@@ -23,6 +23,15 @@
       "AreaInterchange": {
         "$ref": "Operations/Branch/AreaInterchange.json"
       },
+      "CombinedCycleAssociation": {
+        "$ref": "Operations/SupplementalAttributes/CombinedCycleAssociation.json"
+      },
+      "CombinedCycleBlock": {
+        "$ref": "Operations/SupplementalAttributes/CombinedCycleBlock.json"
+      },
+      "CombinedCycleFractional": {
+        "$ref": "Operations/SupplementalAttributes/CombinedCycleFractional.json"
+      },
       "ConstantReserve": {
         "$ref": "Operations/Service/ConstantReserve.json"
       },
@@ -50,8 +59,17 @@
       "FixedAdmittance": {
         "$ref": "Operations/StaticInjection/FixedAdmittance.json"
       },
+      "FixedForcedOutage": {
+        "$ref": "Operations/SupplementalAttributes/FixedForcedOutage.json"
+      },
+      "GeometricDistributionForcedOutage": {
+        "$ref": "Operations/SupplementalAttributes/GeometricDistributionForcedOutage.json"
+      },
       "HydroDispatch": {
         "$ref": "Operations/StaticInjection/HydroDispatch.json"
+      },
+      "HydroPowerPlant": {
+        "$ref": "Operations/SupplementalAttributes/HydroPowerPlant.json"
       },
       "HydroPumpTurbine": {
         "$ref": "Operations/StaticInjection/HydroPumpTurbine.json"
@@ -61,6 +79,9 @@
       },
       "HydroTurbine": {
         "$ref": "Operations/StaticInjection/HydroTurbine.json"
+      },
+      "ImpedanceCorrectionData": {
+        "$ref": "Operations/SupplementalAttributes/ImpedanceCorrectionData.json"
       },
       "InterconnectingConverter": {
         "$ref": "Operations/StaticInjection/InterconnectingConverter.json"
@@ -89,6 +110,12 @@
       "PhaseShiftingTransformer3W": {
         "$ref": "Operations/Branch/PhaseShiftingTransformer3W.json"
       },
+      "PlannedOutage": {
+        "$ref": "Operations/SupplementalAttributes/PlannedOutage.json"
+      },
+      "PlantAssociation": {
+        "$ref": "Operations/SupplementalAttributes/PlantAssociation.json"
+      },
       "PowerLoad": {
         "$ref": "Operations/StaticInjection/PowerLoad.json"
       },
@@ -97,6 +124,9 @@
       },
       "RenewableNonDispatch": {
         "$ref": "Operations/StaticInjection/RenewableNonDispatch.json"
+      },
+      "RenewablePowerPlant": {
+        "$ref": "Operations/SupplementalAttributes/RenewablePowerPlant.json"
       },
       "ShiftablePowerLoad": {
         "$ref": "Operations/StaticInjection/ShiftablePowerLoad.json"
@@ -121,6 +151,9 @@
       },
       "ThermalMultiStart": {
         "$ref": "Operations/StaticInjection/ThermalMultiStart.json"
+      },
+      "ThermalPowerPlant": {
+        "$ref": "Operations/SupplementalAttributes/ThermalPowerPlant.json"
       },
       "ThermalStandard": {
         "$ref": "Operations/StaticInjection/ThermalStandard.json"
