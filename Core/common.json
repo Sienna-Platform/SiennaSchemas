@@ -960,11 +960,12 @@
       ],
       "type": "object"
     },
-    "ThermalRenewableGenerationCost": {
+    "GenericOperationCost": {
       "discriminator": {
         "mapping": {
           "RENEWABLE": "#/definitions/RenewableGenerationCost",
-          "THERMAL": "#/definitions/ThermalGenerationCost"
+          "THERMAL": "#/definitions/ThermalGenerationCost",
+          "HYDRO_GEN": "#/definitions/HydroGenerationCost"
         },
         "propertyName": "cost_type"
       },
@@ -974,9 +975,12 @@
         },
         {
           "$ref": "#/definitions/RenewableGenerationCost"
+        },
+        {
+          "$ref": "#/definitions/HydroGenerationCost"
         }
       ],
-      "title": "ThermalRenewableGenerationCost",
+      "title": "GenericOperationCost",
       "type": "object"
     },
     "TransformerControlObjective": {
