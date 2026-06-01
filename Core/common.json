@@ -244,6 +244,29 @@
       "title": "FunctionData",
       "type": "object"
     },
+    "GenericOperationCost": {
+      "discriminator": {
+        "mapping": {
+          "RENEWABLE": "#/definitions/RenewableGenerationCost",
+          "THERMAL": "#/definitions/ThermalGenerationCost",
+          "HYDRO_GEN": "#/definitions/HydroGenerationCost"
+        },
+        "propertyName": "cost_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/definitions/ThermalGenerationCost"
+        },
+        {
+          "$ref": "#/definitions/RenewableGenerationCost"
+        },
+        {
+          "$ref": "#/definitions/HydroGenerationCost"
+        }
+      ],
+      "title": "GenericOperationCost",
+      "type": "object"
+    },
     "HydroGenerationCost": {
       "description": "Cost representation for hydro gen units",
       "properties": {
@@ -958,29 +981,6 @@
         "start_up",
         "shut_down"
       ],
-      "type": "object"
-    },
-    "GenericOperationCost": {
-      "discriminator": {
-        "mapping": {
-          "RENEWABLE": "#/definitions/RenewableGenerationCost",
-          "THERMAL": "#/definitions/ThermalGenerationCost",
-          "HYDRO_GEN": "#/definitions/HydroGenerationCost"
-        },
-        "propertyName": "cost_type"
-      },
-      "oneOf": [
-        {
-          "$ref": "#/definitions/ThermalGenerationCost"
-        },
-        {
-          "$ref": "#/definitions/RenewableGenerationCost"
-        },
-        {
-          "$ref": "#/definitions/HydroGenerationCost"
-        }
-      ],
-      "title": "GenericOperationCost",
       "type": "object"
     },
     "TransformerControlObjective": {

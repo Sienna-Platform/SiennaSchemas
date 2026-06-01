@@ -50,6 +50,9 @@
       "FunctionData": {
         "$ref": "Core/common.json#/definitions/FunctionData"
       },
+      "GenericOperationCost": {
+        "$ref": "Core/common.json#/definitions/GenericOperationCost"
+      },
       "HydroGenerationCost": {
         "$ref": "Core/common.json#/definitions/HydroGenerationCost"
       },
@@ -142,9 +145,6 @@
       },
       "ThermalGenerationCost": {
         "$ref": "Core/common.json#/definitions/ThermalGenerationCost"
-      },
-      "ThermalRenewableGenerationCost": {
-        "$ref": "Core/common.json#/definitions/ThermalRenewableGenerationCost"
       },
       "TransformerControlObjective": {
         "$ref": "Core/common.json#/definitions/TransformerControlObjective"
