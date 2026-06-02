@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GeometricDistributionForcedOutage",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "mean_time_to_recovery": {
+      "type": "number",
+      "default": 0.0
+    },
+    "outage_transition_probability": {
+      "type": "number",
+      "default": 0.0
+    }
+  },
+  "required": [
+    "id"
+  ]
+}

@@ -54,6 +54,17 @@
       "title": "AverageRateCurve",
       "type": "object"
     },
+    "CombinedCycleConfiguration": {
+      "enum": [
+        "SingleShaftCombustionSteam",
+        "SeparateShaftCombustionSteam",
+        "DoubleCombustionOneSteam",
+        "TripleCombustionOneSteam",
+        "Other"
+      ],
+      "title": "CombinedCycleConfiguration",
+      "type": "string"
+    },
     "ComplexNumber": {
       "properties": {
         "real": {

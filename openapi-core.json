@@ -14,6 +14,9 @@
       "AverageRateCurve": {
         "$ref": "Core/common.json#/definitions/AverageRateCurve"
       },
+      "CombinedCycleConfiguration": {
+        "$ref": "Core/common.json#/definitions/CombinedCycleConfiguration"
+      },
       "ComplexNumber": {
         "$ref": "Core/common.json#/definitions/ComplexNumber"
       },
