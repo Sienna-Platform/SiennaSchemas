@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EmissionsData",
+  "description": "Supplemental attribute describing the emission of a single pollutant from a host component. Combines pollutant identity (CO2, NOx, etc.) with an emission rate expressed as a ValueCurve (supporting constant, linear, or piecewise relationships between fuel consumption / power output and emissions). One EmissionsData instance can be attached to one or many components.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string",
+      "description": "Identifier for this emissions attribute"
+    },
+    "pollutant": {
+      "$ref": "../../Core/common.json#/definitions/PollutantType",
+      "description": "Pollutant identity (CO2, CO2E, CH4, N2O, NOX, SO2, PM25, PM10, HG, HAP, CUSTOM)"
+    },
+    "emission_rate": {
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "description": "Emission rate as a ValueCurve, typically an IncrementalCurve with LinearFunctionData (constant or linearly varying rate) or PiecewiseStepData (piecewise step rates). Rates must be non-negative and finite."
+    },
+    "basis": {
+      "$ref": "../../Core/common.json#/definitions/EmissionBasis",
+      "description": "FUEL_INPUT (mass per unit of heat input) or POWER_OUTPUT (mass per unit of electrical output)"
+    },
+    "start_up_adder": {
+      "type": "number",
+      "description": "Per-start emission pulse, in mass_unit. Must be finite and non-negative.",
+      "default": 0.0
+    },
+    "mass_unit": {
+      "$ref": "../../Core/common.json#/definitions/MassUnit",
+      "description": "Mass unit of the emission rate numerator",
+      "default": "KG"
+    },
+    "energy_unit": {
+      "$ref": "../../Core/common.json#/definitions/EnergyUnit",
+      "description": "Energy unit for the rate denominator. Must be MMBTU or GJ when basis is FUEL_INPUT, and MWH when basis is POWER_OUTPUT."
+    },
+    "gwp": {
+      "type": "number",
+      "description": "GWP100 multiplier for CO2-equivalent reporting. Must be finite and non-negative.",
+      "default": 1.0
+    },
+    "available": {
+      "type": "boolean",
+      "description": "Whether this attribute is active",
+      "default": true
+    },
+    "ext": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Extra metadata dictionary"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "pollutant",
+    "emission_rate",
+    "basis",
+    "energy_unit"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "basis": {
+            "const": "FUEL_INPUT"
+          }
+        },
+        "required": [
+          "basis"
+        ]
+      },
+      "then": {
+        "properties": {
+          "energy_unit": {
+            "enum": [
+              "MMBTU",
+              "GJ"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "basis": {
+            "const": "POWER_OUTPUT"
+          }
+        },
+        "required": [
+          "basis"
+        ]
+      },
+      "then": {
+        "properties": {
+          "energy_unit": {
+            "const": "MWH"
+          }
+        }
+      }
+    }
+  ]
+}

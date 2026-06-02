@@ -142,6 +142,23 @@
       "title": "DiscreteControlledBranchType",
       "type": "string"
     },
+    "EmissionBasis": {
+      "enum": [
+        "FUEL_INPUT",
+        "POWER_OUTPUT"
+      ],
+      "title": "EmissionBasis",
+      "type": "string"
+    },
+    "EnergyUnit": {
+      "enum": [
+        "MMBTU",
+        "GJ",
+        "MWH"
+      ],
+      "title": "EnergyUnit",
+      "type": "string"
+    },
     "FACTSOperationModes": {
       "enum": [
         "OOS",
@@ -522,6 +539,16 @@
       "title": "LoadCost",
       "type": "object"
     },
+    "MassUnit": {
+      "enum": [
+        "KG",
+        "LB",
+        "SHORT_TON",
+        "METRIC_TON"
+      ],
+      "title": "MassUnit",
+      "type": "string"
+    },
     "MinMax": {
       "properties": {
         "max": {
@@ -593,6 +620,23 @@
       ],
       "title": "PiecewiseStepData",
       "type": "object"
+    },
+    "PollutantType": {
+      "enum": [
+        "CO2",
+        "CO2E",
+        "CH4",
+        "N2O",
+        "NOX",
+        "SO2",
+        "PM25",
+        "PM10",
+        "HG",
+        "HAP",
+        "CUSTOM"
+      ],
+      "title": "PollutantType",
+      "type": "string"
     },
     "PrimeMovers": {
       "enum": [
