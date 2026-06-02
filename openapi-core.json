@@ -32,6 +32,12 @@
       "DiscreteControlledBranchType": {
         "$ref": "Core/common.json#/definitions/DiscreteControlledBranchType"
       },
+      "EmissionBasis": {
+        "$ref": "Core/common.json#/definitions/EmissionBasis"
+      },
+      "EnergyUnit": {
+        "$ref": "Core/common.json#/definitions/EnergyUnit"
+      },
       "Feature": {
         "$ref": "Core/common.json#/definitions/Feature"
       },
@@ -89,6 +95,9 @@
       "LoadCost": {
         "$ref": "Core/common.json#/definitions/LoadCost"
       },
+      "MassUnit": {
+        "$ref": "Core/common.json#/definitions/MassUnit"
+      },
       "MinMax": {
         "$ref": "Core/common.json#/definitions/MinMax"
       },
@@ -100,6 +109,9 @@
       },
       "PiecewiseStepData": {
         "$ref": "Core/common.json#/definitions/PiecewiseStepData"
+      },
+      "PollutantType": {
+        "$ref": "Core/common.json#/definitions/PollutantType"
       },
       "PrimeMovers": {
         "$ref": "Core/common.json#/definitions/PrimeMovers"
