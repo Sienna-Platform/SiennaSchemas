@@ -20,9 +20,21 @@
         "power_systems_type": {
             "type": "string"
         },
-        "peak_demand_mw": {
+        "conformity": {
+            "type": "string",
+            "default": "UNDEFINED"
+        },
+        "growth_rate": {
             "type": "number",
             "default": "0.0"
+        },
+        "new_demand_mw": {
+            "type": "number",
+            "default": "0.0"
+        },
+        "new_construction_year": {
+            "type": "integer",
+            "default": "2020"
         },
         "region": {
             "type": "array",

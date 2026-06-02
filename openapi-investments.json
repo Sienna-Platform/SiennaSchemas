@@ -38,8 +38,8 @@
       "EnergyShareRequirements": {
         "$ref": "Investments/Requirements/EnergyShareRequirements.json"
       },
-      "ExistingCapacity": {
-        "$ref": "Investments/Attributes/ExistingCapacity.json"
+      "ExistingDevices": {
+        "$ref": "Investments/Attributes/ExistingDevices.json"
       },
       "HourlyMatching": {
         "$ref": "Investments/Requirements/HourlyMatching.json"

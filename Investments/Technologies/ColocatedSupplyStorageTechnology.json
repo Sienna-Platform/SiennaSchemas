@@ -16,9 +16,6 @@
         "power_systems_type": {
             "type": "string"
         },
-        "base_year": {
-            "type": "integer"
-        },
         "region": {
             "type": "array",
             "items": {
@@ -30,9 +27,6 @@
         },
         "available": {
             "type": "boolean"
-        },
-        "balancing_topology": {
-            "type": "string"
         },
         "capital_costs_solar": {
             "$ref": "../../Core/common.json#/definitions/ValueCurve"

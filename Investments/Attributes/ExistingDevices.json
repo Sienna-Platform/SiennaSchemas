@@ -1,11 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
-    "required": [
-        "existing_capacity"
-    ],
     "properties": {
-        "existing_technologies": {
+        "existing_devices": {
             "type": "array",
             "items": {
                 "type": "string"
