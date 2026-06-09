@@ -1,168 +1,231 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A Non-Capacitor Line Commutated Converter (LCC)-HVDC transmission line. As implemented in PSS/E.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "arc": {
+      "description": "An Arc defining this line `from` a rectifier bus `to` an inverter bus. The rectifier bus must be specified in the `from` bus and inverter bus in the `to` bus.",
       "type": "integer"
     },
     "active_power_flow": {
-      "type": "number"
+      "description": "Initial condition of active power flow on the line.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "r": {
+      "description": "Series resistance of the DC line in pu (`SYSTEM_BASE`).",
       "type": "number"
     },
     "transfer_setpoint": {
+      "description": "Desired set-point of power. If `power_mode = true` this value is in MW units, and if `power_mode = false` is in Amperes units. This parameter must not be specified in per-unit. A positive value represents the desired consumed power at the rectifier bus, while a negative value represents the desired power at the inverter bus (i.e. the absolute value of `transfer_setpoint` is the generated power at the inverter bus).",
       "type": "number"
     },
     "scheduled_dc_voltage": {
-      "type": "number"
+      "description": "Scheduled compounded DC voltage. By default this parameter is the scheduled DC voltage in the inverter bus. This parameter must not be specified in per-unit.",
+      "type": "number",
+      "x-unit": "kV"
     },
     "rectifier_bridges": {
+      "description": "Number of bridges in series in the rectifier side.",
       "type": "integer"
     },
     "rectifier_delay_angle_limits": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Minimum and maximum rectifier firing delay angle (alpha).",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "rad"
     },
     "rectifier_rc": {
+      "description": "Rectifier commutating transformer resistance per bridge in system p.u. (`SYSTEM_BASE`).",
       "type": "number"
     },
     "rectifier_xc": {
+      "description": "Rectifier commutating transformer reactance per bridge in system p.u. (`SYSTEM_BASE`).",
       "type": "number"
     },
     "rectifier_base_voltage": {
-      "type": "number"
+      "description": "Rectifier primary base AC voltage, entered in kV.",
+      "type": "number",
+      "x-unit": "kV"
     },
     "inverter_bridges": {
+      "description": "Number of bridges in series in the inverter side.",
       "type": "integer"
     },
     "inverter_extinction_angle_limits": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Minimum and maximum inverter extinction angle (gamma).",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "rad"
     },
     "inverter_rc": {
+      "description": "Inverter commutating transformer resistance per bridge in system p.u. (`SYSTEM_BASE`).",
       "type": "number"
     },
     "inverter_xc": {
+      "description": "Inverter commutating transformer reactance per bridge in system p.u. (`SYSTEM_BASE`).",
       "type": "number"
     },
     "inverter_base_voltage": {
-      "type": "number"
+      "description": "Inverter primary base AC voltage, entered in kV.",
+      "type": "number",
+      "x-unit": "kV"
     },
     "power_mode": {
+      "description": "Boolean flag to identify if the LCC line is in power mode or current mode. If `power_mode = true`, setpoint values must be specified in MW, and if `power_mode = false` setpoint values must be specified in Amperes.",
       "default": true,
       "type": "boolean"
     },
     "switch_mode_voltage": {
+      "description": "Mode switch DC voltage. This parameter must not be added in per-unit. If LCC line is in power mode control, and DC voltage falls below this value, the line switch to current mode control.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "kV"
     },
     "compounding_resistance": {
+      "description": "Compounding Resistance. This parameter is for control of the DC voltage in the rectifier or inverter end. For inverter DC voltage control, the parameter is set to zero; for rectifier DC voltage control, the parameter is set to the DC line resistance; otherwise, set to a fraction of the DC line resistance.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "ohm"
     },
     "min_compounding_voltage": {
+      "description": "Minimum compounded voltage. This parameter must not be added in per-unit. Only used in constant gamma operation (gamma_min = gamma_max), and the AC transformer is used to control the DC voltage.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "kV"
     },
     "rectifier_transformer_ratio": {
+      "description": "Rectifier transformer ratio between the primary and secondary side AC voltages.",
       "default": 1.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "1"
     },
     "rectifier_tap_setting": {
+      "description": "Rectifier transformer tap setting.",
       "default": 1.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "1"
     },
     "rectifier_tap_limits": {
+      "description": "Minimum and maximum rectifier tap limits as a ratio between the primary and secondary side AC voltages.",
       "default": {
         "min": 0.51,
         "max": 1.5
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "1"
     },
     "rectifier_tap_step": {
+      "description": "Rectifier transformer tap step value.",
       "default": 0.00625,
-      "type": "number"
+      "type": "number",
+      "x-unit": "1"
     },
     "rectifier_delay_angle": {
+      "description": "Rectifier firing delay angle (alpha).",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "rad"
     },
     "rectifier_capacitor_reactance": {
+      "description": "Commutating rectifier capacitor reactance magnitude per bridge, in system p.u. (`SYSTEM_BASE`).",
       "default": 0.0,
       "type": "number"
     },
     "inverter_transformer_ratio": {
+      "description": "Inverter transformer ratio between the primary and secondary side AC voltages.",
       "default": 1.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "1"
     },
     "inverter_tap_setting": {
+      "description": "Inverter transformer tap setting.",
       "default": 1.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "1"
     },
     "inverter_tap_limits": {
+      "description": "Minimum and maximum inverter tap limits as a ratio between the primary and secondary side AC voltages.",
       "default": {
         "min": 0.51,
         "max": 1.5
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "1"
     },
     "inverter_tap_step": {
+      "description": "Inverter transformer tap step value.",
       "default": 0.0625,
-      "type": "number"
+      "type": "number",
+      "x-unit": "1"
     },
     "inverter_extinction_angle": {
+      "description": "Inverter extinction angle (gamma).",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "rad"
     },
     "inverter_capacitor_reactance": {
+      "description": "Commutating inverter capacitor reactance magnitude per bridge, in system p.u. (`SYSTEM_BASE`).",
       "default": 0.0,
       "type": "number"
     },
     "active_power_limits_from": {
+      "description": "Minimum and maximum active power flows to the FROM node.",
       "default": {
         "min": 0.0,
         "max": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
     },
     "active_power_limits_to": {
+      "description": "Minimum and maximum active power flows to the TO node.",
       "default": {
         "min": 0.0,
         "max": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
     },
     "reactive_power_limits_from": {
+      "description": "Minimum and maximum reactive power limits to the FROM node.",
       "default": {
         "min": 0.0,
         "max": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
     },
     "reactive_power_limits_to": {
+      "description": "Minimum and maximum reactive power limits to the TO node.",
       "default": {
         "min": 0.0,
         "max": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
     },
     "loss": {
+      "description": "A generic loss model coefficients. It accepts a linear model with a constant loss and a proportional loss rate (MW of loss per MW of flow). It also accepts a Piecewise loss, with N segments to specify different proportional losses for different segments.",
       "default": {
         "curve_type": "INPUT_OUTPUT",
         "function_data": {
           "function_type": "LINEAR",
           "constant_term": 0,
           "proportional_term": 0
-        },  
+        },
         "input_at_zero": 0
-      }, 
+      },
       "$ref": "../../Core/common.json#/definitions/TwoTerminalLoss"
     }
   },

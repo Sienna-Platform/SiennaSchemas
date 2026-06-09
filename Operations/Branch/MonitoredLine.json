@@ -1,54 +1,81 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "An AC transmission line with additional power flow constraints specified by the system operator, more restrictive than the line's thermal limits.\n\nFor example, monitored lines can be used to restrict line flow following a contingency elsewhere in the network. See the `flow_limits` parameter. If monitoring is not needed, see `Line`.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "active_power_flow": {
-      "type": "number"
+      "description": "Initial condition of active power flow on the line.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "reactive_power_flow": {
-      "type": "number"
+      "description": "Initial condition of reactive power flow on the line.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "arc": {
+      "description": "An `Arc` defining this line `from` a bus `to` another bus.",
       "type": "integer"
     },
     "r": {
-      "type": "number"
+      "description": "Resistance.",
+      "type": "number",
+      "x-unit": "ohm"
     },
     "x": {
-      "type": "number"
+      "description": "Reactance.",
+      "type": "number",
+      "x-unit": "ohm"
     },
     "b": {
-      "$ref": "../../Core/common.json#/definitions/FromTo"
+      "description": "Shunt susceptance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value.",
+      "$ref": "../../Core/common.json#/definitions/FromTo",
+      "x-unit": "S"
     },
     "flow_limits": {
-      "$ref": "../../Core/common.json#/definitions/FromTo_ToFrom"
+      "description": "Minimum and maximum permissable flow on the line, if different from the thermal rating defined in `rating`.",
+      "$ref": "../../Core/common.json#/definitions/FromTo_ToFrom",
+      "x-unit": "MW"
     },
     "rating": {
-      "type": "number"
+      "description": "Thermal rating. Flow through the transformer must be between -`rating` and `rating`.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "rating_b": {
-      "type": "number"
+      "description": "Second current rating.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "rating_c": {
-      "type": "number"
+      "description": "Third current rating.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "angle_limits": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Minimum and maximum angle limits.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "rad"
     },
     "g": {
+      "description": "Shunt conductance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value.",
       "default": {
         "from": 0.0,
         "to": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/FromTo"
+      "$ref": "../../Core/common.json#/definitions/FromTo",
+      "x-unit": "S"
     }
   },
   "required": [

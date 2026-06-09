@@ -1,45 +1,65 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Interconnecting Power Converter (IPC) for transforming power from an ACBus to a DCBus.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
+      "description": "ID of the bus on the AC side of this converter.",
       "type": "integer"
     },
     "dc_bus": {
+      "description": "ID of the bus on the DC side of this converter.",
       "type": "integer"
     },
     "active_power": {
-      "type": "number"
+      "description": "Active power on the DC side.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "rating": {
-      "type": "number"
+      "description": "Maximum output power rating of the converter.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "active_power_limits": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Minimum and maximum stable active power levels.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
     },
     "base_power": {
-      "type": "number"
+      "description": "Base power of the converter for per unitization.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "dc_current": {
+      "description": "DC current on the converter.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "A"
     },
     "max_dc_current": {
+      "description": "Maximum stable dc current limits.",
       "default": 100000000.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "A"
     },
     "loss_function": {
+      "description": "Linear or quadratic loss function with respect to the converter current.",
       "$ref": "../../Core/common.json#/definitions/InputOutputCurve"
     },
     "dynamic_injector": {
+      "description": "Corresponding dynamic injection device.",
       "type": null
     }
   },

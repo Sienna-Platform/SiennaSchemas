@@ -1,61 +1,92 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A 2-winding transformer, with a tap changer for variable turns ratio.\n\nThe model uses an equivalent circuit assuming the impedance is on the High Voltage Side of the transformer. The model allocates the iron losses and magnetizing susceptance to the primary side.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "active_power_flow": {
-      "type": "number"
+      "description": "Initial condition of active power flow through the transformer.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "reactive_power_flow": {
-      "type": "number"
+      "description": "Initial condition of reactive power flow through the transformer.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "arc": {
+      "description": "An `Arc` defining this transformer `from` a bus `to` another bus.",
       "type": "integer"
     },
     "r": {
-      "type": "number"
+      "description": "Resistance.",
+      "type": "number",
+      "x-unit": "ohm"
     },
     "x": {
-      "type": "number"
+      "description": "Reactance.",
+      "type": "number",
+      "x-unit": "ohm"
     },
     "primary_shunt": {
-      "$ref": "../../Core/common.json#/definitions/ComplexNumber"
+      "description": "Primary shunt admittance.",
+      "$ref": "../../Core/common.json#/definitions/ComplexNumber",
+      "x-unit": "S"
     },
     "tap": {
-      "type": "number"
+      "description": "Normalized tap changer position for voltage control, varying between 0 and 2, with 1 centered at the nominal voltage.",
+      "type": "number",
+      "x-unit": "1"
     },
     "rating": {
-      "type": "number"
+      "description": "Thermal rating. Flow through the transformer must be between -`rating`.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "base_power": {
-      "type": "number"
+      "description": "Base power for per unitization.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "base_voltage_primary": {
+      "description": "Primary base voltage.",
       "descriptor": "default of get_base_voltage(get_from(arc)))",
-      "type": "number"
+      "type": "number",
+      "x-unit": "kV"
     },
     "base_voltage_secondary": {
+      "description": "Secondary base voltage.",
       "descriptor": "default of get_base_voltage(get_to(arc)))",
-      "type": "number"
+      "type": "number",
+      "x-unit": "kV"
     },
     "rating_b": {
-      "type": "number"
+      "description": "Second current rating.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "rating_c": {
-      "type": "number"
+      "description": "Third current rating.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "winding_group_number": {
+      "description": "Vector group number ('clock number') indicating fixed phase shift between the `from` and `to` buses due to the connection group configuration.",
       "default": "UNDEFINED",
       "$ref": "../../Core/common.json#/definitions/WindingGroupNumber"
     },
     "control_objective": {
+      "description": "Control objective for the tap changer for power flow calculations.",
       "default": "UNDEFINED",
       "$ref": "../../Core/common.json#/definitions/TransformerControlObjective"
     }

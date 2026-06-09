@@ -1,89 +1,122 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameters of Reactive Power Controller including REPCA1 and REECB1.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "bus_control": {
+      "description": "ACBus identification number for voltage control. `0` identifies the local bus connected to this component.",
       "type": "integer"
     },
     "from_branch_control": {
+      "description": "Monitored branch FROM bus identification number for line drop compensation (if 0 generator power will be used).",
       "type": "integer"
     },
     "to_branch_control": {
+      "description": "Monitored branch TO bus identification number for line drop compensation (if 0 generator power will be used).",
       "type": "integer"
     },
     "branch_id_control": {
+      "description": "Branch circuit id for line drop compensation (as a string). If 0 generator power will be used.",
       "type": "string"
     },
     "VC_Flag": {
+      "description": "Voltage Compensator Flag for REPCA1.",
       "type": "boolean"
     },
     "Ref_Flag": {
+      "description": "Flag for Reactive Power Control for REPCA1. `false`: Q-control, `true`: V-control.",
       "type": "boolean"
     },
     "PF_Flag": {
+      "description": "Flag for Power Factor Control for Outer Control of REECB1. `false`: Q-control, `true`: Power Factor Control.",
       "type": "boolean"
     },
     "V_Flag": {
+      "description": "Flag for Voltage Control for Outer Control of REECB1. `false`: Voltage Control, `true`: Q-Control.",
       "type": "boolean"
     },
     "T_fltr": {
-      "type": "number"
+      "description": "Voltage or Q-power of REPCA Filter Time Constant.",
+      "type": "number",
+      "x-unit": "s"
     },
     "K_p": {
+      "description": "Reactive power PI control proportional gain.",
       "type": "number"
     },
     "K_i": {
+      "description": "Reactive power PI control integral gain.",
       "type": "number"
     },
     "T_ft": {
-      "type": "number"
+      "description": "Reactive power lead time constant.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T_fv": {
-      "type": "number"
+      "description": "Reactive power lag time constant.",
+      "type": "number",
+      "x-unit": "s"
     },
     "V_frz": {
+      "description": "Voltage below which state xiq_oc (integrator state) is freeze.",
       "type": "number"
     },
     "R_c": {
+      "description": "Line drop compensation resistance (used when VC_Flag = 1).",
       "type": "number"
     },
     "X_c": {
+      "description": "Line drop compensation reactance (used when VC_Flag = 1).",
       "type": "number"
     },
     "K_c": {
+      "description": "Reactive current compensation gain (used when VC_Flag = 0).",
       "type": "number"
     },
     "e_lim": {
+      "description": "Upper/Lower limit on Voltage or Q-power deadband output `(e_min, e_max)`.",
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "dbd_pnts": {
+      "description": "Voltage or Q-power error dead band thresholds `(dbd1, dbd2)`.",
       "$ref": "../../Core/common.json#/definitions/DbdPnts"
     },
     "Q_lim": {
+      "description": "Upper/Lower limit on reactive power V/Q control in REPCA `(Q_min, Q_max)`.",
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "T_p": {
-      "type": "number"
+      "description": "Active power lag time constant in REECB. Used only when PF_Flag = 1.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Q_lim_inner": {
+      "description": "Upper/Lower limit on reactive power input in REECB `(Q_min_inner, Q_max_inner)`. Only used when V_Flag = 1.",
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "V_lim": {
+      "description": "Upper/Lower limit on reactive power PI controller in REECB `(V_min, V_max)`. Only used when V_Flag = 1.",
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "K_qp": {
+      "description": "Reactive power regulator proportional gain (used when V_Flag = 1).",
       "type": "number"
     },
     "K_qi": {
+      "description": "Reactive power regulator integral gain (used when V_Flag = 1).",
       "type": "number"
     },
     "Q_ref": {
+      "description": "Reference Reactive Power Set-point.",
       "type": "number",
       "default": 1.0
     },
     "V_ref": {
+      "description": "Reference Voltage Set-point.",
       "type": "number",
       "default": 1.0
     }

@@ -1,44 +1,63 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A voltage-dependent ZIP load, most commonly used for dynamics modeling.\n\nAn `ExponentialLoad` models active power as P = P0 * V^α and reactive power as Q = Q0 * V^β, where the exponents α and β select govern the voltage dependency. For an alternative three-part formulation of the ZIP model, see `StandardLoad`. For a simpler load model with no voltage dependency, see `PowerLoad`.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
+      "description": "ID of the bus that this component is connected to.",
       "type": "integer"
     },
     "active_power": {
-      "type": "number"
+      "description": "Active power coefficient, P0.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "reactive_power": {
-      "type": "number"
+      "description": "Reactive power coefficient, Q0.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "alpha": {
+      "description": "Exponent relating voltage dependency for active power. 0 = constant power only, 1 = constant current only, and 2 = constant impedance only.",
       "type": "number"
     },
     "beta": {
+      "description": "Exponent relating voltage dependency for reactive power. 0 = constant power only, 1 = constant current only, and 2 = constant impedance only.",
       "type": "number"
     },
     "base_power": {
-      "type": "number"
+      "description": "Base power of the unit for per unitization.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "max_active_power": {
-      "type": "number"
+      "description": "Maximum active power that this load can demand.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "max_reactive_power": {
-      "type": "number"
+      "description": "Maximum reactive power that this load can demand.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "conformity": {
+      "description": "Indicates whether the specified load is conforming or non-conforming.",
       "default": "UNDEFINED",
       "$ref": "../../Core/common.json#/definitions/LoadConformity"
     },
     "dynamic_injector": {
+      "description": "Corresponding dynamic injection device.",
       "type": null
     }
   },

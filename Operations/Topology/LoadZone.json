@@ -1,17 +1,24 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A load zone for electricity price analysis. The load zone can be specified when defining each `ACBus` or `DCBus` in the zone.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "peak_active_power": {
-      "type": "number"
+      "description": "Peak active power in the zone.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "peak_reactive_power": {
-      "type": "number"
+      "description": "Peak reactive power in the zone.",
+      "type": "number",
+      "x-unit": "MW"
     }
   },
   "required": [

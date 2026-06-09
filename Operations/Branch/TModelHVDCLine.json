@@ -1,35 +1,49 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A High Voltage DC transmission line for modeling DC transmission networks.\n\nThis line must be connected to a `DCBus` on each end. It uses a T-Model of the line impedance. This is suitable for operational simulations with a multi-terminal DC network.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "active_power_flow": {
-      "type": "number"
+      "description": "Initial condition of active power flow on the line.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "arc": {
+      "description": "An `Arc` defining this line `from` a bus `to` another bus.",
       "type": "integer"
     },
     "r": {
+      "description": "Total series Resistance in p.u. (`SYSTEM_BASE`), split equally on both sides of the shunt capacitance.",
       "type": "number"
     },
     "l": {
+      "description": "Total series Inductance in p.u. (`SYSTEM_BASE`), split equally on both sides of the shunt capacitance.",
       "type": "number"
     },
     "c": {
+      "description": "Shunt capacitance in p.u. (`SYSTEM_BASE`).",
       "type": "number"
     },
     "active_power_limits_from": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Minimum and maximum active power flows to the FROM node.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
     },
     "active_power_limits_to": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Minimum and maximum active power flows to the TO node.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
     }
   },
   "required": [

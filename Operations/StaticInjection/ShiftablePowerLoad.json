@@ -1,44 +1,64 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A static power load that can be partially or completed shifted to later time periods.\n\nThese loads are used to model demand response. This load has a target demand profile (set by a `max_active_power` time series for an operational simulation). Load in the profile can be shifted to later time periods to aid in satisfying other system needs; however, any shifted load must be served within a designated time horizon (e.g., 24 hours), which is set by `load_balance_time_horizon`.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
+      "description": "ID of the bus that this component is connected to.",
       "type": "integer"
     },
     "active_power": {
-      "type": "number"
+      "description": "Initial steady state active power demand.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "active_power_limits": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Minimum and maximum stable active power levels.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
     },
     "reactive_power": {
-      "type": "number"
+      "description": "Initial steady state reactive power demand.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "max_active_power": {
-      "type": "number"
+      "description": "Maximum active power that this load can demand.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "max_reactive_power": {
-      "type": "number"
+      "description": "Maximum reactive power that this load can demand.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "base_power": {
-      "type": "number"
+      "description": "Base power of the unit for per unitization.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "load_balance_time_horizon": {
+      "description": "Number of time periods over which load must be balanced.",
       "type": "integer"
     },
     "operation_cost": {
+      "description": "Operational cost of interrupting load.",
       "descriptor": "or MarketBidCost",
       "$ref": "../../Core/common.json#/definitions/LoadCost"
     },
     "dynamic_injector": {
+      "description": "Corresponding dynamic injection device.",
       "type": null
     }
   },

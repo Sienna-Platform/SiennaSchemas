@@ -1,37 +1,53 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Steam Turbine-Governor. This model considers both TGOV1 or TGOV1DU in PSS/E.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "R": {
+      "description": "Droop parameter.",
       "type": "number"
     },
     "T1": {
-      "type": "number"
+      "description": "Governor time constant.",
+      "type": "number",
+      "x-unit": "s"
     },
     "valve_position_limits": {
+      "description": "Valve position limits.",
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "T2": {
-      "type": "number"
+      "description": "Lead Lag Lead Time constant.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T3": {
-      "type": "number"
+      "description": "Lead Lag Lag Time constant.",
+      "type": "number",
+      "x-unit": "s"
     },
     "D_T": {
+      "description": "Turbine Damping.",
       "type": "number"
     },
     "DB_h": {
+      "description": "Deadband for overspeed.",
       "type": "number"
     },
     "DB_l": {
+      "description": "Deadband for underspeed.",
       "type": "number"
     },
     "T_rate": {
-      "type": "number"
+      "description": "Turbine Rate. If zero, generator base is used.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "P_ref": {
+      "description": "Reference Power Set-point.",
       "type": "number"
     }
   },

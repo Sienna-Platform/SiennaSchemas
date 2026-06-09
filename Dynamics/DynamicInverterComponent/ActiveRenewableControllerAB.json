@@ -1,62 +1,85 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameters of Active Power Controller including REPCA1 and REECB1.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "bus_control": {
+      "description": "ACBus identification number for voltage control. `0` identifies the local bus connected to this component.",
       "type": "integer"
     },
     "from_branch_control": {
+      "description": "Monitored branch FROM bus number for line drop compensation (if 0 generator power will be used).",
       "type": "integer"
     },
     "to_branch_control": {
+      "description": "Monitored branch TO bus number for line drop compensation (if 0 generator power will be used).",
       "type": "integer"
     },
     "branch_id_control": {
+      "description": "Branch circuit id for line drop compensation. If 0 generator power will be used.",
       "descriptor": "in psy this is a string representing the branch name",
       "type": "integer"
     },
     "Freq_Flag": {
+      "description": "Frequency Flag for REPCA1: `false`: disable, `true`: enable.",
       "type": "boolean"
     },
     "K_pg": {
+      "description": "Active power PI control proportional gain.",
       "type": "number"
     },
     "K_ig": {
+      "description": "Active power PI control integral gain.",
       "type": "number"
     },
     "T_p": {
-      "type": "number"
+      "description": "Real power measurement filter time constant.",
+      "type": "number",
+      "x-unit": "s"
     },
     "fdbd_pnts": {
+      "description": "Frequency error dead band thresholds `(fdbd1, fdbd2)`.",
       "$ref": "../../Core/common.json#/definitions/FdbdPnts"
     },
     "fe_lim": {
+      "description": "Upper/Lower limit on frequency error `(fe_min, fe_max)`.",
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "P_lim": {
+      "description": "Upper/Lower limit on power reference `(P_min, P_max)`.",
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "T_g": {
-      "type": "number"
+      "description": "Power Controller lag time constant.",
+      "type": "number",
+      "x-unit": "s"
     },
     "D_dn": {
+      "description": "Droop for over-frequency conditions.",
       "type": "number"
     },
     "D_up": {
+      "description": "Droop for under-frequency conditions.",
       "type": "number"
     },
     "dP_lim": {
+      "description": "Upper/Lower limit on power reference ramp rates `(dP_min, dP_max)`.",
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "P_lim_inner": {
+      "description": "Upper/Lower limit on power reference for REECB `(P_min_inner, P_max_inner)`.",
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "T_pord": {
-      "type": "number"
+      "description": "Power filter time constant REECB time constant.",
+      "type": "number",
+      "x-unit": "s"
     },
     "P_ref": {
+      "description": "Reference Power Set-point.",
       "type": "number",
       "default": 1.0
     }

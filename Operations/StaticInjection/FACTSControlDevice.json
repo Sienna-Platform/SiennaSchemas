@@ -1,32 +1,43 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Facts control devices.\n\nMost often used in AC power flow studies as a control of voltage and, active and reactive power.",
   "properties": {
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
+      "description": "Sending end bus number.",
       "type": "integer"
     },
     "control_mode": {
+      "description": "Control mode. Used to describe the behavior of the control device.",
       "descriptor": "in psy5 a required param with an option to be nothing",
       "$ref": "../../Core/common.json#/definitions/FACTSOperationModes"
     },
     "voltage_setpoint": {
+      "description": "Voltage setpoint at the sending end bus, it has to be a `PV` bus.",
       "type": "number"
     },
     "max_shunt_current": {
-      "type": "number"
+      "description": "Maximum shunt current at the sending end bus; entered at unity voltage.",
+      "type": "number",
+      "x-unit": "MVA"
     },
     "reactive_power_required": {
+      "description": "Total reactive power required to hold voltage at sending bus, as a percentage.",
       "type": "number"
     },
     "dynamic_injector": {
+      "description": "Corresponding dynamic injection model for FACTS control device.",
       "type": null
     }
   },
