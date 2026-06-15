@@ -51,17 +51,21 @@
     "R_th": {
       "description": "Source Thevenin resistance.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "ohm"
     },
     "X_th": {
       "description": "Source Thevenin reactance.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "ohm"
     },
     "internal_voltage": {
       "description": "Internal voltage.",
       "default": 1.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "pu",
+      "x-unit-base": "base_voltage"
     },
     "internal_angle": {
       "description": "Internal angle.",
@@ -131,13 +135,7 @@
       "type": null
     }
   },
-  "required": [
-    "id",
-    "name",
-    "available",
-    "bus",
-    "operation_cost"
-  ],
+  "required": ["id", "name", "available", "bus", "operation_cost"],
   "title": "Source",
   "type": "object"
 }

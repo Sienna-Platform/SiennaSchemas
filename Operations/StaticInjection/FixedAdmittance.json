@@ -20,7 +20,8 @@
     },
     "Y": {
       "description": "Fixed admittance.",
-      "$ref": "../../Core/common.json#/definitions/ComplexNumber"
+      "$ref": "../../Core/common.json#/definitions/ComplexNumber",
+      "x-unit": "S"
     },
     "dynamic_injector": {
       "description": "Corresponding dynamic injection model for admittance.",

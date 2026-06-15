@@ -24,8 +24,9 @@
       "$ref": "../../Core/common.json#/definitions/FACTSOperationModes"
     },
     "voltage_setpoint": {
-      "description": "Voltage setpoint at the sending end bus, it has to be a `PV` bus.",
-      "type": "number"
+      "description": "Voltage setpoint at the sending end bus in kV, it has to be a `PV` bus.",
+      "type": "number",
+      "x-unit": "kV"
     },
     "max_shunt_current": {
       "description": "Maximum shunt current at the sending end bus; entered at unity voltage.",
@@ -34,7 +35,8 @@
     },
     "reactive_power_required": {
       "description": "Total reactive power required to hold voltage at sending bus, as a percentage.",
-      "type": "number"
+      "type": "number",
+      "x-unit": "%"
     },
     "dynamic_injector": {
       "description": "Corresponding dynamic injection model for FACTS control device.",

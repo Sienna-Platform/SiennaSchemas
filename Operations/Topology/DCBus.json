@@ -27,7 +27,9 @@
     "magnitude": {
       "description": "Voltage as a multiple of `base_voltage`.",
       "descriptor": "in psy5 a required param with an option to be nothing",
-      "type": "number"
+      "type": "number",
+      "x-unit": "pu",
+      "x-unit-base": "base_voltage"
     },
     "name": {
       "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
@@ -40,7 +42,9 @@
     "voltage_limits": {
       "description": "Limits on the voltage variation as multiples of `base_voltage`.",
       "descriptor": "in psy5 a required param with an option to be nothing",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "pu",
+      "x-unit-base": "base_voltage"
     }
   },
   "required": [

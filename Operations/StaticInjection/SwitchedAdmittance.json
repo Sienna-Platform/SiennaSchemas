@@ -20,7 +20,8 @@
     },
     "Y": {
       "description": "Initial admittance at N = 0.",
-      "$ref": "../../Core/common.json#/definitions/ComplexNumber"
+      "$ref": "../../Core/common.json#/definitions/ComplexNumber",
+      "x-unit": "S"
     },
     "initial_status": {
       "description": "Vector of initial switched shunt status, one for in-service and zero for out-of-service for block i (1 through 8).",
@@ -41,7 +42,8 @@
       "type": "array",
       "items": {
         "$ref": "../../Core/common.json#/definitions/ComplexNumber"
-      }
+      },
+      "x-unit": "S"
     },
     "admittance_limits": {
       "description": "Shunt admittance limits for switched shunt model.",
@@ -49,7 +51,8 @@
         "min": 1.0,
         "max": 1.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "S"
     },
     "dynamic_injector": {
       "description": "Corresponding dynamic injection model for admittance.",

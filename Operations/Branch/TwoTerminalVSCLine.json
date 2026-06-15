@@ -39,9 +39,10 @@
       "x-unit": "MW"
     },
     "g": {
-      "description": "Series conductance of the DC line in pu (`SYSTEM_BASE`).",
+      "description": "Series conductance of the DC line.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "S"
     },
     "dc_current": {
       "description": "DC current on the converter flowing in the DC line, from `from` bus to `to` bus.",
@@ -66,14 +67,24 @@
       "type": "boolean"
     },
     "dc_setpoint_from": {
-      "description": "Converter DC setpoint in the `from` bus converter. If `voltage_control_from = true` this number is the DC voltage on the DC side of the converter, entered in kV. If `voltage_control_from = false`, this value is the power demand in MW, if positive the converter is supplying power to the AC network at the `from` bus; if negative, the converter is withdrawing power from the AC network at the `from` bus.",
+      "description": "Converter DC setpoint in the `from` bus converter. If `dc_voltage_control_from = true` this number is the DC voltage on the DC side of the converter, entered in kV. If `dc_voltage_control_from = false`, this value is the power demand in MW, if positive the converter is supplying power to the AC network at the `from` bus; if negative, the converter is withdrawing power from the AC network at the `from` bus.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit-discriminator": "dc_voltage_control_from",
+      "x-units": {
+        "true": "kV",
+        "false": "MW"
+      }
     },
     "ac_setpoint_from": {
-      "description": "Converter AC setpoint in the `from` bus converter. If `voltage_control_from = true` this number is the AC voltage on the AC side of the converter, entered in per unit. If `voltage_control_from = false`, this value is the power factor setpoint.",
+      "description": "Converter AC setpoint in the `from` bus converter. If `ac_voltage_control_from = true` this number is the AC voltage on the AC side of the converter, entered in kV. If `ac_voltage_control_from = false`, this value is the power factor setpoint.",
       "default": 1.0,
-      "type": "number"
+      "type": "number",
+      "x-unit-discriminator": "ac_voltage_control_from",
+      "x-units": {
+        "true": "kV",
+        "false": "1"
+      }
     },
     "converter_loss_from": {
       "description": "Loss model coefficients in the `from` bus converter. It accepts a linear model or quadratic. Same converter data is used in both ends.",
@@ -116,12 +127,13 @@
       "x-unit": "1"
     },
     "voltage_limits_from": {
-      "description": "Limits on the Voltage at the DC `from` Bus in per unit.",
+      "description": "Limits on the Voltage at the DC `from` Bus in kV. The DC base voltage is the `dc_setpoint` of the converter with `dc_voltage_control` enabled; exactly one converter must control the DC voltage.",
       "default": {
         "min": 0.0,
         "max": 999.9
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "kV"
     },
     "reactive_power_to": {
       "description": "Initial condition of reactive power flowing into the to-bus.",
@@ -140,14 +152,24 @@
       "type": "boolean"
     },
     "dc_setpoint_to": {
-      "description": "Converter DC setpoint in the `to` bus converter. If `voltage_control_to = true` this number is the DC voltage on the DC side of the converter, entered in kV. If `voltage_control_to = false`, this value is the power demand in MW, if positive the converter is supplying power to the AC network at the `to` bus; if negative, the converter is withdrawing power from the AC network at the `to` bus.",
+      "description": "Converter DC setpoint in the `to` bus converter. If `dc_voltage_control_to = true` this number is the DC voltage on the DC side of the converter, entered in kV. If `dc_voltage_control_to = false`, this value is the power demand in MW, if positive the converter is supplying power to the AC network at the `to` bus; if negative, the converter is withdrawing power from the AC network at the `to` bus.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit-discriminator": "dc_voltage_control_to",
+      "x-units": {
+        "true": "kV",
+        "false": "MW"
+      }
     },
     "ac_setpoint_to": {
-      "description": "Converter AC setpoint in the `to` bus converter. If `voltage_control_to = true` this number is the AC voltage on the AC side of the converter, entered in per unit. If `voltage_control_to = false`, this value is the power factor setpoint.",
+      "description": "Converter AC setpoint in the `to` bus converter. If `ac_voltage_control_to = true` this number is the AC voltage on the AC side of the converter, entered in kV. If `ac_voltage_control_to = false`, this value is the power factor setpoint.",
       "default": 1.0,
-      "type": "number"
+      "type": "number",
+      "x-unit-discriminator": "ac_voltage_control_to",
+      "x-units": {
+        "true": "kV",
+        "false": "1"
+      }
     },
     "converter_loss_to": {
       "description": "Loss model coefficients in the `to` bus converter. It accepts a linear model or quadratic. Same converter data is used in both ends.",
@@ -190,12 +212,13 @@
       "x-unit": "1"
     },
     "voltage_limits_to": {
-      "description": "Limits on the Voltage at the DC `to` Bus.",
+      "description": "Limits on the Voltage at the DC `to` Bus in kV. The DC base voltage is the `dc_setpoint` of the converter with `dc_voltage_control` enabled; exactly one converter must control the DC voltage.",
       "default": {
         "min": 0.0,
         "max": 999.9
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "kV"
     }
   },
   "required": [

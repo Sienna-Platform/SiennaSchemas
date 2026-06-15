@@ -30,11 +30,15 @@
     },
     "magnitude": {
       "description": "Voltage as a multiple of `base_voltage`.",
-      "type": "number"
+      "type": "number",
+      "x-unit": "pu",
+      "x-unit-base": "base_voltage"
     },
     "voltage_limits": {
       "description": "Limits on the voltage variation as multiples of `base_voltage`.",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "pu",
+      "x-unit-base": "base_voltage"
     },
     "base_voltage": {
       "description": "The base voltage.",
