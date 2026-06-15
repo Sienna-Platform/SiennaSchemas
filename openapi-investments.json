@@ -45,7 +45,7 @@
         "$ref": "Investments/Requirements/HourlyMatching.json"
       },
       "InvestmentScheduleResults": {
-        "$ref": "Investments/Portfolio/InvestmentScheduleResults.json"
+        "$ref": "Investments/Results/InvestmentScheduleResults.json"
       },
       "MaximumCapacityRequirements": {
         "$ref": "Investments/Requirements/MaximumCapacityRequirements.json"
