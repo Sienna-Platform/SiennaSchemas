@@ -8,10 +8,16 @@
     },
     "outage_status": {
       "type": "number"
+    },
+    "monitored_components": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "uniqueItems": true,
+      "default": [],
+      "description": "IDs of devices whose post-contingency state should be modeled when this outage occurs. Empty by default; semantics of an empty list are decided by the downstream consumer."
     }
   },
-  "required": [
-    "id",
-    "outage_status"
-  ]
+  "required": ["id", "outage_status"]
 }
