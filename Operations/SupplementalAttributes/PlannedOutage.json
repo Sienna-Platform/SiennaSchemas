@@ -12,16 +12,12 @@
     "monitored_components": {
       "type": "array",
       "items": {
-        "type": "string",
-        "format": "uuid"
+        "type": "integer"
       },
       "uniqueItems": true,
       "default": [],
-      "description": "UUIDs of devices whose post-contingency state should be modeled when this outage occurs. Empty by default; semantics of an empty list are decided by the downstream consumer."
+      "description": "IDs of devices whose post-contingency state should be modeled when this outage occurs. Empty by default; semantics of an empty list are decided by the downstream consumer."
     }
   },
-  "required": [
-    "id",
-    "outage_schedule"
-  ]
+  "required": ["id", "outage_schedule"]
 }
