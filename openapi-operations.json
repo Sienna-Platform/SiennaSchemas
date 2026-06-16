@@ -47,6 +47,9 @@
       "DiscreteControlledACBranch": {
         "$ref": "Operations/Branch/DiscreteControlledACBranch.json"
       },
+      "EmissionsData": {
+        "$ref": "Operations/SupplementalAttributes/EmissionsData.json"
+      },
       "EnergyReservoirStorage": {
         "$ref": "Operations/StaticInjection/EnergyReservoirStorage.json"
       },
