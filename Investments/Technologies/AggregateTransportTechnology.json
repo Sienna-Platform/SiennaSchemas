@@ -36,6 +36,12 @@
         "unit_size": {
             "type": "number"
         },
+        "requirements": {
+            "type": "array",
+            "items": {
+                "type": "integer"
+            }
+        },
         "financial_data": {
             "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
         }

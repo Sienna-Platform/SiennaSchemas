@@ -57,6 +57,12 @@
         },
         "max_demand_curtailment": {
             "type": "number"
+        },
+        "requirements": {
+            "type": "array",
+            "items": {
+                "type": "integer"
+            }
         }
     }
 }

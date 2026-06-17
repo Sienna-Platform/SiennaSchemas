@@ -18,12 +18,6 @@
         "target_year": {
             "type": "integer"
         },
-        "eligible_regions": {
-            "type": "array",
-            "items": {
-                "type": "integer"
-            }
-        },
         "tax_dollars_per_ton": {
             "type": "number",
             "default": "0.0"

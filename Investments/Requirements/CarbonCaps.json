@@ -15,12 +15,6 @@
         "available": {
             "type": "boolean"
         },
-        "eligible_regions": {
-            "type": "array",
-            "items": {
-                "type": "integer"
-            }
-        },
         "target_year": {
             "type": "integer"
         },

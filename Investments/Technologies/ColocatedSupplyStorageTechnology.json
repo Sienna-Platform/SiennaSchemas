@@ -101,6 +101,12 @@
         },
         "inverter_supply_ratio": {
             "type": "number"
+        },
+        "requirements": {
+            "type": "array",
+            "items": {
+                "type": "integer"
+            }
         }
     }
 }

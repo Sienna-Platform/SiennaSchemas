@@ -88,6 +88,12 @@
             "type": "integer",
             "default": "100"
         },
+        "requirements": {
+            "type": "array",
+            "items": {
+                "type": "integer"
+            }
+        },
         "financial_data": {
             "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
         }

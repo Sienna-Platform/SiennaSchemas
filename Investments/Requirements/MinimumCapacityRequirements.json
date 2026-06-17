@@ -19,12 +19,6 @@
         "target_year": {
             "type": "integer"
         },
-        "eligible_resources": {
-            "type": "array",
-            "items": {
-                "type": "integer"
-            }
-        },
         "min_capacity_mw": {
             "type": "number"
         }

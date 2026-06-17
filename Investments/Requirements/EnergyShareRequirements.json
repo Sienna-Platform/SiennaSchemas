@@ -18,18 +18,6 @@
         "target_year": {
             "type": "integer"
         },
-        "eligible_regions": {
-            "type": "array",
-            "items": {
-                "type": "integer"
-            }
-        },
-        "eligible_resources": {
-            "type": "array",
-            "items": {
-                "type": "integer"
-            }
-        },
         "generation_fraction_requirement": {
             "type": "number",
             "default": "0.0"

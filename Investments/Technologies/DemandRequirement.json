@@ -47,6 +47,12 @@
         },
         "unserved_demand_curve": {
             "$ref": "../../Core/common.json#/definitions/ValueCurve"
+        },
+        "requirements": {
+            "type": "array",
+            "items": {
+                "type": "integer"
+            }
         }
     }
 }
