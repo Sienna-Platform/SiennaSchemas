@@ -39,54 +39,80 @@
             "type": "object",
             "additionalProperties": {
                 "type": "number"
-            }
+            },
+            "x-unit": "t/MMBtu",
+            "description": "Units: t/MMBtu."
         },
         "cofire_start_limits": {
             "type": "object",
             "additionalProperties": {
                 "$ref": "../../Core/common.json#/definitions/MinMax"
-            }
+            },
+            "x-unit": "1",
+            "description": "Units: 1."
         },
         "cofire_level_limits": {
             "type": "object",
             "additionalProperties": {
                 "$ref": "../../Core/common.json#/definitions/MinMax"
-            }
+            },
+            "x-unit": "1",
+            "description": "Units: 1."
         },
         "capital_costs": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
+            "$ref": "../../Core/common.json#/definitions/ValueCurve",
+            "x-unit": "USD/MW",
+            "description": "Units: USD/MW."
         },
         "operation_costs": {
-            "$ref": "../../Core/common.json#/definitions/ThermalRenewableGenerationCost"
+            "$ref": "../../Core/common.json#/definitions/ThermalRenewableGenerationCost",
+            "x-unit": "USD/MWh",
+            "description": "Units: USD/MWh."
         },
         "unit_size": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "MW",
+            "description": "Units: MW."
         },
         "capacity_limits": {
-            "$ref": "../../Core/common.json#/definitions/MinMax"
+            "$ref": "../../Core/common.json#/definitions/MinMax",
+            "x-unit": "MW",
+            "description": "Units: MW."
         },
         "outage_factor": {
             "type": "number",
-            "default": "1.0"
+            "default": "1.0",
+            "x-unit": "1",
+            "description": "Units: 1."
         },
         "min_generation_fraction": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "1",
+            "description": "Units: 1."
         },
         "ramp_limits": {
-            "$ref": "../../Core/common.json#/definitions/UpDown"
+            "$ref": "../../Core/common.json#/definitions/UpDown",
+            "x-unit": "MW/min",
+            "description": "Units: MW/min."
         },
         "time_limits": {
-            "$ref": "../../Core/common.json#/definitions/UpDown"
+            "$ref": "../../Core/common.json#/definitions/UpDown",
+            "x-unit": "h",
+            "description": "Units: h."
         },
         "start_fuel_mmbtu_per_mw": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "MMBtu/MW",
+            "description": "Units: MMBtu/MW."
         },
         "lifetime": {
             "type": "integer",
-            "default": "100"
+            "default": "100",
+            "x-unit": "yr",
+            "description": "Units: yr."
         },
         "financial_data": {
             "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"

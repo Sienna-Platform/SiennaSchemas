@@ -13,7 +13,9 @@
             "default": "0.0"
         },
         "retrofit_fraction": {
-            "type": "number"
+            "type": "number",
+            "x-unit": "1",
+            "description": "Units: 1."
         }
     }
 }

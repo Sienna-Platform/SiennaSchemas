@@ -11,19 +11,19 @@
       "type": "string"
     },
     "peak_active_power": {
-      "description": "Peak active power in the area.",
+      "description": "Peak active power in the area. Units: MW.",
       "default": 0.0,
       "type": "number",
       "x-unit": "MW"
     },
     "peak_reactive_power": {
-      "description": "Peak reactive power in the area.",
+      "description": "Peak reactive power in the area. Units: MVAr.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "load_response": {
-      "description": "Load-frequency damping parameter modeling how much the load in the area changes due to changes in frequency.",
+      "description": "Load-frequency damping parameter modeling how much the load in the area changes due to changes in frequency. Units: MW/Hz.",
       "default": 0.0,
       "type": "number",
       "x-unit": "MW/Hz"

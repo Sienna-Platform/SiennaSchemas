@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "An AC transmission line.",
+  "description": "A generic branch defined by a series impedance on an `Arc` between two buses.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -24,6 +24,11 @@
       "type": "number",
       "x-unit": "MVAr"
     },
+    "max_flow": {
+      "description": "Maximum allowable flow on the generic impedance. Per-unit on system base. Units: pu.",
+      "type": "number",
+      "x-unit": "pu"
+    },
     "arc": {
       "description": "An `Arc` defining this line `from` a bus `to` another bus.",
       "type": "integer"
@@ -37,40 +42,6 @@
       "description": "Reactance. Per-unit on system base. Units: pu.",
       "type": "number",
       "x-unit": "pu"
-    },
-    "b": {
-      "description": "Shunt susceptance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value. Per-unit on system base. Units: pu.",
-      "$ref": "../../Core/common.json#/definitions/FromTo",
-      "x-unit": "pu"
-    },
-    "rating": {
-      "description": "Thermal rating. Flow on the line must be between -`rating` and `rating`. Units: MVA.",
-      "type": "number",
-      "x-unit": "MVA"
-    },
-    "rating_b": {
-      "description": "Second current rating. Units: MVA.",
-      "type": "number",
-      "x-unit": "MVA"
-    },
-    "rating_c": {
-      "description": "Third current rating. Units: MVA.",
-      "type": "number",
-      "x-unit": "MVA"
-    },
-    "angle_limits": {
-      "description": "Minimum and maximum angle limits. Units: rad.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "rad"
-    },
-    "g": {
-      "description": "Shunt conductance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value. Per-unit on system base. Units: pu.",
-      "default": {
-        "from": 0.0,
-        "to": 0.0
-      },
-      "$ref": "../../Core/common.json#/definitions/FromTo",
-      "x-unit": "pu"
     }
   },
   "required": [
@@ -79,12 +50,11 @@
     "available",
     "active_power_flow",
     "reactive_power_flow",
+    "max_flow",
     "arc",
     "r",
-    "x",
-    "rating",
-    "angle_limits"
+    "x"
   ],
-  "title": "Line",
+  "title": "GenericArcImpedance",
   "type": "object"
 }

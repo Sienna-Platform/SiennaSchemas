@@ -12,10 +12,14 @@
         },
         "interest_rate": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "1",
+            "description": "Units: 1."
         },
         "capital_recovery_period": {
-            "type": "integer"
+            "type": "integer",
+            "x-unit": "yr",
+            "description": "Units: yr."
         },
         "technology_base_year": {
             "type": "integer"
@@ -24,4 +28,4 @@
             "type": "integer"
         }
     }
-  }
+}

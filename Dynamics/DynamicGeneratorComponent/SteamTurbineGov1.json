@@ -11,7 +11,7 @@
       "type": "number"
     },
     "T1": {
-      "description": "Governor time constant.",
+      "description": "Governor time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -20,12 +20,12 @@
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "T2": {
-      "description": "Lead Lag Lead Time constant.",
+      "description": "Lead Lag Lead Time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T3": {
-      "description": "Lead Lag Lag Time constant.",
+      "description": "Lead Lag Lag Time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -42,7 +42,7 @@
       "type": "number"
     },
     "T_rate": {
-      "description": "Turbine Rate. If zero, generator base is used.",
+      "description": "Turbine Rate. If zero, generator base is used. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },

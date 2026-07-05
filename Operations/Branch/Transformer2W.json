@@ -15,65 +15,63 @@
       "type": "boolean"
     },
     "active_power_flow": {
-      "description": "Initial condition of active power flow through the transformer.",
+      "description": "Initial condition of active power flow through the transformer. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "reactive_power_flow": {
-      "description": "Initial condition of reactive power flow through the transformer.",
+      "description": "Initial condition of reactive power flow through the transformer. Units: MVAr.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "arc": {
       "description": "An Arc defining this transformer `from` a bus `to` another bus.",
       "type": "integer"
     },
     "r": {
-      "description": "Resistance.",
+      "description": "Resistance. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "x": {
-      "description": "Reactance.",
+      "description": "Reactance. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "primary_shunt": {
-      "description": "Primary shunt admittance.",
+      "description": "Primary shunt admittance. Per-unit on system base. Units: pu.",
       "$ref": "../../Core/common.json#/definitions/ComplexNumber",
-      "x-unit": "S"
+      "x-unit": "pu"
     },
     "rating": {
-      "description": "Thermal rating. Flow through the transformer must be between -`rating` and `rating`.",
+      "description": "Thermal rating. Flow through the transformer must be between -`rating` and `rating`. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "base_power": {
-      "description": "Base power of the unit for per unitization.",
+      "description": "Base power of the unit for per unitization. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "base_voltage_primary": {
-      "description": "Primary base voltage.",
-      "descriptor": "default of get_base_voltage(get_from(arc)))",
+      "description": "Primary base voltage. default of get_base_voltage(get_from(arc))) Units: kV.",
       "type": "number",
       "x-unit": "kV"
     },
     "base_voltage_secondary": {
-      "description": "Secondary base voltage.",
-      "descriptor": "default of get_base_voltage(get_to(arc)))",
+      "description": "Secondary base voltage. default of get_base_voltage(get_to(arc))) Units: kV.",
       "type": "number",
       "x-unit": "kV"
     },
     "rating_b": {
-      "description": "Second current rating.",
+      "description": "Second current rating. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "rating_c": {
-      "description": "Third current rating.",
+      "description": "Third current rating. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "winding_group_number": {
       "description": "Vector group number ('clock number') indicating phase shift between the `from` and `to` buses.",

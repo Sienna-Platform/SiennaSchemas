@@ -19,13 +19,16 @@
       "type": "integer"
     },
     "Y": {
-      "description": "Fixed admittance.",
+      "description": "Fixed admittance. Per-unit on system base. Units: pu.",
       "$ref": "../../Core/common.json#/definitions/ComplexNumber",
-      "x-unit": "S"
+      "x-unit": "pu"
     },
     "dynamic_injector": {
-      "description": "Corresponding dynamic injection model for admittance.",
-      "type": null
+      "description": "ID of the corresponding dynamic injection model for admittance, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

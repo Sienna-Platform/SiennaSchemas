@@ -11,7 +11,7 @@
       "type": "number"
     },
     "Tb": {
-      "description": "Lag time constant.",
+      "description": "Lag time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -20,7 +20,7 @@
       "type": "number"
     },
     "Te": {
-      "description": "Field circuit time constant.",
+      "description": "Field circuit time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

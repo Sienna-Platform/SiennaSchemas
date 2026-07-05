@@ -35,7 +35,7 @@
       "type": "boolean"
     },
     "T_fltr": {
-      "description": "Voltage or Q-power of REPCA Filter Time Constant.",
+      "description": "Voltage or Q-power of REPCA Filter Time Constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -48,12 +48,12 @@
       "type": "number"
     },
     "T_ft": {
-      "description": "Reactive power lead time constant.",
+      "description": "Reactive power lead time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T_fv": {
-      "description": "Reactive power lag time constant.",
+      "description": "Reactive power lag time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -86,7 +86,7 @@
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "T_p": {
-      "description": "Active power lag time constant in REECB. Used only when PF_Flag = 1.",
+      "description": "Active power lag time constant in REECB. Used only when PF_Flag = 1. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

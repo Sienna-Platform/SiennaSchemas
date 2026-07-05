@@ -19,14 +19,14 @@
       "type": "integer"
     },
     "active_power": {
-      "description": "Active power coefficient, P0.",
+      "description": "Active power coefficient, P0. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "reactive_power": {
-      "description": "Reactive power coefficient, Q0.",
+      "description": "Reactive power coefficient, Q0. Units: MVAr.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "alpha": {
       "description": "Exponent relating voltage dependency for active power. 0 = constant power only, 1 = constant current only, and 2 = constant impedance only.",
@@ -37,19 +37,19 @@
       "type": "number"
     },
     "base_power": {
-      "description": "Base power of the unit for per unitization.",
+      "description": "Base power of the unit for per unitization. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "max_active_power": {
-      "description": "Maximum active power that this load can demand.",
+      "description": "Maximum active power that this load can demand. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "max_reactive_power": {
-      "description": "Maximum reactive power that this load can demand.",
+      "description": "Maximum reactive power that this load can demand. Units: MVAr.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "conformity": {
       "description": "Indicates whether the specified load is conforming or non-conforming.",
@@ -57,8 +57,11 @@
       "$ref": "../../Core/common.json#/definitions/LoadConformity"
     },
     "dynamic_injector": {
-      "description": "Corresponding dynamic injection device.",
-      "type": null
+      "description": "ID of the corresponding dynamic injection device, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

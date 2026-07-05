@@ -19,32 +19,42 @@
             "type": "string"
         },
         "start_node": {
-          "type": "integer"
+            "type": "integer"
         },
         "end_node": {
-          "type": "integer"
+            "type": "integer"
         },
         "capacity_limits": {
             "$ref": "../../Core/common.json#/definitions/MinMax"
         },
         "capital_costs": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
+            "$ref": "../../Core/common.json#/definitions/ValueCurve",
+            "x-unit": "USD/MW",
+            "description": "Units: USD/MW."
         },
         "resistance": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "pu",
+            "description": "Units: pu."
         },
         "voltage": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "kV",
+            "description": "Units: kV."
         },
         "unit_size": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "MW",
+            "description": "Units: MW."
         },
         "reactance": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "pu",
+            "description": "Units: pu."
         },
         "financial_data": {
             "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"

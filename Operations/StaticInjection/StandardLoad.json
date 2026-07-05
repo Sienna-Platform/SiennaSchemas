@@ -19,81 +19,81 @@
       "type": "integer"
     },
     "base_power": {
-      "description": "Base power of the load for per unitization.",
+      "description": "Base power of the load for per unitization. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "constant_active_power": {
-      "description": "Constant active power demand (P_P).",
+      "description": "Constant active power demand (P_P). Units: MW.",
       "default": 0.0,
       "type": "number",
       "x-unit": "MW"
     },
     "constant_reactive_power": {
-      "description": "Constant reactive power demand (Q_P).",
+      "description": "Constant reactive power demand (Q_P). Units: MVAr.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "impedance_active_power": {
-      "description": "Active power coefficient for constant impedance load (P_Z).",
+      "description": "Active power coefficient for constant impedance load (P_Z). Units: MW.",
       "default": 0.0,
       "type": "number",
       "x-unit": "MW"
     },
     "impedance_reactive_power": {
-      "description": "Reactive power coefficient for constant impedance load (Q_Z).",
+      "description": "Reactive power coefficient for constant impedance load (Q_Z). Units: MVAr.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "current_active_power": {
-      "description": "Active power coefficient for constant current load (P_I).",
+      "description": "Active power coefficient for constant current load (P_I). Units: MW.",
       "default": 0.0,
       "type": "number",
       "x-unit": "MW"
     },
     "current_reactive_power": {
-      "description": "Reactive power coefficient for constant current load (Q_I).",
+      "description": "Reactive power coefficient for constant current load (Q_I). Units: MVAr.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "max_constant_active_power": {
-      "description": "Maximum active power drawn by constant power load.",
+      "description": "Maximum active power drawn by constant power load. Units: MW.",
       "default": 0.0,
       "type": "number",
       "x-unit": "MW"
     },
     "max_constant_reactive_power": {
-      "description": "Maximum reactive power drawn by constant power load.",
+      "description": "Maximum reactive power drawn by constant power load. Units: MVAr.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "max_impedance_active_power": {
-      "description": "Maximum active power drawn by constant impedance load.",
+      "description": "Maximum active power drawn by constant impedance load. Units: MW.",
       "default": 0.0,
       "type": "number",
       "x-unit": "MW"
     },
     "max_impedance_reactive_power": {
-      "description": "Maximum reactive power drawn by constant impedance load.",
+      "description": "Maximum reactive power drawn by constant impedance load. Units: MVAr.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "max_current_active_power": {
-      "description": "Maximum active power drawn by constant current load.",
+      "description": "Maximum active power drawn by constant current load. Units: MW.",
       "default": 0.0,
       "type": "number",
       "x-unit": "MW"
     },
     "max_current_reactive_power": {
-      "description": "Maximum reactive power drawn by constant current load.",
+      "description": "Maximum reactive power drawn by constant current load. Units: MVAr.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "conformity": {
       "description": "Indicates whether the specified load is conforming or non-conforming.",
@@ -101,8 +101,11 @@
       "$ref": "../../Core/common.json#/definitions/LoadConformity"
     },
     "dynamic_injector": {
-      "description": "Corresponding dynamic injection device.",
-      "type": null
+      "description": "ID of the corresponding dynamic injection device, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

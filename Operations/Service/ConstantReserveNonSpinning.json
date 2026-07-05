@@ -15,17 +15,17 @@
       "type": "boolean"
     },
     "time_frame": {
-      "description": "The saturation time frame that a participating device must provide its reserve contribution.",
+      "description": "The saturation time frame that a participating device must provide its reserve contribution. Units: min.",
       "type": "number",
       "x-unit": "min"
     },
     "requirement": {
-      "description": "The value of required reserves.",
+      "description": "The value of required reserves. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "sustained_time": {
-      "description": "The time reserve contribution must be sustained at a specified level.",
+      "description": "The time reserve contribution must be sustained at a specified level. Units: s.",
       "default": 3600.0,
       "type": "number",
       "x-unit": "s"

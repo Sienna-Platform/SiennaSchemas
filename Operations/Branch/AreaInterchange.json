@@ -15,7 +15,7 @@
       "type": "boolean"
     },
     "active_power_flow": {
-      "description": "Initial condition of active power flow on the line.",
+      "description": "Initial condition of active power flow on the line. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
@@ -28,7 +28,7 @@
       "type": "integer"
     },
     "flow_limits": {
-      "description": "Max flow between the areas. It ignores lines and other branches totals.",
+      "description": "Max flow between the areas. It ignores lines and other branches totals. Units: MW.",
       "$ref": "../../Core/common.json#/definitions/FromTo_ToFrom",
       "x-unit": "MW"
     }

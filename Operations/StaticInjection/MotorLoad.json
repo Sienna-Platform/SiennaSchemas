@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A static power load, most commonly used for operational models such as power flow and operational optimizations.\n\nThis load consumes a set amount of power (set by `active_power` for a power flow simulation or a `max_active_power` time series for an operational simulation). For loads that can be compensated for load interruptions through demand response programs, see `InterruptiblePowerLoad`. For voltage-dependent loads used in dynamics modeling, see `StandardLoad`.",
+  "description": "An induction-motor static load, representing the steady-state power draw of motor-driven demand.\n\nThis load models the aggregate real and reactive power consumed by induction motors, along with the motor technology parameters that characterize their electrical behavior. For a simple constant-power load with no motor characteristics, see `PowerLoad`. For voltage-dependent ZIP loads used in dynamics modeling, see `StandardLoad`.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -19,34 +19,34 @@
       "type": "integer"
     },
     "active_power": {
-      "description": "Initial steady-state active power demand. A positive value indicates power consumption.",
+      "description": "Initial steady-state active power demand. A positive value indicates power consumption. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "reactive_power": {
-      "description": "Initial steady-state reactive power demand. A positive value indicates reactive power consumption.",
+      "description": "Initial steady-state reactive power demand. A positive value indicates reactive power consumption. Units: MVAr.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "base_power": {
-      "description": "Base power of the unit for per unitization.",
+      "description": "Base power of the unit for per unitization. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "rating": {
-      "description": "Maximum AC side output power rating of the unit. Not to be confused with base_power.",
+      "description": "Maximum AC side output power rating of the unit. Not to be confused with base_power. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "max_active_power": {
-      "description": "Maximum active power that this load can demand.",
+      "description": "Maximum active power that this load can demand. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "reactive_power_limits": {
-      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable.",
+      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. Units: MVAr.",
       "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "motor_technology": {
       "description": "AC Motor type.",
@@ -54,8 +54,11 @@
       "$ref": "../../Core/common.json#/definitions/MotorLoadTechnology"
     },
     "dynamic_injector": {
-      "description": "Corresponding dynamic injection device.",
-      "type": null
+      "description": "ID of the corresponding dynamic injection device, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

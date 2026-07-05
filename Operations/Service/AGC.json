@@ -15,7 +15,7 @@
       "type": "boolean"
     },
     "bias": {
-      "description": "Area frequency bias.",
+      "description": "Area frequency bias. Units: MW/Hz.",
       "type": "number",
       "x-unit": "MW/Hz"
     },
@@ -32,7 +32,7 @@
       "type": "number"
     },
     "delta_t": {
-      "description": "PID Discretization period.",
+      "description": "PID Discretization period. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

@@ -19,46 +19,49 @@
       "type": "integer"
     },
     "active_power": {
-      "description": "Initial active power set point of the unit. For power flow, this is the steady state operating point of the system. For production cost modeling, this may or may not be used as the initial starting point for the solver, depending on the solver used.",
+      "description": "Initial active power set point of the unit. For power flow, this is the steady state operating point of the system. For production cost modeling, this may or may not be used as the initial starting point for the solver, depending on the solver used. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "reactive_power": {
-      "description": "Initial reactive power set point of the unit, used in some production cost modeling simulations. To set the reactive power in a load flow, use `power_factor`.",
+      "description": "Initial reactive power set point of the unit, used in some production cost modeling simulations. To set the reactive power in a load flow, use `power_factor`. Units: MVAr.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "rating": {
-      "description": "Maximum AC side output power rating of the unit. Not to be confused with base_power.",
+      "description": "Maximum AC side output power rating of the unit. Not to be confused with base_power. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "prime_mover_type": {
       "description": "Prime mover technology according to EIA 923.",
       "$ref": "../../Core/common.json#/definitions/PrimeMovers"
     },
     "reactive_power_limits": {
-      "description": "Minimum and maximum reactive power limits, used in some production cost model simulations and in power flow if the unit is connected to a `PV` bus. Set to `null` if not applicable.",
+      "description": "Minimum and maximum reactive power limits, used in some production cost model simulations and in power flow if the unit is connected to a `PV` bus. Set to `null` if not applicable. Units: MVAr.",
       "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "power_factor": {
-      "description": "Power factor [0, 1] set-point, used in some production cost modeling and in load flow if the unit is connected to a `PQ` bus.",
-      "type": "number"
+      "description": "Power factor [0, 1] set-point, used in some production cost modeling and in load flow if the unit is connected to a `PQ` bus. Units: 1.",
+      "type": "number",
+      "x-unit": "1"
     },
     "operation_cost": {
-      "description": "Operating cost of generation.",
-      "descriptor": "or MarketBidCost",
+      "description": "Operating cost of generation. or MarketBidCost",
       "$ref": "../../Core/common.json#/definitions/RenewableGenerationCost"
     },
     "base_power": {
-      "description": "Base power of the unit for per unitization.",
+      "description": "Base power of the unit for per unitization. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "dynamic_injector": {
-      "description": "Corresponding dynamic injection device.",
-      "type": null
+      "description": "ID of the corresponding dynamic injection device, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

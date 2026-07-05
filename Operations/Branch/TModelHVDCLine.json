@@ -15,7 +15,7 @@
       "type": "boolean"
     },
     "active_power_flow": {
-      "description": "Initial condition of active power flow on the line.",
+      "description": "Initial condition of active power flow on the line. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
@@ -24,27 +24,27 @@
       "type": "integer"
     },
     "r": {
-      "description": "Total series resistance, split equally on both sides of the shunt capacitance.",
+      "description": "Total series resistance, split equally on both sides of the shunt capacitance. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "l": {
-      "description": "Total series inductance, split equally on both sides of the shunt capacitance.",
+      "description": "Total series inductance, split equally on both sides of the shunt capacitance. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "c": {
-      "description": "Shunt capacitance.",
+      "description": "Shunt capacitance. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "S"
+      "x-unit": "pu"
     },
     "active_power_limits_from": {
-      "description": "Minimum and maximum active power flows to the FROM node.",
+      "description": "Minimum and maximum active power flows to the FROM node. Units: MW.",
       "$ref": "../../Core/common.json#/definitions/MinMax",
       "x-unit": "MW"
     },
     "active_power_limits_to": {
-      "description": "Minimum and maximum active power flows to the TO node.",
+      "description": "Minimum and maximum active power flows to the TO node. Units: MW.",
       "$ref": "../../Core/common.json#/definitions/MinMax",
       "x-unit": "MW"
     }

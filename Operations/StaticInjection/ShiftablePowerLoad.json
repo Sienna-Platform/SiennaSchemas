@@ -19,47 +19,49 @@
       "type": "integer"
     },
     "active_power": {
-      "description": "Initial steady state active power demand.",
+      "description": "Initial steady state active power demand. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "active_power_limits": {
-      "description": "Minimum and maximum stable active power levels.",
+      "description": "Minimum and maximum stable active power levels. Units: MW.",
       "$ref": "../../Core/common.json#/definitions/MinMax",
       "x-unit": "MW"
     },
     "reactive_power": {
-      "description": "Initial steady state reactive power demand.",
+      "description": "Initial steady state reactive power demand. Units: MVAr.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "max_active_power": {
-      "description": "Maximum active power that this load can demand.",
+      "description": "Maximum active power that this load can demand. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "max_reactive_power": {
-      "description": "Maximum reactive power that this load can demand.",
+      "description": "Maximum reactive power that this load can demand. Units: MVAr.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "base_power": {
-      "description": "Base power of the unit for per unitization.",
+      "description": "Base power of the unit for per unitization. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "load_balance_time_horizon": {
       "description": "Number of time periods over which load must be balanced.",
       "type": "integer"
     },
     "operation_cost": {
-      "description": "Operational cost of interrupting load.",
-      "descriptor": "or MarketBidCost",
+      "description": "Operational cost of interrupting load. or MarketBidCost",
       "$ref": "../../Core/common.json#/definitions/LoadCost"
     },
     "dynamic_injector": {
-      "description": "Corresponding dynamic injection device.",
-      "type": null
+      "description": "ID of the corresponding dynamic injection device, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

@@ -19,29 +19,28 @@
       "type": "boolean"
     },
     "bustype": {
-      "description": "Used to describe the connectivity and behavior of this bus.",
-      "descriptor": "in psy5 a required param with an option to be nothing",
+      "description": "Used to describe the connectivity and behavior of this bus. in psy5 a required param with an option to be nothing",
       "$ref": "../../Core/common.json#/definitions/ACBusType"
     },
     "angle": {
-      "description": "Angle of the bus.",
+      "description": "Angle of the bus. Units: rad.",
       "type": "number",
       "x-unit": "rad"
     },
     "magnitude": {
-      "description": "Voltage as a multiple of `base_voltage`.",
+      "description": "Voltage as a multiple of `base_voltage`. Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-unit-base": "base_voltage"
     },
     "voltage_limits": {
-      "description": "Limits on the voltage variation as multiples of `base_voltage`.",
+      "description": "Limits on the voltage variation as multiples of `base_voltage`. Units: pu.",
       "$ref": "../../Core/common.json#/definitions/MinMax",
       "x-unit": "pu",
       "x-unit-base": "base_voltage"
     },
     "base_voltage": {
-      "description": "The base voltage.",
+      "description": "The base voltage. Units: kV.",
       "type": "number",
       "x-unit": "kV"
     },

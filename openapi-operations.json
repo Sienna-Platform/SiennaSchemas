@@ -65,8 +65,14 @@
       "FixedForcedOutage": {
         "$ref": "Operations/SupplementalAttributes/FixedForcedOutage.json"
       },
+      "GenericArcImpedance": {
+        "$ref": "Operations/Branch/GenericArcImpedance.json"
+      },
       "GeometricDistributionForcedOutage": {
         "$ref": "Operations/SupplementalAttributes/GeometricDistributionForcedOutage.json"
+      },
+      "HybridSystem": {
+        "$ref": "Operations/StaticInjection/HybridSystem.json"
       },
       "HydroDispatch": {
         "$ref": "Operations/StaticInjection/HydroDispatch.json"
@@ -166,6 +172,9 @@
       },
       "Transformer3W": {
         "$ref": "Operations/Branch/Transformer3W.json"
+      },
+      "TransmissionInterface": {
+        "$ref": "Operations/Service/TransmissionInterface.json"
       },
       "TwoTerminalGenericHVDCLine": {
         "$ref": "Operations/Branch/TwoTerminalGenericHVDCLine.json"

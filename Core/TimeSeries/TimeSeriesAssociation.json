@@ -73,7 +73,8 @@
       "description": "Usually unique for each association, but not necessarily"
     },
     "units": {
-      "type": "string"
+      "type": "string",
+      "description": "Unit string for the series values; must be a unit from the Core/units.json vocabulary for the series' quantity type."
     }
   },
   "required": [

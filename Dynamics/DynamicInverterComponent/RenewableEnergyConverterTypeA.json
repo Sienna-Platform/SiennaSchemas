@@ -3,7 +3,7 @@
   "description": "Parameters of a renewable energy generator/converter model, this model corresponds to REGCA1 in PSSE.",
   "properties": {
     "T_g": {
-      "description": "Converter time constant.",
+      "description": "Converter time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -36,7 +36,7 @@
       "type": "number"
     },
     "T_fltr": {
-      "description": "Voltage filter time constant for low voltage active current management.",
+      "description": "Voltage filter time constant for low voltage active current management. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

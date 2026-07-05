@@ -31,160 +31,156 @@
       "type": "integer"
     },
     "active_power_flow_primary": {
-      "description": "Initial condition of active power flow through the transformer primary side to star (hidden) bus.",
+      "description": "Initial condition of active power flow through the transformer primary side to star (hidden) bus. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "reactive_power_flow_primary": {
-      "description": "Initial condition of reactive power flow through the transformer primary side to star (hidden) bus.",
+      "description": "Initial condition of reactive power flow through the transformer primary side to star (hidden) bus. Units: MVAr.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "active_power_flow_secondary": {
-      "description": "Initial condition of active power flow through the transformer secondary side to star (hidden) bus.",
+      "description": "Initial condition of active power flow through the transformer secondary side to star (hidden) bus. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "reactive_power_flow_secondary": {
-      "description": "Initial condition of reactive power flow through the transformer secondary side to star (hidden) bus.",
+      "description": "Initial condition of reactive power flow through the transformer secondary side to star (hidden) bus. Units: MVAr.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "active_power_flow_tertiary": {
-      "description": "Initial condition of active power flow through the transformer tertiary side to star (hidden) bus.",
+      "description": "Initial condition of active power flow through the transformer tertiary side to star (hidden) bus. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "reactive_power_flow_tertiary": {
-      "description": "Initial condition of reactive power flow through the transformer tertiary side to star (hidden) bus.",
+      "description": "Initial condition of reactive power flow through the transformer tertiary side to star (hidden) bus. Units: MVAr.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "r_primary": {
-      "description": "Equivalent resistance from primary to star (hidden) bus.",
+      "description": "Equivalent resistance from primary to star (hidden) bus. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "x_primary": {
-      "description": "Equivalent reactance from primary to star (hidden) bus.",
+      "description": "Equivalent reactance from primary to star (hidden) bus. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "r_secondary": {
-      "description": "Equivalent resistance from secondary to star (hidden) bus.",
+      "description": "Equivalent resistance from secondary to star (hidden) bus. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "x_secondary": {
-      "description": "Equivalent reactance from secondary to star (hidden) bus.",
+      "description": "Equivalent reactance from secondary to star (hidden) bus. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "r_tertiary": {
-      "description": "Equivalent resistance from tertiary to star (hidden) bus.",
+      "description": "Equivalent resistance from tertiary to star (hidden) bus. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "x_tertiary": {
-      "description": "Equivalent reactance from tertiary to star (hidden) bus.",
+      "description": "Equivalent reactance from tertiary to star (hidden) bus. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "rating": {
-      "description": "Thermal rating. Flow through the transformer must be between -`rating` and `rating`.",
-      "descriptor": "in psy5 a required param with an option to be nothing",
+      "description": "Thermal rating. Flow through the transformer must be between -`rating` and `rating`. in psy5 a required param with an option to be nothing Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "r_12": {
-      "description": "Measured resistance from primary to secondary windings (R1-2 with CZ = 1 in PSS/E).",
+      "description": "Measured resistance from primary to secondary windings (R1-2 with CZ = 1 in PSS/E). Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "x_12": {
-      "description": "Measured reactance from primary to secondary windings (X1-2 with CZ = 1 in PSS/E).",
+      "description": "Measured reactance from primary to secondary windings (X1-2 with CZ = 1 in PSS/E). Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "r_23": {
-      "description": "Measured resistance from secondary to tertiary windings (R2-3 with CZ = 1 in PSS/E).",
+      "description": "Measured resistance from secondary to tertiary windings (R2-3 with CZ = 1 in PSS/E). Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "x_23": {
-      "description": "Measured reactance from secondary to tertiary windings (X2-3 with CZ = 1 in PSS/E).",
+      "description": "Measured reactance from secondary to tertiary windings (X2-3 with CZ = 1 in PSS/E). Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "r_13": {
-      "description": "Measured resistance from primary to tertiary windings (R1-3 with CZ = 1 in PSS/E).",
+      "description": "Measured resistance from primary to tertiary windings (R1-3 with CZ = 1 in PSS/E). Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "x_13": {
-      "description": "Measured reactance from primary to tertiary windings (X1-3 with CZ = 1 in PSS/E).",
+      "description": "Measured reactance from primary to tertiary windings (X1-3 with CZ = 1 in PSS/E). Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "alpha_primary": {
-      "description": "Initial condition of primary phase shift between the `from` and `to` buses.",
+      "description": "Initial condition of primary phase shift between the `from` and `to` buses. Units: rad.",
       "type": "number",
       "x-unit": "rad"
     },
     "alpha_secondary": {
-      "description": "Initial condition of secondary phase shift between the `from` and `to` buses.",
+      "description": "Initial condition of secondary phase shift between the `from` and `to` buses. Units: rad.",
       "type": "number",
       "x-unit": "rad"
     },
     "alpha_tertiary": {
-      "description": "Initial condition of tertiary phase shift between the `from` and `to` buses.",
+      "description": "Initial condition of tertiary phase shift between the `from` and `to` buses. Units: rad.",
       "type": "number",
       "x-unit": "rad"
     },
     "base_power_12": {
-      "description": "Base power for per unitization for primary-secondary windings.",
+      "description": "Base power for per unitization for primary-secondary windings. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "base_power_23": {
-      "description": "Base power for per unitization for secondary-tertiary windings.",
+      "description": "Base power for per unitization for secondary-tertiary windings. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "base_power_13": {
-      "description": "Base power for per unitization for primary-tertiary windings.",
+      "description": "Base power for per unitization for primary-tertiary windings. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "base_voltage_primary": {
-      "description": "Primary base voltage.",
-      "descriptor": "default of get_base_voltage(get_from(primary_star_arc)))",
+      "description": "Primary base voltage. default of get_base_voltage(get_from(primary_star_arc))) Units: kV.",
       "type": "number",
       "x-unit": "kV"
     },
     "base_voltage_secondary": {
-      "description": "Secondary base voltage.",
-      "descriptor": "default of get_base_voltage(get_from(secondary_star_arc)))",
+      "description": "Secondary base voltage. default of get_base_voltage(get_from(secondary_star_arc))) Units: kV.",
       "type": "number",
       "x-unit": "kV"
     },
     "base_voltage_tertiary": {
-      "description": "Tertiary base voltage.",
-      "descriptor": "default of get_base_voltage(get_from(tertiary_star_arc)))",
+      "description": "Tertiary base voltage. default of get_base_voltage(get_from(tertiary_star_arc))) Units: kV.",
       "type": "number",
       "x-unit": "kV"
     },
     "g": {
-      "description": "Shunt conductance from star (hidden) bus to ground (MAG1 in PSS/E).",
+      "description": "Shunt conductance from star (hidden) bus to ground (MAG1 in PSS/E). Per-unit on system base. Units: pu.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "S"
+      "x-unit": "pu"
     },
     "b": {
-      "description": "Shunt susceptance from star (hidden) bus to ground (MAG2 in PSS/E).",
+      "description": "Shunt susceptance from star (hidden) bus to ground (MAG2 in PSS/E). Per-unit on system base. Units: pu.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "S"
+      "x-unit": "pu"
     },
     "primary_turns_ratio": {
       "description": "Primary side off-nominal turns ratio with respect to connected primary bus (WINDV1 with CW = 1 in PSS/E).",
@@ -217,25 +213,25 @@
       "type": "boolean"
     },
     "rating_primary": {
-      "description": "Rating for primary winding.",
+      "description": "Rating for primary winding. Units: MVA.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "rating_secondary": {
-      "description": "Rating for secondary winding.",
+      "description": "Rating for secondary winding. Units: MVA.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "rating_tertiary": {
-      "description": "Rating for tertiary winding.",
+      "description": "Rating for tertiary winding. Units: MVA.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "phase_angle_limits": {
-      "description": "Minimum and maximum phase angle limits.",
+      "description": "Minimum and maximum phase angle limits. Units: rad.",
       "default": {
         "min": -3.1416,
         "max": 3.1416

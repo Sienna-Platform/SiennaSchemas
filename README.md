@@ -34,6 +34,26 @@ openapi-generator generate -c openapi-config-core.json \
 
 Replace `core` with `operations`, `investments`, or `dynamics` for other packages.
 
+## Units
+
+Every numeric property in the schemas carries a unit annotation (`x-unit`, or
+`x-units` + `x-unit-discriminator` for discriminated cases). The vocabulary is one file:
+
+- **`Core/units.json`** — the single source of truth for allowed units and quantity types.
+  It is consumed by the validator here and by SiennaGridDB's registry generator downstream.
+- **`docs/UNIT_ANNOTATIONS.md`** — the annotation spec: rules for `x-unit`, the `pu`
+  channel, discriminated units, and the physics conventions (reactive power is `MVAr`,
+  impedance/admittance are `pu`, percent is banned in favor of fractions).
+- **`docs/PIPELINE.md`** — the end-to-end pipeline: schemas → bundles → generated model
+  packages, schemas → GridDB registry/DDL, and the PSY parity gate
+  (`scripts/check_psy_parity.py`), with the change protocol and release order.
+- **`scripts/validate_units.py`** — validates every annotation against `Core/units.json`.
+  Run it with `python3 scripts/validate_units.py`.
+- **`scripts/bundle_specs.py`** — inlines all `$ref`s into the self-contained bundles under
+  `dist/` (`openapi-*-bundled.json`). Because openapi-generator does not render the `x-unit`
+  vendor extension, the units also travel to codegen consumers as `Units:` sentences in the
+  bundled property descriptions.
+
 ## Creating a Release
 
 ```bash

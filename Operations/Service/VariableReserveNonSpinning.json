@@ -15,17 +15,17 @@
       "type": "boolean"
     },
     "time_frame": {
-      "description": "The saturation time frame to provide reserve contribution.",
+      "description": "The saturation time frame to provide reserve contribution. Units: min.",
       "type": "number",
       "x-unit": "min"
     },
     "requirement": {
-      "description": "The required quantity of the product, which should be scaled by a time series.",
+      "description": "The required quantity of the product, which should be scaled by a time series. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "sustained_time": {
-      "description": "The time reserve contribution must be sustained at a specified level.",
+      "description": "The time reserve contribution must be sustained at a specified level. Units: s.",
       "default": 14400.0,
       "type": "number",
       "x-unit": "s"

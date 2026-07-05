@@ -15,7 +15,7 @@
       "type": "boolean"
     },
     "requirement": {
-      "description": "The value of required reserves.",
+      "description": "The value of required reserves. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },

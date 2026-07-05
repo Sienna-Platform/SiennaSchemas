@@ -15,8 +15,7 @@
       "type": "integer"
     },
     "branch_id_control": {
-      "description": "Branch circuit id for line drop compensation. If 0 generator power will be used.",
-      "descriptor": "in psy this is a string representing the branch name",
+      "description": "Branch circuit id for line drop compensation. If 0 generator power will be used. in psy this is a string representing the branch name",
       "type": "integer"
     },
     "Freq_Flag": {
@@ -32,7 +31,7 @@
       "type": "number"
     },
     "T_p": {
-      "description": "Real power measurement filter time constant.",
+      "description": "Real power measurement filter time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -49,7 +48,7 @@
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "T_g": {
-      "description": "Power Controller lag time constant.",
+      "description": "Power Controller lag time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -70,7 +69,7 @@
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "T_pord": {
-      "description": "Power filter time constant REECB time constant.",
+      "description": "Power filter time constant REECB time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

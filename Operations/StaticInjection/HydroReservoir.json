@@ -18,7 +18,8 @@
         "TOTAL_VOLUME": "m3",
         "HEAD": "m",
         "ENERGY": "MWh"
-      }
+      },
+      "description": "Units: per level_data_type — USABLE_VOLUME: m3, TOTAL_VOLUME: m3, HEAD: m, ENERGY: MWh ."
     },
     "initial_level": {
       "type": "number",
@@ -28,10 +29,11 @@
         "TOTAL_VOLUME": "m3",
         "HEAD": "m",
         "ENERGY": "MWh"
-      }
+      },
+      "description": "Units: per level_data_type — USABLE_VOLUME: m3, TOTAL_VOLUME: m3, HEAD: m, ENERGY: MWh ."
     },
     "spillage_limits": {
-      "description": "in psy5 a required param with an option to be nothing",
+      "description": "in psy5 a required param with an option to be nothing Units: per level_data_type — USABLE_VOLUME: m3/s, TOTAL_VOLUME: m3/s, HEAD: m/s, ENERGY: MW .",
       "$ref": "../../Core/common.json#/definitions/MinMax",
       "x-unit-discriminator": "level_data_type",
       "x-units": {
@@ -49,7 +51,8 @@
         "TOTAL_VOLUME": "m3/s",
         "HEAD": "m/s",
         "ENERGY": "MW"
-      }
+      },
+      "description": "Units: per level_data_type — USABLE_VOLUME: m3/s, TOTAL_VOLUME: m3/s, HEAD: m/s, ENERGY: MW ."
     },
     "outflow": {
       "type": "number",
@@ -59,10 +62,11 @@
         "TOTAL_VOLUME": "m3/s",
         "HEAD": "m/s",
         "ENERGY": "MW"
-      }
+      },
+      "description": "Units: per level_data_type — USABLE_VOLUME: m3/s, TOTAL_VOLUME: m3/s, HEAD: m/s, ENERGY: MW ."
     },
     "level_targets": {
-      "description": "in psy5 a required param with an option to be nothing",
+      "description": "in psy5 a required param with an option to be nothing Units: per level_data_type — USABLE_VOLUME: m3, TOTAL_VOLUME: m3, HEAD: m, ENERGY: MWh .",
       "type": "number",
       "x-unit-discriminator": "level_data_type",
       "x-units": {
@@ -74,10 +78,12 @@
     },
     "intake_elevation": {
       "type": "number",
-      "x-unit": "m"
+      "x-unit": "m",
+      "description": "Units: m."
     },
     "head_to_volume_factor": {
-      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+      "description": "`FunctionData` mapping reservoir head to stored volume.",
+      "$ref": "../../Core/common.json#/definitions/FunctionData"
     },
     "upstream_turbines": {
       "type": "array",

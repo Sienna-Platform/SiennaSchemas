@@ -27,7 +27,7 @@
       "$ref": "../../Core/common.json#/definitions/StorageTech"
     },
     "storage_capacity": {
-      "description": "Maximum storage capacity (can be in units of, e.g., MWh for batteries or liters for hydrogen). When in MWh, this value divided by base_power gives an approximate duration in hours, assuming unity power factor.",
+      "description": "Maximum storage capacity (can be in units of, e.g., MWh for batteries or liters for hydrogen). When in MWh, this value divided by base_power gives an approximate duration in hours, assuming unity power factor. Units: MWh.",
       "type": "number",
       "x-unit": "MWh"
     },
@@ -36,26 +36,27 @@
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "initial_storage_capacity_level": {
-      "description": "Initial storage capacity level as a ratio [0, 1.0] of `storage_capacity`.",
-      "type": "number"
+      "description": "Initial storage capacity level as a ratio [0, 1.0] of `storage_capacity`. Units: 1.",
+      "type": "number",
+      "x-unit": "1"
     },
     "rating": {
-      "description": "Maximum AC side output power rating of the unit. Not to be confused with base_power.",
+      "description": "Maximum AC side output power rating of the unit. Not to be confused with base_power. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "active_power": {
-      "description": "Initial active power set point of the unit. For power flow, this is the steady state operating point of the system. For production cost modeling, this may or may not be used as the initial starting point for the solver, depending on the solver used.",
+      "description": "Initial active power set point of the unit. For power flow, this is the steady state operating point of the system. For production cost modeling, this may or may not be used as the initial starting point for the solver, depending on the solver used. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "input_active_power_limits": {
-      "description": "Minimum and maximum limits on the input active power (i.e., charging).",
+      "description": "Minimum and maximum limits on the input active power (i.e., charging). Units: MW.",
       "$ref": "../../Core/common.json#/definitions/MinMax",
       "x-unit": "MW"
     },
     "output_active_power_limits": {
-      "description": "Minimum and maximum limits on the output active power (i.e., discharging).",
+      "description": "Minimum and maximum limits on the output active power (i.e., discharging). Units: MW.",
       "$ref": "../../Core/common.json#/definitions/MinMax",
       "x-unit": "MW"
     },
@@ -64,43 +65,48 @@
       "$ref": "../../Core/common.json#/definitions/InOut"
     },
     "reactive_power": {
-      "description": "Initial reactive power set point of the unit.",
+      "description": "Initial reactive power set point of the unit. Units: MVAr.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "reactive_power_limits": {
-      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable.",
+      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. Units: MVAr.",
       "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "base_power": {
-      "description": "Base power of the unit for per unitization.",
+      "description": "Base power of the unit for per unitization. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "operation_cost": {
-      "description": "Operating cost of storage.",
-      "descriptor": "or MarketBidCost",
+      "description": "Operating cost of storage. or MarketBidCost",
       "$ref": "../../Core/common.json#/definitions/StorageCost"
     },
     "conversion_factor": {
-      "description": "Conversion factor of `storage_capacity` to MWh, if different than 1.0. For example, X MWh/liter hydrogen.",
+      "description": "Conversion factor of `storage_capacity` to MWh, if different than 1.0. For example, X MWh/liter hydrogen. Units: 1.",
       "default": 1.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "1"
     },
     "storage_target": {
-      "description": "Storage target at the end of simulation as ratio of storage capacity.",
+      "description": "Storage target at the end of simulation as ratio of storage capacity. Units: 1.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "1"
     },
     "cycle_limits": {
-      "description": "Storage Maximum number of cycles per year.",
+      "description": "Storage Maximum number of cycles per year. Units: 1.",
       "default": 10000,
-      "type": "integer"
+      "type": "integer",
+      "x-unit": "1"
     },
     "dynamic_injector": {
-      "description": "Corresponding dynamic injection device.",
-      "type": null
+      "description": "ID of the corresponding dynamic injection device, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

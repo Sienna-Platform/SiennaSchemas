@@ -15,70 +15,68 @@
       "type": "boolean"
     },
     "active_power_flow": {
-      "description": "Initial condition of active power flow through the transformer.",
+      "description": "Initial condition of active power flow through the transformer. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "reactive_power_flow": {
-      "description": "Initial condition of reactive power flow through the transformer.",
+      "description": "Initial condition of reactive power flow through the transformer. Units: MVAr.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "arc": {
       "description": "An `Arc` defining this transformer `from` a bus `to` another bus.",
       "type": "integer"
     },
     "r": {
-      "description": "Resistance.",
+      "description": "Resistance. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "x": {
-      "description": "Reactance.",
+      "description": "Reactance. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "primary_shunt": {
-      "description": "Primary shunt admittance.",
+      "description": "Primary shunt admittance. Per-unit on system base. Units: pu.",
       "$ref": "../../Core/common.json#/definitions/ComplexNumber",
-      "x-unit": "S"
+      "x-unit": "pu"
     },
     "tap": {
-      "description": "Normalized tap changer position for voltage control, varying between 0 and 2, with 1 centered at the nominal voltage.",
+      "description": "Normalized tap changer position for voltage control, varying between 0 and 2, with 1 centered at the nominal voltage. Units: 1.",
       "type": "number",
       "x-unit": "1"
     },
     "rating": {
-      "description": "Thermal rating. Flow through the transformer must be between -`rating`.",
+      "description": "Thermal rating. Flow through the transformer must be between -`rating`. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "base_power": {
-      "description": "Base power for per unitization.",
+      "description": "Base power for per unitization. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "base_voltage_primary": {
-      "description": "Primary base voltage.",
-      "descriptor": "default of get_base_voltage(get_from(arc)))",
+      "description": "Primary base voltage. default of get_base_voltage(get_from(arc))) Units: kV.",
       "type": "number",
       "x-unit": "kV"
     },
     "base_voltage_secondary": {
-      "description": "Secondary base voltage.",
-      "descriptor": "default of get_base_voltage(get_to(arc)))",
+      "description": "Secondary base voltage. default of get_base_voltage(get_to(arc))) Units: kV.",
       "type": "number",
       "x-unit": "kV"
     },
     "rating_b": {
-      "description": "Second current rating.",
+      "description": "Second current rating. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "rating_c": {
-      "description": "Third current rating.",
+      "description": "Third current rating. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "winding_group_number": {
       "description": "Vector group number ('clock number') indicating fixed phase shift between the `from` and `to` buses due to the connection group configuration.",
@@ -89,6 +87,31 @@
       "description": "Control objective for the tap changer for power flow calculations.",
       "default": "UNDEFINED",
       "$ref": "../../Core/common.json#/definitions/TransformerControlObjective"
+    },
+    "tap_limits": {
+      "description": "Minimum and maximum tap ratio (per-unit turns ratio) over which the tap changer may regulate. Units: 1.",
+      "default": {
+        "min": 0.9,
+        "max": 1.1
+      },
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "1"
+    },
+    "number_of_tap_positions": {
+      "description": "Number of discrete tap positions spanning `tap_limits` (NTP in PSS/e); used to snap the tap to a realizable step.",
+      "default": 33,
+      "type": "integer"
+    },
+    "regulated_bus_number": {
+      "description": "ACBus `number` whose voltage the tap changer regulates; `0` identifies the `to` bus of this transformer's arc (local control).",
+      "default": 0,
+      "type": "integer"
+    },
+    "voltage_setpoint": {
+      "description": "Voltage setpoint at the regulated bus. Per-unit on system base. Units: pu.",
+      "default": 1.0,
+      "type": "number",
+      "x-unit": "pu"
     }
   },
   "required": [

@@ -15,33 +15,33 @@
       "type": "boolean"
     },
     "active_power_flow": {
-      "description": "Initial condition of active power flow on the line.",
+      "description": "Initial condition of active power flow on the line. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "reactive_power_flow": {
-      "description": "Initial condition of reactive power flow on the line.",
+      "description": "Initial condition of reactive power flow on the line. Units: MVAr.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     },
     "arc": {
       "description": "An `Arc` defining this line `from` a bus `to` another bus.",
       "type": "integer"
     },
     "r": {
-      "description": "Resistance.",
+      "description": "Resistance. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "x": {
-      "description": "Reactance.",
+      "description": "Reactance. Per-unit on system base. Units: pu.",
       "type": "number",
-      "x-unit": "ohm"
+      "x-unit": "pu"
     },
     "rating": {
-      "description": "Thermal rating. Flow on the branch must be between -`rating` and `rating`.",
+      "description": "Thermal rating. Flow on the branch must be between -`rating` and `rating`. Units: MVA.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVA"
     },
     "discrete_branch_type": {
       "description": "Type of discrete control.",

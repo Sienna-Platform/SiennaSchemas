@@ -11,14 +11,14 @@
       "type": "string"
     },
     "peak_active_power": {
-      "description": "Peak active power in the zone.",
+      "description": "Peak active power in the zone. Units: MW.",
       "type": "number",
       "x-unit": "MW"
     },
     "peak_reactive_power": {
-      "description": "Peak reactive power in the zone.",
+      "description": "Peak reactive power in the zone. Units: MVAr.",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit": "MVAr"
     }
   },
   "required": [
