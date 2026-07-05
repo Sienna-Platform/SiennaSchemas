@@ -57,21 +57,7 @@
             "$ref": "../../Core/common.json#/definitions/ValueCurve"
         },
         "operation_costs": {
-            "discriminator": {
-                "mapping": {
-                  "THERMAL": "../../Core/common.json#/definitions/ThermalGenerationCost",
-                  "RENEWABLE": "../../Core/common.json#/definitions/RenewableGenerationCost"
-                },
-                "propertyName": "cost_type"
-            },
-            "oneOf":[
-                {
-                    "$ref": "../../Core/common.json#/definitions/ThermalGenerationCost"
-                },
-                {
-                    "$ref": "../../Core/common.json#/definitions/RenewableGenerationCost"
-                }
-            ]
+            "$ref": "../../Core/common.json#/definitions/ThermalRenewableGenerationCost"
         },
         "unit_size": {
             "type": "number",

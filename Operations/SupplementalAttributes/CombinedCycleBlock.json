@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CombinedCycleBlock",
+  "description": "Attribute to represent combined cycle generation by block configuration that shares heat recovery conversions. CT and CA unit assignments to HRSGs are recorded as CombinedCycleAssociation rows.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the combined cycle block"
+    },
+    "configuration": {
+      "$ref": "../../Core/common.json#/definitions/CombinedCycleConfiguration"
+    },
+    "heat_recovery_to_steam_factor": {
+      "type": "number",
+      "description": "Factor for heat recovery to steam conversion",
+      "default": 0.0
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "configuration"
+  ]
+}

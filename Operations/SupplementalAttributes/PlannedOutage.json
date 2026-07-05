@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PlannedOutage",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "outage_schedule": {
+      "type": "string"
+    },
+    "monitored_components": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "uniqueItems": true,
+      "default": [],
+      "description": "IDs of devices whose post-contingency state should be modeled when this outage occurs. Empty by default; semantics of an empty list are decided by the downstream consumer."
+    }
+  },
+  "required": ["id", "outage_schedule"]
+}

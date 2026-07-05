@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CombinedCycleFractional",
+  "description": "Attribute to represent combined cycle generation when each unit represents a specific configuration and aggregate heat rate. Operation exclusion groups (only units in the same group can operate simultaneously) are recorded as PlantAssociation rows with role='exclusion'.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the combined cycle fractional plant"
+    },
+    "configuration": {
+      "$ref": "../../Core/common.json#/definitions/CombinedCycleConfiguration"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "configuration"
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TimeSeriesAssociation",
+  "description": "Metadata linking a time series dataset to a component.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "time_series_uuid": {
+      "type": "string",
+      "format": "uuid",
+      "description": "UUID of the time series data. May reference inline data or an external store (e.g., HDF5)."
+    },
+    "time_series_type": {
+      "type": "string"
+    },
+    "initial_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "resolution": {
+      "type": "string",
+      "description": "ISO 8601 duration (e.g., PT1H, PT5M)."
+    },
+    "horizon": {
+      "type": "string",
+      "description": "ISO 8601 duration for forecast horizon."
+    },
+    "interval": {
+      "type": "string",
+      "description": "ISO 8601 duration for forecast interval."
+    },
+    "window_count": {
+      "type": "integer"
+    },
+    "length": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string",
+      "description": "Time series name (e.g., max_active_power)."
+    },
+    "owner_id": {
+      "type": "integer",
+      "description": "ID of the owning component."
+    },
+    "owner_type": {
+      "type": "string",
+      "description": "Type name of the owning component."
+    },
+    "owner_category": {
+      "type": "string",
+      "enum": [
+        "Component",
+        "SupplementalAttribute"
+      ],
+      "description": "Whether the owner is component or supplemental attribute"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "$ref": "../common.json#/definitions/Feature"
+      }
+    },
+    "scaling_factor_multiplier": {
+      "type": "string",
+      "description": "Dot-encoded function name like PowerSystems.get_max_active_power."
+    },
+    "metadata_uuid": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Usually unique for each association, but not necessarily"
+    },
+    "units": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "time_series_uuid",
+    "time_series_type",
+    "initial_timestamp",
+    "resolution",
+    "name",
+    "owner_id",
+    "owner_type",
+    "owner_category",
+    "features",
+    "metadata_uuid"
+  ]
+}

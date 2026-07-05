@@ -2,10 +2,6 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Parameters of Active Power Controller including REPCA1 and REECB1.",
   "properties": {
-    "id": {
-      "description": "Unique integer identifier for this component.",
-      "type": "integer"
-    },
     "bus_control": {
       "description": "ACBus identification number for voltage control. `0` identifies the local bus connected to this component.",
       "type": "integer"
@@ -85,7 +81,6 @@
     }
   },
   "required": [
-    "id",
     "bus_control",
     "from_branch_control",
     "to_branch_control",

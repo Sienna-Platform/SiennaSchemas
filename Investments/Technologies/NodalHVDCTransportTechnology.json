@@ -32,7 +32,7 @@
             "$ref": "../../Core/common.json#/definitions/ValueCurve"
         },
         "line_loss": {
-            "type": "number"
+            "$ref": "../../Core/common.json#/definitions/ValueCurve"
         },
         "unit_size": {
             "type": "number"

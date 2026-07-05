@@ -8,9 +8,6 @@
   "paths": {},
   "components": {
     "schemas": {
-      "ACTransportTechnology": {
-        "$ref": "Investments/Technologies/ACTransportTechnology.json"
-      },
       "AggregateRetirementPotential": {
         "$ref": "Investments/Attributes/AggregateRetirementPotential.json"
       },
@@ -32,9 +29,6 @@
       "ColocatedSupplyStorageTechnology": {
         "$ref": "Investments/Technologies/ColocatedSupplyStorageTechnology.json"
       },
-      "CurtailableDemandSideTechnology": {
-        "$ref": "Investments/Technologies/CurtailableDemandSideTechnology.json"
-      },
       "DemandRequirement": {
         "$ref": "Investments/Technologies/DemandRequirement.json"
       },
@@ -46,12 +40,6 @@
       },
       "ExistingCapacity": {
         "$ref": "Investments/Attributes/ExistingCapacity.json"
-      },
-      "FlexibleDemandTechnology": {
-        "$ref": "Investments/Technologies/FlexibleDemandTechnology.json"
-      },
-      "HVDCTransportTechnology": {
-        "$ref": "Investments/Technologies/HVDCTransportTechnology.json"
       },
       "HourlyMatching": {
         "$ref": "Investments/Requirements/HourlyMatching.json"

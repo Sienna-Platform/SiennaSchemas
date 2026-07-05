@@ -2,10 +2,6 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Parameters of the Inner Control part of the REECB model in PSS/E.",
   "properties": {
-    "id": {
-      "description": "Unique integer identifier for this component.",
-      "type": "integer"
-    },
     "Q_Flag": {
       "description": "Q Flag used for I_qinj.",
       "type": "boolean"
@@ -58,7 +54,6 @@
     }
   },
   "required": [
-    "id",
     "Q_Flag",
     "PQ_Flag",
     "Vdip_lim",

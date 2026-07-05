@@ -10,9 +10,9 @@ Tagged releases (e.g., `v1.2.0`) trigger a GitHub Actions workflow that packages
 
 | Repository | What It Generates |
 |---|---|
-| [power-openapi-models](https://github.com/NREL-Sienna/power-openapi-models) | OpenAPI spec + Python/Pydantic models |
-| [PowerOpenAPIModels.jl](https://github.com/NREL-Sienna/PowerOpenAPIModels.jl) | Julia type definitions |
-| [SiennaGridDB](https://github.com/NREL-Sienna/SiennaGridDB) | SQL DDL migrations (PostgreSQL) |
+| [power-openapi-models](https://github.com/Sienna-Platform/power-openapi-models) | OpenAPI spec + Python/Pydantic models |
+| [PowerOpenAPIModels.jl](https://github.com/Sienna-Platform/PowerOpenAPIModels.jl) | Julia type definitions |
+| [SiennaGridDB](https://github.com/Sienna-Platform/SiennaGridDB) | SQL DDL migrations (PostgreSQL) |
 
 Each downstream repo contains its own `codegen/` directory with a Dockerfile and generation script tailored to its target language. When a new schema release is detected, the repo's codegen container runs and a pull request is opened for review. Repos track which schema version they were last generated from in a `.schema-version` file.
 
