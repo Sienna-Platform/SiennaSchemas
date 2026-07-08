@@ -9,7 +9,7 @@
       "default": 0.0
     }
   },
-  "required": "id",
+  "required": ["id"],
   "title": "AggregateRetirementPotential",
   "type": "object"
 }
