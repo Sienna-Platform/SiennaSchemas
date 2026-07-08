@@ -1,62 +1,63 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "name",
-        "id",
-        "power_systems_type",
-        "region",
-        "value_of_lost_load",
-        "unserved_demand_curve"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "id": {
-            "type": "integer"
-        },
-        "available": {
-            "type": "boolean",
-            "default": true
-        },
-        "power_systems_type": {
-            "type": "string"
-        },
-        "conformity": {
-            "type": "string",
-            "default": "UNDEFINED"
-        },
-        "growth_rate": {
-            "type": "number",
-            "default": 0.0
-        },
-        "new_demand_mw": {
-            "type": "number",
-            "default": 0.0
-        },
-        "new_construction_year": {
-            "type": "integer",
-            "default": 2020
-        },
-        "region": {
-            "type": "array",
-            "items": {
-                "type": "integer"
-            }
-        },
-        "value_of_lost_load": {
-            "type": "number"
-        },
-        "unserved_demand_curve": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
-        },
-        "requirements": {
-            "type": "array",
-            "default": [],
-            "items": {
-                "type": "integer"
-            }
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string"
+    },
+    "available": {
+      "type": "boolean",
+      "default": true
+    },
+    "power_systems_type": {
+      "type": "string"
+    },
+    "conformity": {
+      "type": "string",
+      "default": "UNDEFINED"
+    },
+    "growth_rate": {
+      "type": "number",
+      "default": 0.0
+    },
+    "new_demand_mw": {
+      "type": "number",
+      "default": 0.0
+    },
+    "new_construction_year": {
+      "type": "integer",
+      "default": 2020
+    },
+    "region": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "value_of_lost_load": {
+      "type": "number"
+    },
+    "unserved_demand_curve": {
+      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+    },
+    "requirements": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "integer"
+      }
     }
+  },
+  "required": [
+    "name",
+    "id",
+    "power_systems_type",
+    "region",
+    "value_of_lost_load",
+    "unserved_demand_curve"
+  ],
+  "title": "DemandRequirement",
+  "type": "object"
 }

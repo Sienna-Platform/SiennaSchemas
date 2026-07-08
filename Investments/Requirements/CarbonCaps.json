@@ -1,32 +1,33 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "name",
-        "id",
-        "available",
-        "target_year",
-        "max_mtons"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "id": {
-            "type": "integer"
-        },
-        "available": {
-            "type": "boolean"
-        },
-        "target_year": {
-            "type": "integer"
-        },
-        "max_tons_mwh": {
-            "type": "number",
-            "default": 100000000
-        },
-        "max_mtons": {
-            "type": "number"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string"
+    },
+    "available": {
+      "type": "boolean"
+    },
+    "target_year": {
+      "type": "integer"
+    },
+    "max_tons_mwh": {
+      "type": "number",
+      "default": 100000000
+    },
+    "max_mtons": {
+      "type": "number"
     }
+  },
+  "required": [
+    "name",
+    "id",
+    "available",
+    "target_year",
+    "max_mtons"
+  ],
+  "title": "CarbonCaps",
+  "type": "object"
 }

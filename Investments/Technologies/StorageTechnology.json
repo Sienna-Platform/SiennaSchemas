@@ -1,110 +1,111 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "name",
-        "id",
-        "available",
-        "region",
-        "power_systems_type",
-        "storage_tech",
-        "capital_costs_energy",
-        "capital_costs_charge",
-        "capital_costs_discharge",
-        "operation_costs",
-        "capacity_limits_charge",
-        "capacity_limits_discharge",
-        "capacity_limits_energy",
-        "duration_limits",
-        "efficiency",
-        "financial_data"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "id": {
-            "type": "integer"
-        },
-        "available": {
-            "type": "boolean"
-        },
-        "region": {
-            "type": "array",
-            "items": {
-                "type": "integer"
-            }
-        },
-        "power_systems_type": {
-            "type": "string"
-        },
-        "min_discharge_fraction": {
-            "type": "number",
-            "default": 0.0
-        },
-        "prime_mover_type": {
-            "$ref": "../../Core/common.json#/definitions/PrimeMovers",
-            "default": "OT"
-        },
-        "storage_tech": {
-            "$ref": "../../Core/common.json#/definitions/StorageTech"
-        },
-        "capital_costs_energy": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
-        },
-        "capital_costs_charge": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
-        },
-        "capital_costs_discharge": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
-        },
-        "operation_costs": {
-            "$ref": "../../Core/common.json#/definitions/StorageCost"
-        },
-        "unit_size_discharge": {
-            "type": "number",
-            "default": 0.0
-        },
-        "unit_size_charge": {
-            "type": "number",
-            "default": 0.0
-        },
-        "unit_size_energy": {
-            "type": "number",
-            "default": 0.0
-        },
-        "capacity_limits_charge": {
-            "$ref": "../../Core/common.json#/definitions/MinMax"
-        },
-        "capacity_limits_discharge": {
-            "$ref": "../../Core/common.json#/definitions/MinMax"
-        },
-        "capacity_limits_energy": {
-            "$ref": "../../Core/common.json#/definitions/MinMax"
-        },
-        "duration_limits": {
-            "$ref": "../../Core/common.json#/definitions/MinMax"
-        },
-        "efficiency": {
-            "$ref": "../../Core/common.json#/definitions/InOut"
-        },
-        "losses": {
-            "type": "number",
-            "default": 1.0
-        },
-        "lifetime": {
-            "type": "integer",
-            "default": 100
-        },
-        "requirements": {
-            "type": "array",
-            "default": [],
-            "items": {
-                "type": "integer"
-            }
-        },
-        "financial_data": {
-            "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string"
+    },
+    "available": {
+      "type": "boolean"
+    },
+    "region": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "power_systems_type": {
+      "type": "string"
+    },
+    "min_discharge_fraction": {
+      "type": "number",
+      "default": 0.0
+    },
+    "prime_mover_type": {
+      "$ref": "../../Core/common.json#/definitions/PrimeMovers",
+      "default": "OT"
+    },
+    "storage_tech": {
+      "$ref": "../../Core/common.json#/definitions/StorageTech"
+    },
+    "capital_costs_energy": {
+      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+    },
+    "capital_costs_charge": {
+      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+    },
+    "capital_costs_discharge": {
+      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+    },
+    "operation_costs": {
+      "$ref": "../../Core/common.json#/definitions/StorageCost"
+    },
+    "unit_size_discharge": {
+      "type": "number",
+      "default": 0.0
+    },
+    "unit_size_charge": {
+      "type": "number",
+      "default": 0.0
+    },
+    "unit_size_energy": {
+      "type": "number",
+      "default": 0.0
+    },
+    "capacity_limits_charge": {
+      "$ref": "../../Core/common.json#/definitions/MinMax"
+    },
+    "capacity_limits_discharge": {
+      "$ref": "../../Core/common.json#/definitions/MinMax"
+    },
+    "capacity_limits_energy": {
+      "$ref": "../../Core/common.json#/definitions/MinMax"
+    },
+    "duration_limits": {
+      "$ref": "../../Core/common.json#/definitions/MinMax"
+    },
+    "efficiency": {
+      "$ref": "../../Core/common.json#/definitions/InOut"
+    },
+    "losses": {
+      "type": "number",
+      "default": 1.0
+    },
+    "lifetime": {
+      "type": "integer",
+      "default": 100
+    },
+    "requirements": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "integer"
+      }
+    },
+    "financial_data": {
+      "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
     }
+  },
+  "required": [
+    "name",
+    "id",
+    "available",
+    "region",
+    "power_systems_type",
+    "storage_tech",
+    "capital_costs_energy",
+    "capital_costs_charge",
+    "capital_costs_discharge",
+    "operation_costs",
+    "capacity_limits_charge",
+    "capacity_limits_discharge",
+    "capacity_limits_energy",
+    "duration_limits",
+    "efficiency",
+    "financial_data"
+  ],
+  "title": "StorageTechnology",
+  "type": "object"
 }

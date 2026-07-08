@@ -1,19 +1,20 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "id",
-        "buses"
-    ],
-    "properties": {
-        "id": {
-            "type": "integer"
-        },
-        "buses": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "buses": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
+  },
+  "required": [
+    "id",
+    "buses"
+  ],
+  "title": "TopologyMapping",
+  "type": "object"
 }

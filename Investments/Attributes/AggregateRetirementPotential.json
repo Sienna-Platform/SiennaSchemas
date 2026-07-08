@@ -1,16 +1,15 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "id"
-    ],
-    "properties": {
-        "id": {
-            "type": "integer"
-        },
-        "retirement_potential": {
-            "type": "number",
-            "default": 0.0
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "retirement_potential": {
+      "type": "number",
+      "default": 0.0
     }
+  },
+  "required": "id",
+  "title": "AggregateRetirementPotential",
+  "type": "object"
 }

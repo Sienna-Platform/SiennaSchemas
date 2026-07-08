@@ -1,36 +1,37 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "id",
-        "capital_recovery_period",
-        "technology_base_year",
-        "debt_fraction",
-        "debt_rate",
-        "return_on_equity",
-        "tax_rate"
-    ],
-    "properties": {
-        "id": {
-            "type": "integer"
-        },
-        "capital_recovery_period": {
-            "type": "integer"
-        },
-        "technology_base_year": {
-            "type": "integer"
-        },
-        "debt_fraction": {
-            "type": "number"
-        },
-        "debt_rate": {
-            "type": "number"
-        },
-        "return_on_equity": {
-            "type": "number"
-        },
-        "tax_rate": {
-            "type": "number"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "capital_recovery_period": {
+      "type": "integer"
+    },
+    "technology_base_year": {
+      "type": "integer"
+    },
+    "debt_fraction": {
+      "type": "number"
+    },
+    "debt_rate": {
+      "type": "number"
+    },
+    "return_on_equity": {
+      "type": "number"
+    },
+    "tax_rate": {
+      "type": "number"
     }
+  },
+  "required": [
+    "id",
+    "capital_recovery_period",
+    "technology_base_year",
+    "debt_fraction",
+    "debt_rate",
+    "return_on_equity",
+    "tax_rate"
+  ],
+  "title": "TechnologyFinancialData",
+  "type": "object"
 }

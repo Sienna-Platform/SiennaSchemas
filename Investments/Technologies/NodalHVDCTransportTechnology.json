@@ -1,59 +1,60 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "name",
-        "id",
-        "available",
-        "power_systems_type",
-        "start_node",
-        "end_node",
-        "capacity_limits",
-        "capital_costs",
-        "line_loss",
-        "unit_size",
-        "financial_data"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "id": {
-            "type": "integer"
-        },
-        "available": {
-            "type": "boolean"
-        },
-        "power_systems_type": {
-            "type": "string"
-        },
-        "start_node": {
-            "type": "integer"
-        },
-        "end_node": {
-            "type": "integer"
-        },
-        "capacity_limits": {
-            "$ref": "../../Core/common.json#/definitions/MinMax"
-        },
-        "capital_costs": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
-        },
-        "line_loss": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
-        },
-        "unit_size": {
-            "type": "number"
-        },
-        "requirements": {
-            "type": "array",
-            "default": [],
-            "items": {
-                "type": "integer"
-            }
-        },
-        "financial_data": {
-            "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string"
+    },
+    "available": {
+      "type": "boolean"
+    },
+    "power_systems_type": {
+      "type": "string"
+    },
+    "start_node": {
+      "type": "integer"
+    },
+    "end_node": {
+      "type": "integer"
+    },
+    "capacity_limits": {
+      "$ref": "../../Core/common.json#/definitions/MinMax"
+    },
+    "capital_costs": {
+      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+    },
+    "line_loss": {
+      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+    },
+    "unit_size": {
+      "type": "number"
+    },
+    "requirements": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "integer"
+      }
+    },
+    "financial_data": {
+      "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
     }
+  },
+  "required": [
+    "name",
+    "id",
+    "available",
+    "power_systems_type",
+    "start_node",
+    "end_node",
+    "capacity_limits",
+    "capital_costs",
+    "line_loss",
+    "unit_size",
+    "financial_data"
+  ],
+  "title": "NodalHVDCTransportTechnology",
+  "type": "object"
 }
