@@ -2,11 +2,13 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "required": [
-        "discount_rate",
-        "base_year",
-        "inflation_rate"
+        "id",
+        "base_year"
     ],
     "properties": {
+        "id": {
+            "type": "integer"
+        },
         "discount_rate": {
             "type": "number",
             "default": 0.0
@@ -21,9 +23,6 @@
         },
         "base_year": {
             "type": "integer"
-        },
-        "id": {
-            "type": "integer"
         }
     }
-  }
+}

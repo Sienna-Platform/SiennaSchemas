@@ -2,9 +2,15 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "required": [
-        "retirement_potential"
+        "id",
+        "eligible_generators",
+        "planned_retirement_year",
+        "build_year"
     ],
     "properties": {
+        "id": {
+            "type": "integer"
+        },
         "eligible_generators": {
             "type": "array",
             "items": {
@@ -22,9 +28,6 @@
             "additionalProperties": {
                 "type": "integer"
             }
-        },
-        "id": {
-            "type": "integer"
         }
     }
 }

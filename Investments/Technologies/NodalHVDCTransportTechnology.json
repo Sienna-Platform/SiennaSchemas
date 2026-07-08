@@ -3,8 +3,16 @@
     "type": "object",
     "required": [
         "name",
+        "id",
         "available",
-        "id"
+        "power_systems_type",
+        "start_node",
+        "end_node",
+        "capacity_limits",
+        "capital_costs",
+        "line_loss",
+        "unit_size",
+        "financial_data"
     ],
     "properties": {
         "name": {

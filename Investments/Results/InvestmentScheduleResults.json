@@ -1,6 +1,11 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
+    "required": [
+        "start_dates",
+        "end_dates",
+        "results"
+    ],
     "properties": {
         "start_dates": {
             "type": "array",

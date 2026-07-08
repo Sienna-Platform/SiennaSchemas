@@ -3,8 +3,11 @@
     "type": "object",
     "required": [
         "name",
-        "available",
-        "power_systems_type"
+        "id",
+        "power_systems_type",
+        "region",
+        "value_of_lost_load",
+        "unserved_demand_curve"
     ],
     "properties": {
         "name": {

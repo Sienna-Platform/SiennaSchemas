@@ -3,7 +3,9 @@
     "type": "object",
     "required": [
         "name",
-        "available"
+        "id",
+        "available",
+        "target_year"
     ],
     "properties": {
         "name": {

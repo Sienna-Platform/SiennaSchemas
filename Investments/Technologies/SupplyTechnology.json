@@ -3,12 +3,30 @@
     "type": "object",
     "required": [
         "name",
+        "id",
         "available",
-        "power_systems_type"
+        "power_systems_type",
+        "region",
+        "fuel",
+        "co2",
+        "cofire_start_limits",
+        "cofire_level_limits",
+        "capital_costs",
+        "operation_costs",
+        "capacity_limits",
+        "ramp_limits",
+        "time_limits",
+        "financial_data"
     ],
     "properties": {
         "name": {
             "type": "string"
+        },
+        "id": {
+            "type": "integer"
+        },
+        "available": {
+            "type": "boolean"
         },
         "power_systems_type": {
             "type": "string"
@@ -18,12 +36,6 @@
             "items": {
                 "type": "integer"
             }
-        },
-        "id": {
-            "type": "integer"
-        },
-        "available": {
-            "type": "boolean"
         },
         "prime_mover_type": {
             "$ref": "../../Core/common.json#/definitions/PrimeMovers",

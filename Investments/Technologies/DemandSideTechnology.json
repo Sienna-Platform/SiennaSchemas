@@ -3,8 +3,17 @@
     "type": "object",
     "required": [
         "name",
+        "id",
         "available",
-        "power_systems_type"
+        "region",
+        "power_systems_type",
+        "price_per_unit",
+        "max_demand_delay",
+        "max_demand_advance",
+        "demand_energy_efficiency",
+        "shift_variable_cost",
+        "curtailment_cost",
+        "max_demand_curtailment"
     ],
     "properties": {
         "name": {

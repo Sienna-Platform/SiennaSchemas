@@ -3,24 +3,37 @@
     "type": "object",
     "required": [
         "name",
+        "id",
         "available",
-        "power_systems_type"
+        "region",
+        "power_systems_type",
+        "storage_tech",
+        "capital_costs_energy",
+        "capital_costs_charge",
+        "capital_costs_discharge",
+        "operation_costs",
+        "capacity_limits_charge",
+        "capacity_limits_discharge",
+        "capacity_limits_energy",
+        "duration_limits",
+        "efficiency",
+        "financial_data"
     ],
     "properties": {
         "name": {
             "type": "string"
-        },
-        "region": {
-            "type": "array",
-            "items": {
-                "type": "integer"
-            }
         },
         "id": {
             "type": "integer"
         },
         "available": {
             "type": "boolean"
+        },
+        "region": {
+            "type": "array",
+            "items": {
+                "type": "integer"
+            }
         },
         "power_systems_type": {
             "type": "string"

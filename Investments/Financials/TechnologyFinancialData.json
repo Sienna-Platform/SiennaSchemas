@@ -2,8 +2,13 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "required": [
+        "id",
         "capital_recovery_period",
-        "technology_base_year"
+        "technology_base_year",
+        "debt_fraction",
+        "debt_rate",
+        "return_on_equity",
+        "tax_rate"
     ],
     "properties": {
         "id": {
@@ -26,6 +31,6 @@
         },
         "tax_rate": {
             "type": "number"
-        }        
+        }
     }
-  }
+}

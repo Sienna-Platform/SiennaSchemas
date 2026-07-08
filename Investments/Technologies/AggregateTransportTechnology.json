@@ -3,7 +3,16 @@
     "type": "object",
     "required": [
         "name",
-        "available"
+        "id",
+        "available",
+        "power_systems_type",
+        "start_region",
+        "end_region",
+        "capacity_limits",
+        "capital_costs",
+        "line_loss",
+        "unit_size",
+        "financial_data"
     ],
     "properties": {
         "name": {
@@ -19,10 +28,10 @@
             "type": "string"
         },
         "start_region": {
-          "type": "integer"
+            "type": "integer"
         },
         "end_region": {
-          "type": "integer"
+            "type": "integer"
         },
         "capacity_limits": {
             "$ref": "../../Core/common.json#/definitions/MinMax"

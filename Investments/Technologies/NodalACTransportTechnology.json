@@ -3,7 +3,14 @@
     "type": "object",
     "required": [
         "name",
-        "available"
+        "id",
+        "available",
+        "power_systems_type",
+        "start_node",
+        "end_node",
+        "capacity_limits",
+        "capital_costs",
+        "financial_data"
     ],
     "properties": {
         "name": {
@@ -19,10 +26,10 @@
             "type": "string"
         },
         "start_node": {
-          "type": "integer"
+            "type": "integer"
         },
         "end_node": {
-          "type": "integer"
+            "type": "integer"
         },
         "capacity_limits": {
             "$ref": "../../Core/common.json#/definitions/MinMax"
