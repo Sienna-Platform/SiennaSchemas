@@ -39,6 +39,7 @@
         },
         "requirements": {
             "type": "array",
+            "default": [],
             "items": {
                 "type": "integer"
             }

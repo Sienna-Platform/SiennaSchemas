@@ -20,7 +20,7 @@
         },
         "max_tons_mwh": {
             "type": "number",
-            "default": "1e8"
+            "default": 1e8
         },
         "max_mtons": {
             "type": "number"

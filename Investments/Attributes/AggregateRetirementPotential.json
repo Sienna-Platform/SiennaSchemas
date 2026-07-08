@@ -7,7 +7,10 @@
     "properties": {
         "retirement_potential": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
+        },
+        "id": {
+            "type": "integer"
         }
     }
 }

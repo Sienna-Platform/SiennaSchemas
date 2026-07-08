@@ -2,26 +2,22 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "required": [
-        "name",
         "discount_rate",
         "base_year",
         "inflation_rate"
     ],
     "properties": {
-        "name": {
-            "type": "string"
-        },
         "discount_rate": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "inflation_rate": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "interest_rate": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "base_year": {
             "type": "integer"

@@ -11,8 +11,8 @@
                 "type": "string"
             }
         },
-        "uuid": {
-            "type": "string"
+        "id": {
+            "type": "integer"
         }
     }
 }

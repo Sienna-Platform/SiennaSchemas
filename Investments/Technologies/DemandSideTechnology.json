@@ -27,18 +27,18 @@
         },
         "technology_efficiency": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "price_per_unit": {
             "$ref": "../../Core/common.json#/definitions/ValueCurve"
         },
         "min_power": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "peak_demand_mw": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "max_demand_delay": {
             "type": "number"
@@ -60,6 +60,7 @@
         },
         "requirements": {
             "type": "array",
+            "default": [],
             "items": {
                 "type": "integer"
             }

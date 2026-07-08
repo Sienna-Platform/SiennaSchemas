@@ -20,7 +20,7 @@
         },
         "capacity_reserve_fraction": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         }
     }
 }

@@ -61,18 +61,18 @@
         },
         "unit_size": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "capacity_limits": {
             "$ref": "../../Core/common.json#/definitions/MinMax"
         },
         "outage_factor": {
             "type": "number",
-            "default": "1.0"
+            "default": 1.0
         },
         "min_generation_fraction": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "ramp_limits": {
             "$ref": "../../Core/common.json#/definitions/UpDown"
@@ -82,14 +82,15 @@
         },
         "start_fuel_mmbtu_per_mw": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "lifetime": {
             "type": "integer",
-            "default": "100"
+            "default": 100
         },
         "requirements": {
             "type": "array",
+            "default": [],
             "items": {
                 "type": "integer"
             }

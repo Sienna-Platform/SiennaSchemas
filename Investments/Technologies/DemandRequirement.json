@@ -15,7 +15,7 @@
         },
         "available": {
             "type": "boolean",
-            "default": "true"
+            "default": true
         },
         "power_systems_type": {
             "type": "string"
@@ -26,15 +26,15 @@
         },
         "growth_rate": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "new_demand_mw": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "new_construction_year": {
             "type": "integer",
-            "default": "2020"
+            "default": 2020
         },
         "region": {
             "type": "array",
@@ -50,6 +50,7 @@
         },
         "requirements": {
             "type": "array",
+            "default": [],
             "items": {
                 "type": "integer"
             }

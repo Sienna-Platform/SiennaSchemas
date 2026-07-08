@@ -32,22 +32,23 @@
         },
         "resistance": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "voltage": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "unit_size": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "reactance": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "requirements": {
             "type": "array",
+            "default": [],
             "items": {
                 "type": "integer"
             }

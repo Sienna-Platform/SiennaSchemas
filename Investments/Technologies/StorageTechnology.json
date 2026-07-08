@@ -27,7 +27,7 @@
         },
         "min_discharge_fraction": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "prime_mover_type": {
             "$ref": "../../Core/common.json#/definitions/PrimeMovers",
@@ -50,15 +50,15 @@
         },
         "unit_size_discharge": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "unit_size_charge": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "unit_size_energy": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "capacity_limits_charge": {
             "$ref": "../../Core/common.json#/definitions/MinMax"
@@ -77,14 +77,15 @@
         },
         "losses": {
             "type": "number",
-            "default": "1.0"
+            "default": 1.0
         },
         "lifetime": {
             "type": "integer",
-            "default": "100"
+            "default": 100
         },
         "requirements": {
             "type": "array",
+            "default": [],
             "items": {
                 "type": "integer"
             }

@@ -2,17 +2,12 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "required": [
-        "name",
         "capital_recovery_period",
         "technology_base_year"
     ],
     "properties": {
-        "name": {
-            "type": "string"
-        },
-        "interest_rate": {
-            "type": "number",
-            "default": "0.0"
+        "id": {
+            "type": "integer"
         },
         "capital_recovery_period": {
             "type": "integer"
@@ -20,8 +15,17 @@
         "technology_base_year": {
             "type": "integer"
         },
-        "id": {
-            "type": "integer"
-        }
+        "debt_fraction": {
+            "type": "number"
+        },
+        "debt_rate": {
+            "type": "number"
+        },
+        "return_on_equity": {
+            "type": "number"
+        },
+        "tax_rate": {
+            "type": "number"
+        }        
     }
   }

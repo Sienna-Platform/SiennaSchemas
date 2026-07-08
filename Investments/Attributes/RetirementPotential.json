@@ -22,6 +22,9 @@
             "additionalProperties": {
                 "type": "integer"
             }
+        },
+        "id": {
+            "type": "integer"
         }
     }
 }

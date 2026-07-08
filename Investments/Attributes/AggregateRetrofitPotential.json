@@ -10,10 +10,13 @@
         },
         "retrofit_potential": {
             "type": "number",
-            "default": "0.0"
+            "default": 0.0
         },
         "retrofit_fraction": {
             "type": "number"
+        },
+        "id": {
+            "type": "integer"
         }
     }
 }
