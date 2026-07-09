@@ -51,7 +51,7 @@
       "$ref": "../../Core/common.json#/definitions/ValueCurve"
     },
     "operation_costs": {
-      "$ref": "../../Core/common.json#/definitions/ThermalRenewableGenerationCost"
+      "$ref": "../../Core/common.json#/definitions/GenericOperationCost"
     },
     "unit_size": {
       "type": "number",
