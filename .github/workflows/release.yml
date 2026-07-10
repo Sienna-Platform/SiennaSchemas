@@ -13,7 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build bundled specs
+        run: python scripts/bundle_specs.py
+
       - name: Package schemas
+        # Tarball ships the raw schemas + Core/units.json + the built
+        # dist/*-bundled.json specs (downstream codegen consumes the bundled
+        # ones so no $ref-sibling annotation is lost).
         run: tar -czf schemas-${{ github.ref_name }}.tar.gz --exclude='.git' .
 
       - name: Create GitHub Release

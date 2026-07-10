@@ -1,23 +1,34 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A fixed admittance.\n\nMost often used in dynamics or AC power flow studies as a source of reactive power.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
+      "description": "ID of the bus that this component is connected to.",
       "type": "integer"
     },
     "Y": {
-      "$ref": "../../Core/common.json#/definitions/ComplexNumber"
+      "description": "Fixed admittance. Per-unit on system base. Units: pu.",
+      "$ref": "../../Core/common.json#/definitions/ComplexNumber",
+      "x-unit": "pu"
     },
     "dynamic_injector": {
-      "type": null
+      "description": "ID of the corresponding dynamic injection model for admittance, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

@@ -1,26 +1,36 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Flow exchanged between Areas. This Interchange is agnostic to the lines connecting the areas. It does not substitute Interface which is the total flow across a group of lines.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "active_power_flow": {
-      "type": "number"
+      "description": "Initial condition of active power flow on the line. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "from_area": {
+      "description": "Area from which the power is extracted.",
       "type": "integer"
     },
     "to_area": {
+      "description": "Area to which the power is injected.",
       "type": "integer"
     },
     "flow_limits": {
-      "$ref": "../../Core/common.json#/definitions/FromTo_ToFrom"
+      "description": "Max flow between the areas. It ignores lines and other branches totals. Units: MW.",
+      "$ref": "../../Core/common.json#/definitions/FromTo_ToFrom",
+      "x-unit": "MW"
     }
   },
   "required": [

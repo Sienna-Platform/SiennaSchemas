@@ -54,6 +54,17 @@
       "title": "AverageRateCurve",
       "type": "object"
     },
+    "CombinedCycleConfiguration": {
+      "enum": [
+        "SingleShaftCombustionSteam",
+        "SeparateShaftCombustionSteam",
+        "DoubleCombustionOneSteam",
+        "TripleCombustionOneSteam",
+        "Other"
+      ],
+      "title": "CombinedCycleConfiguration",
+      "type": "string"
+    },
     "ComplexNumber": {
       "properties": {
         "real": {
@@ -129,6 +140,23 @@
         "OTHER"
       ],
       "title": "DiscreteControlledBranchType",
+      "type": "string"
+    },
+    "EmissionBasis": {
+      "enum": [
+        "FUEL_INPUT",
+        "POWER_OUTPUT"
+      ],
+      "title": "EmissionBasis",
+      "type": "string"
+    },
+    "EnergyUnit": {
+      "enum": [
+        "MMBTU",
+        "GJ",
+        "MWH"
+      ],
+      "title": "EnergyUnit",
       "type": "string"
     },
     "FACTSOperationModes": {
@@ -534,6 +562,81 @@
       "title": "LoadCost",
       "type": "object"
     },
+    "MassUnit": {
+      "enum": [
+        "KG",
+        "LB",
+        "SHORT_TON",
+        "METRIC_TON"
+      ],
+      "title": "MassUnit",
+      "type": "string"
+    },
+    "MarketBidCost": {
+      "description": "Cost representation for static (non-time-varying) market bids of energy and ancillary services.",
+      "properties": {
+        "cost_type": {
+          "const": "MARKET_BID",
+          "type": "string",
+          "default": "MARKET_BID"
+        },
+        "no_load_cost": {
+          "description": "No load cost.",
+          "default": {
+            "curve_type": "INPUT_OUTPUT",
+            "function_data": {
+              "function_type": "LINEAR",
+              "constant_term": 0,
+              "proportional_term": 0
+            },
+            "input_at_zero": 0
+          },
+          "$ref": "#/definitions/InputOutputCurve"
+        },
+        "start_up": {
+          "description": "Start-up cost at different stages of the thermal cycle (hot, warm, cold).",
+          "$ref": "#/definitions/StartUpStages"
+        },
+        "shut_down": {
+          "description": "Shut-down cost.",
+          "default": {
+            "curve_type": "INPUT_OUTPUT",
+            "function_data": {
+              "function_type": "LINEAR",
+              "constant_term": 0,
+              "proportional_term": 0
+            },
+            "input_at_zero": 0
+          },
+          "$ref": "#/definitions/InputOutputCurve"
+        },
+        "incremental_offer_curves": {
+          "description": "Sell offer curves data as a `CostCurve` of `PiecewiseIncrementalCurve`.",
+          "$ref": "#/definitions/CostCurve"
+        },
+        "decremental_offer_curves": {
+          "description": "Buy offer curves data as a `CostCurve` of `PiecewiseIncrementalCurve`.",
+          "$ref": "#/definitions/CostCurve"
+        },
+        "ancillary_service_offers": {
+          "description": "IDs of the ancillary service components that this market bid offers into.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "required": [
+        "no_load_cost",
+        "start_up",
+        "shut_down",
+        "incremental_offer_curves",
+        "decremental_offer_curves",
+        "ancillary_service_offers"
+      ],
+      "title": "MarketBidCost",
+      "type": "object"
+    },
     "MinMax": {
       "properties": {
         "max": {
@@ -605,6 +708,23 @@
       ],
       "title": "PiecewiseStepData",
       "type": "object"
+    },
+    "PollutantType": {
+      "enum": [
+        "CO2",
+        "CO2E",
+        "CH4",
+        "N2O",
+        "NOX",
+        "SO2",
+        "PM25",
+        "PM10",
+        "HG",
+        "HAP",
+        "CUSTOM"
+      ],
+      "title": "PollutantType",
+      "type": "string"
     },
     "PrimeMovers": {
       "enum": [
@@ -1094,6 +1214,25 @@
       ],
       "title": "ValueCurve",
       "type": "object"
+    },
+    "VSCACControlModes": {
+      "description": "AC-side control mode of a voltage-source-converter (VSC) terminal. AC_REACTIVE_POWER: converter controls reactive power / fixed power factor. AC_VOLTAGE: converter controls the AC-side voltage magnitude.",
+      "enum": [
+        "AC_REACTIVE_POWER",
+        "AC_VOLTAGE"
+      ],
+      "title": "VSCACControlModes",
+      "type": "string"
+    },
+    "VSCDCControlModes": {
+      "description": "DC-side control mode of a voltage-source-converter (VSC) terminal. DC_POWER: converter controls active power transferred to the DC side. DC_VOLTAGE: converter controls the DC-side voltage. DC_VOLTAGE_DROOP: P-Vdc droop, V_dc = dc_setpoint - droop_gain * P_c.",
+      "enum": [
+        "DC_POWER",
+        "DC_VOLTAGE",
+        "DC_VOLTAGE_DROOP"
+      ],
+      "title": "VSCDCControlModes",
+      "type": "string"
     },
     "TechnologyFinancialData": {
         "properties": {

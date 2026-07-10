@@ -1,40 +1,55 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameters of the Inner Control part of the REECB model in PSS/E.",
   "properties": {
     "Q_Flag": {
+      "description": "Q Flag used for I_qinj.",
       "type": "boolean"
     },
     "PQ_Flag": {
+      "description": "PQ Flag used for the Current Limit Logic.",
       "type": "boolean"
     },
     "Vdip_lim": {
+      "description": "Limits for Voltage Dip Logic `(Vdip, Vup)`.",
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "T_rv": {
-      "type": "number"
+      "description": "Voltage Filter Time Constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "dbd_pnts": {
+      "description": "Voltage error deadband thresholds `(dbd1, dbd2)`.",
       "$ref": "../../Core/common.json#/definitions/DbdPnts"
     },
     "K_qv": {
+      "description": "Reactive current injection gain during over and undervoltage conditions.",
       "type": "number"
     },
     "Iqinj_lim": {
+      "description": "Limits for Iqinj `(I_qh1, I_ql1)`.",
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "V_ref0": {
+      "description": "User defined reference. If 0, `PowerSimulationsDynamics.jl` initializes to initial terminal voltage.",
       "type": "number"
     },
     "K_vp": {
+      "description": "Voltage regulator proportional gain (used when QFlag = 1).",
       "type": "number"
     },
     "K_vi": {
+      "description": "Voltage regulator integral gain (used when QFlag = 1).",
       "type": "number"
     },
     "T_iq": {
-      "type": "number"
+      "description": "Time constant for low-pass filter for state q_V when QFlag = 0. Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "I_max": {
+      "description": "Maximum limit on total converter current.",
       "type": "number"
     }
   },

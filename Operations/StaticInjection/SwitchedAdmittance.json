@@ -1,48 +1,65 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A switched admittance, with discrete steps to adjust the admittance.\n\nMost often used in power flow studies, iterating over the steps to see impacts of admittance on the results. Total admittance is calculated as: `Y` + `number_of_steps` * `Y_increase`.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
+      "description": "ID of the bus that this component is connected to.",
       "type": "integer"
     },
     "Y": {
-      "$ref": "../../Core/common.json#/definitions/ComplexNumber"
+      "description": "Initial admittance at N = 0. Per-unit on system base. Units: pu.",
+      "$ref": "../../Core/common.json#/definitions/ComplexNumber",
+      "x-unit": "pu"
     },
     "initial_status": {
+      "description": "Vector of initial switched shunt status, one for in-service and zero for out-of-service for block i (1 through 8).",
       "type": "array",
       "items": {
         "type": "integer"
       }
     },
     "number_of_steps": {
+      "description": "Vector with number of steps for each adjustable shunt block. For example, `number_of_steps[2]` are the number of available steps for admittance increment at block 2.",
       "type": "array",
       "items": {
         "type": "integer"
       }
     },
     "Y_increase": {
+      "description": "Vector with admittance increment step for each adjustable shunt block. For example, `Y_increase[2]` is the complex admittance increment for each step at block 2. Per-unit on system base. Units: pu.",
       "type": "array",
       "items": {
         "$ref": "../../Core/common.json#/definitions/ComplexNumber"
-      }
+      },
+      "x-unit": "pu"
     },
     "admittance_limits": {
+      "description": "Shunt admittance limits for switched shunt model. Per-unit on system base. Units: pu.",
       "default": {
         "min": 1.0,
         "max": 1.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "pu"
     },
     "dynamic_injector": {
-      "type": null
+      "description": "ID of the corresponding dynamic injection model for admittance, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

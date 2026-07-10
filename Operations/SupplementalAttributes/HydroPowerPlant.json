@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HydroPowerPlant",
+  "description": "Attribute to represent hydro power plants. Shared penstocks between units are recorded as PlantAssociation rows with role='penstock'.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the hydro power plant"
+    }
+  },
+  "required": [
+    "id",
+    "name"
+  ]
+}

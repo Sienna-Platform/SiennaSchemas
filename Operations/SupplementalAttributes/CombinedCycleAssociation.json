@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CombinedCycleAssociation",
+  "description": "Association between a CombinedCycleBlock plant and a CT or CA unit, identifying which HRSG the unit feeds into or receives from. Supports n-to-m relationships: a single CT or CA can participate in multiple HRSGs by appearing in multiple rows.",
+  "type": "object",
+  "properties": {
+    "plant_id": {
+      "type": "integer",
+      "description": "ID of the parent CombinedCycleBlock supplemental attribute"
+    },
+    "entity_id": {
+      "type": "integer",
+      "description": "ID of the CT or CA generating unit"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "CT",
+        "CA"
+      ],
+      "description": "Role of the entity within the combined cycle block (combustion turbine input or combustion-augmented steam output)"
+    },
+    "hrsg_index": {
+      "type": "integer",
+      "description": "HRSG (heat recovery steam generator) index this unit is associated with"
+    }
+  },
+  "required": [
+    "plant_id",
+    "entity_id",
+    "role",
+    "hrsg_index"
+  ]
+}

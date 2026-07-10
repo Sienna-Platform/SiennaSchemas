@@ -1,38 +1,55 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Used to represent switches and breakers connecting AC Buses.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "active_power_flow": {
-      "type": "number"
+      "description": "Initial condition of active power flow on the line. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "reactive_power_flow": {
-      "type": "number"
+      "description": "Initial condition of reactive power flow on the line. Units: MVAr.",
+      "type": "number",
+      "x-unit": "MVAr"
     },
     "arc": {
+      "description": "An `Arc` defining this line `from` a bus `to` another bus.",
       "type": "integer"
     },
     "r": {
-      "type": "number"
+      "description": "Resistance. Per-unit on system base. Units: pu.",
+      "type": "number",
+      "x-unit": "pu"
     },
     "x": {
-      "type": "number"
+      "description": "Reactance. Per-unit on system base. Units: pu.",
+      "type": "number",
+      "x-unit": "pu"
     },
     "rating": {
-      "type": "number"
+      "description": "Thermal rating. Flow on the branch must be between -`rating` and `rating`. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
     },
     "discrete_branch_type": {
+      "description": "Type of discrete control.",
       "$ref": "../../Core/common.json#/definitions/DiscreteControlledBranchType",
       "default": "OTHER"
     },
     "branch_status": {
+      "description": "Open or Close status.",
       "$ref": "../../Core/common.json#/definitions/DiscreteControlledBranchStatus",
       "default": "CLOSED"
     }

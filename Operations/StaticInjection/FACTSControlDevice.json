@@ -1,33 +1,48 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Facts control devices.\n\nMost often used in AC power flow studies as a control of voltage and, active and reactive power.",
   "properties": {
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
+      "description": "Sending end bus number.",
       "type": "integer"
     },
     "control_mode": {
-      "descriptor": "in psy5 a required param with an option to be nothing",
+      "description": "Control mode. Used to describe the behavior of the control device. in psy5 a required param with an option to be nothing",
       "$ref": "../../Core/common.json#/definitions/FACTSOperationModes"
     },
     "voltage_setpoint": {
-      "type": "number"
+      "description": "Voltage setpoint at the sending end bus in kV, it has to be a `PV` bus. Units: kV.",
+      "type": "number",
+      "x-unit": "kV"
     },
     "max_shunt_current": {
-      "type": "number"
+      "description": "Maximum shunt current at the sending end bus; entered at unity voltage. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
     },
     "reactive_power_required": {
-      "type": "number"
+      "description": "Total reactive power required to hold voltage at sending bus, as a fraction in the range 0-1. Units: 1.",
+      "type": "number",
+      "x-unit": "1"
     },
     "dynamic_injector": {
-      "type": null
+      "description": "ID of the corresponding dynamic injection model for FACTS control device, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

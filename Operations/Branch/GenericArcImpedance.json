@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A generic branch defined by a series impedance on an `Arc` between two buses.",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
+      "type": "boolean"
+    },
+    "active_power_flow": {
+      "description": "Initial condition of active power flow on the line. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
+    },
+    "reactive_power_flow": {
+      "description": "Initial condition of reactive power flow on the line. Units: MVAr.",
+      "type": "number",
+      "x-unit": "MVAr"
+    },
+    "max_flow": {
+      "description": "Maximum allowable flow on the generic impedance. Per-unit on system base. Units: pu.",
+      "type": "number",
+      "x-unit": "pu"
+    },
+    "arc": {
+      "description": "An `Arc` defining this line `from` a bus `to` another bus.",
+      "type": "integer"
+    },
+    "r": {
+      "description": "Resistance. Per-unit on system base. Units: pu.",
+      "type": "number",
+      "x-unit": "pu"
+    },
+    "x": {
+      "description": "Reactance. Per-unit on system base. Units: pu.",
+      "type": "number",
+      "x-unit": "pu"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "available",
+    "active_power_flow",
+    "reactive_power_flow",
+    "max_flow",
+    "arc",
+    "r",
+    "x"
+  ],
+  "title": "GenericArcImpedance",
+  "type": "object"
+}
