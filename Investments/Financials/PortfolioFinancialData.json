@@ -8,17 +8,20 @@
     "discount_rate": {
       "type": "number",
       "default": 0.0,
-      "description": "Discount rate for financial calculations"
+      "description": "Discount rate for financial calculations. Units: 1",
+      "x-unit": "1"
     },
     "inflation_rate": {
       "type": "number",
       "default": 0.0,
-      "description": "Inflation rate for cost adjustments"
+      "description": "Inflation rate for cost adjustments. Units: 1",
+      "x-unit": "1"
     },
     "interest_rate": {
       "type": "number",
       "default": 0.0,
-      "description": "Interest rate for financing calculations"
+      "description": "Interest rate for financing calculations. Units: 1",
+      "x-unit": "1"
     },
     "base_year": {
       "type": "integer",

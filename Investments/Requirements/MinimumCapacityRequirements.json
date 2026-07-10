@@ -19,7 +19,8 @@
     },
     "min_capacity_mw": {
       "type": "number",
-      "description": "Minimum total capacity across all eligible resources (MW)"
+      "description": "Minimum total capacity across all eligible resources. Units: MW",
+      "x-unit": "MW"
     }
   },
   "required": [

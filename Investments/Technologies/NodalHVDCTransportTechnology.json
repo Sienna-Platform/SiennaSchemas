@@ -25,21 +25,25 @@
       "type": "integer",
       "description": "End node for transport technology"
     },
-    "capacity_limits": {
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "description": "Allowable capacity for a transmission line (MW)"
-    },
     "capital_costs": {
       "$ref": "../../Core/common.json#/definitions/ValueCurve",
-      "description": "Cost of adding new capacity to the nodal transmission line. (USD/MW)"
+      "description": "Cost of adding new capacity to the nodal transmission line. Units: USD/MW",
+      "x-unit": "USD/MW"
+    },
+    "capacity_limits": {
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "description": "Allowable capacity for a transmission line. Units: MW",
+      "x-unit": "MW"
     },
     "line_loss": {
       "$ref": "../../Core/common.json#/definitions/ValueCurve",
-      "description": "Loss model coefficients. It accepts a linear model with a constant loss and a proportional loss rate. All terms are defined as fraction of installed nameplate capacity It also accepts a Piecewise loss, with N segments to specify different proportional losses for different segments."
+      "description": "Loss model coefficients. It accepts a linear model with a constant loss and a proportional loss rate. All terms are defined as fraction of installed nameplate capacity It also accepts a Piecewise loss, with N segments to specify different proportional losses for different segments. Units: 1",
+      "x-unit": "1"
     },
     "unit_size": {
       "type": "number",
-      "description": "Used for integer investment decisions. Represents the rating capacity of individual new lines (MW)"
+      "description": "Used for integer investment decisions. Represents the rating capacity of individual new lines. Units: MW",
+      "x-unit": "MW"
     },
     "requirements": {
       "type": "array",

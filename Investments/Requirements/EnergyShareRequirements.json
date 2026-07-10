@@ -20,7 +20,8 @@
     "generation_fraction_requirement": {
       "type": "number",
       "default": 0.0,
-      "description": "Fraction of total annual demand across all eligible zones that needs to be met by eligible resources."
+      "description": "Fraction of total annual demand across all eligible zones that needs to be met by eligible resources. Units: 1",
+      "x-unit": "1"
     }
   },
   "required": [

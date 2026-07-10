@@ -12,11 +12,13 @@
     "retrofit_potential": {
       "type": "number",
       "default": 0.0,
-      "description": "Amount of existing capacity for technology that can be retrofitted"
+      "description": "Amount of existing capacity for technology that can be retrofitted. Units: MW",
+      "x-unit": "MW"
     },
     "retrofit_fraction": {
       "type": "number",
-      "description": "Fraction of existing capacity that is eligible for retrofits. Alternative to retrofit_potential"
+      "description": "Fraction of existing capacity that is eligible for retrofits. Alternative to retrofit_potential. Units: 1",
+      "x-unit": "1"
     }
   },
   "required": [

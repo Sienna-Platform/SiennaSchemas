@@ -18,6 +18,13 @@
       "type": "string",
       "description": "Corresponding type to be used in PCM modeling"
     },
+    "region": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "description": "Location where the component applies. Can be a zone or node."
+    },
     "conformity": {
       "type": "string",
       "default": "UNDEFINED",
@@ -26,32 +33,29 @@
     "growth_rate": {
       "type": "number",
       "default": 0.0,
-      "description": "The annual growth rate of the demand requirement, used to scale present-day loads into future projections. Should only be used for conforming loads"
+      "description": "The annual growth rate of the demand requirement, used to scale present-day loads into future projections. Should only be used for conforming loads. Units: 1",
+      "x-unit": "1"
     },
     "new_demand_mw": {
       "type": "number",
       "default": 0.0,
-      "description": "The value of the peak demand to be used for new DemandRequirements."
+      "description": "The value of the peak demand to be used for new DemandRequirements. Units: MW",
+      "x-unit": "MW"
     },
     "new_construction_year": {
       "type": "integer",
       "default": 2020,
       "description": "The year in which the new demand requirement will be installed. Should only be used for new demand requirements."
     },
-    "region": {
-      "type": "array",
-      "items": {
-        "type": "integer"
-      },
-      "description": "Location where the component applies. Can be a zone or node."
-    },
     "value_of_lost_load": {
       "type": "number",
-      "description": "Value of unserved load (USD/MWh)"
+      "description": "Value of unserved load. Units: USD/MWh",
+      "x-unit": "USD/MWh"
     },
     "unserved_demand_curve": {
       "$ref": "../../Core/common.json#/definitions/ValueCurve",
-      "description": "Piecewise curve to scale the cost of unserved load based on the value of lost load"
+      "description": "Piecewise curve to scale the cost of unserved load based on the value of lost load. Units: USD/MWh",
+      "x-unit": "USD/MWh"
     },
     "requirements": {
       "type": "array",

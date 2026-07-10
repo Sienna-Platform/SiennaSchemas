@@ -20,11 +20,13 @@
     "max_tons_mwh": {
       "type": "number",
       "default": 100000000,
-      "description": "Emission limit in terms of rate (tCO2/MWh)"
+      "description": "Emission limit in terms of rate. Units: tCO2/MWh",
+      "x-unit": "tCO2/MWh"
     },
     "max_mtons": {
       "type": "number",
-      "description": "Emission limit in absolute values (million tCO2)"
+      "description": "Emission limit in absolute values (million tonnes). Units: Mt",
+      "x-unit": "Mt"
     }
   },
   "required": [

@@ -19,7 +19,8 @@
     },
     "max_capacity_mw": {
       "type": "number",
-      "description": "Maximum total capacity across all eligible resources (MW)"
+      "description": "Maximum total capacity across all eligible resources. Units: MW",
+      "x-unit": "MW"
     }
   },
   "required": [
