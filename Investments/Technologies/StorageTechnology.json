@@ -2,90 +2,114 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
-      "type": "integer"
+      "type": "integer",
+      "description": "ID for individual component"
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "description": "Name of the component"
     },
     "available": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`)"
     },
     "region": {
       "type": "array",
       "items": {
         "type": "integer"
-      }
+      },
+      "description": "Location where the component applies. Can be a zone or node."
     },
     "power_systems_type": {
-      "type": "string"
+      "type": "string",
+      "description": "Corresponding type to be used in PCM modeling"
     },
     "min_discharge_fraction": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Minimum discharge as a fraction of total discharge capacity"
     },
     "prime_mover_type": {
       "$ref": "../../Core/common.json#/definitions/PrimeMovers",
-      "default": "OT"
+      "default": "OT",
+      "description": "Prime mover for generator"
     },
     "storage_tech": {
-      "$ref": "../../Core/common.json#/definitions/StorageTech"
+      "$ref": "../../Core/common.json#/definitions/StorageTech",
+      "description": "Storage Technology Type"
     },
     "capital_costs_energy": {
-      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "description": "Capital costs for investing in a technology. (USD/MWh)"
     },
     "capital_costs_charge": {
-      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "description": "Capital costs for investing in a technology. (USD/MW)"
     },
     "capital_costs_discharge": {
-      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "description": "Capital costs for investing in a technology. (USD/MW)"
     },
     "operation_costs": {
-      "$ref": "../../Core/common.json#/definitions/StorageCost"
+      "$ref": "../../Core/common.json#/definitions/StorageCost",
+      "description": "Fixed and variable O&M costs for a technology"
     },
     "unit_size_discharge": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Used for discrete investment decisions. Size of each unit of discharging capacity being built (MW)"
     },
     "unit_size_charge": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Used for discrete investment decisions. Unit size of charging capacity (MW)"
     },
     "unit_size_energy": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Used for discrete investment decisions. Size of each unit being built (MWh)"
     },
     "capacity_limits_charge": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "description": "allowable installed power capacity for a storage technology (MW)"
     },
     "capacity_limits_discharge": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "description": "allowable installed power capacity for a storage technology (MW)"
     },
     "capacity_limits_energy": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "description": "allowable installed energy capacity for a storage technology (MWh)"
     },
     "duration_limits": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "description": "Minimum and maximum duration limits (energy to discharge capacity ratio) for a storage technology (hours)"
     },
     "efficiency": {
-      "$ref": "../../Core/common.json#/definitions/InOut"
+      "$ref": "../../Core/common.json#/definitions/InOut",
+      "description": "Efficiency of charging storage, fraction of total charge (in) and discharge (out) capacity"
     },
     "losses": {
       "type": "number",
-      "default": 1.0
+      "default": 1.0,
+      "description": "Self-discharge of storage (fraction of energy stored per hour)"
     },
     "lifetime": {
       "type": "integer",
-      "default": 100
+      "default": 100,
+      "description": "Maximum number of years a technology can be active once installed (years)"
     },
     "requirements": {
       "type": "array",
       "default": [],
       "items": {
         "type": "integer"
-      }
+      },
+      "description": "List of requirement IDs associated with the component"
     },
     "financial_data": {
-      "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
+      "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData",
+      "description": "Struct containing relevant financial information for a technology"
     }
   },
   "required": [

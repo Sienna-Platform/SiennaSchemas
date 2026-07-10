@@ -2,52 +2,64 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
-      "type": "integer"
+      "type": "integer",
+      "description": "ID for individual component"
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "description": "Name of the component"
     },
     "available": {
       "type": "boolean",
-      "default": true
+      "default": true,
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`)"
     },
     "power_systems_type": {
-      "type": "string"
+      "type": "string",
+      "description": "Corresponding type to be used in PCM modeling"
     },
     "conformity": {
       "type": "string",
-      "default": "UNDEFINED"
+      "default": "UNDEFINED",
+      "description": "Indicator of how the demand requirement should conform to the load profile of existing technologies in the system. Should only be used for new demand requirements."
     },
     "growth_rate": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "The annual growth rate of the demand requirement, used to scale present-day loads into future projections. Should only be used for conforming loads"
     },
     "new_demand_mw": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "The value of the peak demand to be used for new DemandRequirements."
     },
     "new_construction_year": {
       "type": "integer",
-      "default": 2020
+      "default": 2020,
+      "description": "The year in which the new demand requirement will be installed. Should only be used for new demand requirements."
     },
     "region": {
       "type": "array",
       "items": {
         "type": "integer"
-      }
+      },
+      "description": "Location where the component applies. Can be a zone or node."
     },
     "value_of_lost_load": {
-      "type": "number"
+      "type": "number",
+      "description": "Value of unserved load (USD/MWh)"
     },
     "unserved_demand_curve": {
-      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "description": "Piecewise curve to scale the cost of unserved load based on the value of lost load"
     },
     "requirements": {
       "type": "array",
       "default": [],
       "items": {
         "type": "integer"
-      }
+      },
+      "description": "List of requirement IDs associated with the component"
     }
   },
   "required": [

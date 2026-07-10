@@ -2,14 +2,17 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
-      "type": "integer"
+      "type": "integer",
+      "description": "ID for individual component"
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "description": "Name of the component"
     },
     "bus_type": {
       "$ref": "../../Core/common.json#/definitions/ACBusType",
-      "default": "PQ"
+      "default": "PQ",
+      "description": "AC Bus Type for a node"
     }
   },
   "required": [

@@ -2,95 +2,117 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
-      "type": "integer"
+      "type": "integer",
+      "description": "ID for individual component"
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "description": "Name of the component"
     },
     "available": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`)"
     },
     "power_systems_type": {
-      "type": "string"
+      "type": "string",
+      "description": "Corresponding type to be used in PCM modeling"
     },
     "region": {
       "type": "array",
       "items": {
         "type": "integer"
-      }
+      },
+      "description": "Location where the component applies. Can be a zone or node."
     },
     "prime_mover_type": {
       "$ref": "../../Core/common.json#/definitions/PrimeMovers",
-      "default": "OT"
+      "default": "OT",
+      "description": "Prime mover for generator"
     },
     "fuel": {
       "type": "array",
       "items": {
         "$ref": "../../Core/common.json#/definitions/ThermalFuels"
-      }
+      },
+      "description": "Fuel type according to IEA"
     },
     "co2": {
       "type": "object",
       "additionalProperties": {
         "type": "number"
-      }
+      },
+      "description": "Carbon Intensity of fuel"
     },
     "cofire_start_limits": {
       "type": "object",
       "additionalProperties": {
         "$ref": "../../Core/common.json#/definitions/MinMax"
-      }
+      },
+      "description": "Minimum and maximum blending level (%) of each fuel during start-up process for multi-fuel generator"
     },
     "cofire_level_limits": {
       "type": "object",
       "additionalProperties": {
         "$ref": "../../Core/common.json#/definitions/MinMax"
-      }
+      },
+      "description": "Minimum and maximum blending level (%) of each fuel during normal generation process for multi-fuel generator"
     },
     "capital_costs": {
-      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "description": "Capital costs for investing in a technology. (USD/MW)"
     },
     "operation_costs": {
-      "$ref": "../../Core/common.json#/definitions/GenericOperationCost"
+      "$ref": "../../Core/common.json#/definitions/GenericOperationCost",
+       "description": "Fixed and variable O&M costs for a technology"
     },
     "unit_size": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Used for discrete investment decisions. Size of each unit being built (MW)"
     },
     "capacity_limits": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "description": "Minimum and maximum allowable installed capacity for a technology (MW)"
     },
     "outage_factor": {
       "type": "number",
-      "default": 1.0
+      "default": 1.0,
+      "description": "Derating factor to account for planned or forced outages of a technology. Fraction of hours in a year where technology is unavailable."
     },
     "min_generation_fraction": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Minimum generation as a fraction of total capacity (MW)"
     },
     "ramp_limits": {
-      "$ref": "../../Core/common.json#/definitions/UpDown"
+      "$ref": "../../Core/common.json#/definitions/UpDown",
+      "description": "Maximum decrease and increase in output between operation periods. Fraction of nameplate capacity per hour"
     },
     "time_limits": {
-      "$ref": "../../Core/common.json#/definitions/UpDown"
+      "$ref": "../../Core/common.json#/definitions/UpDown",
+      "description": "Minimum amount of time a resource has to stay in the committed or shutdown state (hours)."
     },
     "start_fuel_mmbtu_per_mw": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Startup fuel use per MW of nameplate capacity of each generator (MMBtu/MW per start)"
     },
     "lifetime": {
       "type": "integer",
-      "default": 100
+      "default": 100,
+      "description": "Maximum number of years a technology can be active once installed (years)"
     },
     "requirements": {
       "type": "array",
       "default": [],
       "items": {
         "type": "integer"
-      }
+      },
+      "description": "List of requirement IDs associated with the component"
     },
     "financial_data": {
-      "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
+      "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData",
+      "description": "Struct containing relevant financial information for a technology"
     }
   },
   "required": [

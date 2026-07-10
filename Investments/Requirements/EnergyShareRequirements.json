@@ -2,20 +2,25 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
-      "type": "integer"
+      "type": "integer",
+      "description": "ID for individual component"
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "description": "Name of the component"
     },
     "available": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`)"
     },
     "target_year": {
-      "type": "integer"
+      "type": "integer",
+      "description": "Year in which this requirement is applied"
     },
     "generation_fraction_requirement": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Fraction of total annual demand across all eligible zones that needs to be met by eligible resources."
     }
   },
   "required": [

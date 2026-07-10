@@ -1235,28 +1235,34 @@
       "type": "string"
     },
     "TechnologyFinancialData": {
-        "properties": {
-          "capital_recovery_period": {
-              "type": "integer"
-          },
-          "technology_base_year": {
-              "type": "integer"
-          },
-          "debt_fraction": {
-              "type": "number"
-          },
-          "debt_rate": {
-              "type": "number"
-          },
-          "return_on_equity": {
-              "type": "number"
-          },
-          "tax_rate": {
-              "type": "number"
-          }
+      "properties": {
+        "capital_recovery_period": {
+          "type": "integer",
+          "description": "Capital recovery period (in years) used for determining overnight capital costs from annualized investment costs"
         },
-        "title": "TechnologyFinancialData",
-        "type": "object"
+        "technology_base_year": {
+          "type": "integer",
+          "description": "Year for which all dollar values for this technology are reported. Will be converted to dollars in the portfolio base year."
+        },
+        "debt_fraction": {
+          "type": "number",
+          "description": "Fraction of capital financed with debt"
+        },
+        "debt_rate": {
+          "type": "number",
+          "description": "Nominal debt rate for a technology"
+        },
+        "return_on_equity": {
+          "type": "number",
+          "description": "Assumed rate of return on the share of assets financed with equity"
+        },
+        "tax_rate": {
+          "type": "number",
+          "description": "Combined assumed marginal state and federal tax rate"
+        }
+      },
+      "title": "TechnologyFinancialData",
+      "type": "object"
     },
     "WindingCategory": {
       "enum": [

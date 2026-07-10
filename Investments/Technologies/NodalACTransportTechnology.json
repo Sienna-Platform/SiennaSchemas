@@ -2,54 +2,68 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
-      "type": "integer"
+      "type": "integer",
+      "description": "ID for individual component"
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "description": "Name of the component"
     },
     "available": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`)"
     },
     "power_systems_type": {
-      "type": "string"
+      "type": "string",
+      "description": "Corresponding type to be used in PCM modeling"
     },
     "start_node": {
-      "type": "integer"
+      "type": "integer",
+      "description": "Start node for transport technology"
     },
     "end_node": {
-      "type": "integer"
+      "type": "integer",
+      "description": "End node for transport technology"
     },
     "capacity_limits": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "description": "Allowable capacity for a transmission line (MW)"
     },
     "capital_costs": {
-      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "description": "Cost of adding new capacity to the nodal transmission line (USD/MW)."
     },
     "resistance": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Technology resistance in Ohms"
     },
     "voltage": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Voltage rating of transmission line (kV)"
     },
     "unit_size": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Used for integer investment decisions. Represents the rating capacity of individual new lines (MW)"
     },
     "reactance": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Series reactance for a line (ohms)"
     },
     "requirements": {
       "type": "array",
       "default": [],
       "items": {
         "type": "integer"
-      }
+      },
+      "description": "List of requirement IDs associated with the component"
     },
     "financial_data": {
-      "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
+      "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData",
+      "description": "Struct containing relevant financial information for a technology"
     }
   },
   "required": [

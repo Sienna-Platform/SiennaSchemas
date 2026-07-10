@@ -2,22 +2,27 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
-      "type": "integer"
+      "type": "integer",
+      "description": "ID for individual component"
     },
     "discount_rate": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Discount rate for financial calculations"
     },
     "inflation_rate": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Inflation rate for cost adjustments"
     },
     "interest_rate": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Interest rate for financing calculations"
     },
     "base_year": {
-      "type": "integer"
+      "type": "integer",
+      "description": "Base economic year. All costs will be converted to a net present value in this year."
     }
   },
   "required": [

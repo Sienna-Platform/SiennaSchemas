@@ -2,19 +2,24 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
-      "type": "integer"
+      "type": "integer",
+      "description": "ID for individual component"
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "description": "Name of the component"
     },
     "available": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`)"
     },
     "target_year": {
-      "type": "integer"
+      "type": "integer",
+      "description": "Year in which this requirement is applied"
     },
     "max_capacity_mw": {
-      "type": "number"
+      "type": "number",
+      "description": "Maximum total capacity across all eligible resources (MW)"
     }
   },
   "required": [

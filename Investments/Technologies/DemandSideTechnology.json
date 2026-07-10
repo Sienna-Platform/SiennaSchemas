@@ -2,62 +2,78 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
-      "type": "integer"
+      "type": "integer",
+      "description": "ID for individual component"
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "description": "Name of the component"
     },
     "available": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`)"
     },
     "region": {
       "type": "array",
       "items": {
         "type": "integer"
-      }
+      },
+      "description": "Location where the component applies. Can be a zone or node."
     },
     "power_systems_type": {
-      "type": "string"
+      "type": "string",
+      "description": "Corresponding type to be used in PCM modeling"
     },
     "technology_efficiency": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "MWh of electricity per unit of output. Ex: MWh per ton of hydrogen for electrolyzers"
     },
     "price_per_unit": {
-      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "description": "Price or value per unit of output. Ex: USD per ton of hydrogen for electrolyzers"
     },
     "min_power": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Minimum operation of demandside unit as a fraction of peak demand"
     },
     "peak_demand_mw": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "description": "Peak demand value in MW"
     },
     "max_demand_delay": {
-      "type": "number"
+      "type": "number",
+      "description": "Maximum number of hours that demand can be deferred or delayed (hours)."
     },
     "max_demand_advance": {
-      "type": "number"
+      "type": "number",
+      "description": "Maximum number of hours that demand can be scheduled in advance of the original schedule (hours)."
     },
     "demand_energy_efficiency": {
-      "type": "number"
+      "type": "number",
+      "description": "Energy efficiency associated with time shifting demand. Represents energy losses due to time shifting"
     },
     "shift_variable_cost": {
-      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "description": "Variable operation and maintenance costs associated with flexible demand deferral/advancement"
     },
     "curtailment_cost": {
-      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "description": "Energy cost of curtailed demand, USD per Mwh"
     },
     "max_demand_curtailment": {
-      "type": "number"
+      "type": "number",
+      "description": "Maximum fraction of demand that can be curtailed"
     },
     "requirements": {
       "type": "array",
       "default": [],
       "items": {
         "type": "integer"
-      }
+      },
+      "description": "List of requirement IDs associated with the component"
     }
   },
   "required": [

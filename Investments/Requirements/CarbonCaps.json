@@ -2,23 +2,29 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
-      "type": "integer"
+      "type": "integer",
+      "description": "ID for individual component"
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "description": "Name of the component"
     },
     "available": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`)"
     },
     "target_year": {
-      "type": "integer"
+      "type": "integer",
+      "description": "Year in which this requirement is applied"
     },
     "max_tons_mwh": {
       "type": "number",
-      "default": 100000000
+      "default": 100000000,
+      "description": "Emission limit in terms of rate (tCO2/MWh)"
     },
     "max_mtons": {
-      "type": "number"
+      "type": "number",
+      "description": "Emission limit in absolute values (million tCO2)"
     }
   },
   "required": [

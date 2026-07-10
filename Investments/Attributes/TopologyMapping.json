@@ -2,13 +2,15 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
-      "type": "integer"
+      "type": "integer",
+      "description": "ID for individual component"
     },
     "buses": {
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "List of buses in the base system that are associated with a zone"
     }
   },
   "required": [
