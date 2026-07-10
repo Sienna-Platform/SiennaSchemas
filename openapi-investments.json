@@ -77,9 +77,6 @@
       "SupplyTechnology": {
         "$ref": "Investments/Technologies/SupplyTechnology.json"
       },
-      "TechnologyFinancialData": {
-        "$ref": "Investments/Financials/TechnologyFinancialData.json"
-      },
       "TopologyMapping": {
         "$ref": "Investments/Attributes/TopologyMapping.json"
       },
