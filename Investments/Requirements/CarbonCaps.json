@@ -27,8 +27,8 @@
         "max_tons_mwh": {
             "type": "number",
             "default": "1e8",
-            "x-unit": "t/MWh",
-            "description": "Units: t/MWh."
+            "x-unit": "Mt/MWh",
+            "description": "Units: Mt/MWh."
         },
         "max_mtons": {
             "type": "number",
