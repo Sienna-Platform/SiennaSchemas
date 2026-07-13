@@ -182,6 +182,71 @@ def discriminator_enum(disc_prop_schema, source_path):
     return None
 
 
+def validate_x_units_map(x_units, path, enclosing_props, source_path,
+                         source_file, failures, allowed_units):
+    """Validate an ``x-units`` map.
+
+    Each value is either a unit string (leaf) or a nested discriminator object
+    ``{"x-unit-discriminator": <sibling>, "x-units": {...}}`` for a
+    multi-dimensional unit (e.g. a VSC setpoint whose quantity depends on the
+    control mode and whose basis then depends on a unit-basis sibling). Nested
+    objects are validated recursively: the nested discriminator must name an
+    existing sibling whose enum equals the nested ``x-units`` keys, and the
+    nested leaves must be vocabulary units.
+    """
+    for key, val in x_units.items():
+        subpath = f"{path}/{key}"
+        if isinstance(val, str):
+            if val not in allowed_units:
+                failures.append(
+                    Failure(source_file, subpath, "x-unit-vocabulary",
+                            val, "a unit in Core/units.json allowed_units or 'pu'")
+                )
+        elif isinstance(val, dict):
+            nested_disc = val.get("x-unit-discriminator")
+            nested_units = val.get("x-units")
+            if nested_disc is None or not isinstance(nested_units, dict):
+                failures.append(
+                    Failure(source_file, subpath, "x-units-nested-shape",
+                            "nested value",
+                            "a unit string or a nested "
+                            "{x-unit-discriminator, x-units} object")
+                )
+                continue
+            if enclosing_props is None or nested_disc not in enclosing_props:
+                failures.append(
+                    Failure(source_file, f"{subpath}/x-unit-discriminator",
+                            "x-unit-discriminator-sibling", nested_disc,
+                            "an existing sibling property name")
+                )
+            else:
+                enum = discriminator_enum(enclosing_props[nested_disc], source_path)
+                keys = set(nested_units.keys())
+                if enum is None:
+                    failures.append(
+                        Failure(source_file, f"{subpath}/x-unit-discriminator",
+                                "x-units-keys-equal-enum",
+                                f"discriminator '{nested_disc}'",
+                                "a discriminator with a resolvable enum "
+                                "(enum, boolean, or $ref to an enum)")
+                    )
+                elif keys != enum:
+                    failures.append(
+                        Failure(source_file, f"{subpath}/x-units",
+                                "x-units-keys-equal-enum", sorted(keys),
+                                sorted(enum))
+                    )
+            validate_x_units_map(nested_units, f"{subpath}/x-units",
+                                 enclosing_props, source_path, source_file,
+                                 failures, allowed_units)
+        else:
+            failures.append(
+                Failure(source_file, subpath, "x-units-value-type",
+                        type(val).__name__,
+                        "a unit string or a nested discriminator object")
+            )
+
+
 def check_annotations(node, path, source_file, source_path, properties_stack,
                       failures, allowed_units, col_allowed=None, prop_name=None):
     """Walk the schema recursively enforcing rules 2, 3, 4, 5, 6."""
@@ -227,18 +292,16 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
                             f"{sorted(col_allowed[prop_name])}")
                 )
 
-        # Rule 2: x-units values.
-        if "x-units" in node and isinstance(node["x-units"], dict):
-            for k, val in node["x-units"].items():
-                if val not in allowed_units:
-                    failures.append(
-                        Failure(source_file, f"{path}/x-units/{k}", "x-unit-vocabulary",
-                                val, "a unit in Core/units.json allowed_units or 'pu'")
-                    )
-
         # Rules 3 & 4 apply to annotations on a property. The property's
         # sibling set is the enclosing "properties" map (properties_stack top).
         enclosing_props = properties_stack[-1] if properties_stack else None
+
+        # Rule 2: x-units values (recursive — supports nested discriminators for
+        # multi-dimensional units).
+        if "x-units" in node and isinstance(node["x-units"], dict):
+            validate_x_units_map(node["x-units"], f"{path}/x-units",
+                                 enclosing_props, source_path, source_file,
+                                 failures, allowed_units)
 
         # Rule 3: x-unit-base names an existing sibling property.
         if "x-unit-base" in node:

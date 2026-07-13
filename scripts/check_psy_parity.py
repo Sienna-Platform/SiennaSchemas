@@ -123,8 +123,27 @@ PLANT_SA_STRUCTS = {
 }
 
 # Deliberate schemas-ahead-of-PSY properties.
+# Fields intentionally present only in the schema, with no PowerSystems.jl
+# counterpart. The unit-basis discriminators belong here: under the flexible
+# unit-basis design PSY stores each value in a single (per-unit) basis, while the
+# schema/GridDB layer records the storage basis per row via these discriminator
+# properties (see SiennaGridDB flexible-unit-basis plan). They have no PSY field.
+# base_power on Line/MonitoredLine/GenericArcImpedance is the SYSTEM base,
+# recorded per component in lieu of a system-level table/JSON entry — a
+# deliberate schema-only exception; PSY stores no such field and never will.
 SCHEMA_AHEAD = {
-    "Source": {"base_voltage"},
+    "Source": {"base_voltage", "parameter_units"},
+    "TModelHVDCLine": {"parameter_units"},
+    "TwoTerminalLCCLine": {"parameter_units", "dc_voltage_units"},
+    "TwoTerminalVSCLine": {"admittance_units", "voltage_units"},
+    "FixedAdmittance": {"admittance_units"},
+    "SwitchedAdmittance": {"admittance_units"},
+    "FACTSControlDevice": {"voltage_setpoint_units"},
+    "TapTransformer": {"voltage_setpoint_units"},
+    "InterconnectingConverter": {"voltage_setpoint_units"},
+    "Line": {"base_power"},
+    "MonitoredLine": {"base_power"},
+    "GenericArcImpedance": {"base_power", "parameter_units"},
 }
 
 # Schema components with no PSY struct by design (association normalization
