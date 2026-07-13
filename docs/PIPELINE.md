@@ -1,15 +1,13 @@
 # The Sienna Data Pipeline: Single Source of Truth
 
 The JSON Schemas in this repository, together with the unit vocabulary in
-`Core/units.json`, define every component and every unit exactly once. All
-other representations — the Julia and Python model packages, the SiennaGridDB
-SQLite registry and DDL, and the PowerSystems.jl data model — are either
-generated from the schemas or gate-checked against them.
+`Core/units.json`, define every component and every unit exactly once. The
+Julia and Python model packages and the SiennaGridDB SQLite registry and DDL
+are generated from the schemas. PowerSystems.jl is a separate, external data
+model that is gate-checked against these schemas for field parity, but is not
+itself part of this repository's generation pipeline.
 
 ```
-                       PowerSystems.jl (psy6 descriptor)
-                                 ▲ parity gate: scripts/check_psy_parity.py
-                                 │
 Core/units.json ──► JSON Schemas (x-unit annotated)
                                  │
                 scripts/bundle_specs.py ──► dist/openapi-*-bundled.json
