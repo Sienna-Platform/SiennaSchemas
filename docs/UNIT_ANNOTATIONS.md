@@ -95,6 +95,37 @@ Rules:
 
 - Every value in `x-units` must be in the vocabulary (or `"pu"`).
 
+#### Nested discriminators (multi-dimensional units)
+
+A property's unit sometimes depends on **two** siblings. The canonical case is a
+VSC converter setpoint: the control mode selects the *quantity* (power vs
+voltage), and for the voltage modes a unit-basis sibling then selects pu vs kV.
+An `x-units` **value** may therefore be either a unit string (leaf) or a nested
+`{ "x-unit-discriminator": <sibling>, "x-units": { ... } }` object:
+
+```json
+"dc_control_from": { "$ref": "../../Core/common.json#/definitions/VSCDCControlModes" },
+"voltage_units":   { "$ref": "../../Core/common.json#/definitions/VoltageUnitBasis" },
+"dc_setpoint_from": {
+  "type": "number",
+  "x-unit-discriminator": "dc_control_from",
+  "x-units": {
+    "DC_POWER": "MW",
+    "DC_VOLTAGE":       { "x-unit-discriminator": "voltage_units",
+                          "x-units": { "SYSTEM_BASE": "pu", "NATURAL_UNITS": "kV" } },
+    "DC_VOLTAGE_DROOP": { "x-unit-discriminator": "voltage_units",
+                          "x-units": { "SYSTEM_BASE": "pu", "NATURAL_UNITS": "kV" } }
+  }
+}
+```
+
+Rules (applied recursively to every nesting level):
+
+- Each nested object must have both `x-unit-discriminator` and `x-units`.
+- The nested discriminator must name an existing sibling of the annotated
+  property, and its `x-units` key set must exactly equal that sibling's enum.
+- Leaf values must be vocabulary units (or `"pu"`).
+
 ## Placement warning: annotations as `$ref` siblings are invisible until bundling
 
 Under JSON Schema draft-07 and OpenAPI 3.0, any keyword placed **as a sibling
