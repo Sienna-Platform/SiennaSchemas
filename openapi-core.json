@@ -11,11 +11,11 @@
       "ACBusType": {
         "$ref": "Core/common.json#/definitions/ACBusType"
       },
+      "MarketBidCost": {
+        "$ref": "Core/common.json#/definitions/MarketBidCost"
+      },
       "AverageRateCurve": {
         "$ref": "Core/common.json#/definitions/AverageRateCurve"
-      },
-      "CombinedCycleConfiguration": {
-        "$ref": "Core/common.json#/definitions/CombinedCycleConfiguration"
       },
       "ComplexNumber": {
         "$ref": "Core/common.json#/definitions/ComplexNumber"
@@ -26,23 +26,14 @@
       "DbdPnts": {
         "$ref": "Core/common.json#/definitions/DbdPnts"
       },
-      "DiscreteControlledBranchStatus": {
-        "$ref": "Core/common.json#/definitions/DiscreteControlledBranchStatus"
-      },
-      "DiscreteControlledBranchType": {
-        "$ref": "Core/common.json#/definitions/DiscreteControlledBranchType"
-      },
-      "EmissionBasis": {
-        "$ref": "Core/common.json#/definitions/EmissionBasis"
-      },
-      "EnergyUnit": {
-        "$ref": "Core/common.json#/definitions/EnergyUnit"
-      },
       "Feature": {
         "$ref": "Core/common.json#/definitions/Feature"
       },
-      "FACTSOperationModes": {
-        "$ref": "Core/common.json#/definitions/FACTSOperationModes"
+      "ImpedanceUnitBasis": {
+        "$ref": "Core/common.json#/definitions/ImpedanceUnitBasis"
+      },
+      "AdmittanceUnitBasis": {
+        "$ref": "Core/common.json#/definitions/AdmittanceUnitBasis"
       },
       "FdbdPnts": {
         "$ref": "Core/common.json#/definitions/FdbdPnts"
@@ -68,12 +59,6 @@
       "HydroStorageGenerationCost": {
         "$ref": "Core/common.json#/definitions/HydroStorageGenerationCost"
       },
-      "HydroTurbineType": {
-        "$ref": "Core/common.json#/definitions/HydroTurbineType"
-      },
-      "ImpedanceCorrectionTransformerControlMode": {
-        "$ref": "Core/common.json#/definitions/ImpedanceCorrectionTransformerControlMode"
-      },
       "ImportExportCost": {
         "$ref": "Core/common.json#/definitions/ImportExportCost"
       },
@@ -89,20 +74,11 @@
       "LinearFunctionData": {
         "$ref": "Core/common.json#/definitions/LinearFunctionData"
       },
-      "LoadConformity": {
-        "$ref": "Core/common.json#/definitions/LoadConformity"
-      },
       "LoadCost": {
         "$ref": "Core/common.json#/definitions/LoadCost"
       },
-      "MassUnit": {
-        "$ref": "Core/common.json#/definitions/MassUnit"
-      },
       "MinMax": {
         "$ref": "Core/common.json#/definitions/MinMax"
-      },
-      "MotorLoadTechnology": {
-        "$ref": "Core/common.json#/definitions/MotorLoadTechnology"
       },
       "PiecewiseLinearData": {
         "$ref": "Core/common.json#/definitions/PiecewiseLinearData"
@@ -110,29 +86,17 @@
       "PiecewiseStepData": {
         "$ref": "Core/common.json#/definitions/PiecewiseStepData"
       },
-      "PollutantType": {
-        "$ref": "Core/common.json#/definitions/PollutantType"
-      },
       "PrimeMovers": {
         "$ref": "Core/common.json#/definitions/PrimeMovers"
       },
       "ProductionVariableCostCurve": {
         "$ref": "Core/common.json#/definitions/ProductionVariableCostCurve"
       },
-      "PumpHydroStatus": {
-        "$ref": "Core/common.json#/definitions/PumpHydroStatus"
-      },
       "QuadraticFunctionData": {
         "$ref": "Core/common.json#/definitions/QuadraticFunctionData"
       },
       "RenewableGenerationCost": {
         "$ref": "Core/common.json#/definitions/RenewableGenerationCost"
-      },
-      "ReserveDirection": {
-        "$ref": "Core/common.json#/definitions/ReserveDirection"
-      },
-      "ReservoirDataType": {
-        "$ref": "Core/common.json#/definitions/ReservoirDataType"
       },
       "ReservoirLocation": {
         "$ref": "Core/common.json#/definitions/ReservoirLocation"
@@ -161,9 +125,6 @@
       "ThermalRenewableGenerationCost": {
         "$ref": "Core/common.json#/definitions/ThermalRenewableGenerationCost"
       },
-      "TransformerControlObjective": {
-        "$ref": "Core/common.json#/definitions/TransformerControlObjective"
-      },
       "TurbinePump": {
         "$ref": "Core/common.json#/definitions/TurbinePump"
       },
@@ -178,12 +139,6 @@
       },
       "ValueCurve": {
         "$ref": "Core/common.json#/definitions/ValueCurve"
-      },
-      "WindingCategory": {
-        "$ref": "Core/common.json#/definitions/WindingCategory"
-      },
-      "WindingGroupNumber": {
-        "$ref": "Core/common.json#/definitions/WindingGroupNumber"
       },
       "XY_Coords": {
         "$ref": "Core/common.json#/definitions/XY_Coords"

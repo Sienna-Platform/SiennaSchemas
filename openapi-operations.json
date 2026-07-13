@@ -190,7 +190,15 @@
       },
       "VariableReserveNonSpinning": {
         "$ref": "Operations/Service/VariableReserveNonSpinning.json"
-      }
+      },
+      "VSCACControlModes": {"$ref": "Operations/common.json#/definitions/VSCACControlModes"},
+      "VSCDCControlModes": {"$ref": "Operations/common.json#/definitions/VSCDCControlModes"},
+      "CombinedCycleConfiguration": {"$ref": "Operations/common.json#/definitions/CombinedCycleConfiguration"},
+      "ReserveDirection": {"$ref": "Operations/common.json#/definitions/ReserveDirection"},
+      "WindingGroupNumber": {"$ref": "Operations/common.json#/definitions/WindingGroupNumber"},
+      "TransformerControlObjective": {"$ref": "Operations/common.json#/definitions/TransformerControlObjective"},
+      "VoltageUnitBasis": {"$ref": "Operations/common.json#/definitions/VoltageUnitBasis"},
+      "LoadConformity": {"$ref": "Operations/common.json#/definitions/LoadConformity"}
     }
   }
 }
