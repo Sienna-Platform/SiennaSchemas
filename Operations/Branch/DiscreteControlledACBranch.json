@@ -45,13 +45,31 @@
     },
     "discrete_branch_type": {
       "description": "Type of discrete control.",
-      "$ref": "../../Core/common.json#/definitions/DiscreteControlledBranchType",
-      "default": "OTHER"
+      "default": "OTHER",
+      "type": "string",
+      "enum": [
+        "SWITCH",
+        "BREAKER",
+        "OTHER"
+      ]
     },
     "branch_status": {
       "description": "Open or Close status.",
-      "$ref": "../../Core/common.json#/definitions/DiscreteControlledBranchStatus",
-      "default": "CLOSED"
+      "default": "CLOSED",
+      "type": "string",
+      "enum": [
+        "OPEN",
+        "CLOSED"
+      ]
+    },
+    "normal_branch_status": {
+      "description": "Normal (as-designed) open or close status of the device.",
+      "default": "CLOSED",
+      "type": "string",
+      "enum": [
+        "OPEN",
+        "CLOSED"
+      ]
     }
   },
   "required": [
