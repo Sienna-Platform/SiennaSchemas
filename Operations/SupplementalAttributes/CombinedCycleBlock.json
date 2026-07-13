@@ -12,7 +12,7 @@
       "description": "Name of the combined cycle block"
     },
     "configuration": {
-      "$ref": "../../Core/common.json#/definitions/CombinedCycleConfiguration"
+      "$ref": "../../Operations/common.json#/definitions/CombinedCycleConfiguration"
     },
     "heat_recovery_to_steam_factor": {
       "type": "number",

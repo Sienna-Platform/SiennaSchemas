@@ -12,7 +12,7 @@
       "description": "Name of the combined cycle fractional plant"
     },
     "configuration": {
-      "$ref": "../../Core/common.json#/definitions/CombinedCycleConfiguration"
+      "$ref": "../../Operations/common.json#/definitions/CombinedCycleConfiguration"
     }
   },
   "required": [

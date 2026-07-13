@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Shared enum definitions used only by Operations-domain components (never Investments or Dynamics). Domain-agnostic shared types remain in Core/common.json.",
+  "definitions": {
+    "VSCACControlModes": {
+      "description": "AC-side control mode of a voltage-source-converter (VSC) terminal. AC_REACTIVE_POWER: converter controls reactive power / fixed power factor. AC_VOLTAGE: converter controls the AC-side voltage magnitude.",
+      "enum": [
+        "AC_REACTIVE_POWER",
+        "AC_VOLTAGE"
+      ],
+      "title": "VSCACControlModes",
+      "type": "string"
+    },
+    "VSCDCControlModes": {
+      "description": "DC-side control mode of a voltage-source-converter (VSC) terminal. DC_POWER: converter controls active power transferred to the DC side. DC_VOLTAGE: converter controls the DC-side voltage. DC_VOLTAGE_DROOP: P-Vdc droop, V_dc = dc_setpoint - droop_gain * P_c.",
+      "enum": [
+        "DC_POWER",
+        "DC_VOLTAGE",
+        "DC_VOLTAGE_DROOP"
+      ],
+      "title": "VSCDCControlModes",
+      "type": "string"
+    },
+    "CombinedCycleConfiguration": {
+      "enum": [
+        "SingleShaftCombustionSteam",
+        "SeparateShaftCombustionSteam",
+        "DoubleCombustionOneSteam",
+        "TripleCombustionOneSteam",
+        "Other"
+      ],
+      "title": "CombinedCycleConfiguration",
+      "type": "string"
+    },
+    "ReserveDirection": {
+      "enum": [
+        "UP",
+        "DOWN",
+        "SYMMETRIC"
+      ],
+      "title": "ReserveDirection",
+      "type": "string"
+    },
+    "WindingGroupNumber": {
+      "enum": [
+        "UNDEFINED",
+        "GROUP_0",
+        "GROUP_1",
+        "GROUP_5",
+        "GROUP_6",
+        "GROUP_7",
+        "GROUP_11"
+      ],
+      "title": "WindingGroupNumber",
+      "type": "string"
+    },
+    "TransformerControlObjective": {
+      "enum": [
+        "UNDEFINED",
+        "VOLTAGE_DISABLED",
+        "REACTIVE_POWER_FLOW_DISABLED",
+        "ACTIVE_POWER_FLOW_DISABLED",
+        "CONTROL_OF_DC_LINE_DISABLED",
+        "ASYMETRIC_ACTIVE_POWER_FLOW_DISABLED",
+        "FIXED",
+        "VOLTAGE",
+        "REACTIVE_POWER_FLOW",
+        "ACTIVE_POWER_FLOW",
+        "CONTROL_OF_DC_LINE",
+        "ASYMETRIC_ACTIVE_POWER_FLOW"
+      ],
+      "title": "TransformerControlObjective",
+      "type": "string"
+    },
+    "VoltageUnitBasis": {
+      "description": "Unit basis a voltage setpoint is stored in. SYSTEM_BASE: per-unit on the bus base voltage (PSS/E RAW native for FACTS VSET). NATURAL_UNITS: kilovolts.",
+      "enum": ["SYSTEM_BASE", "NATURAL_UNITS"],
+      "title": "VoltageUnitBasis",
+      "type": "string"
+    },
+    "LoadConformity": {
+      "enum": [
+        "NON_CONFORMING",
+        "CONFORMING",
+        "UNDEFINED"
+      ],
+      "title": "LoadConformity",
+      "type": "string"
+    }
+  }
+}

@@ -54,17 +54,6 @@
       "title": "AverageRateCurve",
       "type": "object"
     },
-    "CombinedCycleConfiguration": {
-      "enum": [
-        "SingleShaftCombustionSteam",
-        "SeparateShaftCombustionSteam",
-        "DoubleCombustionOneSteam",
-        "TripleCombustionOneSteam",
-        "Other"
-      ],
-      "title": "CombinedCycleConfiguration",
-      "type": "string"
-    },
     "ComplexNumber": {
       "properties": {
         "real": {
@@ -125,23 +114,6 @@
       "title": "DbdPnts",
       "type": "object"
     },
-    "DiscreteControlledBranchStatus": {
-      "enum": [
-        "OPEN",
-        "CLOSED"
-      ],
-      "title": "DiscreteControlledBranchStatus",
-      "type": "string"
-    },
-    "DiscreteControlledBranchType": {
-      "enum": [
-        "SWITCH",
-        "BREAKER",
-        "OTHER"
-      ],
-      "title": "DiscreteControlledBranchType",
-      "type": "string"
-    },
     "EmissionBasis": {
       "enum": [
         "FUEL_INPUT",
@@ -157,15 +129,6 @@
         "MWH"
       ],
       "title": "EnergyUnit",
-      "type": "string"
-    },
-    "FACTSOperationModes": {
-      "enum": [
-        "OOS",
-        "NML",
-        "BYP"
-      ],
-      "title": "FACTSOperationModes",
       "type": "string"
     },
     "FdbdPnts": {
@@ -337,28 +300,16 @@
         }
       ]
     },
-    "HydroTurbineType": {
-      "enum": [
-        "UNKNOWN",
-        "PELTON",
-        "FRANCIS",
-        "KAPLAN",
-        "TURGO",
-        "CROSSFLOW",
-        "BULB",
-        "DERIAZ",
-        "PROPELLER",
-        "OTHER"
-      ],
-      "title": "HydroTurbineType",
+    "ImpedanceUnitBasis": {
+      "description": "Unit basis a branch/injection impedance is stored in. SYSTEM_BASE: per-unit on the system MVA/voltage base. NATURAL_UNITS: physical ohms (PSS/E RAW native for DC-line impedances).",
+      "enum": ["SYSTEM_BASE", "NATURAL_UNITS"],
+      "title": "ImpedanceUnitBasis",
       "type": "string"
     },
-    "ImpedanceCorrectionTransformerControlMode": {
-      "enum": [
-        "PHASE_SHIFT_ANGLE",
-        "TAP_RATIO"
-      ],
-      "title": "ImpedanceCorrectionTransformerControlMode",
+    "AdmittanceUnitBasis": {
+      "description": "Unit basis a shunt admittance is stored in. SYSTEM_BASE: per-unit on the system base. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance) — PSS/E RAW native for fixed/switched shunts.",
+      "enum": ["SYSTEM_BASE", "NATURAL_UNITS", "DEVICE_MVAR"],
+      "title": "AdmittanceUnitBasis",
       "type": "string"
     },
     "ImportExportCost": {
@@ -508,15 +459,6 @@
       "title": "LinearFunctionData",
       "type": "object"
     },
-    "LoadConformity": {
-      "enum": [
-        "NON_CONFORMING",
-        "CONFORMING",
-        "UNDEFINED"
-      ],
-      "title": "LoadConformity",
-      "type": "string"
-    },
     "LoadCost": {
       "description": "Cost representation for controllable load units",
       "properties": {
@@ -627,15 +569,6 @@
       },
       "title": "MinMax",
       "type": "object"
-    },
-    "MotorLoadTechnology": {
-      "enum": [
-        "INDUCTION",
-        "SYNCHRONOUS",
-        "UNDETERMINED"
-      ],
-      "title": "MotorLoadTechnology",
-      "type": "string"
     },
     "PiecewiseLinearData": {
       "properties": {
@@ -751,15 +684,6 @@
       ],
       "type": "object"
     },
-    "PumpHydroStatus": {
-      "enum": [
-        "PUMP",
-        "GEN",
-        "OFF"
-      ],
-      "title": "PumpHydroStatus",
-      "type": "string"
-    },
     "QuadraticFunctionData": {
       "properties": {
         "constant_term": {
@@ -832,31 +756,12 @@
       "title": "RenewableGenerationCost",
       "type": "object"
     },
-    "ReserveDirection": {
-      "enum": [
-        "UP",
-        "DOWN",
-        "SYMMETRIC"
-      ],
-      "title": "ReserveDirection",
-      "type": "string"
-    },
     "ReservoirLocation": {
       "enum": [
         "HEAD",
         "TAIL"
       ],
       "title": "ReservoirLocation",
-      "type": "string"
-    },
-    "ReservoirDataType": {
-      "enum": [
-        "USABLE_VOLUME",
-        "TOTAL_VOLUME",
-        "HEAD",
-        "ENERGY"
-      ],
-      "title": "ReservoirDataType",
       "type": "string"
     },
     "StartUpShutDown": {
@@ -1099,24 +1004,6 @@
       "title": "ThermalRenewableGenerationCost",
       "type": "object"
     },
-    "TransformerControlObjective": {
-      "enum": [
-        "UNDEFINED",
-        "VOLTAGE_DISABLED",
-        "REACTIVE_POWER_FLOW_DISABLED",
-        "ACTIVE_POWER_FLOW_DISABLED",
-        "CONTROL_OF_DC_LINE_DISABLED",
-        "ASYMETRIC_ACTIVE_POWER_FLOW_DISABLED",
-        "FIXED",
-        "VOLTAGE",
-        "REACTIVE_POWER_FLOW",
-        "ACTIVE_POWER_FLOW",
-        "CONTROL_OF_DC_LINE",
-        "ASYMETRIC_ACTIVE_POWER_FLOW"
-      ],
-      "title": "TransformerControlObjective",
-      "type": "string"
-    },
     "TurbinePump": {
       "properties": {
         "turbine": {
@@ -1211,25 +1098,6 @@
       "title": "ValueCurve",
       "type": "object"
     },
-    "VSCACControlModes": {
-      "description": "AC-side control mode of a voltage-source-converter (VSC) terminal. AC_REACTIVE_POWER: converter controls reactive power / fixed power factor. AC_VOLTAGE: converter controls the AC-side voltage magnitude.",
-      "enum": [
-        "AC_REACTIVE_POWER",
-        "AC_VOLTAGE"
-      ],
-      "title": "VSCACControlModes",
-      "type": "string"
-    },
-    "VSCDCControlModes": {
-      "description": "DC-side control mode of a voltage-source-converter (VSC) terminal. DC_POWER: converter controls active power transferred to the DC side. DC_VOLTAGE: converter controls the DC-side voltage. DC_VOLTAGE_DROOP: P-Vdc droop, V_dc = dc_setpoint - droop_gain * P_c.",
-      "enum": [
-        "DC_POWER",
-        "DC_VOLTAGE",
-        "DC_VOLTAGE_DROOP"
-      ],
-      "title": "VSCDCControlModes",
-      "type": "string"
-    },
     "TechnologyFinancialData": {
         "properties": {
           "capital_recovery_period": {
@@ -1253,29 +1121,6 @@
         },
         "title": "TechnologyFinancialData",
         "type": "object"
-    },
-    "WindingCategory": {
-      "enum": [
-        "TR2W_WINDING",
-        "PRIMARY_WINDING",
-        "SECONDARY_WINDING",
-        "TERTIARY_WINDING"
-      ],
-      "title": "WindingCategory",
-      "type": "string"
-    },
-    "WindingGroupNumber": {
-      "enum": [
-        "UNDEFINED",
-        "GROUP_0",
-        "GROUP_1",
-        "GROUP_5",
-        "GROUP_6",
-        "GROUP_7",
-        "GROUP_11"
-      ],
-      "title": "WindingGroupNumber",
-      "type": "string"
     },
     "XY_Coords": {
       "properties": {
