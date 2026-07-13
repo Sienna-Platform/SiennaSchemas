@@ -30,7 +30,7 @@
     "conformity": {
       "description": "Indicates whether the specified load is conforming or non-conforming.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/LoadConformity"
+      "$ref": "../../Operations/common.json#/definitions/LoadConformity"
     },
     "constant_active_power": {
       "description": "Constant active power demand (P_P). Units: MW.",

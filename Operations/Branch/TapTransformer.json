@@ -81,12 +81,12 @@
     "winding_group_number": {
       "description": "Vector group number ('clock number') indicating fixed phase shift between the `from` and `to` buses due to the connection group configuration.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/WindingGroupNumber"
+      "$ref": "../../Operations/common.json#/definitions/WindingGroupNumber"
     },
     "control_objective": {
       "description": "Control objective for the tap changer for power flow calculations.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/TransformerControlObjective"
+      "$ref": "../../Operations/common.json#/definitions/TransformerControlObjective"
     },
     "tap_limits": {
       "description": "Minimum and maximum tap ratio (per-unit turns ratio) over which the tap changer may regulate. Units: 1.",
@@ -107,11 +107,20 @@
       "default": 0,
       "type": "integer"
     },
+    "voltage_setpoint_units": {
+      "description": "Unit basis for the voltage setpoint. SYSTEM_BASE: per-unit on the bus base voltage. NATURAL_UNITS: kV.",
+      "default": "SYSTEM_BASE",
+      "$ref": "../../Operations/common.json#/definitions/VoltageUnitBasis"
+    },
     "voltage_setpoint": {
-      "description": "Voltage setpoint at the regulated bus. Per-unit on system base. Units: pu.",
+      "description": "Voltage setpoint at the regulated bus. Per-unit on system base. Units: pu. Units: per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV .",
       "default": 1.0,
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "voltage_setpoint_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "kV"
+      }
     }
   },
   "required": [

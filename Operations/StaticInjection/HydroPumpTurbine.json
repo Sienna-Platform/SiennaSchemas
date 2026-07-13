@@ -76,7 +76,12 @@
     "status": {
       "description": "Initial Operating status of a pumped-storage hydro unit. See `PumpHydroStatus` for reference.",
       "default": "OFF",
-      "$ref": "../../Core/common.json#/definitions/PumpHydroStatus"
+      "type": "string",
+      "enum": [
+        "PUMP",
+        "GEN",
+        "OFF"
+      ]
     },
     "time_at_status": {
       "description": "Time the generator has been on or off, as indicated by `status`. default is psy const INFINITE_TIME = 1e4 Units: h.",

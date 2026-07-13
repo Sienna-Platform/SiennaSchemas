@@ -47,7 +47,7 @@
     },
     "reserve_direction": {
       "description": "Whether the reserve is an upward, downward, or symmetric reserve product.",
-      "$ref": "../../Core/common.json#/definitions/ReserveDirection"
+      "$ref": "../../Operations/common.json#/definitions/ReserveDirection"
     }
   },
   "required": [

@@ -66,29 +66,93 @@
     "dc_control": {
       "description": "DC-side control mode of the converter.",
       "default": "DC_VOLTAGE",
-      "$ref": "../../Core/common.json#/definitions/VSCDCControlModes"
+      "$ref": "../../Operations/common.json#/definitions/VSCDCControlModes"
     },
     "ac_control": {
       "description": "AC-side control mode of the converter.",
       "default": "AC_REACTIVE_POWER",
-      "$ref": "../../Core/common.json#/definitions/VSCACControlModes"
+      "$ref": "../../Operations/common.json#/definitions/VSCACControlModes"
+    },
+    "voltage_setpoint_units": {
+      "description": "Unit basis for the DC/AC voltage setpoints.",
+      "default": "SYSTEM_BASE",
+      "$ref": "../../Operations/common.json#/definitions/VoltageUnitBasis"
     },
     "dc_setpoint": {
-      "description": "DC-voltage target (when `dc_control` regulates DC voltage) or active-power order (otherwise). Per-unit on system base. Units: pu.",
+      "description": "DC-voltage target (when `dc_control` regulates DC voltage) or active-power order (otherwise). Units: per dc_control — DC_POWER: MW, DC_VOLTAGE: (per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV), DC_VOLTAGE_DROOP: (per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV) .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "dc_control",
+      "x-units": {
+        "DC_POWER": "MW",
+        "DC_VOLTAGE": {
+          "x-unit-discriminator": "voltage_setpoint_units",
+          "x-units": {
+            "SYSTEM_BASE": "pu",
+            "NATURAL_UNITS": "kV"
+          },
+          "description": "Units: per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV ."
+        },
+        "DC_VOLTAGE_DROOP": {
+          "x-unit-discriminator": "voltage_setpoint_units",
+          "x-units": {
+            "SYSTEM_BASE": "pu",
+            "NATURAL_UNITS": "kV"
+          },
+          "description": "Units: per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV ."
+        }
+      }
     },
     "ac_setpoint": {
-      "description": "AC-voltage magnitude target (when `ac_control` regulates AC voltage). Per-unit on system base. Units: pu.",
+      "description": "AC-voltage magnitude target (when `ac_control` regulates AC voltage) or power factor setpoint (otherwise). Units: per ac_control — AC_REACTIVE_POWER: 1, AC_VOLTAGE: (per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV) .",
       "default": 1.0,
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "ac_control",
+      "x-units": {
+        "AC_REACTIVE_POWER": "1",
+        "AC_VOLTAGE": {
+          "x-unit-discriminator": "voltage_setpoint_units",
+          "x-units": {
+            "SYSTEM_BASE": "pu",
+            "NATURAL_UNITS": "kV"
+          },
+          "description": "Units: per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV ."
+        }
+      }
     },
     "dc_voltage_droop": {
       "description": "DC-voltage droop gain relating DC voltage to converter active power as `V_dc = dc_setpoint - dc_voltage_droop * P_c`. A value of 0.0 disables droop. Units: pu.",
       "default": 0.0,
       "type": "number",
+      "x-unit": "pu"
+    },
+    "remote_bus_control": {
+      "description": "Number of the AC bus whose voltage the converter regulates when `ac_control` is `AC_VOLTAGE`; null regulates its own terminal bus.",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "rmpct": {
+      "description": "Percent of the total Mvar required to hold the voltage at the bus regulated by this converter that is contributed by this converter. Units: 1.",
+      "default": 100.0,
+      "type": "number",
+      "x-unit": "1"
+    },
+    "power_factor_weighting_fraction": {
+      "description": "Power weighting factor fraction used in reducing the active power order and either the reactive power order when the converter rating is violated. When is 0.0, only the active power is reduced; when is 1.0, only the reactive power is reduced; otherwise, a weighted reduction of both active and reactive power is applied. Units: 1.",
+      "default": 1.0,
+      "type": "number",
+      "x-unit": "1"
+    },
+    "voltage_limits": {
+      "description": "Limits on the voltage at the DC bus in per unit. Units: pu.",
+      "default": {
+        "min": 0.0,
+        "max": 999.9
+      },
+      "$ref": "../../Core/common.json#/definitions/MinMax",
       "x-unit": "pu"
     },
     "dynamic_injector": {

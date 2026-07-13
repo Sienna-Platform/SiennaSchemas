@@ -18,10 +18,20 @@
       "description": "ID of the bus that this component is connected to.",
       "type": "integer"
     },
+    "admittance_units": {
+      "description": "Unit basis for the shunt admittance Y. DEVICE_MVAR is PSS/E RAW native (Mvar/MW at unity voltage).",
+      "default": "DEVICE_MVAR",
+      "$ref": "../../Core/common.json#/definitions/AdmittanceUnitBasis"
+    },
     "Y": {
-      "description": "Initial admittance at N = 0. Per-unit on system base. Units: pu.",
+      "description": "Initial admittance at N = 0. Per-unit on system base. Units: pu. Units: per admittance_units — SYSTEM_BASE: pu, NATURAL_UNITS: S, DEVICE_MVAR: MVAr .",
       "$ref": "../../Core/common.json#/definitions/ComplexNumber",
-      "x-unit": "pu"
+      "x-unit-discriminator": "admittance_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "S",
+        "DEVICE_MVAR": "MVAr"
+      }
     },
     "initial_status": {
       "description": "Vector of initial switched shunt status, one for in-service and zero for out-of-service for block i (1 through 8).",
@@ -38,21 +48,51 @@
       }
     },
     "Y_increase": {
-      "description": "Vector with admittance increment step for each adjustable shunt block. For example, `Y_increase[2]` is the complex admittance increment for each step at block 2. Per-unit on system base. Units: pu.",
+      "description": "Vector with admittance increment step for each adjustable shunt block. For example, `Y_increase[2]` is the complex admittance increment for each step at block 2. Per-unit on system base. Units: pu. Units: per admittance_units — SYSTEM_BASE: pu, NATURAL_UNITS: S, DEVICE_MVAR: MVAr .",
       "type": "array",
       "items": {
         "$ref": "../../Core/common.json#/definitions/ComplexNumber"
       },
-      "x-unit": "pu"
+      "x-unit-discriminator": "admittance_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "S",
+        "DEVICE_MVAR": "MVAr"
+      }
     },
     "admittance_limits": {
-      "description": "Shunt admittance limits for switched shunt model. Per-unit on system base. Units: pu.",
+      "description": "Shunt admittance limits for switched shunt model. Per-unit on system base. Units: pu. Units: per admittance_units — SYSTEM_BASE: pu, NATURAL_UNITS: S, DEVICE_MVAR: MVAr .",
       "default": {
         "min": 1.0,
         "max": 1.0
       },
       "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "pu"
+      "x-unit-discriminator": "admittance_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "S",
+        "DEVICE_MVAR": "MVAr"
+      }
+    },
+    "control_mode": {
+      "description": "Switched-shunt control mode (PSS/E MODSW).",
+      "default": "FIXED",
+      "type": "string",
+      "enum": [
+        "UNDEFINED",
+        "FIXED",
+        "DISCRETE_VOLTAGE",
+        "CONTINUOUS_VOLTAGE",
+        "DISCRETE_REACTIVE_PLANT",
+        "DISCRETE_REACTIVE_VSC",
+        "DISCRETE_ADMITTANCE_REMOTE"
+      ]
+    },
+    "regulated_bus_number": {
+      "description": "Bus number whose voltage/quantity this shunt regulates; 0 means local bus (PSS/E SWREM/NREG). Units: 1.",
+      "default": 0,
+      "type": "integer",
+      "x-unit": "1"
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection model for admittance, if any.",

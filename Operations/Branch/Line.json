@@ -38,6 +38,11 @@
       "type": "number",
       "x-unit": "pu"
     },
+    "base_power": {
+      "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
+    },
     "b": {
       "description": "Shunt susceptance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value. Per-unit on system base. Units: pu.",
       "$ref": "../../Core/common.json#/definitions/FromTo",
@@ -82,6 +87,7 @@
     "arc",
     "r",
     "x",
+    "base_power",
     "rating",
     "angle_limits"
   ],

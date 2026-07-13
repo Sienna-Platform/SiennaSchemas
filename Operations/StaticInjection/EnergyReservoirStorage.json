@@ -101,6 +101,23 @@
       "type": "integer",
       "x-unit": "1"
     },
+    "ramp_limits": {
+      "description": "Ramp up and ramp down limits. Units: MW/min.",
+      "$ref": "../../Core/common.json#/definitions/UpDown",
+      "x-unit": "MW/min"
+    },
+    "self_discharge": {
+      "description": "Self-discharge (leakage loss) as a fraction of the stored energy lost per hour (pu/hr of storage_capacity), modeled as E[t] = (1 - self_discharge * dt) * E[t-1]. Units: 1.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "1"
+    },
+    "standing_loss": {
+      "description": "Constant standing-loss power drawn by the storage system. Reduces the effective charging power (p_in - standing_loss) and increases the power drawn from the storage when discharging (p_out + standing_loss). Units: MW.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "MW"
+    },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection device, if any.",
       "type": [

@@ -218,32 +218,32 @@
     "primary_group_number": {
       "description": "Vector group number ('clock number') indicating fixed phase shift between the `from` and `to` buses due to the connection group configuration.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/WindingGroupNumber"
+      "$ref": "../../Operations/common.json#/definitions/WindingGroupNumber"
     },
     "secondary_group_number": {
       "description": "Vector group number ('clock number') indicating fixed phase shift between the `from` and `to` buses due to the connection group configuration.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/WindingGroupNumber"
+      "$ref": "../../Operations/common.json#/definitions/WindingGroupNumber"
     },
     "tertiary_group_number": {
       "description": "Vector group number ('clock number') indicating fixed phase shift between the `from` and `to` buses due to the connection group configuration.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/WindingGroupNumber"
+      "$ref": "../../Operations/common.json#/definitions/WindingGroupNumber"
     },
     "control_objective_primary": {
       "description": "Control objective for the tap changer for winding 1.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/TransformerControlObjective"
+      "$ref": "../../Operations/common.json#/definitions/TransformerControlObjective"
     },
     "control_objective_secondary": {
       "description": "Control objective for the tap changer for winding 2.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/TransformerControlObjective"
+      "$ref": "../../Operations/common.json#/definitions/TransformerControlObjective"
     },
     "control_objective_tertiary": {
       "description": "Control objective for the tap changer for winding 3.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/TransformerControlObjective"
+      "$ref": "../../Operations/common.json#/definitions/TransformerControlObjective"
     }
   },
   "required": [

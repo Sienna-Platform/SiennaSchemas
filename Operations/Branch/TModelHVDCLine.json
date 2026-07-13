@@ -23,10 +23,19 @@
       "description": "An `Arc` defining this line `from` a bus `to` another bus.",
       "type": "integer"
     },
+    "parameter_units": {
+      "description": "Unit basis for this line's impedance field (r).",
+      "default": "NATURAL_UNITS",
+      "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
+    },
     "r": {
-      "description": "Total series resistance, split equally on both sides of the shunt capacitance. Per-unit on system base. Units: pu.",
+      "description": "Total series resistance, split equally on both sides of the shunt capacitance. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "ohm"
+      }
     },
     "l": {
       "description": "Total series inductance, split equally on both sides of the shunt capacitance. Per-unit on system base. Units: pu.",

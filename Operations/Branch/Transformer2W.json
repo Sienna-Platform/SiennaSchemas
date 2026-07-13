@@ -76,7 +76,7 @@
     "winding_group_number": {
       "description": "Vector group number ('clock number') indicating phase shift between the `from` and `to` buses.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/WindingGroupNumber"
+      "$ref": "../../Operations/common.json#/definitions/WindingGroupNumber"
     }
   },
   "required": [

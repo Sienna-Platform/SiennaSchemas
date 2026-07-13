@@ -94,7 +94,7 @@
     "control_objective": {
       "description": "Control objective for the tap changer for power flow calculations.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/TransformerControlObjective"
+      "$ref": "../../Operations/common.json#/definitions/TransformerControlObjective"
     }
   },
   "required": [

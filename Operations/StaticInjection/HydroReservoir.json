@@ -106,9 +106,21 @@
     "operation_cost": {
       "$ref": "../../Core/common.json#/definitions/HydroReservoirCost"
     },
+    "evaporative_loss": {
+      "description": "Standing loss from evaporation as a fraction of the reservoir's stored volume/energy lost per hour. Units: 1.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "1"
+    },
     "level_data_type": {
-      "$ref": "../../Core/common.json#/definitions/ReservoirDataType",
-      "default": "USABLE_VOLUME"
+      "default": "USABLE_VOLUME",
+      "type": "string",
+      "enum": [
+        "USABLE_VOLUME",
+        "TOTAL_VOLUME",
+        "HEAD",
+        "ENERGY"
+      ]
     }
   },
   "required": [

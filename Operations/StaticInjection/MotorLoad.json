@@ -51,7 +51,12 @@
     "motor_technology": {
       "description": "AC Motor type.",
       "default": "UNDETERMINED",
-      "$ref": "../../Core/common.json#/definitions/MotorLoadTechnology"
+      "type": "string",
+      "enum": [
+        "INDUCTION",
+        "SYNCHRONOUS",
+        "UNDETERMINED"
+      ]
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection device, if any.",

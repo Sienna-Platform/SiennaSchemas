@@ -23,10 +23,19 @@
       "type": "number",
       "x-unit": "MW"
     },
+    "parameter_units": {
+      "description": "Unit basis for this line's impedance fields (r, rectifier/inverter rc/xc, capacitor reactances, compounding_resistance).",
+      "default": "NATURAL_UNITS",
+      "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
+    },
     "r": {
-      "description": "Series resistance of the DC line. Per-unit on system base. Units: pu.",
+      "description": "Series resistance of the DC line. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "ohm"
+      }
     },
     "transfer_setpoint": {
       "description": "Desired set-point of power. If `power_mode = true` this value is in MW units, and if `power_mode = false` is in Amperes units. This parameter must not be specified in per-unit. A positive value represents the desired consumed power at the rectifier bus, while a negative value represents the desired power at the inverter bus (i.e. the absolute value of `transfer_setpoint` is the generated power at the inverter bus). Units: per power_mode — true: MW, false: A .",
@@ -37,10 +46,19 @@
         "false": "A"
       }
     },
+    "dc_voltage_units": {
+      "description": "Unit basis for the DC voltage fields (scheduled_dc_voltage, switch_mode_voltage, min_compounding_voltage). SYSTEM_BASE: per-unit on the bus base voltage. NATURAL_UNITS: kV.",
+      "default": "NATURAL_UNITS",
+      "$ref": "../../Operations/common.json#/definitions/VoltageUnitBasis"
+    },
     "scheduled_dc_voltage": {
-      "description": "Scheduled compounded DC voltage. By default this parameter is the scheduled DC voltage in the inverter bus. This parameter must not be specified in per-unit. Units: kV.",
+      "description": "Scheduled compounded DC voltage. By default this parameter is the scheduled DC voltage in the inverter bus. This parameter must not be specified in per-unit. Units: kV. Units: per dc_voltage_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV .",
       "type": "number",
-      "x-unit": "kV"
+      "x-unit-discriminator": "dc_voltage_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "kV"
+      }
     },
     "rectifier_bridges": {
       "description": "Number of bridges in series in the rectifier side.",
@@ -52,14 +70,22 @@
       "x-unit": "rad"
     },
     "rectifier_rc": {
-      "description": "Rectifier commutating transformer resistance per bridge. Per-unit on system base. Units: pu.",
+      "description": "Rectifier commutating transformer resistance per bridge. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "ohm"
+      }
     },
     "rectifier_xc": {
-      "description": "Rectifier commutating transformer reactance per bridge. Per-unit on system base. Units: pu.",
+      "description": "Rectifier commutating transformer reactance per bridge. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "ohm"
+      }
     },
     "rectifier_base_voltage": {
       "description": "Rectifier primary base AC voltage, entered in kV. Units: kV.",
@@ -76,14 +102,22 @@
       "x-unit": "rad"
     },
     "inverter_rc": {
-      "description": "Inverter commutating transformer resistance per bridge. Per-unit on system base. Units: pu.",
+      "description": "Inverter commutating transformer resistance per bridge. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "ohm"
+      }
     },
     "inverter_xc": {
-      "description": "Inverter commutating transformer reactance per bridge. Per-unit on system base. Units: pu.",
+      "description": "Inverter commutating transformer reactance per bridge. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "ohm"
+      }
     },
     "inverter_base_voltage": {
       "description": "Inverter primary base AC voltage, entered in kV. Units: kV.",
@@ -96,22 +130,34 @@
       "type": "boolean"
     },
     "switch_mode_voltage": {
-      "description": "Mode switch DC voltage. This parameter must not be added in per-unit. If LCC line is in power mode control, and DC voltage falls below this value, the line switch to current mode control. Units: kV.",
+      "description": "Mode switch DC voltage. This parameter must not be added in per-unit. If LCC line is in power mode control, and DC voltage falls below this value, the line switch to current mode control. Units: kV. Units: per dc_voltage_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "kV"
+      "x-unit-discriminator": "dc_voltage_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "kV"
+      }
     },
     "compounding_resistance": {
-      "description": "Compounding Resistance. This parameter is for control of the DC voltage in the rectifier or inverter end. For inverter DC voltage control, the parameter is set to zero; for rectifier DC voltage control, the parameter is set to the DC line resistance; otherwise, set to a fraction of the DC line resistance. Per-unit on system base. Units: pu.",
+      "description": "Compounding Resistance. This parameter is for control of the DC voltage in the rectifier or inverter end. For inverter DC voltage control, the parameter is set to zero; for rectifier DC voltage control, the parameter is set to the DC line resistance; otherwise, set to a fraction of the DC line resistance. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "ohm"
+      }
     },
     "min_compounding_voltage": {
-      "description": "Minimum compounded voltage. This parameter must not be added in per-unit. Only used in constant gamma operation (gamma_min = gamma_max), and the AC transformer is used to control the DC voltage. Units: kV.",
+      "description": "Minimum compounded voltage. This parameter must not be added in per-unit. Only used in constant gamma operation (gamma_min = gamma_max), and the AC transformer is used to control the DC voltage. Units: kV. Units: per dc_voltage_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "kV"
+      "x-unit-discriminator": "dc_voltage_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "kV"
+      }
     },
     "rectifier_transformer_ratio": {
       "description": "Rectifier transformer ratio between the primary and secondary side AC voltages. Units: 1.",
@@ -147,10 +193,14 @@
       "x-unit": "rad"
     },
     "rectifier_capacitor_reactance": {
-      "description": "Commutating rectifier capacitor reactance magnitude per bridge. Per-unit on system base. Units: pu.",
+      "description": "Commutating rectifier capacitor reactance magnitude per bridge. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "ohm"
+      }
     },
     "inverter_transformer_ratio": {
       "description": "Inverter transformer ratio between the primary and secondary side AC voltages. Units: 1.",
@@ -186,10 +236,14 @@
       "x-unit": "rad"
     },
     "inverter_capacitor_reactance": {
-      "description": "Commutating inverter capacitor reactance magnitude per bridge. Per-unit on system base. Units: pu.",
+      "description": "Commutating inverter capacitor reactance magnitude per bridge. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "ohm"
+      }
     },
     "active_power_limits_from": {
       "description": "Minimum and maximum active power flows to the FROM node. Units: MW.",

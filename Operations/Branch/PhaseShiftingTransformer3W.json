@@ -242,17 +242,17 @@
     "control_objective_primary": {
       "description": "Control objective for the tap changer for winding 1.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/TransformerControlObjective"
+      "$ref": "../../Operations/common.json#/definitions/TransformerControlObjective"
     },
     "control_objective_secondary": {
       "description": "Control objective for the tap changer for winding 2.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/TransformerControlObjective"
+      "$ref": "../../Operations/common.json#/definitions/TransformerControlObjective"
     },
     "control_objective_tertiary": {
       "description": "Control objective for the tap changer for winding 3.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/TransformerControlObjective"
+      "$ref": "../../Operations/common.json#/definitions/TransformerControlObjective"
     }
   },
   "required": [

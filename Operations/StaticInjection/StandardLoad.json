@@ -98,7 +98,7 @@
     "conformity": {
       "description": "Indicates whether the specified load is conforming or non-conforming.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/LoadConformity"
+      "$ref": "../../Operations/common.json#/definitions/LoadConformity"
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection device, if any.",

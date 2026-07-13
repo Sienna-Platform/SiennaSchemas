@@ -104,7 +104,19 @@
     "turbine_type": {
       "description": "Type of the turbine.",
       "default": "UNKNOWN",
-      "$ref": "../../Core/common.json#/definitions/HydroTurbineType"
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "PELTON",
+        "FRANCIS",
+        "KAPLAN",
+        "TURGO",
+        "CROSSFLOW",
+        "BULB",
+        "DERIAZ",
+        "PROPELLER",
+        "OTHER"
+      ]
     },
     "conversion_factor": {
       "description": "Conversion factor from flow/volume to energy: m^3 -> p.u-hr. Units: 1.",

@@ -18,10 +18,20 @@
       "description": "ID of the bus that this component is connected to.",
       "type": "integer"
     },
+    "admittance_units": {
+      "description": "Unit basis for the shunt admittance Y. DEVICE_MVAR is PSS/E RAW native (Mvar/MW at unity voltage).",
+      "default": "DEVICE_MVAR",
+      "$ref": "../../Core/common.json#/definitions/AdmittanceUnitBasis"
+    },
     "Y": {
-      "description": "Fixed admittance. Per-unit on system base. Units: pu.",
+      "description": "Fixed admittance. Per-unit on system base. Units: pu. Units: per admittance_units — SYSTEM_BASE: pu, NATURAL_UNITS: S, DEVICE_MVAR: MVAr .",
       "$ref": "../../Core/common.json#/definitions/ComplexNumber",
-      "x-unit": "pu"
+      "x-unit-discriminator": "admittance_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "S",
+        "DEVICE_MVAR": "MVAr"
+      }
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection model for admittance, if any.",
