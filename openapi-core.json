@@ -148,6 +148,18 @@
       },
       "TimeSeriesAssociation": {
         "$ref": "Core/TimeSeries/TimeSeriesAssociation.json"
+      },
+      "PollutantType": {
+        "$ref": "Core/common.json#/definitions/PollutantType"
+      },
+      "EmissionBasis": {
+        "$ref": "Core/common.json#/definitions/EmissionBasis"
+      },
+      "MassUnit": {
+        "$ref": "Core/common.json#/definitions/MassUnit"
+      },
+      "EnergyUnit": {
+        "$ref": "Core/common.json#/definitions/EnergyUnit"
       }
     }
   }
