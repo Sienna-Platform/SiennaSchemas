@@ -138,7 +138,9 @@
       "description": "Units: 1."
     },
     "inverter_supply_ratio": {
-      "type": "number"
+      "type": "number",
+      "x-unit": "1",
+      "description": "Units: 1."
     },
     "requirements": {
       "type": "array",

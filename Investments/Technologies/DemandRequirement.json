@@ -20,7 +20,9 @@
     },
     "growth_rate": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "x-unit": "1",
+      "description": "Units: 1."
     },
     "new_demand_mw": {
       "type": "number",

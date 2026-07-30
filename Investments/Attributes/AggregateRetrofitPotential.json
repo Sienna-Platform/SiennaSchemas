@@ -9,7 +9,9 @@
     },
     "retrofit_potential": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "x-unit": "MW",
+      "description": "Units: MW."
     },
     "retrofit_fraction": {
       "type": "number",

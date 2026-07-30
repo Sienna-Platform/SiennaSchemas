@@ -6,10 +6,14 @@
     },
     "retirement_potential": {
       "type": "number",
-      "default": 0.0
+      "default": 0.0,
+      "x-unit": "MW",
+      "description": "Units: MW."
     }
   },
-  "required": ["id"],
+  "required": [
+    "id"
+  ],
   "title": "AggregateRetirementPotential",
   "type": "object"
 }
