@@ -1,68 +1,85 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "name",
-        "available",
-        "power_systems_type"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "id": {
-            "type": "integer"
-        },
-        "available": {
-            "type": "boolean"
-        },
-        "region": {
-            "type": "array",
-            "items": {
-                "type": "integer"
-            }
-        },
-        "power_systems_type": {
-            "type": "string"
-        },
-        "technology_efficiency": {
-            "type": "number",
-            "default": "0.0",
-            "x-unit": "1",
-            "description": "Units: 1."
-        },
-        "price_per_unit": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
-        },
-        "min_power": {
-            "type": "number",
-            "default": "0.0",
-            "x-unit": "MW",
-            "description": "Units: MW."
-        },
-        "peak_demand_mw": {
-            "type": "number",
-            "default": "0.0",
-            "x-unit": "MW",
-            "description": "Units: MW."
-        },
-        "max_demand_delay": {
-            "type": "number"
-        },
-        "max_demand_advance": {
-            "type": "number"
-        },
-        "demand_energy_efficiency": {
-            "type": "number"
-        },
-        "shift_variable_cost": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
-        },
-        "curtailment_cost": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
-        },
-        "max_demand_curtailment": {
-            "type": "number"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string"
+    },
+    "available": {
+      "type": "boolean"
+    },
+    "region": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "power_systems_type": {
+      "type": "string"
+    },
+    "technology_efficiency": {
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "1",
+      "description": "Units: 1."
+    },
+    "price_per_unit": {
+      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+    },
+    "min_power": {
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "MW",
+      "description": "Units: MW."
+    },
+    "peak_demand_mw": {
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "MW",
+      "description": "Units: MW."
+    },
+    "max_demand_delay": {
+      "type": "number"
+    },
+    "max_demand_advance": {
+      "type": "number"
+    },
+    "demand_energy_efficiency": {
+      "type": "number"
+    },
+    "shift_variable_cost": {
+      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+    },
+    "curtailment_cost": {
+      "$ref": "../../Core/common.json#/definitions/ValueCurve"
+    },
+    "max_demand_curtailment": {
+      "type": "number"
+    },
+    "requirements": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "integer"
+      }
     }
+  },
+  "required": [
+    "name",
+    "id",
+    "available",
+    "region",
+    "power_systems_type",
+    "price_per_unit",
+    "max_demand_delay",
+    "max_demand_advance",
+    "demand_energy_efficiency",
+    "shift_variable_cost",
+    "curtailment_cost",
+    "max_demand_curtailment"
+  ],
+  "title": "DemandSideTechnology",
+  "type": "object"
 }

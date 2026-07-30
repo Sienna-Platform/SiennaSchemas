@@ -1,39 +1,37 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "name",
-        "available"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "id": {
-            "type": "integer"
-        },
-        "available": {
-            "type": "boolean"
-        },
-        "eligible_regions": {
-            "type": "array",
-            "items": {
-                "type": "integer"
-            }
-        },
-        "target_year": {
-            "type": "integer"
-        },
-        "max_tons_mwh": {
-            "type": "number",
-            "default": "1e8",
-            "x-unit": "Mt/MWh",
-            "description": "Units: Mt/MWh."
-        },
-        "max_mtons": {
-            "type": "number",
-            "x-unit": "Mt",
-            "description": "Units: Mt."
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string"
+    },
+    "available": {
+      "type": "boolean"
+    },
+    "target_year": {
+      "type": "integer"
+    },
+    "max_tons_mwh": {
+      "type": "number",
+      "default": 100000000,
+      "x-unit": "Mt/MWh",
+      "description": "Units: Mt/MWh."
+    },
+    "max_mtons": {
+      "type": "number",
+      "x-unit": "Mt",
+      "description": "Units: Mt."
     }
+  },
+  "required": [
+    "name",
+    "id",
+    "available",
+    "target_year",
+    "max_mtons"
+  ],
+  "title": "CarbonCaps",
+  "type": "object"
 }

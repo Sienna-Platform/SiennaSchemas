@@ -50,6 +50,9 @@
       "FunctionData": {
         "$ref": "Core/common.json#/definitions/FunctionData"
       },
+      "GenericOperationCost": {
+        "$ref": "Core/common.json#/definitions/GenericOperationCost"
+      },
       "HydroGenerationCost": {
         "$ref": "Core/common.json#/definitions/HydroGenerationCost"
       },
@@ -122,9 +125,6 @@
       "ThermalGenerationCost": {
         "$ref": "Core/common.json#/definitions/ThermalGenerationCost"
       },
-      "ThermalRenewableGenerationCost": {
-        "$ref": "Core/common.json#/definitions/ThermalRenewableGenerationCost"
-      },
       "TurbinePump": {
         "$ref": "Core/common.json#/definitions/TurbinePump"
       },
@@ -148,6 +148,18 @@
       },
       "TimeSeriesAssociation": {
         "$ref": "Core/TimeSeries/TimeSeriesAssociation.json"
+      },
+      "PollutantType": {
+        "$ref": "Core/common.json#/definitions/PollutantType"
+      },
+      "EmissionBasis": {
+        "$ref": "Core/common.json#/definitions/EmissionBasis"
+      },
+      "MassUnit": {
+        "$ref": "Core/common.json#/definitions/MassUnit"
+      },
+      "EnergyUnit": {
+        "$ref": "Core/common.json#/definitions/EnergyUnit"
       }
     }
   }
