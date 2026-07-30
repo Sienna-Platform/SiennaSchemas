@@ -1,21 +1,27 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "retrofit_id"
-    ],
-    "properties": {
-        "retrofit_id": {
-            "type": "integer"
-        },
-        "retrofit_potential": {
-            "type": "number",
-            "default": "0.0"
-        },
-        "retrofit_fraction": {
-            "type": "number",
-            "x-unit": "1",
-            "description": "Units: 1."
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "retrofit_id": {
+      "type": "integer"
+    },
+    "retrofit_potential": {
+      "type": "number",
+      "default": 0.0
+    },
+    "retrofit_fraction": {
+      "type": "number",
+      "x-unit": "1",
+      "description": "Units: 1."
     }
+  },
+  "required": [
+    "id",
+    "retrofit_id",
+    "retrofit_fraction"
+  ],
+  "title": "AggregateRetrofitPotential",
+  "type": "object"
 }

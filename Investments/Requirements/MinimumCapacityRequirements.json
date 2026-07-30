@@ -1,34 +1,31 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "name",
-        "available",
-        "eligible_resources"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "id": {
-            "type": "integer"
-        },
-        "available": {
-            "type": "boolean"
-        },
-        "target_year": {
-            "type": "integer"
-        },
-        "eligible_resources": {
-            "type": "array",
-            "items": {
-                "type": "integer"
-            }
-        },
-        "min_capacity_mw": {
-            "type": "number",
-            "x-unit": "MW",
-            "description": "Units: MW."
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string"
+    },
+    "available": {
+      "type": "boolean"
+    },
+    "target_year": {
+      "type": "integer"
+    },
+    "min_capacity_mw": {
+      "type": "number",
+      "x-unit": "MW",
+      "description": "Units: MW."
     }
+  },
+  "required": [
+    "name",
+    "id",
+    "available",
+    "target_year",
+    "min_capacity_mw"
+  ],
+  "title": "MinimumCapacityRequirements",
+  "type": "object"
 }

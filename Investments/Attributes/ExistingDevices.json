@@ -4,7 +4,7 @@
     "id": {
       "type": "integer"
     },
-    "eligible_generators": {
+    "existing_devices": {
       "type": "array",
       "items": {
         "type": "string"
@@ -13,8 +13,8 @@
   },
   "required": [
     "id",
-    "eligible_generators"
+    "existing_devices"
   ],
-  "title": "RetrofitPotential",
+  "title": "ExistingDevices",
   "type": "object"
 }

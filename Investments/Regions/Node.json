@@ -1,19 +1,21 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "name"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "id": {
-            "type": "integer"
-        },
-        "bus_type": {
-            "$ref": "../../Core/common.json#/definitions/ACBusType",
-            "default": "PQ"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string"
+    },
+    "bus_type": {
+      "$ref": "../../Core/common.json#/definitions/ACBusType",
+      "default": "PQ"
     }
+  },
+  "required": [
+    "name",
+    "id"
+  ],
+  "title": "Node",
+  "type": "object"
 }

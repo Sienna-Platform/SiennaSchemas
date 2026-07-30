@@ -1,39 +1,35 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "name",
-        "discount_rate",
-        "base_year",
-        "inflation_rate"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "discount_rate": {
-            "type": "number",
-            "default": "0.0",
-            "x-unit": "1",
-            "description": "Units: 1."
-        },
-        "inflation_rate": {
-            "type": "number",
-            "default": "0.0",
-            "x-unit": "1",
-            "description": "Units: 1."
-        },
-        "interest_rate": {
-            "type": "number",
-            "default": "0.0",
-            "x-unit": "1",
-            "description": "Units: 1."
-        },
-        "base_year": {
-            "type": "integer"
-        },
-        "id": {
-            "type": "integer"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "discount_rate": {
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "1",
+      "description": "Units: 1."
+    },
+    "inflation_rate": {
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "1",
+      "description": "Units: 1."
+    },
+    "interest_rate": {
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "1",
+      "description": "Units: 1."
+    },
+    "base_year": {
+      "type": "integer"
     }
+  },
+  "required": [
+    "id",
+    "base_year"
+  ],
+  "title": "PortfolioFinancialData",
+  "type": "object"
 }
