@@ -14,8 +14,7 @@
     }
   },
   "required": [
-    "id",
-    "buses"
+    "id"
   ],
   "title": "TopologyMapping",
   "type": "object"

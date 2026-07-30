@@ -13,8 +13,7 @@
     }
   },
   "required": [
-    "id",
-    "retirement_potential"
+    "id"
   ],
   "title": "AggregateRetirementPotential",
   "type": "object"

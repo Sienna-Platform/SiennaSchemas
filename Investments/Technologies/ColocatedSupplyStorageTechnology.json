@@ -160,9 +160,13 @@
     }
   },
   "required": [
-    "name",
+    "capital_costs_inverter",
+    "financial_data",
     "id",
-    "available",
+    "inverter_efficiency",
+    "inverter_supply_ratio",
+    "name",
+    "operation_costs_inverter",
     "power_systems_type"
   ],
   "title": "ColocatedSupplyStorageTechnology",

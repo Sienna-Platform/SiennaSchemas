@@ -59,9 +59,13 @@
     }
   },
   "required": [
-    "name",
-    "id",
-    "available"
+    "available", 
+    "end_region", 
+    "financial_data", 
+    "id", 
+    "name", 
+    "power_systems_type", 
+    "start_region"
   ],
   "title": "AggregateTransportTechnology",
   "type": "object"

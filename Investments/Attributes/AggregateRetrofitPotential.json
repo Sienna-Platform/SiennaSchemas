@@ -22,8 +22,7 @@
     }
   },
   "required": [
-    "id",
-    "retrofit_id"
+    "id"
   ],
   "title": "AggregateRetrofitPotential",
   "type": "object"

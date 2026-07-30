@@ -129,9 +129,9 @@
     }
   },
   "required": [
-    "name",
+    "financial_data",
     "id",
-    "available",
+    "name",
     "power_systems_type"
   ],
   "title": "SupplyTechnology",

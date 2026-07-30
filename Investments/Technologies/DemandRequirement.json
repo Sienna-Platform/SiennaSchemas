@@ -67,10 +67,10 @@
     }
   },
   "required": [
-    "name",
-    "id",
-    "available",
-    "power_systems_type"
+    "id", 
+    "name", 
+    "power_systems_type", 
+    "value_of_lost_load"
   ],
   "title": "DemandRequirement",
   "type": "object"

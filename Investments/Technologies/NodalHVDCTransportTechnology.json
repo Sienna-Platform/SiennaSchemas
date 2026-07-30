@@ -59,9 +59,13 @@
     }
   },
   "required": [
-    "name",
+    "available",
+    "end_node",
+    "financial_data",
     "id",
-    "available"
+    "name",
+    "power_systems_type",
+    "start_node"
   ],
   "title": "NodalHVDCTransportTechnology",
   "type": "object"
