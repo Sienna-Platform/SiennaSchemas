@@ -2,6 +2,7 @@
     "inputSpec": "openapi-investments.json",
     "inlineSchemaNameMappings": {
         "AverageRateCurve_1": "AverageRateCurve",
+        "AverageRateCurve_1_function_data": "AverageRateCurveFunctionData",
         "CostCurve_1": "CostCurve",
         "FuelCurve_1": "FuelCurve",
         "HydroGenerationCost_1": "HydroGenerationCost",
@@ -23,6 +24,7 @@
         "StorageCost_1_start_up_oneOf": "StorageCostStartUpOneOf",
         "TechnologyFinancialData_1": "TechnologyFinancialData",
         "ThermalGenerationCost_1": "ThermalGenerationCost",
+        "ThermalGenerationCost_1_start_up": "ThermalGenerationCostStartUp",
         "TurbinePump_1": "TurbinePump",
         "UpDown_1": "UpDown",
         "ValueCurve_1": "ValueCurve",
