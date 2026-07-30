@@ -399,6 +399,8 @@ def check_metaschema(doc, source_file, failures):
 #   * plain x-unit:   "Units: <x-unit>."
 #   * discriminated:  "Units: per <discriminator> — <VAL>: <unit>, ... ."
 #                     (x-units entries in insertion order; em dash separator).
+#   * nested:         a discriminated value may itself be discriminated; it
+#                     renders parenthesized: "<VAL>: (per <discriminator> — ...)".
 # The sentence is applied idempotently: a stale trailing "Units: ..." sentence
 # is replaced, never duplicated.
 # --------------------------------------------------------------------------- #
@@ -414,11 +416,21 @@ def check_metaschema(doc, source_file, failures):
 _UNITS_SENTENCE_RE = re.compile(r"Units:(?:(?!\. ).)*\.\s*$", re.DOTALL)
 
 
+def _units_value(value):
+    """Render one x-units map value: a plain unit string, or a nested
+    discriminated map rendered parenthesized as '(per <disc> — K: v, ...)'."""
+    if isinstance(value, dict):
+        disc = value.get("x-unit-discriminator", "value")
+        parts = ", ".join(f"{k}: {_units_value(v)}" for k, v in value["x-units"].items())
+        return f"(per {disc} — {parts})"
+    return value
+
+
 def units_sentence(node):
     """Return the canonical 'Units: ...' sentence for an annotated node."""
     if "x-units" in node and isinstance(node["x-units"], dict):
         disc = node.get("x-unit-discriminator", "value")
-        parts = ", ".join(f"{k}: {v}" for k, v in node["x-units"].items())
+        parts = ", ".join(f"{k}: {_units_value(v)}" for k, v in node["x-units"].items())
         return f"Units: per {disc} — {parts} ."
     return f"Units: {node['x-unit']}."
 
