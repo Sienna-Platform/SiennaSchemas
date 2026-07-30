@@ -28,7 +28,9 @@
   "required": [
     "id",
     "name",
-    "available"
+    "available",
+    "target_year",
+    "max_mtons"
   ],
   "title": "CarbonCaps",
   "type": "object"

@@ -22,7 +22,9 @@
   "required": [
     "id",
     "name",
-    "available"
+    "available",
+    "target_year",
+    "max_capacity_mw"
   ],
   "title": "MaximumCapacityRequirements",
   "type": "object"

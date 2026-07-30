@@ -22,7 +22,9 @@
   "required": [
     "id",
     "name",
-    "available"
+    "available",
+    "target_year",
+    "min_capacity_mw"
   ],
   "title": "MinimumCapacityRequirements",
   "type": "object"

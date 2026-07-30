@@ -12,7 +12,8 @@
     }
   },
   "required": [
-    "id"
+    "id",
+    "existing_devices"
   ],
   "title": "ExistingDevices",
   "type": "object"

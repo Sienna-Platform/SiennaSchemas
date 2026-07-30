@@ -12,7 +12,8 @@
     }
   },
   "required": [
-    "id"
+    "id",
+    "eligible_generators"
   ],
   "title": "RetrofitPotential",
   "type": "object"

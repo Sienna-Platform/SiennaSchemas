@@ -23,7 +23,8 @@
   "required": [
     "id",
     "name",
-    "available"
+    "available",
+    "target_year"
   ],
   "title": "EnergyShareRequirements",
   "type": "object"

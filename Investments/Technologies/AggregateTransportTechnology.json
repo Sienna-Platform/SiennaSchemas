@@ -49,12 +49,16 @@
     }
   },
   "required": [
-    "id",
     "name",
+    "id",
     "available",
     "power_systems_type",
     "start_region",
     "end_region",
+    "capacity_limits",
+    "capital_costs",
+    "line_loss",
+    "unit_size",
     "financial_data"
   ],
   "title": "AggregateTransportTechnology",

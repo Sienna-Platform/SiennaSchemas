@@ -30,8 +30,8 @@
     "resistance": {
       "type": "number",
       "default": 0.0,
-      "x-unit": "pu",
-      "description": "Units: pu."
+      "x-unit": "ohm",
+      "description": "Units: ohm."
     },
     "voltage": {
       "type": "number",
@@ -48,8 +48,8 @@
     "reactance": {
       "type": "number",
       "default": 0.0,
-      "x-unit": "pu",
-      "description": "Units: pu."
+      "x-unit": "ohm",
+      "description": "Units: ohm."
     },
     "requirements": {
       "type": "array",
@@ -63,12 +63,14 @@
     }
   },
   "required": [
-    "id",
     "name",
+    "id",
     "available",
     "power_systems_type",
     "start_node",
     "end_node",
+    "capacity_limits",
+    "capital_costs",
     "financial_data"
   ],
   "title": "NodalACTransportTechnology",

@@ -24,7 +24,10 @@
     }
   },
   "required": [
-    "id"
+    "id",
+    "eligible_generators",
+    "planned_retirement_year",
+    "build_year"
   ],
   "title": "RetirementPotential",
   "type": "object"

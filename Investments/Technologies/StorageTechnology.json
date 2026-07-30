@@ -119,11 +119,21 @@
     }
   },
   "required": [
-    "id",
     "name",
+    "id",
     "available",
+    "region",
     "power_systems_type",
     "storage_tech",
+    "capital_costs_energy",
+    "capital_costs_charge",
+    "capital_costs_discharge",
+    "operation_costs",
+    "capacity_limits_charge",
+    "capacity_limits_discharge",
+    "capacity_limits_energy",
+    "duration_limits",
+    "efficiency",
     "financial_data"
   ],
   "title": "StorageTechnology",
