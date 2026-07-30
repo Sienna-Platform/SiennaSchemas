@@ -2,9 +2,11 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
+      "description": "ID for individual component.",
       "type": "integer"
     },
     "buses": {
+      "description": "List of buses in the base system that are associated with a zone.",
       "type": "array",
       "items": {
         "type": "string"

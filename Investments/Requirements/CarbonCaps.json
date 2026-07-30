@@ -2,27 +2,31 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
+      "description": "ID for individual component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
       "type": "boolean"
     },
     "target_year": {
+      "description": "Year in which this requirement is applied.",
       "type": "integer"
     },
     "max_tons_mwh": {
+      "description": "Emission limit in terms of rate. Units: Mt/MWh.",
       "type": "number",
       "default": 100000000,
-      "x-unit": "Mt/MWh",
-      "description": "Units: Mt/MWh."
+      "x-unit": "Mt/MWh"
     },
     "max_mtons": {
+      "description": "Emission limit in absolute values (million tonnes). Units: Mt.",
       "type": "number",
-      "x-unit": "Mt",
-      "description": "Units: Mt."
+      "x-unit": "Mt"
     }
   },
   "required": [

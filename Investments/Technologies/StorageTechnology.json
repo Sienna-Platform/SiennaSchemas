@@ -2,112 +2,120 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
+      "description": "ID for individual component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
       "type": "boolean"
     },
     "region": {
+      "description": "Location where the component applies. Can be a zone or node.",
       "type": "array",
       "items": {
         "type": "integer"
       }
     },
     "power_systems_type": {
+      "description": "Corresponding type to be used in PCM modeling.",
       "type": "string"
     },
     "min_discharge_fraction": {
+      "description": "Minimum discharge as a fraction of total discharge capacity. Units: 1.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "1",
-      "description": "Units: 1."
+      "x-unit": "1"
     },
     "prime_mover_type": {
-      "$ref": "../../Core/common.json#/definitions/PrimeMovers",
-      "default": "OT"
+      "description": "Prime mover for generator.",
+      "default": "OT",
+      "$ref": "../../Core/common.json#/definitions/PrimeMovers"
     },
     "storage_tech": {
+      "description": "Storage Technology Type.",
       "$ref": "../../Core/common.json#/definitions/StorageTech"
     },
     "capital_costs_energy": {
+      "description": "Capital costs for investing in a storage technology's energy capacity. Units: USD/MWh.",
       "$ref": "../../Core/common.json#/definitions/ValueCurve",
-      "x-unit": "USD/MWh",
-      "description": "Units: USD/MWh."
+      "x-unit": "USD/MWh"
     },
     "capital_costs_charge": {
+      "description": "Capital costs for investing in a storage technology's charge capacity. Units: USD/MW.",
       "$ref": "../../Core/common.json#/definitions/ValueCurve",
-      "x-unit": "USD/MW",
-      "description": "Units: USD/MW."
+      "x-unit": "USD/MW"
     },
     "capital_costs_discharge": {
+      "description": "Capital costs for investing in a storage technology's discharge capacity. Units: USD/MW.",
       "$ref": "../../Core/common.json#/definitions/ValueCurve",
-      "x-unit": "USD/MW",
-      "description": "Units: USD/MW."
+      "x-unit": "USD/MW"
     },
     "operation_costs": {
+      "description": "Fixed and variable O&M costs for a storage technology. Units: USD/MWh.",
       "$ref": "../../Core/common.json#/definitions/StorageCost",
-      "x-unit": "USD/MWh",
-      "description": "Units: USD/MWh."
+      "x-unit": "USD/MWh"
     },
     "unit_size_discharge": {
+      "description": "Used for discrete investment decisions. Size of each unit of discharging capacity being built. Units: MW.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "MW",
-      "description": "Units: MW."
+      "x-unit": "MW"
     },
     "unit_size_charge": {
+      "description": "Used for discrete investment decisions. Unit size of charging capacity. Units: MW.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "MW",
-      "description": "Units: MW."
+      "x-unit": "MW"
     },
     "unit_size_energy": {
+      "description": "Used for discrete investment decisions. Size of each unit of energy capacity being built. Units: MWh.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "MWh",
-      "description": "Units: MWh."
+      "x-unit": "MWh"
     },
     "capacity_limits_charge": {
+      "description": "Allowable installed power capacity for charging of a storage technology. Units: MW.",
       "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MW",
-      "description": "Units: MW."
+      "x-unit": "MW"
     },
     "capacity_limits_discharge": {
+      "description": "Allowable installed power capacity for discharging of a storage technology. Units: MW.",
       "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MW",
-      "description": "Units: MW."
+      "x-unit": "MW"
     },
     "capacity_limits_energy": {
+      "description": "Allowable installed energy capacity for a storage technology. Units: MWh.",
       "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MWh",
-      "description": "Units: MWh."
+      "x-unit": "MWh"
     },
     "duration_limits": {
+      "description": "Minimum and maximum duration limits (energy to discharge capacity ratio) for a storage technology (hours). Units: h.",
       "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "h",
-      "description": "Units: h."
+      "x-unit": "h"
     },
     "efficiency": {
+      "description": "Efficiency of charging storage, fraction of total charge (in) and discharge (out) capacity. Units: 1.",
       "$ref": "../../Core/common.json#/definitions/InOut",
-      "x-unit": "1",
-      "description": "Units: 1."
+      "x-unit": "1"
     },
     "losses": {
+      "description": "Self-discharge of storage (fraction of energy stored per hour). Units: 1.",
       "type": "number",
       "default": 1.0,
-      "x-unit": "1",
-      "description": "Units: 1."
+      "x-unit": "1"
     },
     "lifetime": {
+      "description": "Maximum number of years a technology can be active once installed. Units: yr.",
       "type": "integer",
       "default": 100,
-      "x-unit": "yr",
-      "description": "Units: yr."
+      "x-unit": "yr"
     },
     "requirements": {
+      "description": "List of requirement IDs associated with the component.",
       "type": "array",
       "default": [],
       "items": {
@@ -115,6 +123,7 @@
       }
     },
     "financial_data": {
+      "description": "Struct containing relevant financial information for a technology.",
       "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
     }
   },

@@ -2,12 +2,15 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
+      "description": "ID for individual component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
       "type": "boolean"
     }
   },

@@ -2,9 +2,11 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "id": {
+      "description": "ID for individual component.",
       "type": "integer"
     },
     "existing_devices": {
+      "description": "List of individual existing devices to map to a specific technology in the portfolio.",
       "type": "array",
       "items": {
         "type": "string"
