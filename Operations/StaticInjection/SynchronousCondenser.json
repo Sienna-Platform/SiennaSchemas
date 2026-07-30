@@ -1,37 +1,55 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A Synchronous Machine connected to the system to provide inertia or reactive power support.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
+      "description": "ID of the bus that this component is connected to.",
       "type": "integer"
     },
     "reactive_power": {
-      "type": "number"
+      "description": "Initial reactive power set point of the unit. Units: MVAr.",
+      "type": "number",
+      "x-unit": "MVAr"
     },
     "rating": {
-      "type": "number"
+      "description": "Maximum AC side output power rating of the unit. Not to be confused with base_power. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
     },
     "reactive_power_limits": {
-      "descriptor": "in psy5 a required param with an option to be nothing",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing Units: MVAr.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MVAr"
     },
     "base_power": {
-      "type": "number"
+      "description": "Base power of the unit for per unitization. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
     },
     "active_power_losses": {
+      "description": "Active power loss incurred by having the unit online. Units: MW.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "MW"
     },
     "dynamic_injector": {
-      "type": null
+      "description": "ID of the corresponding dynamic injection device, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

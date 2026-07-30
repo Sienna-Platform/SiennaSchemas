@@ -1,23 +1,44 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A fixed admittance.\n\nMost often used in dynamics or AC power flow studies as a source of reactive power.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
+      "description": "ID of the bus that this component is connected to.",
       "type": "integer"
     },
+    "admittance_units": {
+      "description": "Unit basis for the shunt admittance Y. DEVICE_MVAR is PSS/E RAW native (Mvar/MW at unity voltage).",
+      "default": "DEVICE_MVAR",
+      "$ref": "../../Core/common.json#/definitions/AdmittanceUnitBasis"
+    },
     "Y": {
-      "$ref": "../../Core/common.json#/definitions/ComplexNumber"
+      "description": "Fixed admittance. Per-unit on system base. Units: pu. Units: per admittance_units — SYSTEM_BASE: pu, NATURAL_UNITS: S, DEVICE_MVAR: MVAr .",
+      "$ref": "../../Core/common.json#/definitions/ComplexNumber",
+      "x-unit-discriminator": "admittance_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "S",
+        "DEVICE_MVAR": "MVAr"
+      }
     },
     "dynamic_injector": {
-      "type": null
+      "description": "ID of the corresponding dynamic injection model for admittance, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

@@ -1,33 +1,82 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Facts control devices.\n\nMost often used in AC power flow studies as a control of voltage and, active and reactive power.",
   "properties": {
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
+      "description": "Sending end bus number.",
       "type": "integer"
     },
     "control_mode": {
-      "descriptor": "in psy5 a required param with an option to be nothing",
-      "$ref": "../../Core/common.json#/definitions/FACTSOperationModes"
+      "description": "Control mode. Used to describe the behavior of the control device. in psy5 a required param with an option to be nothing",
+      "type": "string",
+      "enum": [
+        "OOS",
+        "NML",
+        "BYP"
+      ]
+    },
+    "voltage_setpoint_units": {
+      "description": "Unit basis for voltage_setpoint. SYSTEM_BASE (pu) is PSS/E RAW native (VSET).",
+      "default": "SYSTEM_BASE",
+      "$ref": "../../Operations/common.json#/definitions/VoltageUnitBasis"
     },
     "voltage_setpoint": {
-      "type": "number"
+      "description": "Voltage setpoint at the sending end bus in kV, it has to be a `PV` bus. Units: kV. Units: per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV .",
+      "type": "number",
+      "x-unit-discriminator": "voltage_setpoint_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "kV"
+      }
     },
     "max_shunt_current": {
-      "type": "number"
+      "description": "Maximum shunt current at the sending end bus; entered at unity voltage. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
     },
     "reactive_power_required": {
+      "description": "Total reactive power required to hold voltage at sending bus, as a fraction in the range 0-1. Units: 1.",
+      "type": "number",
+      "x-unit": "1"
+    },
+    "max_reactive_power": {
+      "description": "Independent maximum reactive power ceiling; the device reactive limit is min(the current/susceptance law on max_shunt_current, this value). Non-binding at the 9999.0 default.",
+      "default": 9999.0,
       "type": "number"
     },
+    "shunt_control_type": {
+      "description": "Device class selecting the reactive-limit law (SVC vs STATCOM).",
+      "default": "STATCOM",
+      "type": "string",
+      "enum": [
+        "SVC",
+        "STATCOM"
+      ]
+    },
+    "regulated_bus_number": {
+      "description": "Bus whose voltage this device regulates; 0 means local (sending) bus (PSS/E FCREG). Units: 1.",
+      "default": 0,
+      "type": "integer",
+      "x-unit": "1"
+    },
     "dynamic_injector": {
-      "type": null
+      "description": "ID of the corresponding dynamic injection model for FACTS control device, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

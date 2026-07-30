@@ -29,13 +29,19 @@
             "$ref": "../../Core/common.json#/definitions/MinMax"
         },
         "capital_costs": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
+            "$ref": "../../Core/common.json#/definitions/ValueCurve",
+            "x-unit": "USD/MW",
+            "description": "Units: USD/MW."
         },
         "line_loss": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
+            "$ref": "../../Core/common.json#/definitions/ValueCurve",
+            "x-unit": "1",
+            "description": "Units: 1."
         },
         "unit_size": {
-            "type": "number"
+            "type": "number",
+            "x-unit": "MW",
+            "description": "Units: MW."
         },
         "financial_data": {
             "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"

@@ -1,54 +1,73 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameters of a renewable energy generator/converter model, this model corresponds to REGCA1 in PSSE.",
   "properties": {
     "T_g": {
-      "type": "number"
+      "description": "Converter time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Rrpwr": {
+      "description": "Low Voltage Power Logic (LVPL) ramp rate limit.",
       "type": "number"
     },
     "Brkpt": {
+      "description": "LVPL characteristic voltage 2.",
       "type": "number"
     },
     "Zerox": {
+      "description": "LVPL characteristic voltage 1.",
       "type": "number"
     },
     "Lvpl1": {
+      "description": "LVPL gain.",
       "type": "number"
     },
     "Vo_lim": {
+      "description": "Voltage limit for high voltage reactive current management.",
       "type": "number"
     },
     "Lv_pnts": {
+      "description": "Voltage points for low voltage active current management (Lvpnt0, Lvpnt1).",
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "Io_lim": {
+      "description": "Current limit for high voltage reactive current management (specified as a negative value).",
       "type": "number"
     },
     "T_fltr": {
-      "type": "number"
+      "description": "Voltage filter time constant for low voltage active current management. Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "K_hv": {
+      "description": "Overvoltage compensation gain used in the high voltage reactive current management.",
       "type": "number"
     },
     "Iqr_lims": {
+      "description": "Limit on rate of change for reactive current (Iqr_min, Iqr_max).",
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "Accel": {
+      "description": "Acceleration factor.",
       "type": "number"
     },
     "Lvpl_sw": {
+      "description": "Low voltage power logic (LVPL) switch. (`false`: LVPL not present, `true`: LVPL present).",
       "type": "boolean"
     },
     "Q_ref": {
+      "description": "Initial condition of reactive power from power flow.",
       "type": "number",
       "default": 1.0
     },
     "R_source": {
+      "description": "Output resistor used for the Thevenin Equivalent.",
       "type": "number",
       "default": 0.0
     },
     "X_source": {
+      "description": "Output reactance used for the Thevenin Equivalent.",
       "type": "number",
       "default": 100000.0
     }

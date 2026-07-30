@@ -1,38 +1,55 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "An AC bus.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "number": {
+      "description": "A unique bus identification number (positive integer).",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations. This field should not be confused with the ISOLATED enum value.",
       "type": "boolean"
-    }, 
+    },
     "bustype": {
-      "descriptor": "in psy5 a required param with an option to be nothing",
+      "description": "Used to describe the connectivity and behavior of this bus. in psy5 a required param with an option to be nothing",
       "$ref": "../../Core/common.json#/definitions/ACBusType"
     },
     "angle": {
-      "type": "number"
+      "description": "Angle of the bus. Units: rad.",
+      "type": "number",
+      "x-unit": "rad"
     },
     "magnitude": {
-      "type": "number"
+      "description": "Voltage as a multiple of `base_voltage`. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-unit-base": "base_voltage"
     },
     "voltage_limits": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Limits on the voltage variation as multiples of `base_voltage`. Units: pu.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "pu",
+      "x-unit-base": "base_voltage"
     },
     "base_voltage": {
-      "type": "number"
+      "description": "The base voltage. Units: kV.",
+      "type": "number",
+      "x-unit": "kV"
     },
     "area": {
+      "description": "ID of the area containing the bus.",
       "type": "integer"
     },
     "load_zone": {
+      "description": "ID of the load zone containing the bus.",
       "type": "integer"
     }
   },

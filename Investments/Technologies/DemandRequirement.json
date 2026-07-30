@@ -22,7 +22,9 @@
         },
         "peak_demand_mw": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "MW",
+            "description": "Units: MW."
         },
         "region": {
             "type": "array",
@@ -31,7 +33,9 @@
             }
         },
         "value_of_lost_load": {
-            "type": "number"
+            "type": "number",
+            "x-unit": "USD/MWh",
+            "description": "Units: USD/MWh."
         },
         "unserved_demand_curve": {
             "$ref": "../../Core/common.json#/definitions/ValueCurve"

@@ -1,35 +1,47 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A DC bus.",
   "properties": {
     "area": {
+      "description": "ID of the area containing the DC bus.",
       "type": "integer"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "base_voltage": {
-      "descriptor": "in psy5 a required param with an option to be nothing",
-      "type": "number"
+      "description": "The base voltage. in psy5 a required param with an option to be nothing Units: kV.",
+      "type": "number",
+      "x-unit": "kV"
     },
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "load_zone": {
+      "description": "ID of the load zone containing the DC bus.",
       "type": "integer"
     },
     "magnitude": {
-      "descriptor": "in psy5 a required param with an option to be nothing",
-      "type": "number"
+      "description": "Voltage as a multiple of `base_voltage`. in psy5 a required param with an option to be nothing Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-unit-base": "base_voltage"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "number": {
+      "description": "A unique bus identification number (positive integer).",
       "type": "number"
     },
     "voltage_limits": {
-      "descriptor": "in psy5 a required param with an option to be nothing",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Limits on the voltage variation as multiples of `base_voltage`. in psy5 a required param with an option to be nothing Units: pu.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "pu",
+      "x-unit-base": "base_voltage"
     }
   },
   "required": [

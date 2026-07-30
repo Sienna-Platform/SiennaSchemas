@@ -1,0 +1,271 @@
+#!/usr/bin/env python3
+"""Bundle the four openapi-<domain>.json specs into self-contained specs.
+
+For each ``openapi-<domain>.json`` at the repo root this resolves every
+external-file ``$ref`` (a ``$ref`` whose value names a file, i.e. does not start
+with ``#/``) and writes ``dist/openapi-<domain>-bundled.json``.
+
+Why this exists
+---------------
+Under JSON Schema draft-07 and OpenAPI 3.0 any keyword placed **as a sibling of
+``$ref``** is ignored: the ``$ref`` replaces the whole object. Most ``x-unit*``
+annotations in this repo sit next to a ``$ref`` (a property that is a ``MinMax``,
+a ``ReservoirDataType``-discriminated field, ...), so downstream draft-07/OpenAPI
+codegen drops them silently. Bundling resolves the external refs and **merges the
+sibling annotations into the resolved referent** so nothing is lost.
+
+Resolution rules
+----------------
+* External-file ``$ref`` (value contains a file part, e.g.
+  ``Operations/StaticInjection/ThermalStandard.json`` or
+  ``../../Core/common.json#/definitions/MinMax``) is resolved to the referenced
+  file+fragment and inlined.
+* When the referring node carries sibling keys next to ``$ref`` those siblings
+  are merged onto a copy of the resolved referent. **Sibling keys win over
+  referent keys on conflict** (so a property's own ``description`` and ``x-unit``
+  override the shared definition's).
+* ``Core/common.json#/definitions/<Name>`` targets are hoisted once into a
+  top-level ``definitions`` block of the bundle. A ref to such a definition that
+  has **no** siblings is rewritten to the internal ``#/definitions/<Name>``.
+  A ref that **does** carry siblings is inlined in place (a merged copy) because
+  the merged object is unique to that use site.
+* Refs already internal to the spec (``#/...``) are left untouched -- draft-07
+  tooling handles those.
+
+Determinism
+-----------
+Output uses stable insertion order: keys are emitted in the order they are first
+seen while walking (spec order, then referent order), and the hoisted
+``definitions`` block is emitted in sorted key order. ``json.dump`` is called
+with ``ensure_ascii=False`` and a trailing newline. Given identical inputs the
+bytes are identical, which ``--check`` relies on.
+
+Usage
+-----
+    python scripts/bundle_specs.py            # write dist/*-bundled.json
+    python scripts/bundle_specs.py --check     # exit non-zero if dist/ is stale
+
+Stdlib only.
+"""
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+DIST_DIR = REPO_ROOT / "dist"
+DOMAINS = ["core", "operations", "investments", "dynamics"]
+COMMON_REL = "Core/common.json"
+
+# Shared across all four domain bundles: common.json (and any multiply-$ref'd
+# file) is parsed from disk once. Keyed by resolved absolute path.
+_file_cache = {}
+
+
+def load_json(path):
+    key = str(Path(path).resolve())
+    if key not in _file_cache:
+        with open(path) as fh:
+            _file_cache[key] = json.load(fh)
+    return _file_cache[key]
+
+
+def split_ref(ref):
+    """Split a $ref into (filepart, fragment). filepart '' means same document."""
+    if "#" in ref:
+        filepart, fragment = ref.split("#", 1)
+    else:
+        filepart, fragment = ref, ""
+    return filepart, fragment
+
+
+def is_external(ref):
+    filepart, _ = split_ref(ref)
+    return filepart != ""
+
+
+def resolve_fragment(doc, fragment):
+    """Follow a JSON-pointer fragment (leading '/') into doc."""
+    node = doc
+    if fragment in ("", "/"):
+        return node
+    for token in fragment.strip("/").split("/"):
+        token = token.replace("~1", "/").replace("~0", "~")
+        if isinstance(node, dict) and token in node:
+            node = node[token]
+        else:
+            raise KeyError(f"fragment token '{token}' not found in {fragment}")
+    return node
+
+
+class Bundler:
+    """Bundles one spec. Hoists Core/common.json definitions into `definitions`."""
+
+    def __init__(self):
+        self.common_path = (REPO_ROOT / COMMON_REL).resolve()
+        self.common_doc = load_json(self.common_path)
+        # Names of common.json definitions pulled into the bundle's `definitions`.
+        self.hoisted = {}
+
+    def _hoist_common_definition(self, name):
+        """Ensure a common.json definition is inlined into the bundle definitions.
+
+        Resolves its own internal defn->defn refs to bundle-internal
+        #/definitions refs (recursively hoisting the targets)."""
+        if name in self.hoisted:
+            return
+        if name not in self.common_doc.get("definitions", {}):
+            raise KeyError(f"Core/common.json has no definition '{name}'")
+        # Placeholder to break cycles.
+        self.hoisted[name] = None
+        body = self.common_doc["definitions"][name]
+        self.hoisted[name] = self._rewrite_common_internal(body)
+
+    def _rewrite_common_internal(self, node):
+        """Within common.json content, turn '#/definitions/X' refs into bundle
+        '#/definitions/X' refs (same spelling) and hoist X. No external refs
+        exist inside common.json, so only internal ones are handled here."""
+        if isinstance(node, dict):
+            if "$ref" in node and not is_external(node["$ref"]):
+                _, fragment = split_ref(node["$ref"])
+                tokens = fragment.strip("/").split("/")
+                if len(tokens) == 2 and tokens[0] == "definitions":
+                    self._hoist_common_definition(tokens[1])
+                # Merge any siblings (rare inside common) onto a rewritten copy.
+                out = {}
+                for k, v in node.items():
+                    out[k] = v if k == "$ref" else self._rewrite_common_internal(v)
+                return out
+            return {k: self._rewrite_common_internal(v) for k, v in node.items()}
+        if isinstance(node, list):
+            return [self._rewrite_common_internal(v) for v in node]
+        return node
+
+    def _resolve_external(self, ref, base_path):
+        """Return (resolved_content, target_path, fragment, common_name).
+
+        common_name is the definition name if this targets Core/common.json's
+        definitions, else None."""
+        filepart, fragment = split_ref(ref)
+        target = (base_path.parent / filepart).resolve()
+        doc = load_json(target)
+        content = resolve_fragment(doc, fragment)
+        common_name = None
+        if target == self.common_path:
+            tokens = fragment.strip("/").split("/")
+            if len(tokens) == 2 and tokens[0] == "definitions":
+                common_name = tokens[1]
+        return content, target, fragment, common_name
+
+    def walk(self, node, base_path):
+        """Recursively bundle a node, resolving external refs relative to
+        base_path (the file the node currently lives in)."""
+        if isinstance(node, dict):
+            if "$ref" in node and not is_external(node["$ref"]):
+                # Internal ref. If we are walking common.json content (inlined
+                # with siblings), its #/definitions/X targets must be hoisted
+                # into the bundle so the internal ref resolves there.
+                if base_path == self.common_path:
+                    _, fragment = split_ref(node["$ref"])
+                    tokens = fragment.strip("/").split("/")
+                    if len(tokens) == 2 and tokens[0] == "definitions":
+                        self._hoist_common_definition(tokens[1])
+                    out = {}
+                    for k, v in node.items():
+                        out[k] = v if k == "$ref" else self.walk(v, base_path)
+                    return out
+                return {k: self.walk(v, base_path) for k, v in node.items()}
+            if "$ref" in node and is_external(node["$ref"]):
+                siblings = {k: v for k, v in node.items() if k != "$ref"}
+                content, target, _, common_name = self._resolve_external(
+                    node["$ref"], base_path
+                )
+                if common_name is not None and not siblings:
+                    # No siblings: hoist and point to internal definition.
+                    self._hoist_common_definition(common_name)
+                    return {"$ref": f"#/definitions/{common_name}"}
+                # Inline the resolved content (deep-resolved in its own file
+                # context), then merge siblings on top (siblings win).
+                resolved = self.walk(content, target)
+                merged = {}
+                if isinstance(resolved, dict):
+                    merged.update(resolved)
+                else:
+                    # Non-dict referent with siblings cannot merge; siblings win
+                    # only makes sense for object referents. Keep resolved.
+                    if siblings:
+                        merged["allOf"] = [resolved]
+                    else:
+                        return resolved
+                for k, v in siblings.items():
+                    merged[k] = self.walk(v, base_path)
+                return merged
+            # Ordinary dict: recurse, preserving key order.
+            return {k: self.walk(v, base_path) for k, v in node.items()}
+        if isinstance(node, list):
+            return [self.walk(v, base_path) for v in node]
+        return node
+
+    def bundle(self, spec_path):
+        spec = load_json(spec_path)
+        bundled = self.walk(spec, spec_path)
+        if self.hoisted:
+            defs = {name: self.hoisted[name] for name in sorted(self.hoisted)}
+            bundled["definitions"] = defs
+        return bundled
+
+
+def bundle_spec(domain):
+    spec_path = REPO_ROOT / f"openapi-{domain}.json"
+    return Bundler().bundle(spec_path)
+
+
+def serialize(obj):
+    return json.dumps(obj, indent=2, ensure_ascii=False) + "\n"
+
+
+def cmd_write():
+    DIST_DIR.mkdir(exist_ok=True)
+    for domain in DOMAINS:
+        out = DIST_DIR / f"openapi-{domain}-bundled.json"
+        out.write_text(serialize(bundle_spec(domain)))
+        print(f"wrote {out.relative_to(REPO_ROOT)}")
+    return 0
+
+
+def cmd_check():
+    stale = []
+    for domain in DOMAINS:
+        out = DIST_DIR / f"openapi-{domain}-bundled.json"
+        fresh = serialize(bundle_spec(domain))
+        if not out.exists():
+            stale.append(f"{out.relative_to(REPO_ROOT)} (missing)")
+            continue
+        if out.read_text() != fresh:
+            stale.append(f"{out.relative_to(REPO_ROOT)} (stale)")
+    if stale:
+        print("Bundled specs are missing or stale:")
+        for s in stale:
+            print(f"  {s}")
+        print("Run: python scripts/bundle_specs.py")
+        return 1
+    print(f"OK: {len(DOMAINS)} bundled spec(s) up to date in dist/.")
+    return 0
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Exit non-zero if dist/ outputs are missing or stale.",
+    )
+    args = parser.parse_args()
+    if args.check:
+        return cmd_check()
+    return cmd_write()
+
+
+if __name__ == "__main__":
+    sys.exit(main())

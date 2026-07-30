@@ -1,0 +1,388 @@
+#!/usr/bin/env python3
+"""Check structural parity between PowerSystems.jl structs and these schemas.
+
+Every non-dynamics PSY struct (generated structs from the descriptor plus the
+hand-written supplemental attributes) must have a schema component of the same
+title, and the matched pair must have no unexplained field drift. Known,
+deliberate conventions are allowlisted below; anything else fails the check.
+
+Usage:
+  python3 scripts/check_psy_parity.py --psy-path ../PowerSystems.jl
+
+When the PSY checkout is absent the check SKIPs cleanly (exit 0), mirroring
+check_units_sync.py's optional PSY layer, so CI can run it unconditionally.
+
+Output contract:
+  MISSING SCHEMA <StructName>   PSY struct with no schema component
+  MISSING STRUCT <Title>        schema component with no PSY struct
+  FIELD DRIFT <Name>: psy_only=[...] schema_only=[...]
+  DEFAULT DRIFT <Name>.<field>: psy=<v> schema=<v>   numeric default mismatch
+  SUMMARY: N missing schemas, M unexplained drifts
+Exit 1 if N + M > 0.
+"""
+
+import argparse
+import json
+import os
+import re
+import sys
+
+from validate_units import collect_schema_files
+
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# PSY abstract dynamics-component types live in these model files as
+# `abstract type <Name> <: DynamicComponent/DynamicInjection/...`. Every struct
+# whose descriptor supertype is one of them is a dynamics modeling component,
+# which schemas deliberately do not cover yet (Dynamics annotation is deferred).
+DYNAMICS_MODEL_FILES = (
+    "src/models/dynamic_models.jl",
+    "src/models/dynamic_inverter.jl",
+    "src/models/dynamic_inverter_components.jl",
+    "src/models/dynamic_generator_components.jl",
+)
+
+# Fallback used only when the dynamics model sources are absent (partial PSY
+# checkout): the abstract supertype names cannot be derived, so exclude by this
+# known list instead. Kept in sync with the abstract types in the files above.
+DYNAMICS_SUPERTYPES_FALLBACK = {
+    "AVR",
+    "ActivePowerControl",
+    "Converter",
+    "DCSource",
+    "DynamicInjection",
+    "Filter",
+    "FrequencyEstimator",
+    "InnerControl",
+    "Machine",
+    "OutputCurrentLimiter",
+    "PSS",
+    "ReactivePowerControl",
+    "Shaft",
+    "TurbineGov",
+}
+
+
+def derive_dynamics_supertypes(psy_path):
+    """Abstract dynamics-component type names declared in PSY's dynamic model
+    files. Falls back to DYNAMICS_SUPERTYPES_FALLBACK if none are found (the
+    sources are missing in a partial checkout)."""
+    names = set()
+    for rel in DYNAMICS_MODEL_FILES:
+        full = os.path.join(psy_path, rel)
+        if not os.path.exists(full):
+            continue
+        with open(full, encoding="utf-8") as f:
+            text = f.read()
+        for match in re.finditer(r"abstract type\s+([A-Za-z_][A-Za-z0-9_]*)\b", text):
+            names.add(match.group(1))
+    if not names:
+        return set(DYNAMICS_SUPERTYPES_FALLBACK)
+    return names
+
+
+# PSY infrastructure fields never represented as schema properties.
+DROPPED_FIELDS = {
+    "internal",
+    "ext",
+    "time_series_container",
+    "supplemental_attributes_container",
+    "services",
+}
+
+# Unicode field names transliterated to ASCII property names.
+TRANSLITERATION = {
+    "α": "alpha",
+    "β": "beta",
+    "α_primary": "alpha_primary",
+    "α_secondary": "alpha_secondary",
+    "α_tertiary": "alpha_tertiary",
+}
+
+# PSY encodes reserve direction in the Reserve{T} type parameter; schemas
+# flatten it into a reserve_direction property.
+RESERVE_DIRECTION_COMPONENTS = {
+    "ConstantReserve",
+    "ConstantReserveGroup",
+    "VariableReserve",
+    "VariableReserveNonSpinning",
+}
+
+# PSY relationship/map fields normalized into association components
+# (PlantAssociation / CombinedCycleAssociation) instead of properties.
+ASSOCIATION_NORMALIZED = {
+    "AGC": {"reserves"},
+    "ConstantReserveGroup": {"contributing_services"},
+}
+PLANT_SA_STRUCTS = {
+    "ThermalPowerPlant",
+    "CombinedCycleBlock",
+    "CombinedCycleFractional",
+    "HydroPowerPlant",
+    "RenewablePowerPlant",
+}
+
+# Deliberate schemas-ahead-of-PSY properties.
+# Fields intentionally present only in the schema, with no PowerSystems.jl
+# counterpart. The unit-basis discriminators belong here: under the flexible
+# unit-basis design PSY stores each value in a single (per-unit) basis, while the
+# schema/GridDB layer records the storage basis per row via these discriminator
+# properties (see SiennaGridDB flexible-unit-basis plan). They have no PSY field.
+# base_power on Line/MonitoredLine/GenericArcImpedance is the SYSTEM base,
+# recorded per component in lieu of a system-level table/JSON entry — a
+# deliberate schema-only exception; PSY stores no such field and never will.
+SCHEMA_AHEAD = {
+    "Source": {"base_voltage", "parameter_units"},
+    "TModelHVDCLine": {"parameter_units"},
+    "TwoTerminalLCCLine": {"parameter_units", "dc_voltage_units"},
+    "TwoTerminalVSCLine": {"admittance_units", "voltage_units"},
+    "FixedAdmittance": {"admittance_units"},
+    "SwitchedAdmittance": {"admittance_units"},
+    "FACTSControlDevice": {"voltage_setpoint_units"},
+    "InterconnectingConverter": {"voltage_setpoint_units"},
+    "Line": {"base_power"},
+    "MonitoredLine": {"base_power"},
+    "GenericArcImpedance": {"base_power", "parameter_units"},
+}
+
+# PSY fields that are constructor-managed runtime state, never serialized, so
+# schemas never represent them. TransformerCircuit.base_value is repopulated by
+# add_component! and explicitly skipped by PSY's hand-written IS.serialize
+# (src/models/transformer_circuits.jl). Reviewable per type, like SCHEMA_AHEAD.
+PSY_INTERNAL = {
+    "TransformerCircuit": {"base_value"},
+}
+
+# Schema components with no PSY struct by design (association normalization
+# and IS-level concepts). Everything under Investments/ maps to PSIP, not PSY,
+# and is excluded from the scan entirely.
+SCHEMA_ONLY_COMPONENTS = {
+    "CombinedCycleAssociation",
+    "PlantAssociation",
+    "TimeSeriesAssociation",
+}
+
+# Hand-written supplemental-attribute structs: name -> Julia source relative
+# to the PSY checkout (GeographicInfo lives in InfrastructureSystems).
+HAND_WRITTEN = {
+    "EmissionsData": "src/emissions_data.jl",
+    "ImpedanceCorrectionData": "src/impedance_correction.jl",
+    "PlannedOutage": "src/outages.jl",
+    "GeometricDistributionForcedOutage": "src/outages.jl",
+    "FixedForcedOutage": "src/outages.jl",
+    "ThermalPowerPlant": "src/plant_attribute.jl",
+    "CombinedCycleBlock": "src/plant_attribute.jl",
+    "CombinedCycleFractional": "src/plant_attribute.jl",
+    "HydroPowerPlant": "src/plant_attribute.jl",
+    "RenewablePowerPlant": "src/plant_attribute.jl",
+}
+IS_GEOGRAPHIC = ("GeographicInfo", "src/geographic_supplemental_attribute.jl")
+
+
+def julia_struct_fields(path, struct_name):
+    """Field names of a hand-written Julia struct (lines `name :: Type`)."""
+    with open(path, encoding="utf-8") as f:
+        text = f.read()
+    match = re.search(
+        rf"struct {struct_name}\b.*?\n(.*?)\nend", text, re.S
+    )
+    if match is None:
+        return None
+    fields = []
+    for line in match.group(1).splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or line.startswith('"'):
+            continue
+        if line.startswith("function "):
+            break
+        field_match = re.match(r"([a-z_][a-zA-Z0-9_]*)\s*::", line)
+        if field_match:
+            fields.append(field_match.group(1))
+    return fields
+
+
+def load_psy_structs(psy_path):
+    """Returns (structs, unresolved). Hand-written structs whose Julia source
+    is absent (partial checkout) land in `unresolved` so their schema
+    components are skipped instead of reported as spurious MISSING STRUCT."""
+    descriptor_path = os.path.join(
+        psy_path, "src", "descriptors", "power_system_structs.json"
+    )
+    with open(descriptor_path, encoding="utf-8") as f:
+        descriptor = json.load(f)
+    dynamics_supertypes = derive_dynamics_supertypes(psy_path)
+    structs = {}
+    defaults = {}
+    unresolved = set()
+    for entry in descriptor["auto_generated_structs"]:
+        if entry.get("supertype", "") in dynamics_supertypes:
+            continue
+        internal = PSY_INTERNAL.get(entry["struct_name"], set())
+        structs[entry["struct_name"]] = [
+            field["name"]
+            for field in entry.get("fields", [])
+            if field["name"] not in internal
+        ]
+        defaults[entry["struct_name"]] = {
+            field["name"]: field["default"]
+            for field in entry.get("fields", [])
+            if "default" in field
+        }
+    for name, rel_path in HAND_WRITTEN.items():
+        full = os.path.join(psy_path, rel_path)
+        fields = julia_struct_fields(full, name) if os.path.exists(full) else None
+        if fields is None:
+            unresolved.add(name)
+            print(f"SKIP hand-written struct {name}: source not found under {psy_path}")
+        else:
+            structs[name] = fields
+    is_name, is_rel = IS_GEOGRAPHIC
+    is_path = os.path.normpath(
+        os.path.join(psy_path, "..", "InfrastructureSystems.jl", is_rel)
+    )
+    fields = julia_struct_fields(is_path, is_name) if os.path.exists(is_path) else None
+    if fields is None:
+        unresolved.add(is_name)
+        print(f"SKIP hand-written struct {is_name}: InfrastructureSystems.jl checkout not found")
+    else:
+        structs[is_name] = fields
+    return structs, unresolved, defaults
+
+
+def load_schema_components():
+    """Titled components under Operations/ and Core/ (Dynamics/ and Investments/
+    map to PSY dynamics and PSIP respectively, so they are excluded per the
+    check's semantics). Sources the file superset from validate_units'
+    collect_schema_files so both scripts agree on which schema files exist."""
+    components = {}
+    defaults = {}
+    for path in collect_schema_files():
+        if path.relative_to(REPO_ROOT).parts[0] not in ("Operations", "Core"):
+            continue
+        try:
+            with open(path, encoding="utf-8") as f:
+                doc = json.load(f)
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            continue
+        title = doc.get("title")
+        if title:
+            props = doc.get("properties", {})
+            components[title] = set(props.keys())
+            defaults[title] = {
+                name: node["default"]
+                for name, node in props.items()
+                if isinstance(node, dict) and "default" in node
+            }
+    return components, defaults
+
+
+def explained_psy_only(name, field):
+    if field in DROPPED_FIELDS:
+        return True
+    if field in ASSOCIATION_NORMALIZED.get(name, set()):
+        return True
+    if name in PLANT_SA_STRUCTS and field.endswith("_map"):
+        return True
+    return False
+
+
+def as_number(value):
+    """Return value as a float, or None if it is not a scalar number. Booleans
+    are treated as non-numeric so a JSON `true`/`false` default is never coerced.
+    PSY descriptor defaults are strings ("1.0", "1e8"); schema defaults are typed
+    JSON. Only pairs where BOTH sides are numeric are compared."""
+    if isinstance(value, bool):
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def explained_schema_only(name, prop):
+    if prop == "id":
+        return True
+    if prop == "reserve_direction" and name in RESERVE_DIRECTION_COMPONENTS:
+        return True
+    if prop in SCHEMA_AHEAD.get(name, set()):
+        return True
+    return False
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        "--psy-path",
+        default=os.path.normpath(os.path.join(REPO_ROOT, "..", "PowerSystems.jl")),
+        help="PowerSystems.jl checkout (SKIPs cleanly when absent)",
+    )
+    args = parser.parse_args()
+
+    descriptor = os.path.join(
+        args.psy_path, "src", "descriptors", "power_system_structs.json"
+    )
+    if not os.path.exists(descriptor):
+        print(f"SKIP: PSY checkout not found at {args.psy_path}")
+        return 0
+
+    psy_structs, unresolved, psy_defaults = load_psy_structs(args.psy_path)
+    components, schema_defaults = load_schema_components()
+
+    missing_schemas = 0
+    drifts = 0
+
+    for name in sorted(set(psy_structs) - set(components)):
+        print(f"MISSING SCHEMA {name}")
+        missing_schemas += 1
+
+    for title in sorted(set(components) - set(psy_structs)):
+        if title in SCHEMA_ONLY_COMPONENTS or title in unresolved:
+            continue
+        print(f"MISSING STRUCT {title}")
+        drifts += 1
+
+    for name in sorted(set(psy_structs) & set(components)):
+        psy_fields = {
+            TRANSLITERATION.get(field, field) for field in psy_structs[name]
+        }
+        props = components[name]
+        psy_only = sorted(
+            field
+            for field in psy_fields - props
+            if not explained_psy_only(name, field)
+        )
+        schema_only = sorted(
+            prop
+            for prop in props - psy_fields
+            if not explained_schema_only(name, prop)
+        )
+        if psy_only or schema_only:
+            print(f"FIELD DRIFT {name}: psy_only={psy_only} schema_only={schema_only}")
+            drifts += 1
+
+        # Default drift: for every field where BOTH the PSY descriptor and the
+        # schema property declare a numeric default, the values must agree
+        # (1.0 == 1). Non-numeric or one-sided defaults are not compared.
+        psy_field_defaults = psy_defaults.get(name, {})
+        schema_prop_defaults = schema_defaults.get(name, {})
+        for field, psy_raw in sorted(psy_field_defaults.items()):
+            prop = TRANSLITERATION.get(field, field)
+            if prop not in schema_prop_defaults:
+                continue
+            psy_num = as_number(psy_raw)
+            schema_num = as_number(schema_prop_defaults[prop])
+            if psy_num is None or schema_num is None:
+                continue
+            if psy_num != schema_num:
+                print(
+                    f"DEFAULT DRIFT {name}.{prop}: "
+                    f"psy={psy_raw} schema={schema_prop_defaults[prop]}"
+                )
+                drifts += 1
+
+    print(f"SUMMARY: {missing_schemas} missing schemas, {drifts} unexplained drifts")
+    return 1 if (missing_schemas + drifts) > 0 else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

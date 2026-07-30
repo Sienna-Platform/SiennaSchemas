@@ -25,8 +25,15 @@
     },
     "start_up_adder": {
       "type": "number",
-      "description": "Per-start emission pulse, in mass_unit. Must be finite and non-negative.",
-      "default": 0.0
+      "description": "Per-start emission pulse, in mass_unit. Must be finite and non-negative. Units: per mass_unit — KG: kg, LB: lb, SHORT_TON: ston, METRIC_TON: t .",
+      "default": 0.0,
+      "x-unit-discriminator": "mass_unit",
+      "x-units": {
+        "KG": "kg",
+        "LB": "lb",
+        "SHORT_TON": "ston",
+        "METRIC_TON": "t"
+      }
     },
     "mass_unit": {
       "$ref": "../../Core/common.json#/definitions/MassUnit",
@@ -39,8 +46,9 @@
     },
     "gwp": {
       "type": "number",
-      "description": "GWP100 multiplier for CO2-equivalent reporting. Must be finite and non-negative.",
-      "default": 1.0
+      "description": "GWP100 multiplier for CO2-equivalent reporting. Must be finite and non-negative. Units: 1.",
+      "default": 1.0,
+      "x-unit": "1"
     },
     "available": {
       "type": "boolean",
@@ -64,12 +72,17 @@
             "const": "FUEL_INPUT"
           }
         },
-        "required": ["basis"]
+        "required": [
+          "basis"
+        ]
       },
       "then": {
         "properties": {
           "energy_unit": {
-            "enum": ["MMBTU", "GJ"]
+            "enum": [
+              "MMBTU",
+              "GJ"
+            ]
           }
         }
       }
@@ -81,7 +94,9 @@
             "const": "POWER_OUTPUT"
           }
         },
-        "required": ["basis"]
+        "required": [
+          "basis"
+        ]
       },
       "then": {
         "properties": {

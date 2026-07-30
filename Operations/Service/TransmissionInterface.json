@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A collection of transmission branches whose combined flow is monitored and constrained as an interface.",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
+      "type": "boolean"
+    },
+    "active_power_flow_limits": {
+      "description": "Minimum and maximum active power flow limits on the interface. Units: MW.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
+    },
+    "violation_penalty": {
+      "description": "Penalty cost for violating the flow limits in the interface.",
+      "type": "number"
+    },
+    "direction_mapping": {
+      "description": "Dictionary of the line `name`s in the interface and their direction of flow (1 or -1) relative to the flow of the interface.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "available",
+    "active_power_flow_limits"
+  ],
+  "title": "TransmissionInterface",
+  "type": "object"
+}

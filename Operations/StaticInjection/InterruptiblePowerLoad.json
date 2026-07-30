@@ -1,43 +1,63 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A static power load that can be compensated for temporary or continuous interruptions to its requested demand.\n\nThese loads are most commonly used for operational optimizations and can be used to model, for example, large commercial and industrial customers enrolled in demand response programs. This load has a target demand profile (set by a `max_active_power` time series for an operational simulation) that can be reduced to satisfy other system needs. For simpler loads without an operating cost for demand response, see `PowerLoad`.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
+      "description": "ID of the bus that this component is connected to.",
       "type": "integer"
     },
     "active_power": {
-      "type": "number"
+      "description": "Initial steady state active power demand. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "reactive_power": {
-      "type": "number"
+      "description": "Initial steady state reactive power demand. Units: MVAr.",
+      "type": "number",
+      "x-unit": "MVAr"
     },
     "max_active_power": {
-      "type": "number"
+      "description": "Maximum active power that this load can demand. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "max_reactive_power": {
-      "type": "number"
+      "description": "Maximum reactive power that this load can demand. Units: MVAr.",
+      "type": "number",
+      "x-unit": "MVAr"
     },
     "base_power": {
-      "type": "number"
+      "description": "Base power of the unit for per unitization. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
     },
     "operation_cost": {
-      "descriptor": "or MarketBidCost",
+      "description": "Operational cost of interrupting load. or MarketBidCost",
       "$ref": "../../Core/common.json#/definitions/LoadCost"
     },
     "conformity": {
+      "description": "Indicates whether the specified load is conforming or non-conforming.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/LoadConformity"
+      "$ref": "../../Operations/common.json#/definitions/LoadConformity"
     },
     "dynamic_injector": {
-      "type": null
+      "description": "ID of the corresponding dynamic injection device, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

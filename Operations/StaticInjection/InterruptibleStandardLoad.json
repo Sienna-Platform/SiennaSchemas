@@ -1,79 +1,115 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "An interruptible, voltage-dependent ZIP load whose demand can be curtailed through demand response programs, subject to an interruption cost.\n\nLike `StandardLoad`, it breaks the ZIP into three pieces: Z (constant impedance), I (constant current), and P (constant power), according to `P = P_P * V^0 + P_I * V^1 + P_Z * V^2` for active power and `Q = Q_P * V^0 + Q_I * V^1 + Q_Z * V^2` for reactive power. (Voltage V is in per unit.) Unlike `StandardLoad`, it carries an `operation_cost` for interrupting the load.\n\nFor a non-interruptible ZIP load, see `StandardLoad`. For an interruptible constant-power load, see `InterruptiblePowerLoad`.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `InterruptibleStandardLoad`) must have unique names, but components of different types (e.g., `InterruptibleStandardLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
+      "description": "ID of the bus that this component is connected to.",
       "type": "integer"
     },
     "base_power": {
-      "type": "number"
+      "description": "Base power of the load for per unitization. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
     },
     "operation_cost": {
-      "descriptor": "or MarketBidCost",
+      "description": "Operational cost of interrupting load. or MarketBidCost",
       "$ref": "../../Core/common.json#/definitions/LoadCost"
     },
     "conformity": {
+      "description": "Indicates whether the specified load is conforming or non-conforming.",
       "default": "UNDEFINED",
-      "$ref": "../../Core/common.json#/definitions/LoadConformity"
+      "$ref": "../../Operations/common.json#/definitions/LoadConformity"
     },
     "constant_active_power": {
+      "description": "Constant active power demand (P_P). Units: MW.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "MW"
     },
     "constant_reactive_power": {
+      "description": "Constant reactive power demand (Q_P). Units: MVAr.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "MVAr"
     },
     "impedance_active_power": {
+      "description": "Active power coefficient for constant impedance load (P_Z). Units: MW.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "MW"
     },
     "impedance_reactive_power": {
+      "description": "Reactive power coefficient for constant impedance load (Q_Z). Units: MVAr.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "MVAr"
     },
     "current_active_power": {
+      "description": "Active power coefficient for constant current load (P_I). Units: MW.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "MW"
     },
     "current_reactive_power": {
+      "description": "Reactive power coefficient for constant current load (Q_I). Units: MVAr.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "MVAr"
     },
     "max_constant_active_power": {
+      "description": "Maximum active power drawn by constant power load. Units: MW.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "MW"
     },
     "max_constant_reactive_power": {
+      "description": "Maximum reactive power drawn by constant power load. Units: MVAr.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "MVAr"
     },
     "max_impedance_active_power": {
+      "description": "Maximum active power drawn by constant impedance load. Units: MW.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "MW"
     },
     "max_impedance_reactive_power": {
+      "description": "Maximum reactive power drawn by constant impedance load. Units: MVAr.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "MVAr"
     },
     "max_current_active_power": {
+      "description": "Maximum active power drawn by constant current load. Units: MW.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "MW"
     },
     "max_current_reactive_power": {
+      "description": "Maximum reactive power drawn by constant current load. Units: MVAr.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "MVAr"
     },
     "dynamic_injector": {
-      "type": null
+      "description": "ID of the corresponding dynamic injection device, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

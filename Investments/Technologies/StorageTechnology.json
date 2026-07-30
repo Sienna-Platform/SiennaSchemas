@@ -27,7 +27,9 @@
         },
         "min_discharge_fraction": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "1",
+            "description": "Units: 1."
         },
         "prime_mover_type": {
             "$ref": "../../Core/common.json#/definitions/PrimeMovers",
@@ -37,51 +39,79 @@
             "$ref": "../../Core/common.json#/definitions/StorageTech"
         },
         "capital_costs_energy": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
+            "$ref": "../../Core/common.json#/definitions/ValueCurve",
+            "x-unit": "USD/MWh",
+            "description": "Units: USD/MWh."
         },
         "capital_costs_charge": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
+            "$ref": "../../Core/common.json#/definitions/ValueCurve",
+            "x-unit": "USD/MW",
+            "description": "Units: USD/MW."
         },
         "capital_costs_discharge": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
+            "$ref": "../../Core/common.json#/definitions/ValueCurve",
+            "x-unit": "USD/MW",
+            "description": "Units: USD/MW."
         },
         "operation_costs": {
-            "$ref": "../../Core/common.json#/definitions/StorageCost"
+            "$ref": "../../Core/common.json#/definitions/StorageCost",
+            "x-unit": "USD/MWh",
+            "description": "Units: USD/MWh."
         },
         "unit_size_discharge": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "MW",
+            "description": "Units: MW."
         },
         "unit_size_charge": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "MW",
+            "description": "Units: MW."
         },
         "unit_size_energy": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "MWh",
+            "description": "Units: MWh."
         },
         "capacity_limits_charge": {
-            "$ref": "../../Core/common.json#/definitions/MinMax"
+            "$ref": "../../Core/common.json#/definitions/MinMax",
+            "x-unit": "MW",
+            "description": "Units: MW."
         },
         "capacity_limits_discharge": {
-            "$ref": "../../Core/common.json#/definitions/MinMax"
+            "$ref": "../../Core/common.json#/definitions/MinMax",
+            "x-unit": "MW",
+            "description": "Units: MW."
         },
         "capacity_limits_energy": {
-            "$ref": "../../Core/common.json#/definitions/MinMax"
+            "$ref": "../../Core/common.json#/definitions/MinMax",
+            "x-unit": "MWh",
+            "description": "Units: MWh."
         },
         "duration_limits": {
-            "$ref": "../../Core/common.json#/definitions/MinMax"
+            "$ref": "../../Core/common.json#/definitions/MinMax",
+            "x-unit": "h",
+            "description": "Units: h."
         },
         "efficiency": {
-            "$ref": "../../Core/common.json#/definitions/InOut"
+            "$ref": "../../Core/common.json#/definitions/InOut",
+            "x-unit": "1",
+            "description": "Units: 1."
         },
         "losses": {
             "type": "number",
-            "default": "1.0"
+            "default": "1.0",
+            "x-unit": "1",
+            "description": "Units: 1."
         },
         "lifetime": {
             "type": "integer",
-            "default": "100"
+            "default": "100",
+            "x-unit": "yr",
+            "description": "Units: yr."
         },
         "financial_data": {
             "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"

@@ -13,10 +13,20 @@
       "$ref": "../../Core/common.json#/definitions/PiecewiseLinearData"
     },
     "transformer_winding": {
-      "$ref": "../../Core/common.json#/definitions/WindingCategory"
+      "type": "string",
+      "enum": [
+        "TR2W_WINDING",
+        "PRIMARY_WINDING",
+        "SECONDARY_WINDING",
+        "TERTIARY_WINDING"
+      ]
     },
     "transformer_control_mode": {
-      "$ref": "../../Core/common.json#/definitions/ImpedanceCorrectionTransformerControlMode"
+      "type": "string",
+      "enum": [
+        "PHASE_SHIFT_ANGLE",
+        "TAP_RATIO"
+      ]
     }
   },
   "required": [

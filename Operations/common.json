@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Shared enum definitions used only by Operations-domain components (never Investments or Dynamics). Domain-agnostic shared types remain in Core/common.json.",
+  "definitions": {
+    "VSCACControlModes": {
+      "description": "AC-side control mode of a voltage-source-converter (VSC) terminal. AC_REACTIVE_POWER: converter controls reactive power / fixed power factor. AC_VOLTAGE: converter controls the AC-side voltage magnitude.",
+      "enum": [
+        "AC_REACTIVE_POWER",
+        "AC_VOLTAGE"
+      ],
+      "title": "VSCACControlModes",
+      "type": "string"
+    },
+    "VSCDCControlModes": {
+      "description": "DC-side control mode of a voltage-source-converter (VSC) terminal. DC_POWER: converter controls active power transferred to the DC side. DC_VOLTAGE: converter controls the DC-side voltage. DC_VOLTAGE_DROOP: P-Vdc droop, V_dc = dc_setpoint - droop_gain * P_c.",
+      "enum": [
+        "DC_POWER",
+        "DC_VOLTAGE",
+        "DC_VOLTAGE_DROOP"
+      ],
+      "title": "VSCDCControlModes",
+      "type": "string"
+    },
+    "CombinedCycleConfiguration": {
+      "enum": [
+        "SingleShaftCombustionSteam",
+        "SeparateShaftCombustionSteam",
+        "DoubleCombustionOneSteam",
+        "TripleCombustionOneSteam",
+        "Other"
+      ],
+      "title": "CombinedCycleConfiguration",
+      "type": "string"
+    },
+    "ReserveDirection": {
+      "enum": [
+        "UP",
+        "DOWN",
+        "SYMMETRIC"
+      ],
+      "title": "ReserveDirection",
+      "type": "string"
+    },
+    "TransformerControlObjective": {
+      "enum": [
+        "UNDEFINED",
+        "VOLTAGE_DISABLED",
+        "REACTIVE_POWER_FLOW_DISABLED",
+        "ACTIVE_POWER_FLOW_DISABLED",
+        "CONTROL_OF_DC_LINE_DISABLED",
+        "ASYMMETRIC_ACTIVE_POWER_FLOW_DISABLED",
+        "FIXED",
+        "VOLTAGE",
+        "REACTIVE_POWER_FLOW",
+        "ACTIVE_POWER_FLOW",
+        "CONTROL_OF_DC_LINE",
+        "ASYMMETRIC_ACTIVE_POWER_FLOW"
+      ],
+      "title": "TransformerControlObjective",
+      "type": "string"
+    },
+    "TwoWindingTransformerShuntLocation": {
+      "description": "Placement of a `TwoWindingTransformer`'s magnetizing shunt admittance on the two sides of its single circuit arc. PRIMARY: the full magnetizing shunt is applied on the primary (from) side. SECONDARY: the full magnetizing shunt is applied on the secondary (to) side. SPLIT: the full complex magnetizing shunt value is applied on BOTH sides.",
+      "enum": [
+        "PRIMARY",
+        "SECONDARY",
+        "SPLIT"
+      ],
+      "title": "TwoWindingTransformerShuntLocation",
+      "type": "string"
+    },
+    "ThreeWindingTransformerShuntLocation": {
+      "description": "Placement of a `ThreeWindingTransformer`'s magnetizing shunt admittance in the equivalent star model. PRIMARY: the full magnetizing shunt is applied on the winding-1 (primary) terminal side. STAR: the full magnetizing shunt is applied at the star node.",
+      "enum": [
+        "PRIMARY",
+        "STAR"
+      ],
+      "title": "ThreeWindingTransformerShuntLocation",
+      "type": "string"
+    },
+    "VoltageUnitBasis": {
+      "description": "Unit basis a voltage setpoint is stored in. SYSTEM_BASE: per-unit on the bus base voltage (PSS/E RAW native for FACTS VSET). NATURAL_UNITS: kilovolts.",
+      "enum": ["SYSTEM_BASE", "NATURAL_UNITS"],
+      "title": "VoltageUnitBasis",
+      "type": "string"
+    },
+    "LoadConformity": {
+      "enum": [
+        "NON_CONFORMING",
+        "CONFORMING",
+        "UNDEFINED"
+      ],
+      "title": "LoadConformity",
+      "type": "string"
+    }
+  }
+}

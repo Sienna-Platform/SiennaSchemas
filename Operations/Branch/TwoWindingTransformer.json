@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A two-winding transformer connecting two buses.\n\nAll series electrical data — the modeled arc, tap, phase shift, series impedance `r`/`x`, ratings, per-winding base power, base voltages, and control — lives on the single `TransformerCircuit` referenced by `circuit`; availability is circuit-level. The `magnetizing_shunt` admittance and its `shunt_location` are transformer-level. The model uses an equivalent circuit assuming the impedance is on the high-voltage side and allocates iron losses and magnetizing susceptance according to `shunt_location`. The transformer's device base is the circuit's `base_power`.",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "type": "string"
+    },
+    "circuit": {
+      "description": "The `TransformerCircuit` carrying this transformer's series electrical data.",
+      "type": "integer"
+    },
+    "magnetizing_shunt": {
+      "description": "Magnetizing shunt admittance in pu (device base on the circuit's `base_power`) referenced to the circuit's `base_voltage_primary`. Units: pu.",
+      "default": {
+        "real": 0.0,
+        "imag": 0.0
+      },
+      "$ref": "../../Core/common.json#/definitions/ComplexNumber",
+      "x-unit": "pu"
+    },
+    "shunt_location": {
+      "description": "Placement of `magnetizing_shunt` on the two sides of the circuit arc.",
+      "default": "PRIMARY",
+      "$ref": "../../Operations/common.json#/definitions/TwoWindingTransformerShuntLocation"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "circuit"
+  ],
+  "title": "TwoWindingTransformer",
+  "type": "object"
+}

@@ -1,34 +1,47 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Automatic generation control (AGC) for the system or a certain `Area` within the system. This model uses a proportional-integral-derivative (PID) control to simulate a \"smooth\" response of the AGC to the area control error (ACE).",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bias": {
-      "type": "number"
+      "description": "Area frequency bias. Units: MW/Hz.",
+      "type": "number",
+      "x-unit": "MW/Hz"
     },
     "K_p": {
+      "description": "PID Proportional Constant.",
       "type": "number"
     },
     "K_i": {
+      "description": "PID Integral Constant.",
       "type": "number"
     },
     "K_d": {
+      "description": "PID Derivative Constant.",
       "type": "number"
     },
     "delta_t": {
-      "type": "number"
+      "description": "PID Discretization period. Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "area": {
+      "description": "ID of the area controlled by the AGC.",
       "type": "integer"
     },
     "initial_ace": {
+      "description": "Initial condition for ACE.",
       "default": 0.0,
       "type": "number"
     }

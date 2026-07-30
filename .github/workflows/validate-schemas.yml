@@ -1,0 +1,55 @@
+name: Validate Schemas
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install jsonschema
+
+      - name: Validate unit annotations
+        run: python scripts/validate_units.py
+
+      - name: Check unit-description sentences are canonical
+        run: python scripts/validate_units.py --check-descriptions
+
+      # dist/ is gitignored and absent on a clean checkout, so build the bundles
+      # before checking them (mirrors release.yml). --check then verifies the
+      # committed schemas bundle deterministically.
+      - name: Build bundled specs
+        run: python scripts/bundle_specs.py
+
+      - name: Check bundled specs are up to date
+        run: python scripts/bundle_specs.py --check
+
+      # TODO after psy6 merges to PowerSystems main: drop `ref`
+      - name: Checkout PowerSystems (psy6) for parity gate
+        uses: actions/checkout@v4
+        with:
+          repository: Sienna-Platform/PowerSystems.jl
+          ref: psy6
+          path: PowerSystems.jl
+          fetch-depth: 1
+
+      # TODO after IS4 merges to InfrastructureSystems main: drop `ref`
+      # The parity script finds IS as a sibling of the PSY checkout.
+      - name: Checkout InfrastructureSystems (IS4) for GeographicInfo parity
+        uses: actions/checkout@v4
+        with:
+          repository: Sienna-Platform/InfrastructureSystems.jl
+          ref: IS4
+          path: InfrastructureSystems.jl
+          fetch-depth: 1
+
+      - name: PSY struct parity gate
+        run: python scripts/check_psy_parity.py --psy-path PowerSystems.jl

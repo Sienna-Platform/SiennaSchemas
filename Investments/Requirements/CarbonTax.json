@@ -26,7 +26,9 @@
         },
         "tax_dollars_per_ton": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "USD/t",
+            "description": "Units: USD/t."
         }
     }
 }

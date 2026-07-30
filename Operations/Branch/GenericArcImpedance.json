@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A generic branch defined by a series impedance on an `Arc` between two buses.",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
+      "type": "boolean"
+    },
+    "active_power_flow": {
+      "description": "Initial condition of active power flow on the line. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
+    },
+    "reactive_power_flow": {
+      "description": "Initial condition of reactive power flow on the line. Units: MVAr.",
+      "type": "number",
+      "x-unit": "MVAr"
+    },
+    "max_flow": {
+      "description": "Maximum allowable flow on the generic impedance. Per-unit on system base. Units: pu.",
+      "type": "number",
+      "x-unit": "pu"
+    },
+    "arc": {
+      "description": "An `Arc` defining this line `from` a bus `to` another bus.",
+      "type": "integer"
+    },
+    "base_power": {
+      "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
+    },
+    "parameter_units": {
+      "description": "Unit basis for r and x. SYSTEM_BASE: per-unit on the system base. NATURAL_UNITS: physical ohms.",
+      "default": "SYSTEM_BASE",
+      "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
+    },
+    "r": {
+      "description": "Resistance. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
+      "type": "number",
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "ohm"
+      }
+    },
+    "x": {
+      "description": "Reactance. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
+      "type": "number",
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "SYSTEM_BASE": "pu",
+        "NATURAL_UNITS": "ohm"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "available",
+    "active_power_flow",
+    "reactive_power_flow",
+    "max_flow",
+    "arc",
+    "base_power",
+    "r",
+    "x"
+  ],
+  "title": "GenericArcImpedance",
+  "type": "object"
+}

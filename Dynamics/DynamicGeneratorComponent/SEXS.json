@@ -1,31 +1,41 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameters of Simplified Excitation System Model - SEXS in PSSE.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "Ta_Tb": {
+      "description": "Ratio of lead and lag time constants.",
       "type": "number"
     },
     "Tb": {
-      "type": "number"
+      "description": "Lag time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "K": {
+      "description": "Gain.",
       "type": "number"
     },
     "Te": {
-      "type": "number"
+      "description": "Field circuit time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "V_lim": {
+      "description": "Field voltage limits.",
       "$ref": "../../Core/common.json#/definitions/MinMax"
     },
     "V_ref": {
+      "description": "Reference Voltage Set-point.",
       "default": 1.0,
       "type": "number"
     }
   },
   "required": [
-    "id", 
+    "id",
     "Ta_Tb",
     "Tb",
     "K",

@@ -1,66 +1,96 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A hydropower pumped turbine that needs to have two `HydroReservoir`s attached, suitable for modeling independent pumped hydro with reservoirs.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
+      "description": "ID of the bus that this component is connected to.",
       "type": "integer"
     },
     "active_power": {
-      "type": "number"
+      "description": "Initial active power set point of the turbine unit. For power flow, this is the steady state operating point of the system. For production cost modeling, this may or may not be used as the initial starting point for the solver, depending on the solver used. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "reactive_power": {
-      "type": "number"
+      "description": "Initial reactive power set point of the unit. Units: MVAr.",
+      "type": "number",
+      "x-unit": "MVAr"
     },
     "rating": {
-      "type": "number"
+      "description": "Maximum AC side output power rating of the unit. Not to be confused with base_power. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
     },
     "active_power_limits": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Minimum and maximum stable active power levels for the turbine. Units: MW.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
     },
     "reactive_power_limits": {
-      "descriptor": "in psy5 a required param with an option to be nothing",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing Units: MVAr.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MVAr"
     },
     "active_power_limits_pump": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Minimum and maximum stable active power levels for the pump. Units: MW.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
     },
     "outflow_limits": {
-      "descriptor": "in psy5 a required param with an option to be nothing",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Turbine/Pump outflow limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing Units: m3/s.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "m3/s"
     },
     "powerhouse_elevation": {
-      "type": "number"
+      "description": "Height level above the sea level of the powerhouse on which the turbine is installed. Units: m.",
+      "type": "number",
+      "x-unit": "m"
     },
     "ramp_limits": {
-      "descriptor": "in psy5 a required param with an option to be nothing",
-      "$ref": "../../Core/common.json#/definitions/UpDown"
+      "description": "Ramp up and ramp down limits. in psy5 a required param with an option to be nothing Units: MW/min.",
+      "$ref": "../../Core/common.json#/definitions/UpDown",
+      "x-unit": "MW/min"
     },
     "time_limits": {
-      "descriptor": "in psy5 a required param with an option to be nothing",
-      "$ref": "../../Core/common.json#/definitions/UpDown"
+      "description": "Minimum up and minimum down time limits. in psy5 a required param with an option to be nothing Units: h.",
+      "$ref": "../../Core/common.json#/definitions/UpDown",
+      "x-unit": "h"
     },
     "base_power": {
-      "type": "number"
+      "description": "Base power of the unit for per unitization. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
     },
     "status": {
+      "description": "Initial Operating status of a pumped-storage hydro unit. See `PumpHydroStatus` for reference.",
       "default": "OFF",
-      "$ref": "../../Core/common.json#/definitions/PumpHydroStatus"
+      "type": "string",
+      "enum": [
+        "PUMP",
+        "GEN",
+        "OFF"
+      ]
     },
     "time_at_status": {
-      "descriptor": "default is psy const INFINITE_TIME = 1e4",  
+      "description": "Time the generator has been on or off, as indicated by `status`. default is psy const INFINITE_TIME = 1e4 Units: h.",
       "default": 10000.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "h"
     },
     "operation_cost": {
-      "descriptor": "or MarketBidCost; default PSY.HydroGenerationCost(nothing)",
+      "description": "Operating cost of generation. or MarketBidCost; default PSY.HydroGenerationCost(nothing)",
       "default": {
         "variable": {
           "variable_cost_type": "COST",
@@ -81,16 +111,19 @@
               "proportional_term": 0
             },
             "input_at_zero": 0
-          } 
+          }
         }
       },
       "$ref": "../../Core/common.json#/definitions/HydroGenerationCost"
     },
     "active_power_pump": {
+      "description": "Initial active power set point of the pump unit. For power flow, this is the steady state operating point of the system. For production cost modeling, this may or may not be used as the initial starting point for the solver, depending on the solver used. Units: MW.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "MW"
     },
     "efficiency": {
+      "description": "Turbine/Pump efficiency [0, 1.0].",
       "default": {
         "turbine": 1.0,
         "pump": 1.0
@@ -98,36 +131,50 @@
       "$ref": "../../Core/common.json#/definitions/TurbinePump"
     },
     "transition_time": {
+      "description": "Transition time to switch into the specific mode. Units: h.",
       "default": {
         "turbine": 0.0,
         "pump": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/TurbinePump"
+      "$ref": "../../Core/common.json#/definitions/TurbinePump",
+      "x-unit": "h"
     },
     "minimum_time": {
+      "description": "Minimum operating time for the specific mode. Units: h.",
       "default": {
         "turbine": 0.0,
         "pump": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/TurbinePump"
+      "$ref": "../../Core/common.json#/definitions/TurbinePump",
+      "x-unit": "h"
     },
     "travel_time": {
-      "type": "number"
+      "description": "Downstream (from reservoir into turbine) travel time. Units: h.",
+      "type": "number",
+      "x-unit": "h"
     },
     "conversion_factor": {
+      "description": "Conversion factor from flow/volume to energy: m^3 -> p.u-hr. Units: 1.",
       "default": 1.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "1"
     },
     "must_run": {
+      "description": "Whether the unit must run (i.e., cannot be curtailed).",
       "default": false,
       "type": "boolean"
     },
     "prime_mover_type": {
+      "description": "Prime mover technology according to EIA 923.",
       "$ref": "../../Core/common.json#/definitions/PrimeMovers",
       "default": "PS"
     },
     "dynamic_injector": {
-      "type": null
+      "description": "ID of the corresponding dynamic injection device, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

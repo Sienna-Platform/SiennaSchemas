@@ -1,0 +1,153 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "The data defining one modeled arc of a transformer.\n\nA `TwoWindingTransformer` has one circuit; a `ThreeWindingTransformer` has three, each connecting a terminal bus to the star bus. Circuit `available` is the single source of truth for availability; the owning transformer derives its availability from its circuits. `r`/`x` are the circuit impedance (for a two-winding transformer, the series impedance; for a three-winding transformer, the star-leg equivalent), in pu (device base) on `base_power` referenced to `base_voltage_primary`. Tap-changer / phase-shifter control is described by the flat control fields: `control_objective = UNDEFINED` means the circuit has no control block. For a `TwoWindingTransformer`, the single circuit's `base_power` is the transformer's device base.",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "available": {
+      "description": "Indicator of whether this circuit is connected and online.",
+      "type": "boolean"
+    },
+    "arc": {
+      "description": "An `Arc` defining this circuit `from` a terminal bus `to` the transformer's other terminal or star bus.",
+      "type": "integer"
+    },
+    "tap": {
+      "description": "Normalized tap changer position for voltage control, varying between 0 and 2, with 1 centered at the nominal voltage. Units: 1.",
+      "default": 1.0,
+      "type": "number",
+      "x-unit": "1"
+    },
+    "alpha": {
+      "description": "Initial condition of phase shift across this circuit. Units: rad.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "rad"
+    },
+    "r": {
+      "description": "Circuit resistance. Units: pu.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "pu"
+    },
+    "x": {
+      "description": "Circuit reactance. Units: pu.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "pu"
+    },
+    "control_objective": {
+      "description": "Tap-changer / phase-shifter control objective (PSS/E COD). `UNDEFINED` means this circuit has no control block.",
+      "default": "UNDEFINED",
+      "$ref": "../../Operations/common.json#/definitions/TransformerControlObjective"
+    },
+    "regulated_bus_number": {
+      "description": "Controlled bus number (PSS/E CONT; sign = regulation side).",
+      "default": 0,
+      "type": "integer"
+    },
+    "control_limits": {
+      "description": "Control band (PSS/E RMA/RMI), per `control_objective`. Units: per control_objective — UNDEFINED: 1, VOLTAGE_DISABLED: 1, REACTIVE_POWER_FLOW_DISABLED: 1, ACTIVE_POWER_FLOW_DISABLED: rad, CONTROL_OF_DC_LINE_DISABLED: 1, ASYMMETRIC_ACTIVE_POWER_FLOW_DISABLED: rad, FIXED: 1, VOLTAGE: 1, REACTIVE_POWER_FLOW: 1, ACTIVE_POWER_FLOW: rad, CONTROL_OF_DC_LINE: 1, ASYMMETRIC_ACTIVE_POWER_FLOW: rad .",
+      "default": {
+        "min": 0.9,
+        "max": 1.1
+      },
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit-discriminator": "control_objective",
+      "x-units": {
+        "UNDEFINED": "1",
+        "VOLTAGE_DISABLED": "1",
+        "REACTIVE_POWER_FLOW_DISABLED": "1",
+        "ACTIVE_POWER_FLOW_DISABLED": "rad",
+        "CONTROL_OF_DC_LINE_DISABLED": "1",
+        "ASYMMETRIC_ACTIVE_POWER_FLOW_DISABLED": "rad",
+        "FIXED": "1",
+        "VOLTAGE": "1",
+        "REACTIVE_POWER_FLOW": "1",
+        "ACTIVE_POWER_FLOW": "rad",
+        "CONTROL_OF_DC_LINE": "1",
+        "ASYMMETRIC_ACTIVE_POWER_FLOW": "rad"
+      }
+    },
+    "controlled_quantity_limits": {
+      "description": "Controlled-quantity band (PSS/E VMA/VMI), per `control_objective`. Units: per control_objective — UNDEFINED: pu, VOLTAGE_DISABLED: pu, REACTIVE_POWER_FLOW_DISABLED: MVAr, ACTIVE_POWER_FLOW_DISABLED: MW, CONTROL_OF_DC_LINE_DISABLED: MW, ASYMMETRIC_ACTIVE_POWER_FLOW_DISABLED: MW, FIXED: pu, VOLTAGE: pu, REACTIVE_POWER_FLOW: MVAr, ACTIVE_POWER_FLOW: MW, CONTROL_OF_DC_LINE: MW, ASYMMETRIC_ACTIVE_POWER_FLOW: MW .",
+      "default": {
+        "min": 0.9,
+        "max": 1.1
+      },
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit-discriminator": "control_objective",
+      "x-units": {
+        "UNDEFINED": "pu",
+        "VOLTAGE_DISABLED": "pu",
+        "REACTIVE_POWER_FLOW_DISABLED": "MVAr",
+        "ACTIVE_POWER_FLOW_DISABLED": "MW",
+        "CONTROL_OF_DC_LINE_DISABLED": "MW",
+        "ASYMMETRIC_ACTIVE_POWER_FLOW_DISABLED": "MW",
+        "FIXED": "pu",
+        "VOLTAGE": "pu",
+        "REACTIVE_POWER_FLOW": "MVAr",
+        "ACTIVE_POWER_FLOW": "MW",
+        "CONTROL_OF_DC_LINE": "MW",
+        "ASYMMETRIC_ACTIVE_POWER_FLOW": "MW"
+      }
+    },
+    "number_of_tap_positions": {
+      "description": "Number of tap positions (PSS/E NTP).",
+      "default": 33,
+      "type": "integer"
+    },
+    "rating": {
+      "description": "Thermal rating. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
+    },
+    "rating_b": {
+      "description": "Second current rating. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
+    },
+    "rating_c": {
+      "description": "Third current rating. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
+    },
+    "active_power_flow": {
+      "description": "Initial condition of active power flow through this circuit. Units: MW.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "MW"
+    },
+    "reactive_power_flow": {
+      "description": "Initial condition of reactive power flow through this circuit. Units: MVAr.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "MVAr"
+    },
+    "base_power": {
+      "description": "Base power for per unitization of this circuit. Units: MVA.",
+      "default": 100.0,
+      "type": "number",
+      "x-unit": "MVA"
+    },
+    "base_voltage_primary": {
+      "description": "Primary (from) terminal-side base voltage; the reference voltage for this circuit's per-unit impedance. Units: kV.",
+      "type": "number",
+      "x-unit": "kV"
+    },
+    "base_voltage_secondary": {
+      "description": "Secondary (to) terminal-side base voltage. For a three-winding transformer this defaults to the primary base voltage at parse time. Units: kV.",
+      "type": "number",
+      "x-unit": "kV"
+    }
+  },
+  "required": [
+    "id",
+    "available",
+    "arc"
+  ],
+  "title": "TransformerCircuit",
+  "type": "object"
+}

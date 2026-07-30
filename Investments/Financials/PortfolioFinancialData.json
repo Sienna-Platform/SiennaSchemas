@@ -13,15 +13,21 @@
         },
         "discount_rate": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "1",
+            "description": "Units: 1."
         },
         "inflation_rate": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "1",
+            "description": "Units: 1."
         },
         "interest_rate": {
             "type": "number",
-            "default": "0.0"
+            "default": "0.0",
+            "x-unit": "1",
+            "description": "Units: 1."
         },
         "base_year": {
             "type": "integer"
@@ -30,4 +36,4 @@
             "type": "integer"
         }
     }
-  }
+}

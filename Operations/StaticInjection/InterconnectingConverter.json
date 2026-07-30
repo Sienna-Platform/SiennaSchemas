@@ -1,46 +1,166 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Interconnecting Power Converter (IPC) for transforming power from an ACBus to a DCBus.",
   "properties": {
     "id": {
+      "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
+      "description": "ID of the bus on the AC side of this converter.",
       "type": "integer"
     },
     "dc_bus": {
+      "description": "ID of the bus on the DC side of this converter.",
       "type": "integer"
     },
     "active_power": {
-      "type": "number"
+      "description": "Active power on the DC side. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
     },
     "rating": {
-      "type": "number"
+      "description": "Maximum output power rating of the converter. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
     },
     "active_power_limits": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Minimum and maximum stable active power levels. Units: MW.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
     },
     "base_power": {
-      "type": "number"
+      "description": "Base power of the converter for per unitization. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
+    },
+    "reactive_power_limits": {
+      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. Units: MVAr.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MVAr"
     },
     "dc_current": {
+      "description": "DC current on the converter. Units: A.",
       "default": 0.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "A"
     },
     "max_dc_current": {
+      "description": "Maximum stable dc current limits. Units: A.",
       "default": 100000000.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "A"
     },
     "loss_function": {
+      "description": "Linear or quadratic loss function with respect to the converter current.",
       "$ref": "../../Core/common.json#/definitions/InputOutputCurve"
     },
+    "dc_control": {
+      "description": "DC-side control mode of the converter.",
+      "default": "DC_VOLTAGE",
+      "$ref": "../../Operations/common.json#/definitions/VSCDCControlModes"
+    },
+    "ac_control": {
+      "description": "AC-side control mode of the converter.",
+      "default": "AC_REACTIVE_POWER",
+      "$ref": "../../Operations/common.json#/definitions/VSCACControlModes"
+    },
+    "voltage_setpoint_units": {
+      "description": "Unit basis for the DC/AC voltage setpoints.",
+      "default": "SYSTEM_BASE",
+      "$ref": "../../Operations/common.json#/definitions/VoltageUnitBasis"
+    },
+    "dc_setpoint": {
+      "description": "DC-voltage target (when `dc_control` regulates DC voltage) or active-power order (otherwise). Units: per dc_control — DC_POWER: MW, DC_VOLTAGE: (per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV), DC_VOLTAGE_DROOP: (per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV) .",
+      "default": 0.0,
+      "type": "number",
+      "x-unit-discriminator": "dc_control",
+      "x-units": {
+        "DC_POWER": "MW",
+        "DC_VOLTAGE": {
+          "x-unit-discriminator": "voltage_setpoint_units",
+          "x-units": {
+            "SYSTEM_BASE": "pu",
+            "NATURAL_UNITS": "kV"
+          },
+          "description": "Units: per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV ."
+        },
+        "DC_VOLTAGE_DROOP": {
+          "x-unit-discriminator": "voltage_setpoint_units",
+          "x-units": {
+            "SYSTEM_BASE": "pu",
+            "NATURAL_UNITS": "kV"
+          },
+          "description": "Units: per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV ."
+        }
+      }
+    },
+    "ac_setpoint": {
+      "description": "AC-voltage magnitude target (when `ac_control` regulates AC voltage) or power factor setpoint (otherwise). Units: per ac_control — AC_REACTIVE_POWER: 1, AC_VOLTAGE: (per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV) .",
+      "default": 1.0,
+      "type": "number",
+      "x-unit-discriminator": "ac_control",
+      "x-units": {
+        "AC_REACTIVE_POWER": "1",
+        "AC_VOLTAGE": {
+          "x-unit-discriminator": "voltage_setpoint_units",
+          "x-units": {
+            "SYSTEM_BASE": "pu",
+            "NATURAL_UNITS": "kV"
+          },
+          "description": "Units: per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV ."
+        }
+      }
+    },
+    "dc_voltage_droop": {
+      "description": "DC-voltage droop gain relating DC voltage to converter active power as `V_dc = dc_setpoint - dc_voltage_droop * P_c`. A value of 0.0 disables droop. Units: pu.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "pu"
+    },
+    "remote_bus_control": {
+      "description": "Number of the AC bus whose voltage the converter regulates when `ac_control` is `AC_VOLTAGE`; null regulates its own terminal bus.",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "rmpct": {
+      "description": "Percent of the total Mvar required to hold the voltage at the bus regulated by this converter that is contributed by this converter. Units: 1.",
+      "default": 100.0,
+      "type": "number",
+      "x-unit": "1"
+    },
+    "power_factor_weighting_fraction": {
+      "description": "Power weighting factor fraction used in reducing the active power order and either the reactive power order when the converter rating is violated. When is 0.0, only the active power is reduced; when is 1.0, only the reactive power is reduced; otherwise, a weighted reduction of both active and reactive power is applied. Units: 1.",
+      "default": 1.0,
+      "type": "number",
+      "x-unit": "1"
+    },
+    "voltage_limits": {
+      "description": "Limits on the voltage at the DC bus in per unit. Units: pu.",
+      "default": {
+        "min": 0.0,
+        "max": 999.9
+      },
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "pu"
+    },
     "dynamic_injector": {
-      "type": null
+      "description": "ID of the corresponding dynamic injection device, if any.",
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

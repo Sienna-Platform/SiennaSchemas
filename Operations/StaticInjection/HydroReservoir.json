@@ -11,31 +11,80 @@
       "type": "boolean"
     },
     "storage_level_limits": {
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit-discriminator": "level_data_type",
+      "x-units": {
+        "USABLE_VOLUME": "m3",
+        "TOTAL_VOLUME": "m3",
+        "HEAD": "m",
+        "ENERGY": "MWh"
+      },
+      "description": "Units: per level_data_type — USABLE_VOLUME: m3, TOTAL_VOLUME: m3, HEAD: m, ENERGY: MWh ."
     },
     "initial_level": {
-      "type": "number"
+      "type": "number",
+      "x-unit-discriminator": "level_data_type",
+      "x-units": {
+        "USABLE_VOLUME": "m3",
+        "TOTAL_VOLUME": "m3",
+        "HEAD": "m",
+        "ENERGY": "MWh"
+      },
+      "description": "Units: per level_data_type — USABLE_VOLUME: m3, TOTAL_VOLUME: m3, HEAD: m, ENERGY: MWh ."
     },
     "spillage_limits": {
-      "descriptor": "in psy5 a required param with an option to be nothing",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "in psy5 a required param with an option to be nothing Units: per level_data_type — USABLE_VOLUME: m3/s, TOTAL_VOLUME: m3/s, HEAD: m/s, ENERGY: MW .",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit-discriminator": "level_data_type",
+      "x-units": {
+        "USABLE_VOLUME": "m3/s",
+        "TOTAL_VOLUME": "m3/s",
+        "HEAD": "m/s",
+        "ENERGY": "MW"
+      }
     },
     "inflow": {
-      "type": "number"
+      "type": "number",
+      "x-unit-discriminator": "level_data_type",
+      "x-units": {
+        "USABLE_VOLUME": "m3/s",
+        "TOTAL_VOLUME": "m3/s",
+        "HEAD": "m/s",
+        "ENERGY": "MW"
+      },
+      "description": "Units: per level_data_type — USABLE_VOLUME: m3/s, TOTAL_VOLUME: m3/s, HEAD: m/s, ENERGY: MW ."
     },
     "outflow": {
-      "type": "number"
+      "type": "number",
+      "x-unit-discriminator": "level_data_type",
+      "x-units": {
+        "USABLE_VOLUME": "m3/s",
+        "TOTAL_VOLUME": "m3/s",
+        "HEAD": "m/s",
+        "ENERGY": "MW"
+      },
+      "description": "Units: per level_data_type — USABLE_VOLUME: m3/s, TOTAL_VOLUME: m3/s, HEAD: m/s, ENERGY: MW ."
     },
     "level_targets": {
-      "descriptor": "in psy5 a required param with an option to be nothing",
-      "type": "number"
+      "description": "in psy5 a required param with an option to be nothing Units: per level_data_type — USABLE_VOLUME: m3, TOTAL_VOLUME: m3, HEAD: m, ENERGY: MWh .",
+      "type": "number",
+      "x-unit-discriminator": "level_data_type",
+      "x-units": {
+        "USABLE_VOLUME": "m3",
+        "TOTAL_VOLUME": "m3",
+        "HEAD": "m",
+        "ENERGY": "MWh"
+      }
     },
     "intake_elevation": {
-      "type": "number"
+      "type": "number",
+      "x-unit": "m",
+      "description": "Units: m."
     },
     "head_to_volume_factor": {
-      "$ref": "../../Core/common.json#/definitions/ValueCurve"
-    }, 
+      "description": "`FunctionData` mapping reservoir head to stored volume.",
+      "$ref": "../../Core/common.json#/definitions/FunctionData"
+    },
     "upstream_turbines": {
       "type": "array",
       "items": {
@@ -55,12 +104,23 @@
       }
     },
     "operation_cost": {
-      "descriptor": "default PSY.HydroReservoirCost(nothing), I think already in common.json?",
       "$ref": "../../Core/common.json#/definitions/HydroReservoirCost"
-    }, 
+    },
+    "evaporative_loss": {
+      "description": "Standing loss from evaporation as a fraction of the reservoir's stored volume/energy lost per hour. Units: 1.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "1"
+    },
     "level_data_type": {
-      "$ref": "../../Core/common.json#/definitions/ReservoirDataType",
-      "default": "USABLE_VOLUME"
+      "default": "USABLE_VOLUME",
+      "type": "string",
+      "enum": [
+        "USABLE_VOLUME",
+        "TOTAL_VOLUME",
+        "HEAD",
+        "ENERGY"
+      ]
     }
   },
   "required": [
