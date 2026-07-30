@@ -1,34 +1,33 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "name",
-        "available",
-        "eligible_resources"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "id": {
-            "type": "integer"
-        },
-        "available": {
-            "type": "boolean"
-        },
-        "target_year": {
-            "type": "integer"
-        },
-        "eligible_resources": {
-            "type": "array",
-            "items": {
-                "type": "integer"
-            }
-        },
-        "min_capacity_mw": {
-            "type": "number",
-            "x-unit": "MW",
-            "description": "Units: MW."
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "description": "ID for individual component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+      "type": "boolean"
+    },
+    "target_year": {
+      "description": "Year in which this requirement is applied.",
+      "type": "integer"
+    },
+    "min_capacity_mw": {
+      "description": "Minimum total capacity across all eligible resources. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
     }
+  },
+  "required": [
+    "name",
+    "id",
+    "available"
+  ],
+  "title": "MinimumCapacityRequirements",
+  "type": "object"
 }

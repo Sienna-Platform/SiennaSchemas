@@ -1,44 +1,77 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "name",
-        "available",
-        "power_systems_type"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "id": {
-            "type": "integer"
-        },
-        "available": {
-            "type": "boolean",
-            "default": "true"
-        },
-        "power_systems_type": {
-            "type": "string"
-        },
-        "peak_demand_mw": {
-            "type": "number",
-            "default": "0.0",
-            "x-unit": "MW",
-            "description": "Units: MW."
-        },
-        "region": {
-            "type": "array",
-            "items": {
-                "type": "integer"
-            }
-        },
-        "value_of_lost_load": {
-            "type": "number",
-            "x-unit": "USD/MWh",
-            "description": "Units: USD/MWh."
-        },
-        "unserved_demand_curve": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "description": "ID for individual component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+      "type": "boolean",
+      "default": true
+    },
+    "power_systems_type": {
+      "description": "Corresponding type to be used in PCM modeling.",
+      "type": "string"
+    },
+    "conformity": {
+      "description": "Indicator of how the demand requirement should conform to the load profile of existing technologies in the system. Should only be used for new demand requirements.",
+      "type": "string",
+      "default": "UNDEFINED"
+    },
+    "growth_rate": {
+      "description": "The annual growth rate of the demand requirement, used to scale present-day loads into future projections. Should only be used for conforming loads. Units: 1.",
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "1"
+    },
+    "new_demand_mw": {
+      "description": "The value of the peak demand to be used for new DemandRequirements. Units: MW.",
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "MW"
+    },
+    "new_construction_year": {
+      "description": "The year in which the new demand requirement will be installed. Should only be used for new demand requirements.",
+      "type": "integer",
+      "default": 2020
+    },
+    "region": {
+      "description": "Location where the component applies. Can be a zone or node.",
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "value_of_lost_load": {
+      "description": "Value of unserved load. Units: USD/MWh.",
+      "type": "number",
+      "x-unit": "USD/MWh"
+    },
+    "unserved_demand_curve": {
+      "description": "Piecewise curve to scale the cost of unserved load based on the value of lost load. Units: USD/MWh.",
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "x-unit": "USD/MWh"
+    },
+    "requirements": {
+      "description": "List of requirement IDs associated with the component.",
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "integer"
+      }
     }
+  },
+  "required": [
+    "id", 
+    "name", 
+    "power_systems_type", 
+    "value_of_lost_load"
+  ],
+  "title": "DemandRequirement",
+  "type": "object"
 }

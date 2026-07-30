@@ -1,49 +1,72 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "name",
-        "available"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "id": {
-            "type": "integer"
-        },
-        "available": {
-            "type": "boolean"
-        },
-        "power_systems_type": {
-            "type": "string"
-        },
-        "start_region": {
-            "type": "integer"
-        },
-        "end_region": {
-            "type": "integer"
-        },
-        "capacity_limits": {
-            "$ref": "../../Core/common.json#/definitions/MinMax"
-        },
-        "capital_costs": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve",
-            "x-unit": "USD/MW",
-            "description": "Units: USD/MW."
-        },
-        "line_loss": {
-            "type": "number",
-            "x-unit": "1",
-            "description": "Units: 1."
-        },
-        "unit_size": {
-            "type": "number",
-            "x-unit": "MW",
-            "description": "Units: MW."
-        },
-        "financial_data": {
-            "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "description": "ID for individual component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+      "type": "boolean"
+    },
+    "power_systems_type": {
+      "description": "Corresponding type to be used in PCM modeling.",
+      "type": "string"
+    },
+    "start_region": {
+      "description": "Start region for transport technology.",
+      "type": "integer"
+    },
+    "end_region": {
+      "description": "End region for transport technology.",
+      "type": "integer"
+    },
+    "capacity_limits": {
+      "description": "Allowable capacity for a transmission line. Units: MW.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
+    },
+    "capital_costs": {
+      "description": "Cost of adding new capacity to the nodal transmission line. Units: USD/MW.",
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "x-unit": "USD/MW"
+    },
+    "line_loss": {
+      "description": "Transmission loss for each transport technology. Units: 1.",
+      "type": "number",
+      "x-unit": "1"
+    },
+    "unit_size": {
+      "description": "Used for integer investment decisions. Represents the rating capacity of individual new lines. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
+    },
+    "requirements": {
+      "description": "List of requirement IDs associated with the component.",
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "integer"
+      }
+    },
+    "financial_data": {
+      "description": "Struct containing relevant financial information for a technology.",
+      "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
     }
+  },
+  "required": [
+    "available", 
+    "end_region", 
+    "financial_data", 
+    "id", 
+    "name", 
+    "power_systems_type", 
+    "start_region"
+  ],
+  "title": "AggregateTransportTechnology",
+  "type": "object"
 }

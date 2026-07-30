@@ -1,31 +1,49 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "name",
-        "capital_recovery_period",
-        "technology_base_year"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "interest_rate": {
-            "type": "number",
-            "default": "0.0",
-            "x-unit": "1",
-            "description": "Units: 1."
-        },
-        "capital_recovery_period": {
-            "type": "integer",
-            "x-unit": "yr",
-            "description": "Units: yr."
-        },
-        "technology_base_year": {
-            "type": "integer"
-        },
-        "id": {
-            "type": "integer"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "description": "ID for individual component.",
+      "type": "integer"
+    },
+    "capital_recovery_period": {
+      "description": "Period over which capital costs are recovered for net present value calculations. Units: yr.",
+      "type": "integer",
+      "x-unit": "yr"
+    },
+    "technology_base_year": {
+      "description": "Base year for technology cost data used in NPV calculations.",
+      "type": "integer"
+    },
+    "debt_fraction": {
+      "description": "Fraction of capital costs financed through debt. Units: 1.",
+      "type": "number",
+      "x-unit": "1"
+    },
+    "debt_rate": {
+      "description": "Interest rate on debt financing. Units: 1.",
+      "type": "number",
+      "x-unit": "1"
+    },
+    "return_on_equity": {
+      "description": "Required rate of return on equity financing. Units: 1.",
+      "type": "number",
+      "x-unit": "1"
+    },
+    "tax_rate": {
+      "description": "Tax rate applied to equity returns. Units: 1.",
+      "type": "number",
+      "x-unit": "1"
     }
+  },
+  "required": [
+    "id",
+    "capital_recovery_period",
+    "technology_base_year",
+    "debt_fraction",
+    "debt_rate",
+    "return_on_equity",
+    "tax_rate"
+  ],
+  "title": "TechnologyFinancialData",
+  "type": "object"
 }

@@ -1,156 +1,174 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "name",
-        "available",
-        "power_systems_type"
-    ],
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "id": {
-            "type": "integer"
-        },
-        "power_systems_type": {
-            "type": "string"
-        },
-        "base_year": {
-            "type": "integer"
-        },
-        "region": {
-            "type": "array",
-            "items": {
-                "type": "integer"
-            }
-        },
-        "financial_data": {
-            "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
-        },
-        "available": {
-            "type": "boolean"
-        },
-        "balancing_topology": {
-            "type": "string"
-        },
-        "capital_costs_solar": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve",
-            "x-unit": "USD/MW",
-            "description": "Units: USD/MW."
-        },
-        "operation_costs_solar": {
-            "$ref": "../../Core/common.json#/definitions/RenewableGenerationCost",
-            "x-unit": "USD/MWh",
-            "description": "Units: USD/MWh."
-        },
-        "capacity_limits_solar": {
-            "$ref": "../../Core/common.json#/definitions/MinMax",
-            "x-unit": "MW",
-            "description": "Units: MW."
-        },
-        "lifetime_solar": {
-            "type": "integer",
-            "x-unit": "yr",
-            "description": "Units: yr."
-        },
-        "capital_costs_wind": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve",
-            "x-unit": "USD/MW",
-            "description": "Units: USD/MW."
-        },
-        "operation_costs_wind": {
-            "$ref": "../../Core/common.json#/definitions/RenewableGenerationCost",
-            "x-unit": "USD/MWh",
-            "description": "Units: USD/MWh."
-        },
-        "capacity_limits_wind": {
-            "$ref": "../../Core/common.json#/definitions/MinMax",
-            "x-unit": "MW",
-            "description": "Units: MW."
-        },
-        "lifetime_wind": {
-            "type": "integer",
-            "x-unit": "yr",
-            "description": "Units: yr."
-        },
-        "capital_costs_energy": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve",
-            "x-unit": "USD/MWh",
-            "description": "Units: USD/MWh."
-        },
-        "capital_costs_power": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve",
-            "x-unit": "USD/MW",
-            "description": "Units: USD/MW."
-        },
-        "operation_costs_energy": {
-            "$ref": "../../Core/common.json#/definitions/StorageCost",
-            "x-unit": "USD/MWh",
-            "description": "Units: USD/MWh."
-        },
-        "operation_costs_power": {
-            "$ref": "../../Core/common.json#/definitions/StorageCost",
-            "x-unit": "USD/MWh",
-            "description": "Units: USD/MWh."
-        },
-        "capacity_power_limits": {
-            "$ref": "../../Core/common.json#/definitions/MinMax",
-            "x-unit": "MW",
-            "description": "Units: MW."
-        },
-        "capacity_energy_limits": {
-            "$ref": "../../Core/common.json#/definitions/MinMax",
-            "x-unit": "MWh",
-            "description": "Units: MWh."
-        },
-        "duration_limits": {
-            "$ref": "../../Core/common.json#/definitions/MinMax",
-            "x-unit": "h",
-            "description": "Units: h."
-        },
-        "efficiency_storage": {
-            "$ref": "../../Core/common.json#/definitions/InOut",
-            "x-unit": "1",
-            "description": "Units: 1."
-        },
-        "losses_storage": {
-            "type": "number",
-            "default": "1.0",
-            "x-unit": "1",
-            "description": "Units: 1."
-        },
-        "lifetime_storage": {
-            "type": "integer",
-            "default": "100",
-            "x-unit": "yr",
-            "description": "Units: yr."
-        },
-        "max_inverter_capacity": {
-            "type": "number",
-            "x-unit": "MW",
-            "description": "Units: MW."
-        },
-        "min_inverter_capacity": {
-            "type": "number",
-            "x-unit": "MW",
-            "description": "Units: MW."
-        },
-        "capital_costs_inverter": {
-            "$ref": "../../Core/common.json#/definitions/ValueCurve",
-            "x-unit": "USD/MW",
-            "description": "Units: USD/MW."
-        },
-        "operation_costs_inverter": {
-            "$ref": "../../Core/common.json#/definitions/ProductionVariableCostCurve"
-        },
-        "inverter_efficiency": {
-            "type": "number",
-            "x-unit": "1",
-            "description": "Units: 1."
-        },
-        "inverter_supply_ratio": {
-            "type": "number"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "description": "ID for individual component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+      "type": "boolean"
+    },
+    "power_systems_type": {
+      "description": "Corresponding type to be used in PCM modeling.",
+      "type": "string"
+    },
+    "region": {
+      "description": "Location where the component applies. Can be a zone or node.",
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "financial_data": {
+      "description": "Struct containing relevant financial information for a technology.",
+      "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
+    },
+    "capital_costs_solar": {
+      "description": "Capital costs for investing in a solar technology. Units: USD/MW.",
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "x-unit": "USD/MW"
+    },
+    "operation_costs_solar": {
+      "description": "Fixed and variable O&M costs for the solar component. Units: USD/MWh.",
+      "$ref": "../../Core/common.json#/definitions/RenewableGenerationCost",
+      "x-unit": "USD/MWh"
+    },
+    "capacity_limits_solar": {
+      "description": "Maximum allowable installed capacity for the solar component. Units: MW.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
+    },
+    "lifetime_solar": {
+      "description": "Maximum number of years the solar component can be active once installed. Units: yr.",
+      "type": "integer",
+      "x-unit": "yr"
+    },
+    "capital_costs_wind": {
+      "description": "Capital costs for investing in a wind technology. Units: USD/MW.",
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "x-unit": "USD/MW"
+    },
+    "operation_costs_wind": {
+      "description": "Fixed and variable O&M costs for the wind component. Units: USD/MWh.",
+      "$ref": "../../Core/common.json#/definitions/RenewableGenerationCost",
+      "x-unit": "USD/MWh"
+    },
+    "capacity_limits_wind": {
+      "description": "Maximum allowable installed capacity for the wind component. Units: MW.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
+    },
+    "lifetime_wind": {
+      "description": "Maximum number of years the wind component can be active once installed. Units: yr.",
+      "type": "integer",
+      "x-unit": "yr"
+    },
+    "capital_costs_energy": {
+      "description": "Capital costs for investing in the storage technology's energy capacity. Units: USD/MWh.",
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "x-unit": "USD/MWh"
+    },
+    "capital_costs_power": {
+      "description": "Capital costs for investing in the storage technology's charge/discharge capacity. Units: USD/MW.",
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "x-unit": "USD/MW"
+    },
+    "operation_costs_energy": {
+      "description": "Fixed and variable O&M costs for the storage energy component. Units: USD/MWh.",
+      "$ref": "../../Core/common.json#/definitions/StorageCost",
+      "x-unit": "USD/MWh"
+    },
+    "operation_costs_power": {
+      "description": "Fixed and variable O&M costs for the storage power component. Units: USD/MWh.",
+      "$ref": "../../Core/common.json#/definitions/StorageCost",
+      "x-unit": "USD/MWh"
+    },
+    "capacity_power_limits": {
+      "description": "Allowable installed power capacity for the storage component. Units: MW.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MW"
+    },
+    "capacity_energy_limits": {
+      "description": "Allowable installed energy capacity for the storage component. Units: MWh.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "MWh"
+    },
+    "duration_limits": {
+      "description": "Minimum and maximum duration limits for the storage component (hours). Units: h.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "h"
+    },
+    "efficiency_storage": {
+      "description": "Efficiency of charging storage, fraction of total charge (in) and discharge (out) capacity. Units: 1.",
+      "$ref": "../../Core/common.json#/definitions/InOut",
+      "x-unit": "1"
+    },
+    "losses_storage": {
+      "description": "Self-discharge of storage (fraction of stored energy per hour). Units: 1.",
+      "type": "number",
+      "default": 1.0,
+      "x-unit": "1"
+    },
+    "lifetime_storage": {
+      "description": "Maximum number of years the storage component can be active once installed. Units: yr.",
+      "type": "integer",
+      "default": 100,
+      "x-unit": "yr"
+    },
+    "max_inverter_capacity": {
+      "description": "Limit on inverter capacity. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
+    },
+    "min_inverter_capacity": {
+      "description": "Minimum inverter capacity. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
+    },
+    "capital_costs_inverter": {
+      "description": "Capital costs for investing in inverter capacity. Units: USD/MW.",
+      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "x-unit": "USD/MW"
+    },
+    "operation_costs_inverter": {
+      "description": "Operational costs for using inverter in co-located systems. Units: USD/MWh.",
+      "$ref": "../../Core/common.json#/definitions/ProductionVariableCostCurve",
+      "x-unit": "USD/MWh"
+    },
+    "inverter_efficiency": {
+      "description": "Efficiency of AC to DC conversion of inverter. Units: 1.",
+      "type": "number",
+      "x-unit": "1"
+    },
+    "inverter_supply_ratio": {
+      "description": "Ratio of generation capacity to grid connection capacity. Units: 1.",
+      "type": "number",
+      "x-unit": "1"
+    },
+    "requirements": {
+      "description": "List of requirement IDs associated with the component.",
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "integer"
+      }
     }
+  },
+  "required": [
+    "capital_costs_inverter",
+    "financial_data",
+    "id",
+    "inverter_efficiency",
+    "inverter_supply_ratio",
+    "name",
+    "operation_costs_inverter",
+    "power_systems_type"
+  ],
+  "title": "ColocatedSupplyStorageTechnology",
+  "type": "object"
 }

@@ -1,18 +1,21 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "existing_capacity"
-    ],
-    "properties": {
-        "buses": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
-        },
-        "uuid": {
-            "type": "string"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "description": "ID for individual component.",
+      "type": "integer"
+    },
+    "buses": {
+      "description": "List of buses in the base system that are associated with a zone.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
+  },
+  "required": [
+    "id"
+  ],
+  "title": "TopologyMapping",
+  "type": "object"
 }

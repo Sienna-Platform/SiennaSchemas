@@ -1,27 +1,35 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-        "retirement_potential"
-    ],
-    "properties": {
-        "eligible_generators": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
-        },
-        "planned_retirement_year": {
-            "type": "object",
-            "additionalProperties": {
-                "type": "integer"
-            }
-        },
-        "build_year": {
-            "type": "object",
-            "additionalProperties": {
-                "type": "integer"
-            }
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "description": "ID for individual component.",
+      "type": "integer"
+    },
+    "eligible_generators": {
+      "description": "Names of individual generation units mapped to a technology that are eligible for retirement.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "planned_retirement_year": {
+      "description": "Optional dictionary to indicate the year in which the forced/planned retirement will occur.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer"
+      }
+    },
+    "build_year": {
+      "description": "Optional dictionary to indicate the year in which existing generators in the base system were built.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer"
+      }
     }
+  },
+  "required": [
+    "id"
+  ],
+  "title": "RetirementPotential",
+  "type": "object"
 }
