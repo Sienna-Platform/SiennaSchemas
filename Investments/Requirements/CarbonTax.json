@@ -25,10 +25,9 @@
     }
   },
   "required": [
-    "id",
     "name",
-    "available",
-    "target_year"
+    "id",
+    "available"
   ],
   "title": "CarbonTax",
   "type": "object"

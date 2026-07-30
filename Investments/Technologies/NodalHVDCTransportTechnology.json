@@ -61,15 +61,7 @@
   "required": [
     "name",
     "id",
-    "available",
-    "power_systems_type",
-    "start_node",
-    "end_node",
-    "capacity_limits",
-    "capital_costs",
-    "line_loss",
-    "unit_size",
-    "financial_data"
+    "available"
   ],
   "title": "NodalHVDCTransportTechnology",
   "type": "object"

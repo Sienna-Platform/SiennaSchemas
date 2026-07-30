@@ -24,11 +24,9 @@
     }
   },
   "required": [
-    "id",
     "name",
-    "available",
-    "target_year",
-    "max_capacity_mw"
+    "id",
+    "available"
   ],
   "title": "MaximumCapacityRequirements",
   "type": "object"

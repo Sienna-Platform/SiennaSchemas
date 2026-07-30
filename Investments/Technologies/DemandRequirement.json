@@ -69,10 +69,8 @@
   "required": [
     "name",
     "id",
-    "power_systems_type",
-    "region",
-    "value_of_lost_load",
-    "unserved_demand_curve"
+    "available",
+    "power_systems_type"
   ],
   "title": "DemandRequirement",
   "type": "object"
