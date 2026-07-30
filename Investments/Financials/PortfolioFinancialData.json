@@ -28,6 +28,9 @@
   },
   "required": [
     "id",
+    "discount_rate",
+    "inflation_rate",
+    "interest_rate",
     "base_year"
   ],
   "title": "PortfolioFinancialData",

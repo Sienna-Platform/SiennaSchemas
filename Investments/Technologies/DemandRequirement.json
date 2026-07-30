@@ -57,12 +57,10 @@
     }
   },
   "required": [
-    "name",
     "id",
+    "name",
     "power_systems_type",
-    "region",
-    "value_of_lost_load",
-    "unserved_demand_curve"
+    "value_of_lost_load"
   ],
   "title": "DemandRequirement",
   "type": "object"

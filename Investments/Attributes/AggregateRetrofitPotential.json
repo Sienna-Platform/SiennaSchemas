@@ -20,9 +20,7 @@
     }
   },
   "required": [
-    "id",
-    "retrofit_id",
-    "retrofit_fraction"
+    "id"
   ],
   "title": "AggregateRetrofitPotential",
   "type": "object"

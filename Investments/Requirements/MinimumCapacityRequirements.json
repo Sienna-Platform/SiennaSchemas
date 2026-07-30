@@ -20,11 +20,9 @@
     }
   },
   "required": [
-    "name",
     "id",
-    "available",
-    "target_year",
-    "min_capacity_mw"
+    "name",
+    "available"
   ],
   "title": "MinimumCapacityRequirements",
   "type": "object"

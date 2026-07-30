@@ -63,14 +63,12 @@
     }
   },
   "required": [
-    "name",
     "id",
+    "name",
     "available",
     "power_systems_type",
     "start_node",
     "end_node",
-    "capacity_limits",
-    "capital_costs",
     "financial_data"
   ],
   "title": "NodalACTransportTechnology",

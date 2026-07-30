@@ -26,11 +26,9 @@
     }
   },
   "required": [
-    "name",
     "id",
-    "available",
-    "target_year",
-    "max_mtons"
+    "name",
+    "available"
   ],
   "title": "CarbonCaps",
   "type": "object"

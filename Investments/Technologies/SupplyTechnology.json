@@ -120,20 +120,9 @@
     }
   },
   "required": [
-    "name",
     "id",
-    "available",
+    "name",
     "power_systems_type",
-    "region",
-    "fuel",
-    "co2",
-    "cofire_start_limits",
-    "cofire_level_limits",
-    "capital_costs",
-    "operation_costs",
-    "capacity_limits",
-    "ramp_limits",
-    "time_limits",
     "financial_data"
   ],
   "title": "SupplyTechnology",

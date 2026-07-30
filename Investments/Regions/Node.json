@@ -13,8 +13,8 @@
     }
   },
   "required": [
-    "name",
-    "id"
+    "id",
+    "name"
   ],
   "title": "Node",
   "type": "object"
