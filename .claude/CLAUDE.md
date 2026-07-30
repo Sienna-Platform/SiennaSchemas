@@ -1,8 +1,8 @@
 # SiennaSchemas — Claude Guide
 
-The **single source of truth for Sienna data-model schemas**: hand-written JSON Schema (draft-07) definitions organized by domain, the OpenAPI specs that select what each generated package contains, the **unit vocabulary** (`Core/units.json`), and the units validator. Everything here is source; the generated side lives downstream. Platform conventions: `.claude/Sienna.md`; workspace architecture: `/home/jdlara/Sienna_work/psy6/CLAUDE.md`.
+The **single source of truth for Sienna data-model schemas**: hand-written JSON Schema (draft-07) definitions organized by domain, the OpenAPI specs that select what each generated package contains, the **unit vocabulary** (`Core/units.json`), and the units validator. Everything here is source; the generated side lives downstream. Platform conventions: `.claude/Sienna.md`; workspace architecture: the psy6 workspace root `CLAUDE.md`.
 
-Current branch: `jm/units` (units-annotation effort, PR #15). Master plan: `/home/jdlara/Sienna_work/psy6/.claude/plans/2026-07-05-units-ecosystem-closure.md`.
+Current branch: `jm/units` (units-annotation effort, PR #15). Master plan: the psy6 workspace root's `.claude/plans/2026-07-05-units-ecosystem-closure.md`.
 
 ## Multi-repository pipeline
 
@@ -54,7 +54,7 @@ Cross-references are relative paths (`"$ref": "../../Core/common.json#/definitio
 - `Core/units.json` is the unit vocabulary — single source of truth, consumed by the validator here and by SiennaGridDB's registry generator (sibling-checkout relative path `../SiennaSchemas`).
 - Every numeric property carries `x-unit` (or `x-units` + `x-unit-discriminator` for discriminated cases; `x-unit-base` names a sibling property). Values must be in `units.json` `allowed_units` or the literal `"pu"`. For the four branch-impedance quantities (Resistance/Reactance/Susceptance/Conductance), `pu` **is** a registered vocabulary unit — it is one of two discriminated storage options (per-row basis recorded by GridDB `transmission_lines.parameter_units`); elsewhere `"pu"` is just an annotation channel.
 - Vocabulary rules: reactive power is `MVAr` (not MW — 63 fields across 27 files are being corrected); impedance/admittance annotations move from `ohm`/`S` to `"pu"`; percent is banned (store fractions).
-- Validate: `python3 scripts/validate_units.py` (spec in `docs/UNIT_ANNOTATIONS.md`). Use `python3`, never `python`; the venv is `/home/jdlara/Sienna_work/psy6/.venv-units`.
+- Validate: `python3 scripts/validate_units.py` (spec in `docs/UNIT_ANNOTATIONS.md`). Use `python3`, never `python`; the venv is `.venv-units` at the psy6 workspace root.
 - Remaining annotation debt (post-PR #15): Dynamics numerics (deferred by design) and the ~56 documented sync-check WARNs (`SiennaGridDB/scripts/check_units_sync.py`) — gaps, not contradictions. Operations and Investments are annotated; `base_power` defaults are gone.
 
 ## Schema conventions
