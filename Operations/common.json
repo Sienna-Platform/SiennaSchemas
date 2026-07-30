@@ -41,19 +41,6 @@
       "title": "ReserveDirection",
       "type": "string"
     },
-    "WindingGroupNumber": {
-      "enum": [
-        "UNDEFINED",
-        "GROUP_0",
-        "GROUP_1",
-        "GROUP_5",
-        "GROUP_6",
-        "GROUP_7",
-        "GROUP_11"
-      ],
-      "title": "WindingGroupNumber",
-      "type": "string"
-    },
     "TransformerControlObjective": {
       "enum": [
         "UNDEFINED",
@@ -61,15 +48,34 @@
         "REACTIVE_POWER_FLOW_DISABLED",
         "ACTIVE_POWER_FLOW_DISABLED",
         "CONTROL_OF_DC_LINE_DISABLED",
-        "ASYMETRIC_ACTIVE_POWER_FLOW_DISABLED",
+        "ASYMMETRIC_ACTIVE_POWER_FLOW_DISABLED",
         "FIXED",
         "VOLTAGE",
         "REACTIVE_POWER_FLOW",
         "ACTIVE_POWER_FLOW",
         "CONTROL_OF_DC_LINE",
-        "ASYMETRIC_ACTIVE_POWER_FLOW"
+        "ASYMMETRIC_ACTIVE_POWER_FLOW"
       ],
       "title": "TransformerControlObjective",
+      "type": "string"
+    },
+    "TwoWindingTransformerShuntLocation": {
+      "description": "Placement of a `TwoWindingTransformer`'s magnetizing shunt admittance on the two sides of its single circuit arc. PRIMARY: the full magnetizing shunt is applied on the primary (from) side. SECONDARY: the full magnetizing shunt is applied on the secondary (to) side. SPLIT: the full complex magnetizing shunt value is applied on BOTH sides.",
+      "enum": [
+        "PRIMARY",
+        "SECONDARY",
+        "SPLIT"
+      ],
+      "title": "TwoWindingTransformerShuntLocation",
+      "type": "string"
+    },
+    "ThreeWindingTransformerShuntLocation": {
+      "description": "Placement of a `ThreeWindingTransformer`'s magnetizing shunt admittance in the equivalent star model. PRIMARY: the full magnetizing shunt is applied on the winding-1 (primary) terminal side. STAR: the full magnetizing shunt is applied at the star node.",
+      "enum": [
+        "PRIMARY",
+        "STAR"
+      ],
+      "title": "ThreeWindingTransformerShuntLocation",
       "type": "string"
     },
     "VoltageUnitBasis": {

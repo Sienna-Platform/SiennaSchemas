@@ -113,12 +113,6 @@
       "MotorLoad": {
         "$ref": "Operations/StaticInjection/MotorLoad.json"
       },
-      "PhaseShiftingTransformer": {
-        "$ref": "Operations/Branch/PhaseShiftingTransformer.json"
-      },
-      "PhaseShiftingTransformer3W": {
-        "$ref": "Operations/Branch/PhaseShiftingTransformer3W.json"
-      },
       "PlannedOutage": {
         "$ref": "Operations/SupplementalAttributes/PlannedOutage.json"
       },
@@ -155,9 +149,6 @@
       "TModelHVDCLine": {
         "$ref": "Operations/Branch/TModelHVDCLine.json"
       },
-      "TapTransformer": {
-        "$ref": "Operations/Branch/TapTransformer.json"
-      },
       "ThermalMultiStart": {
         "$ref": "Operations/StaticInjection/ThermalMultiStart.json"
       },
@@ -167,11 +158,11 @@
       "ThermalStandard": {
         "$ref": "Operations/StaticInjection/ThermalStandard.json"
       },
-      "Transformer2W": {
-        "$ref": "Operations/Branch/Transformer2W.json"
+      "ThreeWindingTransformer": {
+        "$ref": "Operations/Branch/ThreeWindingTransformer.json"
       },
-      "Transformer3W": {
-        "$ref": "Operations/Branch/Transformer3W.json"
+      "TransformerCircuit": {
+        "$ref": "Operations/Branch/TransformerCircuit.json"
       },
       "TransmissionInterface": {
         "$ref": "Operations/Service/TransmissionInterface.json"
@@ -185,6 +176,9 @@
       "TwoTerminalVSCLine": {
         "$ref": "Operations/Branch/TwoTerminalVSCLine.json"
       },
+      "TwoWindingTransformer": {
+        "$ref": "Operations/Branch/TwoWindingTransformer.json"
+      },
       "VariableReserve": {
         "$ref": "Operations/Service/VariableReserve.json"
       },
@@ -195,8 +189,9 @@
       "VSCDCControlModes": {"$ref": "Operations/common.json#/definitions/VSCDCControlModes"},
       "CombinedCycleConfiguration": {"$ref": "Operations/common.json#/definitions/CombinedCycleConfiguration"},
       "ReserveDirection": {"$ref": "Operations/common.json#/definitions/ReserveDirection"},
-      "WindingGroupNumber": {"$ref": "Operations/common.json#/definitions/WindingGroupNumber"},
       "TransformerControlObjective": {"$ref": "Operations/common.json#/definitions/TransformerControlObjective"},
+      "TwoWindingTransformerShuntLocation": {"$ref": "Operations/common.json#/definitions/TwoWindingTransformerShuntLocation"},
+      "ThreeWindingTransformerShuntLocation": {"$ref": "Operations/common.json#/definitions/ThreeWindingTransformerShuntLocation"},
       "VoltageUnitBasis": {"$ref": "Operations/common.json#/definitions/VoltageUnitBasis"},
       "LoadConformity": {"$ref": "Operations/common.json#/definitions/LoadConformity"}
     }

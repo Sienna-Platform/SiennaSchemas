@@ -139,11 +139,18 @@ SCHEMA_AHEAD = {
     "FixedAdmittance": {"admittance_units"},
     "SwitchedAdmittance": {"admittance_units"},
     "FACTSControlDevice": {"voltage_setpoint_units"},
-    "TapTransformer": {"voltage_setpoint_units"},
     "InterconnectingConverter": {"voltage_setpoint_units"},
     "Line": {"base_power"},
     "MonitoredLine": {"base_power"},
     "GenericArcImpedance": {"base_power", "parameter_units"},
+}
+
+# PSY fields that are constructor-managed runtime state, never serialized, so
+# schemas never represent them. TransformerCircuit.base_value is repopulated by
+# add_component! and explicitly skipped by PSY's hand-written IS.serialize
+# (src/models/transformer_circuits.jl). Reviewable per type, like SCHEMA_AHEAD.
+PSY_INTERNAL = {
+    "TransformerCircuit": {"base_value"},
 }
 
 # Schema components with no PSY struct by design (association normalization
@@ -210,8 +217,11 @@ def load_psy_structs(psy_path):
     for entry in descriptor["auto_generated_structs"]:
         if entry.get("supertype", "") in dynamics_supertypes:
             continue
+        internal = PSY_INTERNAL.get(entry["struct_name"], set())
         structs[entry["struct_name"]] = [
-            field["name"] for field in entry.get("fields", [])
+            field["name"]
+            for field in entry.get("fields", [])
+            if field["name"] not in internal
         ]
         defaults[entry["struct_name"]] = {
             field["name"]: field["default"]
