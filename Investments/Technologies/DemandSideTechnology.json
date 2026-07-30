@@ -41,13 +41,19 @@
       "description": "Units: MW."
     },
     "max_demand_delay": {
-      "type": "number"
+      "type": "number",
+      "x-unit": "h",
+      "description": "Units: h."
     },
     "max_demand_advance": {
-      "type": "number"
+      "type": "number",
+      "x-unit": "h",
+      "description": "Units: h."
     },
     "demand_energy_efficiency": {
-      "type": "number"
+      "type": "number",
+      "x-unit": "1",
+      "description": "Units: 1."
     },
     "shift_variable_cost": {
       "$ref": "../../Core/common.json#/definitions/ValueCurve"
@@ -56,7 +62,9 @@
       "$ref": "../../Core/common.json#/definitions/ValueCurve"
     },
     "max_demand_curtailment": {
-      "type": "number"
+      "type": "number",
+      "x-unit": "1",
+      "description": "Units: 1."
     },
     "requirements": {
       "type": "array",
