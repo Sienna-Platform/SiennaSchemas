@@ -129,10 +129,10 @@
     }
   },
   "required": [
-    "financial_data",
-    "id",
     "name",
-    "power_systems_type"
+    "id",
+    "power_systems_type",
+    "financial_data"
   ],
   "title": "SupplyTechnology",
   "type": "object"

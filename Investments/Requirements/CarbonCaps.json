@@ -31,8 +31,8 @@
   },
   "required": [
     "name",
-    "id",
-    "available"
+    "available",
+    "id"
   ],
   "title": "CarbonCaps",
   "type": "object"

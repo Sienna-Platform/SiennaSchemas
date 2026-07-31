@@ -16,8 +16,8 @@
     }
   },
   "required": [
-    "id",
-    "name"
+    "name",
+    "id"
   ],
   "title": "Node",
   "type": "object"

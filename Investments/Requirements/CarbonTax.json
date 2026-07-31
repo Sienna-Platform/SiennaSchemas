@@ -26,8 +26,8 @@
   },
   "required": [
     "name",
-    "id",
-    "available"
+    "available",
+    "id"
   ],
   "title": "CarbonTax",
   "type": "object"

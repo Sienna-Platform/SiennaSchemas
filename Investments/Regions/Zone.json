@@ -11,8 +11,8 @@
     }
   },
   "required": [
-    "id",
-    "name"
+    "name",
+    "id"
   ],
   "title": "Zone",
   "type": "object"

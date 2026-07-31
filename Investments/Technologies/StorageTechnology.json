@@ -128,12 +128,12 @@
     }
   },
   "required": [
-    "available",
-    "financial_data",
-    "id",
     "name",
+    "id",
+    "available",
     "power_systems_type",
-    "storage_tech"
+    "storage_tech",
+    "financial_data"
   ],
   "title": "StorageTechnology",
   "type": "object"

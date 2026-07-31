@@ -16,8 +16,8 @@
   },
   "required": [
     "name",
-    "id",
-    "available"
+    "available",
+    "id"
   ],
   "title": "HourlyMatching",
   "type": "object"
