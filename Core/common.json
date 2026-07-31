@@ -324,14 +324,23 @@
       ]
     },
     "ImpedanceUnitBasis": {
-      "description": "Unit basis a branch/injection impedance is stored in. SYSTEM_BASE: per-unit on the system MVA/voltage base. NATURAL_UNITS: physical ohms (PSS/E RAW native for DC-line impedances).",
-      "enum": ["SYSTEM_BASE", "NATURAL_UNITS"],
+      "description": "Unit basis a branch/injection impedance is stored in. SYSTEM_BASE: per-unit on the system MVA/voltage base. NATURAL_UNITS: physical ohms (PSS/E RAW native for DC-line impedances). DEVICE_BASE: per-unit on the component's own device base (MVA and voltage), which is what PSS/E supplies for DC-line converters and CZ=2 transformer windings.",
+      "enum": [
+        "SYSTEM_BASE",
+        "NATURAL_UNITS",
+        "DEVICE_BASE"
+      ],
       "title": "ImpedanceUnitBasis",
       "type": "string"
     },
     "AdmittanceUnitBasis": {
-      "description": "Unit basis a shunt admittance is stored in. SYSTEM_BASE: per-unit on the system base. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance) — PSS/E RAW native for fixed/switched shunts.",
-      "enum": ["SYSTEM_BASE", "NATURAL_UNITS", "DEVICE_MVAR"],
+      "description": "Unit basis a shunt admittance is stored in. SYSTEM_BASE: per-unit on the system base. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance) \u2014 PSS/E RAW native for fixed/switched shunts. DEVICE_BASE: per-unit on the component's own device base (MVA and voltage), which is what PSS/E supplies for DC-line converters and CZ=2 transformer windings \u2014 a per-unit base, not a power at unity voltage, and not an alternative spelling of DEVICE_MVAR. DEVICE_BASE does not apply to fixed or switched shunts, which have no device MVA rating; shunts use DEVICE_MVAR for their native form.",
+      "enum": [
+        "SYSTEM_BASE",
+        "NATURAL_UNITS",
+        "DEVICE_MVAR",
+        "DEVICE_BASE"
+      ],
       "title": "AdmittanceUnitBasis",
       "type": "string"
     },

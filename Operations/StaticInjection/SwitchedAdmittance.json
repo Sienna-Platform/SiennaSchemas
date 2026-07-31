@@ -24,13 +24,14 @@
       "$ref": "../../Core/common.json#/definitions/AdmittanceUnitBasis"
     },
     "Y": {
-      "description": "Initial admittance at N = 0. Per-unit on system base. Units: pu. Units: per admittance_units — SYSTEM_BASE: pu, NATURAL_UNITS: S, DEVICE_MVAR: MVAr .",
+      "description": "Initial admittance at N = 0. Per-unit on system base. Units: pu. Units: per admittance_units — SYSTEM_BASE: pu, NATURAL_UNITS: S, DEVICE_MVAR: MVAr, DEVICE_BASE: pu .",
       "$ref": "../../Core/common.json#/definitions/ComplexNumber",
       "x-unit-discriminator": "admittance_units",
       "x-units": {
         "SYSTEM_BASE": "pu",
         "NATURAL_UNITS": "S",
-        "DEVICE_MVAR": "MVAr"
+        "DEVICE_MVAR": "MVAr",
+        "DEVICE_BASE": "pu"
       }
     },
     "initial_status": {
@@ -48,7 +49,7 @@
       }
     },
     "Y_increase": {
-      "description": "Vector with admittance increment step for each adjustable shunt block. For example, `Y_increase[2]` is the complex admittance increment for each step at block 2. Per-unit on system base. Units: pu. Units: per admittance_units — SYSTEM_BASE: pu, NATURAL_UNITS: S, DEVICE_MVAR: MVAr .",
+      "description": "Vector with admittance increment step for each adjustable shunt block. For example, `Y_increase[2]` is the complex admittance increment for each step at block 2. Per-unit on system base. Units: pu. Units: per admittance_units — SYSTEM_BASE: pu, NATURAL_UNITS: S, DEVICE_MVAR: MVAr, DEVICE_BASE: pu .",
       "type": "array",
       "items": {
         "$ref": "../../Core/common.json#/definitions/ComplexNumber"
@@ -57,11 +58,12 @@
       "x-units": {
         "SYSTEM_BASE": "pu",
         "NATURAL_UNITS": "S",
-        "DEVICE_MVAR": "MVAr"
+        "DEVICE_MVAR": "MVAr",
+        "DEVICE_BASE": "pu"
       }
     },
     "admittance_limits": {
-      "description": "Shunt admittance limits for switched shunt model. Per-unit on system base. Units: pu. Units: per admittance_units — SYSTEM_BASE: pu, NATURAL_UNITS: S, DEVICE_MVAR: MVAr .",
+      "description": "Shunt admittance limits for switched shunt model. Per-unit on system base. Units: pu. Units: per admittance_units — SYSTEM_BASE: pu, NATURAL_UNITS: S, DEVICE_MVAR: MVAr, DEVICE_BASE: pu .",
       "default": {
         "min": 1.0,
         "max": 1.0
@@ -71,7 +73,8 @@
       "x-units": {
         "SYSTEM_BASE": "pu",
         "NATURAL_UNITS": "S",
-        "DEVICE_MVAR": "MVAr"
+        "DEVICE_MVAR": "MVAr",
+        "DEVICE_BASE": "pu"
       }
     },
     "control_mode": {

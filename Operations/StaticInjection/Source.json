@@ -54,23 +54,25 @@
       "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
     },
     "R_th": {
-      "description": "Source Thevenin resistance. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
+      "description": "Source Thevenin resistance. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
         "SYSTEM_BASE": "pu",
-        "NATURAL_UNITS": "ohm"
+        "NATURAL_UNITS": "ohm",
+        "DEVICE_BASE": "pu"
       }
     },
     "X_th": {
-      "description": "Source Thevenin reactance. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
+      "description": "Source Thevenin reactance. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
         "SYSTEM_BASE": "pu",
-        "NATURAL_UNITS": "ohm"
+        "NATURAL_UNITS": "ohm",
+        "DEVICE_BASE": "pu"
       }
     },
     "internal_voltage": {

@@ -24,13 +24,14 @@
       "$ref": "../../Core/common.json#/definitions/AdmittanceUnitBasis"
     },
     "Y": {
-      "description": "Fixed admittance. Per-unit on system base. Units: pu. Units: per admittance_units — SYSTEM_BASE: pu, NATURAL_UNITS: S, DEVICE_MVAR: MVAr .",
+      "description": "Fixed admittance. Per-unit on system base. Units: pu. Units: per admittance_units — SYSTEM_BASE: pu, NATURAL_UNITS: S, DEVICE_MVAR: MVAr, DEVICE_BASE: pu .",
       "$ref": "../../Core/common.json#/definitions/ComplexNumber",
       "x-unit-discriminator": "admittance_units",
       "x-units": {
         "SYSTEM_BASE": "pu",
         "NATURAL_UNITS": "S",
-        "DEVICE_MVAR": "MVAr"
+        "DEVICE_MVAR": "MVAr",
+        "DEVICE_BASE": "pu"
       }
     },
     "dynamic_injector": {

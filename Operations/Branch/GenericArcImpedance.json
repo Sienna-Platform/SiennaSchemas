@@ -44,21 +44,23 @@
       "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
     },
     "r": {
-      "description": "Resistance. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
+      "description": "Resistance. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
         "SYSTEM_BASE": "pu",
-        "NATURAL_UNITS": "ohm"
+        "NATURAL_UNITS": "ohm",
+        "DEVICE_BASE": "pu"
       }
     },
     "x": {
-      "description": "Reactance. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
+      "description": "Reactance. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
         "SYSTEM_BASE": "pu",
-        "NATURAL_UNITS": "ohm"
+        "NATURAL_UNITS": "ohm",
+        "DEVICE_BASE": "pu"
       }
     }
   },
