@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "convention": "sienna-units-1.0",
-  "notes": "Single source of truth for the Sienna unit vocabulary. 'dimension' is an exponent map over base dimensions M (mass, kg), L (length, m), T (time, s), I (electric current, A), and pseudo-dimensions USD (money) and Btu (fuel chemical energy, kept distinct from electrical energy so heat-rate and fuel-intensity quantities never collide with cost quantities). Dimensionless quantities use the empty exponent map {} and the single allowed unit \"1\"; percent is banned (store fractions). 'to_default' in allowed_units is the exact multiplicative factor converting a value in 'unit' to the quantity's default_unit; it is null where conversion is context-dependent rather than a fixed factor (e.g. pu bases), and 0.0 where this layer deliberately does not perform the conversion at all (e.g. Angle). For Frequency/Hz, to_default instead records the nominal system frequency (60.0), not a conversion factor. 'ucum' carries the UCUM code of the default_unit where one exists, else null.",
+  "notes": "Single source of truth for the Sienna unit vocabulary. 'dimension' is an exponent map over base dimensions M (mass, kg), L (length, m), T (time, s), I (electric current, A), and pseudo-dimensions USD (money) and Btu (fuel chemical energy, kept distinct from electrical energy so heat-rate and fuel-intensity quantities never collide with cost quantities). Dimensionless quantities use the empty exponent map {} and the single allowed unit \"1\"; percent is banned (store fractions). 'to_default' in allowed_units is the exact multiplicative factor converting a value in 'unit' to the quantity's default_unit; it is null where conversion is context-dependent rather than a fixed factor (e.g. pu bases), and 0.0 where this layer deliberately does not perform the conversion at all. Angle carries real factors (rad is the default, deg is pi/180) so that source data in degrees converts on the way in rather than being rejected. For Frequency/Hz, to_default instead records the nominal system frequency (60.0), not a conversion factor. 'ucum' carries the UCUM code of the default_unit where one exists, else null.",
   "quantity_types": [
     {"name": "ActivePower", "dimension": {"M": 1, "L": 2, "T": -3}, "default_unit": "MW", "ucum": "MW", "description": "Active (real) power"},
     {"name": "ReactivePower", "dimension": {"M": 1, "L": 2, "T": -3}, "default_unit": "MVAr", "ucum": null, "description": "Reactive power"},
@@ -58,8 +58,8 @@
     {"quantity_type": "Impedance", "unit": "ohm", "to_default": 1.0},
     {"quantity_type": "Conductance", "unit": "S", "to_default": 1.0},
     {"quantity_type": "Susceptance", "unit": "S", "to_default": 1.0},
-    {"quantity_type": "Angle", "unit": "rad", "to_default": 0.0},
-    {"quantity_type": "Angle", "unit": "deg", "to_default": 0.0},
+    {"quantity_type": "Angle", "unit": "rad", "to_default": 1.0},
+    {"quantity_type": "Angle", "unit": "deg", "to_default": 0.017453292519943295},
     {"quantity_type": "Frequency", "unit": "Hz", "to_default": 60.0},
     {"quantity_type": "PowerPerFrequency", "unit": "MW/Hz", "to_default": 1.0},
     {"quantity_type": "Length", "unit": "km", "to_default": 1.0},
