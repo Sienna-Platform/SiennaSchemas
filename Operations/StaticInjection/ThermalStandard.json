@@ -62,9 +62,9 @@
       "x-unit": "MVA"
     },
     "time_limits": {
-      "description": "Minimum up and minimum down time limits. Units: h.",
-      "$ref": "../../Core/common.json#/definitions/UpDown",
-      "x-unit": "h"
+      "description": "Minimum up and minimum down time limits. Units: min.",
+      "$ref": "../../Core/common.json#/definitions/UpDownMinutes",
+      "x-unit": "min"
     },
     "must_run": {
       "description": "Set to `true` if the unit is must run.",
@@ -83,10 +83,10 @@
       "default": "OTHER"
     },
     "time_at_status": {
-      "description": "Time the generator has been on or off, as indicated by `status`. Units: h.",
-      "default": 10000.0,
-      "type": "number",
-      "x-unit": "h"
+      "description": "Time the generator has been on or off, as indicated by `status`. Units: min.",
+      "default": 600000,
+      "type": "integer",
+      "x-unit": "min"
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection device, if any.",

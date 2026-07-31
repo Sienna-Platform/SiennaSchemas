@@ -16,7 +16,7 @@
     },
     "time_frame": {
       "description": "The saturation time frame that a participating device must provide its reserve contribution. Units: min.",
-      "type": "number",
+      "type": "integer",
       "x-unit": "min"
     },
     "requirement": {
@@ -25,10 +25,10 @@
       "x-unit": "MW"
     },
     "sustained_time": {
-      "description": "The time reserve contribution must be sustained at a specified level. Units: s.",
-      "default": 3600.0,
-      "type": "number",
-      "x-unit": "s"
+      "description": "The time reserve contribution must be sustained at a specified level. Units: min.",
+      "default": 60,
+      "type": "integer",
+      "x-unit": "min"
     },
     "max_output_fraction": {
       "description": "The maximum fraction of each device's output that can be assigned to the service.",

@@ -66,14 +66,14 @@
       "x-unit": "MW"
     },
     "time_limits": {
-      "description": "Minimum up and minimum down time limits. Units: h.",
-      "$ref": "../../Core/common.json#/definitions/UpDown",
-      "x-unit": "h"
+      "description": "Minimum up and minimum down time limits. Units: min.",
+      "$ref": "../../Core/common.json#/definitions/UpDownMinutes",
+      "x-unit": "min"
     },
     "start_time_limits": {
-      "description": "Time limits for start-up based on turbine temperature. Units: h.",
-      "$ref": "../../Core/common.json#/definitions/StartUpStages",
-      "x-unit": "h"
+      "description": "Time limits for start-up based on turbine temperature. Units: min.",
+      "$ref": "../../Core/common.json#/definitions/StartUpStagesMinutes",
+      "x-unit": "min"
     },
     "start_types": {
       "description": "Number of start-up based on turbine temperature, where `1` = *hot*, `2` = *warm*, and `3` = *cold*.",
@@ -89,10 +89,10 @@
       "x-unit": "MVA"
     },
     "time_at_status": {
-      "description": "Time the generator has been on or off, as indicated by `status`. Units: h.",
-      "default": 10000.0,
-      "type": "number",
-      "x-unit": "h"
+      "description": "Time the generator has been on or off, as indicated by `status`. Units: min.",
+      "default": 600000,
+      "type": "integer",
+      "x-unit": "min"
     },
     "must_run": {
       "description": "Set to `true` if the unit is must run.",

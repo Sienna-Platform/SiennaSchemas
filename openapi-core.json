@@ -83,6 +83,9 @@
       "MinMax": {
         "$ref": "Core/common.json#/definitions/MinMax"
       },
+      "MinMaxMinutes": {
+        "$ref": "Core/common.json#/definitions/MinMaxMinutes"
+      },
       "PiecewiseLinearData": {
         "$ref": "Core/common.json#/definitions/PiecewiseLinearData"
       },
@@ -110,6 +113,9 @@
       "StartUpStages": {
         "$ref": "Core/common.json#/definitions/StartUpStages"
       },
+      "StartUpStagesMinutes": {
+        "$ref": "Core/common.json#/definitions/StartUpStagesMinutes"
+      },
       "StorageCost": {
         "$ref": "Core/common.json#/definitions/StorageCost"
       },
@@ -128,6 +134,9 @@
       "TurbinePump": {
         "$ref": "Core/common.json#/definitions/TurbinePump"
       },
+      "TurbinePumpMinutes": {
+        "$ref": "Core/common.json#/definitions/TurbinePumpMinutes"
+      },
       "TwoTerminalLoss": {
         "$ref": "Core/common.json#/definitions/TwoTerminalLoss"
       },
@@ -136,6 +145,9 @@
       },
       "UpDown": {
         "$ref": "Core/common.json#/definitions/UpDown"
+      },
+      "UpDownMinutes": {
+        "$ref": "Core/common.json#/definitions/UpDownMinutes"
       },
       "ValueCurve": {
         "$ref": "Core/common.json#/definitions/ValueCurve"

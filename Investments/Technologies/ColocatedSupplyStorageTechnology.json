@@ -99,9 +99,9 @@
       "x-unit": "MWh"
     },
     "duration_limits": {
-      "description": "Minimum and maximum duration limits for the storage component (hours). Units: h.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "h"
+      "description": "Minimum and maximum duration limits for the storage component (minutes). Units: min.",
+      "$ref": "../../Core/common.json#/definitions/MinMaxMinutes",
+      "x-unit": "min"
     },
     "efficiency_storage": {
       "description": "Efficiency of charging storage, fraction of total charge (in) and discharge (out) capacity. Units: 1.",

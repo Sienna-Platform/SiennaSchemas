@@ -92,9 +92,9 @@
       "x-unit": "MWh"
     },
     "duration_limits": {
-      "description": "Minimum and maximum duration limits (energy to discharge capacity ratio) for a storage technology (hours). Units: h.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "h"
+      "description": "Minimum and maximum duration limits (energy to discharge capacity ratio) for a storage technology (minutes). Units: min.",
+      "$ref": "../../Core/common.json#/definitions/MinMaxMinutes",
+      "x-unit": "min"
     },
     "efficiency": {
       "description": "Efficiency of charging storage, fraction of total charge (in) and discharge (out) capacity. Units: 1.",

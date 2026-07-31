@@ -64,9 +64,9 @@
       "x-unit": "MW/min"
     },
     "time_limits": {
-      "description": "Minimum up and minimum down time limits. in psy5 a required param with an option to be nothing Units: h.",
-      "$ref": "../../Core/common.json#/definitions/UpDown",
-      "x-unit": "h"
+      "description": "Minimum up and minimum down time limits. in psy5 a required param with an option to be nothing Units: min.",
+      "$ref": "../../Core/common.json#/definitions/UpDownMinutes",
+      "x-unit": "min"
     },
     "base_power": {
       "description": "Base power of the unit for per unitization. Units: MVA.",
@@ -84,10 +84,10 @@
       ]
     },
     "time_at_status": {
-      "description": "Time the generator has been on or off, as indicated by `status`. default is psy const INFINITE_TIME = 1e4 Units: h.",
-      "default": 10000.0,
-      "type": "number",
-      "x-unit": "h"
+      "description": "Time the generator has been on or off, as indicated by `status`. default is PowerSystems.jl's INFINITE_TIME sentinel (1e4 hours, 600000 minutes). Units: min.",
+      "default": 600000,
+      "type": "integer",
+      "x-unit": "min"
     },
     "operation_cost": {
       "description": "Operating cost of generation. or MarketBidCost; default PSY.HydroGenerationCost(nothing)",
@@ -131,27 +131,27 @@
       "$ref": "../../Core/common.json#/definitions/TurbinePump"
     },
     "transition_time": {
-      "description": "Transition time to switch into the specific mode. Units: h.",
+      "description": "Transition time to switch into the specific mode. Units: min.",
       "default": {
-        "turbine": 0.0,
-        "pump": 0.0
+        "turbine": 0,
+        "pump": 0
       },
-      "$ref": "../../Core/common.json#/definitions/TurbinePump",
-      "x-unit": "h"
+      "$ref": "../../Core/common.json#/definitions/TurbinePumpMinutes",
+      "x-unit": "min"
     },
     "minimum_time": {
-      "description": "Minimum operating time for the specific mode. Units: h.",
+      "description": "Minimum operating time for the specific mode. Units: min.",
       "default": {
-        "turbine": 0.0,
-        "pump": 0.0
+        "turbine": 0,
+        "pump": 0
       },
-      "$ref": "../../Core/common.json#/definitions/TurbinePump",
-      "x-unit": "h"
+      "$ref": "../../Core/common.json#/definitions/TurbinePumpMinutes",
+      "x-unit": "min"
     },
     "travel_time": {
-      "description": "Downstream (from reservoir into turbine) travel time. Units: h.",
-      "type": "number",
-      "x-unit": "h"
+      "description": "Downstream (from reservoir into turbine) travel time. Units: min.",
+      "type": "integer",
+      "x-unit": "min"
     },
     "conversion_factor": {
       "description": "Conversion factor from flow/volume to energy: m^3 -> p.u-hr. Units: 1.",

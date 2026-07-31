@@ -602,6 +602,21 @@
       "title": "MinMax",
       "type": "object"
     },
+    "MinMaxMinutes": {
+      "description": "A min/max pair of operational durations in whole minutes. Integer-typed counterpart to `MinMax`, used where the bounds are scheduling durations rather than continuous quantities.",
+      "properties": {
+        "max": {
+          "title": "Max",
+          "type": "integer"
+        },
+        "min": {
+          "title": "Min",
+          "type": "integer"
+        }
+      },
+      "title": "MinMaxMinutes",
+      "type": "object"
+    },
     "PiecewiseLinearData": {
       "properties": {
         "function_type": {
@@ -837,6 +852,32 @@
       "title": "StartUpStages",
       "type": "object"
     },
+    "StartUpStagesMinutes": {
+      "description": "Per-temperature-stage start-up durations in whole minutes. Integer-typed counterpart to `StartUpStages`, which stays real-valued because it also carries start-up costs. `startup_stages_type` is retained for field-for-field parity with the PowerSystems.jl `StartUpStages` struct, which backs both uses.",
+      "properties": {
+        "startup_stages_type": {
+          "const": "STAGES",
+          "type": "string",
+          "default": "STAGES"
+        },
+        "cold": {
+          "type": "integer"
+        },
+        "hot": {
+          "type": "integer"
+        },
+        "warm": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "hot",
+        "warm",
+        "cold"
+      ],
+      "title": "StartUpStagesMinutes",
+      "type": "object"
+    },
     "StorageCost": {
       "description": "Cost representation for storage units",
       "properties": {
@@ -1035,22 +1076,39 @@
       "title": "TurbinePump",
       "type": "object"
     },
+    "TurbinePumpMinutes": {
+      "description": "A turbine/pump pair of operational durations in whole minutes. Integer-typed counterpart to `TurbinePump`, which stays real-valued for power and flow quantities.",
+      "properties": {
+        "turbine": {
+          "type": "integer"
+        },
+        "pump": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "turbine",
+        "pump"
+      ],
+      "title": "TurbinePumpMinutes",
+      "type": "object"
+    },
     "TwoTerminalLoss": {
       "title": "TwoTerminalLoss",
       "discriminator": {
         "mapping": {
           "INCREMENTAL": "#/definitions/IncrementalCurve",
           "INPUT_OUTPUT": "#/definitions/InputOutputCurve"
-        },  
+        },
         "propertyName": "curve_type"
-      },  
+      },
       "oneOf": [
-        {   
+        {
           "$ref": "#/definitions/InputOutputCurve"
-        },  
-        {   
+        },
+        {
           "$ref": "#/definitions/IncrementalCurve"
-        }   
+        }
       ],
       "default": {
         "curve_type": "INPUT_OUTPUT",
@@ -1088,6 +1146,25 @@
         "down"
       ],
       "title": "UpDown",
+      "type": "object"
+    },
+    "UpDownMinutes": {
+      "description": "An up/down pair of operational durations in whole minutes. Integer-typed counterpart to `UpDown`, which stays real-valued because it also carries ramp limits in MW/min.",
+      "properties": {
+        "down": {
+          "title": "Down",
+          "type": "integer"
+        },
+        "up": {
+          "title": "Up",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "up",
+        "down"
+      ],
+      "title": "UpDownMinutes",
       "type": "object"
     },
     "ValueCurve": {
