@@ -89,7 +89,7 @@
               "proportional_term": 0
             },
             "input_at_zero": 0
-          },  
+          },
           "$ref": "#/definitions/InputOutputCurve"
         }
       },
@@ -650,6 +650,8 @@
         "N2O",
         "NOX",
         "SO2",
+        "CO",
+        "VOC",
         "PM25",
         "PM10",
         "HG",
@@ -761,7 +763,7 @@
                 "proportional_term": 0
               },
               "input_at_zero": 0
-            } 
+            }
           },
           "$ref": "#/definitions/CostCurve"
         },
@@ -983,18 +985,18 @@
           "discriminator": {
             "mapping": {
               "STAGES": "#/definitions/StartUpStages"
-            },  
+            },
             "propertyName": "startup_stages_type"
-          },  
+          },
           "description": "Start-up cost can take linear or multi-stage cost",
           "oneOf": [
-            {   
+            {
               "type": "number"
             },
-            {   
+            {
               "$ref": "#/definitions/StartUpStages"
             }
-          ]   
+          ]
         },
         "variable": {
           "$ref": "#/definitions/ProductionVariableCostCurve"
@@ -1047,10 +1049,10 @@
           "function_type": "LINEAR",
           "constant_term": 0,
           "proportional_term": 0
-        }, 
+        },
         "input_at_zero": 0
       },
-      "type": "object"  
+      "type": "object"
     },
     "UnitSystem": {
       "enum": [
@@ -1103,28 +1105,28 @@
       "type": "object"
     },
     "TechnologyFinancialData": {
-        "properties": {
-          "capital_recovery_period": {
-              "type": "integer"
-          },
-          "technology_base_year": {
-              "type": "integer"
-          },
-          "debt_fraction": {
-              "type": "number"
-          },
-          "debt_rate": {
-              "type": "number"
-          },
-          "return_on_equity": {
-              "type": "number"
-          },
-          "tax_rate": {
-              "type": "number"
-          }
+      "properties": {
+        "capital_recovery_period": {
+          "type": "integer"
         },
-        "title": "TechnologyFinancialData",
-        "type": "object"
+        "technology_base_year": {
+          "type": "integer"
+        },
+        "debt_fraction": {
+          "type": "number"
+        },
+        "debt_rate": {
+          "type": "number"
+        },
+        "return_on_equity": {
+          "type": "number"
+        },
+        "tax_rate": {
+          "type": "number"
+        }
+      },
+      "title": "TechnologyFinancialData",
+      "type": "object"
     },
     "XY_Coords": {
       "properties": {

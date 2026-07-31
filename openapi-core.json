@@ -146,6 +146,9 @@
       "GeographicInfo": {
         "$ref": "Core/SupplementalAttributes/GeographicInfo.json"
       },
+      "SupplementalAttributeAssociation": {
+        "$ref": "Core/SupplementalAttributes/SupplementalAttributeAssociation.json"
+      },
       "TimeSeriesAssociation": {
         "$ref": "Core/TimeSeries/TimeSeriesAssociation.json"
       },

@@ -25,9 +25,9 @@
       "x-unit": "MVAr"
     },
     "max_flow": {
-      "description": "Maximum allowable flow on the generic impedance. Per-unit on system base. Units: pu.",
+      "description": "Maximum allowable flow on the generic impedance. Units: MW.",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit": "MW"
     },
     "arc": {
       "description": "An `Arc` defining this line `from` a bus `to` another bus.",
