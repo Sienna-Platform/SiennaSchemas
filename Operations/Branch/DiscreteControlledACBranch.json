@@ -38,15 +38,6 @@
       "type": "number",
       "x-unit": "pu"
     },
-    "b": {
-      "description": "Shunt susceptance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value. Per-unit on system base. Units: pu.",
-      "default": {
-        "from": 0.0,
-        "to": 0.0
-      },
-      "$ref": "../../Core/common.json#/definitions/FromTo",
-      "x-unit": "pu"
-    },
     "rating": {
       "description": "Thermal rating. Flow on the branch must be between -`rating` and `rating`. Units: MVA.",
       "type": "number",
@@ -79,15 +70,6 @@
         "OPEN",
         "CLOSED"
       ]
-    },
-    "g": {
-      "description": "Shunt conductance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value. Per-unit on system base. Units: pu.",
-      "default": {
-        "from": 0.0,
-        "to": 0.0
-      },
-      "$ref": "../../Core/common.json#/definitions/FromTo",
-      "x-unit": "pu"
     }
   },
   "required": [
