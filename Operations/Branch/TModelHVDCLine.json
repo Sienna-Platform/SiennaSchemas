@@ -28,23 +28,27 @@
       "default": "NATURAL_UNITS",
       "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
     },
+    "base_current": {
+      "description": "Base current for per-unitization of this line's per-unit fields — this DC line per-unitizes against a current base, not a power base. Units: A.",
+      "type": "number",
+      "x-unit": "A"
+    },
     "r": {
-      "description": "Total series resistance, split equally on both sides of the shunt capacitance. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
+      "description": "Total series resistance, split equally on both sides of the shunt capacitance. Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
-        "SYSTEM_BASE": "pu",
         "NATURAL_UNITS": "ohm",
         "DEVICE_BASE": "pu"
       }
     },
     "l": {
-      "description": "Total series inductance, split equally on both sides of the shunt capacitance. Per-unit on system base. Units: pu.",
+      "description": "Total series inductance, split equally on both sides of the shunt capacitance. Per-unit on this line's `base_current`. Units: pu.",
       "type": "number",
       "x-unit": "pu"
     },
     "c": {
-      "description": "Shunt capacitance. Per-unit on system base. Units: pu.",
+      "description": "Shunt capacitance. Per-unit on this line's `base_current`. Units: pu.",
       "type": "number",
       "x-unit": "pu"
     },
@@ -66,6 +70,7 @@
     "active_power_flow",
     "arc",
     "r",
+    "base_current",
     "l",
     "c",
     "active_power_limits_from",

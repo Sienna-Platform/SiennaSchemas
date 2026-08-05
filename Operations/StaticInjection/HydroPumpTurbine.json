@@ -65,7 +65,7 @@
     },
     "time_limits": {
       "description": "Minimum up and minimum down time limits. in psy5 a required param with an option to be nothing Units: min.",
-      "$ref": "../../Core/common.json#/definitions/UpDownMinutes",
+      "$ref": "../../Core/common.json#/definitions/UpDown",
       "x-unit": "min"
     },
     "base_power": {
@@ -85,8 +85,8 @@
     },
     "time_at_status": {
       "description": "Time the generator has been on or off, as indicated by `status`. default is PowerSystems.jl's INFINITE_TIME sentinel (1e4 hours, 600000 minutes). Units: min.",
-      "default": 600000,
-      "type": "integer",
+      "default": 600000.0,
+      "type": "number",
       "x-unit": "min"
     },
     "operation_cost": {
@@ -133,25 +133,29 @@
     "transition_time": {
       "description": "Transition time to switch into the specific mode. Units: min.",
       "default": {
-        "turbine": 0,
-        "pump": 0
+        "turbine": 0.0,
+        "pump": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/TurbinePumpMinutes",
+      "$ref": "../../Core/common.json#/definitions/TurbinePump",
       "x-unit": "min"
     },
     "minimum_time": {
       "description": "Minimum operating time for the specific mode. Units: min.",
       "default": {
-        "turbine": 0,
-        "pump": 0
+        "turbine": 0.0,
+        "pump": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/TurbinePumpMinutes",
+      "$ref": "../../Core/common.json#/definitions/TurbinePump",
       "x-unit": "min"
     },
     "travel_time": {
-      "description": "Downstream (from reservoir into turbine) travel time. Units: min.",
-      "type": "integer",
-      "x-unit": "min"
+      "description": "Downstream (from reservoir into turbine) travel time. Set to `null` if not applicable. Units: min.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "x-unit": "min",
+      "default": null
     },
     "conversion_factor": {
       "description": "Conversion factor from flow/volume to energy: m^3 -> p.u-hr. Units: 1.",

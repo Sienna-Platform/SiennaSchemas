@@ -50,27 +50,25 @@
     },
     "parameter_units": {
       "description": "Unit basis for this source's impedance fields (R_th, X_th).",
-      "default": "SYSTEM_BASE",
+      "default": "DEVICE_BASE",
       "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
     },
     "R_th": {
-      "description": "Source Thevenin resistance. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
+      "description": "Source Thevenin resistance. Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
-        "SYSTEM_BASE": "pu",
         "NATURAL_UNITS": "ohm",
         "DEVICE_BASE": "pu"
       }
     },
     "X_th": {
-      "description": "Source Thevenin reactance. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
+      "description": "Source Thevenin reactance. Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
-        "SYSTEM_BASE": "pu",
         "NATURAL_UNITS": "ohm",
         "DEVICE_BASE": "pu"
       }

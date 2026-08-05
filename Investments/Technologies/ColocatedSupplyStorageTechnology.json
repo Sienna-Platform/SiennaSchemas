@@ -100,7 +100,7 @@
     },
     "duration_limits": {
       "description": "Minimum and maximum duration limits for the storage component (minutes). Units: min.",
-      "$ref": "../../Core/common.json#/definitions/MinMaxMinutes",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
       "x-unit": "min"
     },
     "efficiency_storage": {

@@ -16,11 +16,11 @@
     },
     "admittance_units": {
       "description": "Unit basis for the magnetizing_shunt admittance.",
-      "default": "SYSTEM_BASE",
+      "default": "DEVICE_BASE",
       "$ref": "../../Core/common.json#/definitions/AdmittanceUnitBasis"
     },
     "magnetizing_shunt": {
-      "description": "Magnetizing shunt admittance referenced to the circuit's `base_voltage_primary`. Units: per admittance_units — SYSTEM_BASE: pu, NATURAL_UNITS: S, DEVICE_MVAR: MVAr, DEVICE_BASE: pu .",
+      "description": "Magnetizing shunt admittance referenced to the circuit's `base_voltage_primary`. Units: per admittance_units — NATURAL_UNITS: S, DEVICE_MVAR: MVAr, DEVICE_BASE: pu .",
       "default": {
         "real": 0.0,
         "imag": 0.0
@@ -28,7 +28,6 @@
       "$ref": "../../Core/common.json#/definitions/ComplexNumber",
       "x-unit-discriminator": "admittance_units",
       "x-units": {
-        "SYSTEM_BASE": "pu",
         "NATURAL_UNITS": "S",
         "DEVICE_MVAR": "MVAr",
         "DEVICE_BASE": "pu"

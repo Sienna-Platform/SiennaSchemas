@@ -79,8 +79,8 @@
       "type": "string"
     },
     "VoltageUnitBasis": {
-      "description": "Unit basis a voltage setpoint is stored in. SYSTEM_BASE: per-unit on the bus base voltage (PSS/E RAW native for FACTS VSET). NATURAL_UNITS: kilovolts. DEVICE_BASE: per-unit on the component's own device base (MVA and voltage), which is what PSS/E supplies for DC-line converters and CZ=2 transformer windings.",
-      "enum": ["SYSTEM_BASE", "NATURAL_UNITS", "DEVICE_BASE"],
+      "description": "Unit basis a voltage setpoint is stored in. NATURAL_UNITS: kilovolts. DEVICE_BASE: per-unit on the component's own base voltage (the connected bus's base voltage for AC setpoints — PSS/E RAW native for FACTS VSET — and the device voltage base PSS/E supplies for DC-line converters and CZ=2 transformer windings). There is no separate system-base option: bus-base per-unit is the device base for voltage.",
+      "enum": ["NATURAL_UNITS", "DEVICE_BASE"],
       "title": "VoltageUnitBasis",
       "type": "string"
     },

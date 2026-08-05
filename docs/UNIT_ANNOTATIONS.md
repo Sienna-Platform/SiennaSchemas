@@ -27,14 +27,16 @@ A single unit string for a numeric property. The value is either:
   `"MMBtu/MWh"`), or
 - the literal `"pu"` (per-unit).
 
-A bare `"pu"` with no `x-unit-base` means the value is on the **system base**.
-For the four branch-impedance quantities (Resistance, Reactance, Susceptance,
-Conductance), `pu` **is a registered vocabulary unit** (`to_default: null`, since the
-pu→natural conversion depends on the system base rather than a fixed factor). It is one
-of two discriminated storage options in the downstream registry: the schema annotates
-the PSY-native `pu` (system-base) representation, while GridDB stores each branch
-parameter in either per-unit or natural units and records which per row via
-`transmission_lines.parameter_units` (`SYSTEM_BASE` → `pu`; `NATURAL_UNITS` → `ohm`/`S`).
+A bare `"pu"` with no `x-unit-base` means the value is per-unit on the component's
+own recorded base (`base_power`, or `base_current` for `TModelHVDCLine`); there is no
+system-base option — components whose per-unit data was historically on the system base
+record that base in `base_power`. For the four branch-impedance quantities (Resistance,
+Reactance, Susceptance, Conductance), `pu` **is a registered vocabulary unit**
+(`to_default: null`, since the pu→natural conversion depends on the recorded base rather
+than a fixed factor). It is one of two discriminated storage options in the downstream
+registry: GridDB stores each branch parameter in either per-unit or natural units and
+records which per row via `transmission_lines.parameter_units` (`DEVICE_BASE` → `pu`;
+`NATURAL_UNITS` → `ohm`/`S`).
 Elsewhere, `"pu"` remains purely an annotation channel; no other quantity registers `pu`.
 
 ```json
@@ -112,9 +114,9 @@ An `x-units` **value** may therefore be either a unit string (leaf) or a nested
   "x-units": {
     "DC_POWER": "MW",
     "DC_VOLTAGE":       { "x-unit-discriminator": "voltage_units",
-                          "x-units": { "SYSTEM_BASE": "pu", "NATURAL_UNITS": "kV" } },
+                          "x-units": { "DEVICE_BASE": "pu", "NATURAL_UNITS": "kV" } },
     "DC_VOLTAGE_DROOP": { "x-unit-discriminator": "voltage_units",
-                          "x-units": { "SYSTEM_BASE": "pu", "NATURAL_UNITS": "kV" } }
+                          "x-units": { "DEVICE_BASE": "pu", "NATURAL_UNITS": "kV" } }
   }
 }
 ```
@@ -194,7 +196,7 @@ annotated property's description is not exactly the canonical form.
 - **DB / interchange carry natural units** (decision **D2**), with one
   deliberate exception: branch electrical parameters (`r`/`x`/`b`/`g`) may be
   stored in per-unit *or* natural units, and the storage layer records which
-  per row (GridDB `transmission_lines.parameter_units`: `SYSTEM_BASE` → `pu`,
+  per row (GridDB `transmission_lines.parameter_units`: `DEVICE_BASE` → `pu`,
   `NATURAL_UNITS` → `ohm`/`S`). For every other quantity the DB stores natural
   units only and `"pu"` is a model-layer annotation, not a stored unit.
 - **Percent is banned.** Fractions and dimensionless quantities use the unit

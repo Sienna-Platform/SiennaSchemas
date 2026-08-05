@@ -17,6 +17,11 @@ Output contract:
   MISSING STRUCT <Title>        schema component with no PSY struct
   FIELD DRIFT <Name>: psy_only=[...] schema_only=[...]
   DEFAULT DRIFT <Name>.<field>: psy=<v> schema=<v>   numeric default mismatch
+  CONVERTER DRIFT missing <Type>       registered hand-written but no from_openapi found
+  CONVERTER DRIFT unregistered <Type>  from_openapi found but not registered anywhere
+  CONVERTER DRIFT overlap <Type>       both openapi_type-annotated and hand-written registered
+  UNIT DRIFT <Type>.<field>: conversion_unit=<v> x-unit=<v>   family mismatch
+  UNIT DRIFT <Type>.<field>: openapi_unit=<v> x-unit=<v>      pu-identity mismatch
   SUMMARY: N missing schemas, M unexplained drifts
 Exit 1 if N + M > 0.
 """
@@ -90,29 +95,32 @@ DROPPED_FIELDS = {
     "services",
 }
 
-# Unicode field names transliterated to ASCII property names.
+# PSY field names respelled as schema property names: unicode transliterated
+# to ASCII, and object references renamed to the integer-id `_id` convention
+# (`from`/`to` exist only on Arc, so the global map is safe).
 TRANSLITERATION = {
     "α": "alpha",
     "β": "beta",
     "α_primary": "alpha_primary",
     "α_secondary": "alpha_secondary",
     "α_tertiary": "alpha_tertiary",
+    "from": "from_id",
+    "to": "to_id",
 }
 
 # PSY encodes reserve direction in the Reserve{T} type parameter; schemas
-# flatten it into a reserve_direction property.
+# flatten it into a reserve_direction property. OfflineReserve is upward-only
+# (no ReserveDirection type parameter), so it is deliberately excluded.
 RESERVE_DIRECTION_COMPONENTS = {
-    "ConstantReserve",
-    "ConstantReserveGroup",
-    "VariableReserve",
-    "VariableReserveNonSpinning",
+    "OnlineReserve",
+    "GroupReserve",
 }
 
 # PSY relationship/map fields normalized into association components
 # (PlantAssociation / CombinedCycleAssociation) instead of properties.
 ASSOCIATION_NORMALIZED = {
     "AGC": {"reserves"},
-    "ConstantReserveGroup": {"contributing_services"},
+    "GroupReserve": {"contributing_services"},
 }
 PLANT_SA_STRUCTS = {
     "ThermalPowerPlant",
@@ -124,25 +132,20 @@ PLANT_SA_STRUCTS = {
 
 # Deliberate schemas-ahead-of-PSY properties.
 # Fields intentionally present only in the schema, with no PowerSystems.jl
-# counterpart. The unit-basis discriminators belong here: under the flexible
-# unit-basis design PSY stores each value in a single (per-unit) basis, while the
-# schema/GridDB layer records the storage basis per row via these discriminator
-# properties (see SiennaGridDB flexible-unit-basis plan). They have no PSY field.
-# base_power on Line/MonitoredLine/GenericArcImpedance is the SYSTEM base,
+# counterpart. Unit-basis discriminators (any property whose $ref ends in
+# "UnitBasis") are exempted structurally in explained_schema_only, so they
+# never need an entry here. base_power on the branch types is the SYSTEM base,
 # recorded per component in lieu of a system-level table/JSON entry — a
 # deliberate schema-only exception; PSY stores no such field and never will.
+# TModelHVDCLine is the exception among the branches: it per-unitizes against
+# a base current, not a power base.
 SCHEMA_AHEAD = {
-    "Source": {"base_voltage", "parameter_units"},
-    "TModelHVDCLine": {"parameter_units"},
-    "TwoTerminalLCCLine": {"parameter_units", "dc_voltage_units"},
-    "TwoTerminalVSCLine": {"admittance_units", "voltage_units"},
-    "FixedAdmittance": {"admittance_units"},
-    "SwitchedAdmittance": {"admittance_units"},
-    "FACTSControlDevice": {"voltage_setpoint_units"},
-    "InterconnectingConverter": {"voltage_setpoint_units"},
+    "Source": {"base_voltage"},
     "Line": {"base_power"},
     "MonitoredLine": {"base_power"},
-    "GenericArcImpedance": {"base_power", "parameter_units"},
+    "GenericArcImpedance": {"base_power"},
+    "DiscreteControlledACBranch": {"base_power"},
+    "TModelHVDCLine": {"base_current"},
 }
 
 # PSY fields that are constructor-managed runtime state, never serialized, so
@@ -159,6 +162,11 @@ PSY_INTERNAL = {
 SCHEMA_ONLY_COMPONENTS = {
     "CombinedCycleAssociation",
     "PlantAssociation",
+    # Reserve/service participation is normalized to (service_id, entity_id) rows
+    # here. PowerSystems keeps the same relation on the device side as
+    # Device.services, so there is no PSY struct to match.
+    "ServiceAssociation",
+    "SupplementalAttributeAssociation",
     "TimeSeriesAssociation",
 }
 
@@ -175,8 +183,95 @@ HAND_WRITTEN = {
     "CombinedCycleFractional": "src/plant_attribute.jl",
     "HydroPowerPlant": "src/plant_attribute.jl",
     "RenewablePowerPlant": "src/plant_attribute.jl",
+    # OnlineReserve/OfflineReserve/GroupReserve are parametric (ReserveDirection,
+    # and for OnlineReserve/OfflineReserve also the cost-curve unit type), so the
+    # struct entry the descriptor carries lives under `struct_validation_descriptors`
+    # (field-validation metadata only), not `auto_generated_structs` — there is no
+    # generated struct file, same as the supplemental attributes above.
+    "OnlineReserve": "src/models/reserves.jl",
+    "OfflineReserve": "src/models/reserves.jl",
+    "GroupReserve": "src/models/reserves.jl",
 }
 IS_GEOGRAPHIC = ("GeographicInfo", "src/geographic_supplemental_attribute.jl")
+
+# Hand-written `from_openapi` CONVERTERS (src/openapi_handwritten_converters.jl):
+# a DIFFERENT category from HAND_WRITTEN above. Every one of these has a normal
+# generated struct (an `auto_generated_structs` entry, or — for the three
+# reserves — a `struct_validation_descriptors` entry); what's hand-written is
+# only the PO<->PSY conversion function, because the IS generator's
+# `openapi_type` mechanism cannot emit it (field-name mismatch, non-scalar
+# field, missing base_power anchor, or a parametric struct — see the header
+# comment of openapi_handwritten_converters.jl for the reason per type).
+# Derived from source (2026-08-05), not from the converter-plan's progress log,
+# which stops at 12 and is stale (omits FixedAdmittance, added later).
+HAND_WRITTEN_CONVERTERS = {
+    "Arc",
+    "Area",
+    "LoadZone",
+    "Line",
+    "TransformerCircuit",
+    "TwoWindingTransformer",
+    "FixedAdmittance",
+    "HydroReservoir",
+    "EnergyReservoirStorage",
+    "TwoTerminalGenericHVDCLine",
+    "OnlineReserve",
+    "OfflineReserve",
+    "GroupReserve",
+}
+HANDWRITTEN_CONVERTERS_REL_PATH = "src/openapi_handwritten_converters.jl"
+
+
+def derive_handwritten_converter_types(psy_path):
+    """Type names with an actual `from_openapi(::Type{X}, ...)` method in
+    `src/openapi_handwritten_converters.jl`. Returns None when the file is
+    absent (partial checkout), so callers can skip the drift check instead of
+    reporting spurious CONVERTER DRIFT lines."""
+    full = os.path.join(psy_path, HANDWRITTEN_CONVERTERS_REL_PATH)
+    if not os.path.exists(full):
+        return None
+    with open(full, encoding="utf-8") as f:
+        text = f.read()
+    return set(re.findall(r"from_openapi\(\s*::Type\{(\w+)\}", text))
+
+
+def derive_openapi_annotated_types(descriptor):
+    """Struct names carrying an `openapi_type` annotation on their
+    `auto_generated_structs` entry: the generated-converter half of converter
+    coverage, complementing HAND_WRITTEN_CONVERTERS."""
+    return {
+        entry["struct_name"]
+        for entry in descriptor["auto_generated_structs"]
+        if "openapi_type" in entry
+    }
+
+
+# converter-plan §8's three quantity families (POWER/IMPEDANCE/ADMITTANCE),
+# named by the descriptor's `conversion_unit` value. `Voltage`/`Angle` fields
+# use a different (V_base-anchored) mechanism, not `needs_conversion`+
+# `conversion_unit`, so they are not part of this table.
+CONVERSION_UNIT_QUANTITY_TYPES = {
+    ":mva": {"ActivePower", "ReactivePower", "ApparentPower", "ActivePowerChangeRate"},
+    ":ohm": {"Resistance", "Reactance", "Impedance"},
+    ":siemens": {"Conductance", "Susceptance"},
+}
+
+
+def load_conversion_unit_families():
+    """Map each `conversion_unit` to the set of natural (non-"pu") schema
+    `x-unit` strings its quantity family allows, sourced from Core/units.json
+    so the mapping cannot drift from the vocabulary independently of it."""
+    units_path = os.path.join(REPO_ROOT, "Core", "units.json")
+    with open(units_path, encoding="utf-8") as f:
+        vocab = json.load(f)
+    families = {}
+    for conversion_unit, quantity_types in CONVERSION_UNIT_QUANTITY_TYPES.items():
+        families[conversion_unit] = {
+            entry["unit"]
+            for entry in vocab["allowed_units"]
+            if entry["quantity_type"] in quantity_types and entry["unit"] != "pu"
+        }
+    return families
 
 
 def julia_struct_fields(path, struct_name):
@@ -202,9 +297,12 @@ def julia_struct_fields(path, struct_name):
 
 
 def load_psy_structs(psy_path):
-    """Returns (structs, unresolved). Hand-written structs whose Julia source
-    is absent (partial checkout) land in `unresolved` so their schema
-    components are skipped instead of reported as spurious MISSING STRUCT."""
+    """Returns (structs, unresolved, defaults, conversions, annotated_types).
+    Hand-written structs whose Julia source is absent (partial checkout) land
+    in `unresolved` so their schema components are skipped instead of
+    reported as spurious MISSING STRUCT. `conversions` carries, for every
+    openapi_type-annotated struct only, the needs_conversion field metadata
+    (conversion_unit/openapi_unit) Task 6's unit-consistency check needs."""
     descriptor_path = os.path.join(
         psy_path, "src", "descriptors", "power_system_structs.json"
     )
@@ -213,6 +311,8 @@ def load_psy_structs(psy_path):
     dynamics_supertypes = derive_dynamics_supertypes(psy_path)
     structs = {}
     defaults = {}
+    conversions = {}
+    annotated_types = set()
     unresolved = set()
     for entry in descriptor["auto_generated_structs"]:
         if entry.get("supertype", "") in dynamics_supertypes:
@@ -228,6 +328,16 @@ def load_psy_structs(psy_path):
             for field in entry.get("fields", [])
             if "default" in field
         }
+        if "openapi_type" in entry:
+            annotated_types.add(entry["struct_name"])
+            conversions[entry["struct_name"]] = {
+                field["name"]: {
+                    "conversion_unit": field.get("conversion_unit"),
+                    "openapi_unit": field.get("openapi_unit"),
+                }
+                for field in entry.get("fields", [])
+                if field.get("needs_conversion")
+            }
     for name, rel_path in HAND_WRITTEN.items():
         full = os.path.join(psy_path, rel_path)
         fields = julia_struct_fields(full, name) if os.path.exists(full) else None
@@ -246,7 +356,7 @@ def load_psy_structs(psy_path):
         print(f"SKIP hand-written struct {is_name}: InfrastructureSystems.jl checkout not found")
     else:
         structs[is_name] = fields
-    return structs, unresolved, defaults
+    return structs, unresolved, defaults, conversions, annotated_types
 
 
 def load_schema_components():
@@ -267,7 +377,10 @@ def load_schema_components():
         title = doc.get("title")
         if title:
             props = doc.get("properties", {})
-            components[title] = set(props.keys())
+            components[title] = {
+                name: node if isinstance(node, dict) else {}
+                for name, node in props.items()
+            }
             defaults[title] = {
                 name: node["default"]
                 for name, node in props.items()
@@ -299,14 +412,89 @@ def as_number(value):
         return None
 
 
-def explained_schema_only(name, prop):
+def explained_schema_only(name, prop, node):
     if prop == "id":
         return True
     if prop == "reserve_direction" and name in RESERVE_DIRECTION_COMPONENTS:
         return True
     if prop in SCHEMA_AHEAD.get(name, set()):
         return True
+    # Unit-basis discriminators are schema-only by design: PSY stores each value
+    # in a single basis, the interchange layer records the storage basis per row.
+    if node.get("$ref", "").endswith("UnitBasis"):
+        return True
     return False
+
+
+def check_converter_coverage(psy_path, annotated_types):
+    """Converter-plan Task 6 companion: every hand-written converter's
+    declared registration (HAND_WRITTEN_CONVERTERS) must match what actually
+    exists in src/openapi_handwritten_converters.jl, in both directions, and
+    no type may be registered as both generated (openapi_type-annotated) and
+    hand-written. Returns the drift count."""
+    drifts = 0
+    actual = derive_handwritten_converter_types(psy_path)
+    if actual is None:
+        print(
+            f"SKIP converter-coverage check: {HANDWRITTEN_CONVERTERS_REL_PATH} "
+            f"not found under {psy_path}"
+        )
+        return 0
+    for name in sorted(HAND_WRITTEN_CONVERTERS - actual):
+        print(f"CONVERTER DRIFT missing {name}: registered hand-written, no from_openapi found")
+        drifts += 1
+    for name in sorted(actual - HAND_WRITTEN_CONVERTERS):
+        print(f"CONVERTER DRIFT unregistered {name}: from_openapi found, not registered")
+        drifts += 1
+    for name in sorted(HAND_WRITTEN_CONVERTERS & annotated_types):
+        print(f"CONVERTER DRIFT overlap {name}: both openapi_type-annotated and hand-written")
+        drifts += 1
+    return drifts
+
+
+def check_unit_consistency(conversions, components, families):
+    """Converter-plan Task 6: for every openapi_type-annotated PSY struct,
+    every field with needs_conversion+conversion_unit must have a schema
+    x-unit consistent with it — "pu" when the descriptor's `openapi_unit`
+    key says so (§4b amendment 1), otherwise a natural unit in the
+    conversion_unit's quantity family. The reverse direction (a schema x-unit
+    of "pu" with no matching openapi_unit key) is caught structurally: "pu"
+    is never a member of a natural-unit family, so it fails the same branch.
+    Returns the drift count; a missing plain x-unit (absent, or only a
+    discriminated x-units) is its own drift rather than silently skipped."""
+    drifts = 0
+    for struct_name, fields in sorted(conversions.items()):
+        props = components.get(struct_name)
+        if props is None:
+            continue  # MISSING SCHEMA/STRUCT already reported for this type
+        for field_name, meta in sorted(fields.items()):
+            prop = TRANSLITERATION.get(field_name, field_name)
+            node = props.get(prop)
+            if node is None:
+                continue  # FIELD DRIFT already reported for this psy_only field
+            x_unit = node.get("x-unit")
+            if x_unit is None:
+                print(
+                    f"UNIT DRIFT {struct_name}.{prop}: conversion_unit="
+                    f"{meta['conversion_unit']} but schema has no plain x-unit"
+                )
+                drifts += 1
+                continue
+            if meta.get("openapi_unit") == "pu":
+                if x_unit != "pu":
+                    print(
+                        f"UNIT DRIFT {struct_name}.{prop}: openapi_unit=pu x-unit={x_unit}"
+                    )
+                    drifts += 1
+                continue
+            natural_units = families.get(meta["conversion_unit"], set())
+            if x_unit not in natural_units:
+                print(
+                    f"UNIT DRIFT {struct_name}.{prop}: conversion_unit="
+                    f"{meta['conversion_unit']} x-unit={x_unit}"
+                )
+                drifts += 1
+    return drifts
 
 
 def main():
@@ -325,11 +513,18 @@ def main():
         print(f"SKIP: PSY checkout not found at {args.psy_path}")
         return 0
 
-    psy_structs, unresolved, psy_defaults = load_psy_structs(args.psy_path)
+    psy_structs, unresolved, psy_defaults, conversions, annotated_types = (
+        load_psy_structs(args.psy_path)
+    )
     components, schema_defaults = load_schema_components()
 
     missing_schemas = 0
     drifts = 0
+
+    drifts += check_converter_coverage(args.psy_path, annotated_types)
+    drifts += check_unit_consistency(
+        conversions, components, load_conversion_unit_families()
+    )
 
     for name in sorted(set(psy_structs) - set(components)):
         print(f"MISSING SCHEMA {name}")
@@ -348,13 +543,13 @@ def main():
         props = components[name]
         psy_only = sorted(
             field
-            for field in psy_fields - props
+            for field in psy_fields - set(props)
             if not explained_psy_only(name, field)
         )
         schema_only = sorted(
             prop
-            for prop in props - psy_fields
-            if not explained_schema_only(name, prop)
+            for prop in set(props) - psy_fields
+            if not explained_schema_only(name, prop, props[prop])
         )
         if psy_only or schema_only:
             print(f"FIELD DRIFT {name}: psy_only={psy_only} schema_only={schema_only}")

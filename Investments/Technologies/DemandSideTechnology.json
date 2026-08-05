@@ -49,12 +49,12 @@
     },
     "max_demand_delay": {
       "description": "Maximum number of minutes that demand can be deferred or delayed (minutes). Units: min.",
-      "type": "integer",
+      "type": "number",
       "x-unit": "min"
     },
     "max_demand_advance": {
       "description": "Maximum number of minutes that demand can be scheduled in advance of the original schedule (minutes). Units: min.",
-      "type": "integer",
+      "type": "number",
       "x-unit": "min"
     },
     "demand_energy_efficiency": {

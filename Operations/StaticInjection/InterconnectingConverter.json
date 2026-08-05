@@ -75,11 +75,11 @@
     },
     "voltage_setpoint_units": {
       "description": "Unit basis for the DC/AC voltage setpoints.",
-      "default": "SYSTEM_BASE",
+      "default": "DEVICE_BASE",
       "$ref": "../../Operations/common.json#/definitions/VoltageUnitBasis"
     },
     "dc_setpoint": {
-      "description": "DC-voltage target (when `dc_control` regulates DC voltage) or active-power order (otherwise). Units: per dc_control — DC_POWER: MW, DC_VOLTAGE: (per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV, DEVICE_BASE: pu), DC_VOLTAGE_DROOP: (per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV, DEVICE_BASE: pu) .",
+      "description": "DC-voltage target (when `dc_control` regulates DC voltage) or active-power order (otherwise). Units: per dc_control — DC_POWER: MW, DC_VOLTAGE: (per voltage_setpoint_units — NATURAL_UNITS: kV, DEVICE_BASE: pu), DC_VOLTAGE_DROOP: (per voltage_setpoint_units — NATURAL_UNITS: kV, DEVICE_BASE: pu) .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "dc_control",
@@ -88,25 +88,23 @@
         "DC_VOLTAGE": {
           "x-unit-discriminator": "voltage_setpoint_units",
           "x-units": {
-            "SYSTEM_BASE": "pu",
             "NATURAL_UNITS": "kV",
             "DEVICE_BASE": "pu"
           },
-          "description": "Units: per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV, DEVICE_BASE: pu ."
+          "description": "Units: per voltage_setpoint_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
         },
         "DC_VOLTAGE_DROOP": {
           "x-unit-discriminator": "voltage_setpoint_units",
           "x-units": {
-            "SYSTEM_BASE": "pu",
             "NATURAL_UNITS": "kV",
             "DEVICE_BASE": "pu"
           },
-          "description": "Units: per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV, DEVICE_BASE: pu ."
+          "description": "Units: per voltage_setpoint_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
         }
       }
     },
     "ac_setpoint": {
-      "description": "AC-voltage magnitude target (when `ac_control` regulates AC voltage) or power factor setpoint (otherwise). Units: per ac_control — AC_REACTIVE_POWER: 1, AC_VOLTAGE: (per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV, DEVICE_BASE: pu) .",
+      "description": "AC-voltage magnitude target (when `ac_control` regulates AC voltage) or power factor setpoint (otherwise). Units: per ac_control — AC_REACTIVE_POWER: 1, AC_VOLTAGE: (per voltage_setpoint_units — NATURAL_UNITS: kV, DEVICE_BASE: pu) .",
       "default": 1.0,
       "type": "number",
       "x-unit-discriminator": "ac_control",
@@ -115,11 +113,10 @@
         "AC_VOLTAGE": {
           "x-unit-discriminator": "voltage_setpoint_units",
           "x-units": {
-            "SYSTEM_BASE": "pu",
             "NATURAL_UNITS": "kV",
             "DEVICE_BASE": "pu"
           },
-          "description": "Units: per voltage_setpoint_units — SYSTEM_BASE: pu, NATURAL_UNITS: kV, DEVICE_BASE: pu ."
+          "description": "Units: per voltage_setpoint_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
         }
       }
     },

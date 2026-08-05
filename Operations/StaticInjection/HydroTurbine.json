@@ -88,7 +88,7 @@
     },
     "time_limits": {
       "description": "Minimum up and minimum down time limits. Units: min.",
-      "$ref": "../../Core/common.json#/definitions/UpDownMinutes",
+      "$ref": "../../Core/common.json#/definitions/UpDown",
       "x-unit": "min"
     },
     "outflow_limits": {
@@ -130,9 +130,13 @@
       "default": "HY"
     },
     "travel_time": {
-      "description": "Downstream (from reservoir into turbine) travel time. Units: min.",
-      "type": "integer",
-      "x-unit": "min"
+      "description": "Downstream (from reservoir into turbine) travel time. Set to `null` if not applicable. Units: min.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "x-unit": "min",
+      "default": null
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection device, if any.",

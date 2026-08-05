@@ -27,9 +27,18 @@
       "$ref": "../../Core/common.json#/definitions/StorageTech"
     },
     "storage_capacity": {
-      "description": "Maximum storage capacity (can be in units of, e.g., MWh for batteries or liters for hydrogen). When in MWh, this value divided by base_power gives an approximate duration in hours, assuming unity power factor. Units: MWh.",
+      "description": "Maximum storage capacity (can be in units of, e.g., MWh for batteries or liters for hydrogen). Divided by base_power this gives an approximate duration, assuming unity power factor: in hours under MWH, in minutes under MWMIN. Units: per energy_units — MWH: MWh, MWMIN: MWmin .",
       "type": "number",
-      "x-unit": "MWh"
+      "x-unit-discriminator": "energy_units",
+      "x-units": {
+        "MWH": "MWh",
+        "MWMIN": "MWmin"
+      }
+    },
+    "energy_units": {
+      "description": "Unit basis for `storage_capacity`. MWH is the default interchange form; MWMIN records the same energy on the minutes basis used by operational durations.",
+      "default": "MWH",
+      "$ref": "../../Core/common.json#/definitions/EnergyUnitBasis"
     },
     "storage_level_limits": {
       "description": "Minimum and maximum allowable storage levels [0, 1], which can be used to model derates or other restrictions, such as state-of-charge restrictions on battery cycling.",
@@ -107,10 +116,10 @@
       "x-unit": "MW/min"
     },
     "self_discharge": {
-      "description": "Self-discharge (leakage loss) as a fraction of the stored energy lost per hour (pu/hr of storage_capacity), modeled as E[t] = (1 - self_discharge * dt) * E[t-1]. Units: 1.",
+      "description": "Self-discharge (leakage loss) as a fraction of the stored energy lost per minute (pu/min of storage_capacity), modeled as E[t] = (1 - self_discharge * dt) * E[t-1]; dt must be on the same minutes basis. Units: 1/min.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1/min"
     },
     "standing_loss": {
       "description": "Constant standing-loss power drawn by the storage system. Reduces the effective charging power (p_in - standing_loss) and increases the power drawn from the storage when discharging (p_out + standing_loss). Units: MW.",

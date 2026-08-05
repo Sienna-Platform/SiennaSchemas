@@ -70,7 +70,7 @@
       ]
     },
     "interconnection_impedance": {
-      "description": "Impedance between the hybrid system and the grid interconnection. Per-unit on system base. Units: pu.",
+      "description": "Impedance between the hybrid system and the grid interconnection. Per-unit on `base_power`. Units: pu.",
       "$ref": "../../Core/common.json#/definitions/ComplexNumber",
       "x-unit": "pu"
     },

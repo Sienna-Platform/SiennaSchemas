@@ -131,6 +131,15 @@
       "title": "EnergyUnit",
       "type": "string"
     },
+    "EnergyUnitBasis": {
+      "description": "Unit basis a stored-energy quantity is recorded in (distinct from EnergyUnit, which names fuel energy content). MWH: megawatt-hours, the conventional interchange form. MWMIN: megawatt-minutes, consistent with the minutes basis used for operational durations, so a duration computed as energy over power comes out in minutes with no hidden factor of 60. Defaults to MWH: MWMIN is supported, not preferred.",
+      "enum": [
+        "MWH",
+        "MWMIN"
+      ],
+      "title": "EnergyUnitBasis",
+      "type": "string"
+    },
     "FdbdPnts": {
       "properties": {
         "fdbd1": {
@@ -324,9 +333,8 @@
       ]
     },
     "ImpedanceUnitBasis": {
-      "description": "Unit basis a branch/injection impedance is stored in. SYSTEM_BASE: per-unit on the system MVA/voltage base. NATURAL_UNITS: physical ohms (PSS/E RAW native for DC-line impedances). DEVICE_BASE: per-unit on the component's own device base (MVA and voltage), which is what PSS/E supplies for DC-line converters and CZ=2 transformer windings.",
+      "description": "Unit basis a branch/injection impedance is stored in. NATURAL_UNITS: physical ohms (PSS/E RAW native for DC-line impedances). DEVICE_BASE: per-unit on the component's own base (base_power MVA and voltage base); components whose per-unit data was historically on the system base record that system base in base_power, so there is no separate system-base option. PSS/E supplies device base for DC-line converters and CZ=2 transformer windings.",
       "enum": [
-        "SYSTEM_BASE",
         "NATURAL_UNITS",
         "DEVICE_BASE"
       ],
@@ -334,14 +342,22 @@
       "type": "string"
     },
     "AdmittanceUnitBasis": {
-      "description": "Unit basis a shunt admittance is stored in. SYSTEM_BASE: per-unit on the system base. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance) \u2014 PSS/E RAW native for fixed/switched shunts. DEVICE_BASE: per-unit on the component's own device base (MVA and voltage), which is what PSS/E supplies for DC-line converters and CZ=2 transformer windings \u2014 a per-unit base, not a power at unity voltage, and not an alternative spelling of DEVICE_MVAR. DEVICE_BASE does not apply to fixed or switched shunts, which have no device MVA rating; shunts use DEVICE_MVAR for their native form.",
+      "description": "Unit basis a shunt admittance is stored in. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance). DEVICE_BASE: per-unit on the component's own base (base_power MVA and voltage base) — a per-unit base, not a power at unity voltage, and not an alternative spelling of DEVICE_MVAR; components whose per-unit data was historically on the system base record that system base in base_power. Fixed and switched shunts use ShuntAdmittanceUnitBasis instead, which omits DEVICE_BASE because a shunt has no device MVA rating.",
       "enum": [
-        "SYSTEM_BASE",
         "NATURAL_UNITS",
         "DEVICE_MVAR",
         "DEVICE_BASE"
       ],
       "title": "AdmittanceUnitBasis",
+      "type": "string"
+    },
+    "ShuntAdmittanceUnitBasis": {
+      "description": "Subset of AdmittanceUnitBasis for fixed and switched shunts: omits DEVICE_BASE because a shunt has no device MVA rating to per-unitize against. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance) — PSS/E RAW native for shunts.",
+      "enum": [
+        "NATURAL_UNITS",
+        "DEVICE_MVAR"
+      ],
+      "title": "ShuntAdmittanceUnitBasis",
       "type": "string"
     },
     "ImportExportCost": {
@@ -602,21 +618,6 @@
       "title": "MinMax",
       "type": "object"
     },
-    "MinMaxMinutes": {
-      "description": "A min/max pair of operational durations in whole minutes. Integer-typed counterpart to `MinMax`, used where the bounds are scheduling durations rather than continuous quantities.",
-      "properties": {
-        "max": {
-          "title": "Max",
-          "type": "integer"
-        },
-        "min": {
-          "title": "Min",
-          "type": "integer"
-        }
-      },
-      "title": "MinMaxMinutes",
-      "type": "object"
-    },
     "PiecewiseLinearData": {
       "properties": {
         "function_type": {
@@ -852,32 +853,6 @@
       "title": "StartUpStages",
       "type": "object"
     },
-    "StartUpStagesMinutes": {
-      "description": "Per-temperature-stage start-up durations in whole minutes. Integer-typed counterpart to `StartUpStages`, which stays real-valued because it also carries start-up costs. `startup_stages_type` is retained for field-for-field parity with the PowerSystems.jl `StartUpStages` struct, which backs both uses.",
-      "properties": {
-        "startup_stages_type": {
-          "const": "STAGES",
-          "type": "string",
-          "default": "STAGES"
-        },
-        "cold": {
-          "type": "integer"
-        },
-        "hot": {
-          "type": "integer"
-        },
-        "warm": {
-          "type": "integer"
-        }
-      },
-      "required": [
-        "hot",
-        "warm",
-        "cold"
-      ],
-      "title": "StartUpStagesMinutes",
-      "type": "object"
-    },
     "StorageCost": {
       "description": "Cost representation for storage units",
       "properties": {
@@ -1076,23 +1051,6 @@
       "title": "TurbinePump",
       "type": "object"
     },
-    "TurbinePumpMinutes": {
-      "description": "A turbine/pump pair of operational durations in whole minutes. Integer-typed counterpart to `TurbinePump`, which stays real-valued for power and flow quantities.",
-      "properties": {
-        "turbine": {
-          "type": "integer"
-        },
-        "pump": {
-          "type": "integer"
-        }
-      },
-      "required": [
-        "turbine",
-        "pump"
-      ],
-      "title": "TurbinePumpMinutes",
-      "type": "object"
-    },
     "TwoTerminalLoss": {
       "title": "TwoTerminalLoss",
       "discriminator": {
@@ -1122,8 +1080,8 @@
       "type": "object"
     },
     "UnitSystem": {
+      "description": "Unit basis curve power values are stored in. DEVICE_BASE: per-unit on the component's own base_power. NATURAL_UNITS: MW/MVA. There is no system-base option: per-unit data historically on the system base records that base in the component's base_power and rides as DEVICE_BASE.",
       "enum": [
-        "SYSTEM_BASE",
         "DEVICE_BASE",
         "NATURAL_UNITS"
       ],
@@ -1146,25 +1104,6 @@
         "down"
       ],
       "title": "UpDown",
-      "type": "object"
-    },
-    "UpDownMinutes": {
-      "description": "An up/down pair of operational durations in whole minutes. Integer-typed counterpart to `UpDown`, which stays real-valued because it also carries ramp limits in MW/min.",
-      "properties": {
-        "down": {
-          "title": "Down",
-          "type": "integer"
-        },
-        "up": {
-          "title": "Up",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "up",
-        "down"
-      ],
-      "title": "UpDownMinutes",
       "type": "object"
     },
     "ValueCurve": {

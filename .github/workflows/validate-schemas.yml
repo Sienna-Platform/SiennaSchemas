@@ -17,6 +17,15 @@ jobs:
       - name: Install dependencies
         run: pip install jsonschema
 
+      # NOTE: without a SiennaGridDB checkout the (quantity_type, unit) pairing
+      # rule is SKIPPED, not satisfied — this step passing does not prove that
+      # rule holds. Enable it by checking GridDB out and passing --griddb-path
+      # once GridDB re-types its time columns to OperationalDuration /
+      # CalendarPeriod; until then the rule fails on known, tracked drift:
+      #
+      #   - uses: actions/checkout@v4
+      #     with: { repository: Sienna-Platform/SiennaGridDB, path: SiennaGridDB, fetch-depth: 1 }
+      #   - run: python scripts/validate_units.py --griddb-path SiennaGridDB
       - name: Validate unit annotations
         run: python scripts/validate_units.py
 

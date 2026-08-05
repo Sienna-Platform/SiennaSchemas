@@ -93,7 +93,7 @@
     },
     "duration_limits": {
       "description": "Minimum and maximum duration limits (energy to discharge capacity ratio) for a storage technology (minutes). Units: min.",
-      "$ref": "../../Core/common.json#/definitions/MinMaxMinutes",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
       "x-unit": "min"
     },
     "efficiency": {

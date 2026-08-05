@@ -96,16 +96,30 @@ def load_allowed_units():
     units = load_json(UNITS_JSON)
     allowed = {a["unit"] for a in units["allowed_units"]}
     allowed.add("pu")
+    _check_fraction_per_time_basis(units)
     return allowed
+
+
+def _check_fraction_per_time_basis(units):
+    """FractionPerTime multiplies the simulation step, so its time basis must be
+    the one OperationalDuration uses — re-basing either alone silently corrupts
+    every stored decay rate by the ratio of the two."""
+    defaults = {q["name"]: q["default_unit"] for q in units["quantity_types"]}
+    fpt = defaults.get("FractionPerTime")
+    opd = defaults.get("OperationalDuration")
+    if fpt is not None and opd is not None and fpt != f"1/{opd}":
+        raise SystemExit(
+            f"units.json: FractionPerTime default_unit '{fpt}' must be "
+            f"'1/{opd}' to match OperationalDuration's basis"
+        )
 
 
 # Optional sibling SiennaGridDB checkout carrying the DB-owned
 # column -> (quantity_type, unit) conventions. When present, it lets rule 2
 # tighten the flat vocabulary check into a (quantity_type, unit) pairing check
 # for any schema property whose name matches a registered DB column.
-COLUMN_CONVENTIONS = (
-    REPO_ROOT / ".." / "SiennaGridDB" / "schema" / "column_conventions.json"
-)
+DEFAULT_GRIDDB_PATH = REPO_ROOT / ".." / "SiennaGridDB"
+COLUMN_CONVENTIONS_RELATIVE = Path("schema") / "column_conventions.json"
 
 
 def load_quantity_units():
@@ -117,12 +131,14 @@ def load_quantity_units():
     return q2u
 
 
-def load_column_allowed_units():
+def load_column_allowed_units(griddb_path=None):
     """Map DB column name -> set of units the registry allows for that column's
-    quantity_type(s), sourced from the sibling SiennaGridDB
-    column_conventions.json crossed with units.json. Returns {} when the sibling
-    checkout is absent (the tighter pairing check is then simply skipped)."""
-    path = COLUMN_CONVENTIONS.resolve()
+    quantity_type(s), sourced from SiennaGridDB's column_conventions.json
+    crossed with units.json. Returns {} when the checkout is absent (the tighter
+    pairing check is then simply skipped), so pass --griddb-path in CI if the
+    rule is meant to run — a missing path makes this check silently vacuous."""
+    root = Path(griddb_path) if griddb_path else DEFAULT_GRIDDB_PATH
+    path = (root / COLUMN_CONVENTIONS_RELATIVE).resolve()
     if not path.exists():
         return {}
     q2u = load_quantity_units()
@@ -549,6 +565,11 @@ def main():
     group.add_argument("--check-descriptions", action="store_true",
                        help="Exit non-zero if any annotated property lacks its "
                             "canonical Units: sentence (CI check).")
+    parser.add_argument("--griddb-path", default=None,
+                        help="Path to the SiennaGridDB checkout supplying "
+                             "schema/column_conventions.json for the "
+                             "(quantity_type, unit) pairing rule. Defaults to "
+                             "../SiennaGridDB; the rule is skipped when absent.")
     args = parser.parse_args()
 
     files = collect_schema_files()
@@ -556,12 +577,12 @@ def main():
         return run_fix_descriptions(files)
     if args.check_descriptions:
         return run_check_descriptions(files)
-    return run_validation(files)
+    return run_validation(files, args.griddb_path)
 
 
-def run_validation(files):
+def run_validation(files, griddb_path=None):
     allowed_units = load_allowed_units()
-    col_allowed = load_column_allowed_units()
+    col_allowed = load_column_allowed_units(griddb_path)
     failures = []
 
     for path in files:

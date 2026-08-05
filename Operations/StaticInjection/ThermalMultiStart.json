@@ -67,12 +67,12 @@
     },
     "time_limits": {
       "description": "Minimum up and minimum down time limits. Units: min.",
-      "$ref": "../../Core/common.json#/definitions/UpDownMinutes",
+      "$ref": "../../Core/common.json#/definitions/UpDown",
       "x-unit": "min"
     },
     "start_time_limits": {
       "description": "Time limits for start-up based on turbine temperature. Units: min.",
-      "$ref": "../../Core/common.json#/definitions/StartUpStagesMinutes",
+      "$ref": "../../Core/common.json#/definitions/StartUpStages",
       "x-unit": "min"
     },
     "start_types": {
@@ -90,8 +90,8 @@
     },
     "time_at_status": {
       "description": "Time the generator has been on or off, as indicated by `status`. Units: min.",
-      "default": 600000,
-      "type": "integer",
+      "default": 600000.0,
+      "type": "number",
       "x-unit": "min"
     },
     "must_run": {
