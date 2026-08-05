@@ -32,15 +32,6 @@
       "CombinedCycleFractional": {
         "$ref": "Operations/SupplementalAttributes/CombinedCycleFractional.json"
       },
-      "ConstantReserve": {
-        "$ref": "Operations/Service/ConstantReserve.json"
-      },
-      "ConstantReserveGroup": {
-        "$ref": "Operations/Service/ConstantReserveGroup.json"
-      },
-      "ConstantReserveNonSpinning": {
-        "$ref": "Operations/Service/ConstantReserveNonSpinning.json"
-      },
       "DCBus": {
         "$ref": "Operations/Topology/DCBus.json"
       },
@@ -64,6 +55,9 @@
       },
       "FixedForcedOutage": {
         "$ref": "Operations/SupplementalAttributes/FixedForcedOutage.json"
+      },
+      "GroupReserve": {
+        "$ref": "Operations/Service/GroupReserve.json"
       },
       "GenericArcImpedance": {
         "$ref": "Operations/Branch/GenericArcImpedance.json"
@@ -113,6 +107,12 @@
       "MotorLoad": {
         "$ref": "Operations/StaticInjection/MotorLoad.json"
       },
+      "OfflineReserve": {
+        "$ref": "Operations/Service/OfflineReserve.json"
+      },
+      "OnlineReserve": {
+        "$ref": "Operations/Service/OnlineReserve.json"
+      },
       "PlannedOutage": {
         "$ref": "Operations/SupplementalAttributes/PlannedOutage.json"
       },
@@ -130,6 +130,9 @@
       },
       "RenewablePowerPlant": {
         "$ref": "Operations/SupplementalAttributes/RenewablePowerPlant.json"
+      },
+      "ServiceAssociation": {
+        "$ref": "Operations/SupplementalAttributes/ServiceAssociation.json"
       },
       "ShiftablePowerLoad": {
         "$ref": "Operations/StaticInjection/ShiftablePowerLoad.json"
@@ -178,12 +181,6 @@
       },
       "TwoWindingTransformer": {
         "$ref": "Operations/Branch/TwoWindingTransformer.json"
-      },
-      "VariableReserve": {
-        "$ref": "Operations/Service/VariableReserve.json"
-      },
-      "VariableReserveNonSpinning": {
-        "$ref": "Operations/Service/VariableReserveNonSpinning.json"
       },
       "VSCACControlModes": {"$ref": "Operations/common.json#/definitions/VSCACControlModes"},
       "VSCDCControlModes": {"$ref": "Operations/common.json#/definitions/VSCDCControlModes"},

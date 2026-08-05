@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A reserve product with a constant procurement requirement, such as 3% of the system base power at all times. This reserve product includes online generators that can respond right away after an unexpected contingency, such as a transmission line or generator outage. When defining the reserve, the `ReserveDirection` must be specified to define this as a `ReserveUp`, `ReserveDown`, or `ReserveSymmetric`.",
+  "description": "A non-spinning reserve product from devices not currently synchronized with the system but able to come online quickly after an unexpected contingency. Upward only, so unlike `OnlineReserve` there is no reserve direction. The procurement requirement is static unless a `requirement` time series is attached, in which case `requirement` is the scaling factor.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -16,18 +16,23 @@
     },
     "time_frame": {
       "description": "The saturation time frame to provide reserve contribution. Units: min.",
-      "type": "integer",
+      "type": "number",
       "x-unit": "min"
     },
     "requirement": {
       "description": "The value of required reserves. Units: MW.",
+      "default": 0.0,
       "type": "number",
       "x-unit": "MW"
     },
+    "variable": {
+      "description": "Operating reserve demand curve. Omit when the reserve has no demand curve.",
+      "$ref": "../../Core/common.json#/definitions/CostCurve"
+    },
     "sustained_time": {
       "description": "The time reserve contribution must be sustained at a specified level. Units: min.",
-      "default": 60,
-      "type": "integer",
+      "default": 60.0,
+      "type": "number",
       "x-unit": "min"
     },
     "max_output_fraction": {
@@ -44,20 +49,14 @@
       "description": "Fraction of service procurement that is assumed to be actually deployed. Most commonly, this is assumed to be either 0.0 or 1.0.",
       "default": 0.0,
       "type": "number"
-    },
-    "reserve_direction": {
-      "description": "Whether the reserve is an upward, downward, or symmetric reserve product.",
-      "$ref": "../../Operations/common.json#/definitions/ReserveDirection"
     }
   },
   "required": [
     "id",
     "name",
     "available",
-    "time_frame",
-    "requirement",
-    "reserve_direction"
+    "time_frame"
   ],
-  "title": "ConstantReserve",
+  "title": "OfflineReserve",
   "type": "object"
 }
