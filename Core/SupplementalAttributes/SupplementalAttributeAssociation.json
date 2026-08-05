@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "SupplementalAttributeAssociation",
-  "description": "Links a supplemental attribute to the entity it describes. Two columns only: the type of either side is resolved through the entity registry rather than duplicated here, matching GridDB's `supplemental_attributes_association` table. Lives in Core because either side may be a Core or an Operations type.",
+  "description": "Links a supplemental attribute to the entity it describes. The type of either side is resolved through the entity registry rather than duplicated here, matching GridDB's `supplemental_attributes_association` table. Lives in Core because either side may be a Core or an Operations type. Unlike `components`, `supplemental_attributes` is a flat, untyped array, so `attribute_type` is this record's only per-row type discriminator.",
   "type": "object",
   "properties": {
     "attribute_id": {
@@ -11,10 +11,15 @@
     "entity_id": {
       "description": "ID of the component the attribute describes.",
       "type": "integer"
+    },
+    "attribute_type": {
+      "description": "Schema title of the referenced supplemental attribute (e.g. \"EmissionsData\", \"GeographicInfo\"). A free-form string, not an enum: new attribute types are added elsewhere in this repo continuously, and a closed enum here would go stale.",
+      "type": "string"
     }
   },
   "required": [
     "attribute_id",
-    "entity_id"
+    "entity_id",
+    "attribute_type"
   ]
 }
