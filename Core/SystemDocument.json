@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SystemDocument",
+  "description": "The serialized form of a whole power system: every component, the association tables that link them, and the name of the HDF5 sidecar holding time series values. This is the interchange format between producers (PowerTableDataParser, PowerFlowFileParser, PowerSystems) and consumers (PowerSystems, SiennaGridDB, non-Julia clients), so the shape is defined here rather than by convention in each producer.\n\nDeliberately excluded from openapi-generator: `components` is a map from type name to an array of heterogeneous component objects, which the generated Julia client cannot express as typed buckets. The hand-written container in PowerCoreOpenAPIModels (`src/document.jl`) is the single Julia representation, and its fields are checked against this file. This schema remains authoritative for every other language binding.\n\nTime series *values* never appear here. `time_series_associations` carries the metadata rows and `time_series_storage_file` names the sidecar; reading or writing that file is the consumer's job.",
+  "type": "object",
+  "properties": {
+    "base_power": {
+      "description": "System base power. Per-unit values elsewhere in the document are relative to this when the component carries no base of its own.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "MVA"
+    },
+    "unit_system": {
+      "description": "The convention every stored value in this document follows. Values are only interpretable against the convention they were written in; the `x-unit` annotations name the natural unit either way. There is no system-base option: per-unit data historically on the system base records that base in the component's own `base_power` and rides as DEVICE_BASE.",
+      "type": "string",
+      "enum": [
+        "NATURAL_UNITS",
+        "DEVICE_BASE"
+      ]
+    },
+    "name": {
+      "description": "Optional system name.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "description": {
+      "description": "Optional free-text description of the system.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "frequency": {
+      "description": "Nominal system frequency.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "Hz"
+    },
+    "components": {
+      "description": "Components grouped by type name, e.g. `{\"ACBus\": [...], \"ThermalStandard\": [...]}`. The key is the referenced schema's `title`. Keys are emitted in sorted order so output is deterministic. Every type present must be one the consumer can convert: a consumer encountering an unknown type name must fail rather than skip it.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "supplemental_attributes": {
+      "description": "Supplemental attributes in one flat array rather than bucketed by type: nothing iterates them per type, and `supplemental_attribute_associations` carries both the link and the `attribute_type` discriminator a consumer needs to pick a converter.",
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "supplemental_attribute_associations": {
+      "description": "Links each supplemental attribute, or each service acting as one, to the entity it describes or the member it contains. One row per (attribute, entity) or (service, member) pair; `attribute_type` says which.",
+      "type": "array",
+      "items": {
+        "$ref": "SupplementalAttributes/SupplementalAttributeAssociation.json"
+      }
+    },
+    "time_series_associations": {
+      "description": "Time series metadata rows. The values themselves live in the file named by `time_series_storage_file`.",
+      "type": "array",
+      "items": {
+        "$ref": "TimeSeries/TimeSeriesAssociation.json"
+      }
+    },
+    "ext": {
+      "description": "Source data that no schema field claims, keyed by the stringified component id it belongs to. Kept beside the components rather than inside them: the schemas describe what a component is, and this is whatever else the source happened to state.\n\nThis is recorded debt, not an extension point. A consumer must not silently discard it: keys it knowingly ignores belong on a declared ignore list, and an unlisted key is an error. Every key here is a field the data model should eventually name.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object"
+      }
+    },
+    "time_series_storage_file": {
+      "description": "Basename of the HDF5 sidecar holding time series values, or null when the system has no time series. A name, not a path: the file is resolved relative to the document, so a document and its sidecar can be moved together.",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "base_power",
+    "unit_system",
+    "components",
+    "supplemental_attributes",
+    "supplemental_attribute_associations",
+    "time_series_associations",
+    "ext",
+    "time_series_storage_file"
+  ]
+}

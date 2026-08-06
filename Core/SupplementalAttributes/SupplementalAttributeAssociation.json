@@ -1,20 +1,32 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "SupplementalAttributeAssociation",
-  "description": "Links a supplemental attribute to the entity it describes. The type of either side is resolved through the entity registry rather than duplicated here, matching GridDB's `supplemental_attributes_association` table. Lives in Core because either side may be a Core or an Operations type. Unlike `components`, `supplemental_attributes` is a flat, untyped array, so `attribute_type` is this record's only per-row type discriminator.",
+  "description": "Links a supplemental attribute, or a service acting as one, to the entity it describes or the member it contains. The type of either side is resolved through the entity registry rather than duplicated here, matching GridDB's `supplemental_attributes_association` table. Unlike `components`, `supplemental_attributes` is a flat, untyped array, so `attribute_type` is this record's type discriminator: it says what the row means and which optional fields apply. A plain supplemental attribute (e.g. EmissionsData, GeographicInfo) or a service membership uses neither `group_index` nor `role`. A ThermalPowerPlant, HydroPowerPlant, or RenewablePowerPlant row uses `group_index` for the shaft, penstock, or PCC number; a CombinedCycleBlock row uses `group_index` for the HRSG index and `role` for CT/CA; an exclusion-group row uses `group_index` for the exclusion group number. This one table replaces the four that used to express these relations separately (ServiceAssociation, PlantAssociation, CombinedCycleAssociation): a service association or a plant/combined-cycle association is a supplemental attribute association with the type-specific fields filled in, not a distinct kind of table. Lives in Core because either side may be a Core or an Operations type.",
   "type": "object",
   "properties": {
     "attribute_id": {
-      "description": "ID of the supplemental attribute.",
+      "description": "ID of the supplemental attribute, or of the service, for a membership row.",
       "type": "integer"
     },
     "entity_id": {
-      "description": "ID of the component the attribute describes.",
+      "description": "ID of the component, or other entity, that the attribute describes or the service contains.",
       "type": "integer"
     },
     "attribute_type": {
-      "description": "Schema title of the referenced supplemental attribute (e.g. \"EmissionsData\", \"GeographicInfo\"). A free-form string, not an enum: new attribute types are added elsewhere in this repo continuously, and a closed enum here would go stale.",
+      "description": "Schema title of the referenced supplemental attribute or service (e.g. \"EmissionsData\", \"GeographicInfo\", \"ThermalPowerPlant\", \"CombinedCycleBlock\", \"OnlineReserve\"). A free-form string, not an enum: new attribute and service types are added elsewhere in this repo continuously, and a closed enum here would go stale.",
       "type": "string"
+    },
+    "group_index": {
+      "description": "Optional group number within the parent named by attribute_id: the shaft/penstock/PCC number for a ThermalPowerPlant, HydroPowerPlant, or RenewablePowerPlant row, the HRSG index for a CombinedCycleBlock row, or the exclusion group number for an exclusion grouping. Omitted for a plain supplemental attribute or a service membership, neither of which has a group to index.",
+      "type": "integer"
+    },
+    "role": {
+      "description": "Optional role of entity_id within the parent named by attribute_id. Meaningful only for a CombinedCycleBlock row, where it is CT (combustion turbine) or CA (combustion-augmented steam); omitted for every other attribute_type.",
+      "type": "string",
+      "enum": [
+        "CT",
+        "CA"
+      ]
     }
   },
   "required": [

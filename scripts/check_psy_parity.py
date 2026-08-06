@@ -116,8 +116,8 @@ RESERVE_DIRECTION_COMPONENTS = {
     "GroupReserve",
 }
 
-# PSY relationship/map fields normalized into association components
-# (PlantAssociation / CombinedCycleAssociation) instead of properties.
+# PSY relationship/map fields normalized into SupplementalAttributeAssociation
+# rows (D10) instead of properties.
 ASSOCIATION_NORMALIZED = {
     "AGC": {"reserves"},
     "GroupReserve": {"contributing_services"},
@@ -160,14 +160,18 @@ PSY_INTERNAL = {
 # and IS-level concepts). Everything under Investments/ maps to PSIP, not PSY,
 # and is excluded from the scan entirely.
 SCHEMA_ONLY_COMPONENTS = {
-    "CombinedCycleAssociation",
-    "PlantAssociation",
-    # Reserve/service participation is normalized to (service_id, entity_id) rows
-    # here. PowerSystems keeps the same relation on the device side as
-    # Device.services, so there is no PSY struct to match.
-    "ServiceAssociation",
+    # Association normalization (plant groups, combined-cycle HRSGs, and
+    # service/reserve participation) is unified into
+    # SupplementalAttributeAssociation rows (D10); PowerSystems keeps the
+    # underlying relations on the device/plant side, so there is no PSY struct
+    # to match any association table.
     "SupplementalAttributeAssociation",
     "TimeSeriesAssociation",
+    # The whole-system serialization envelope, not a component. Its Julia
+    # counterpart is the hand-written container in PowerCoreOpenAPIModels
+    # (src/document.jl), checked against the schema by that repo's own
+    # validate.jl -- there is no PSY struct to match.
+    "SystemDocument",
 }
 
 # Hand-written supplemental-attribute structs: name -> Julia source relative
@@ -194,14 +198,14 @@ HAND_WRITTEN = {
 }
 IS_GEOGRAPHIC = ("GeographicInfo", "src/geographic_supplemental_attribute.jl")
 
-# Hand-written `from_openapi` CONVERTERS (src/openapi_handwritten_converters.jl):
+# Hand-written `from_openapi` CONVERTERS (src/openapi/import_handwritten.jl):
 # a DIFFERENT category from HAND_WRITTEN above. Every one of these has a normal
 # generated struct (an `auto_generated_structs` entry, or — for the three
 # reserves — a `struct_validation_descriptors` entry); what's hand-written is
 # only the PO<->PSY conversion function, because the IS generator's
 # `openapi_type` mechanism cannot emit it (field-name mismatch, non-scalar
 # field, missing base_power anchor, or a parametric struct — see the header
-# comment of openapi_handwritten_converters.jl for the reason per type).
+# comment of openapi/import_handwritten.jl for the reason per type).
 # Derived from source (2026-08-05), not from the converter-plan's progress log,
 # which stops at 12 and is stale (omits FixedAdmittance, added later).
 HAND_WRITTEN_CONVERTERS = {
@@ -219,12 +223,12 @@ HAND_WRITTEN_CONVERTERS = {
     "OfflineReserve",
     "GroupReserve",
 }
-HANDWRITTEN_CONVERTERS_REL_PATH = "src/openapi_handwritten_converters.jl"
+HANDWRITTEN_CONVERTERS_REL_PATH = "src/openapi/import_handwritten.jl"
 
 
 def derive_handwritten_converter_types(psy_path):
     """Type names with an actual `from_openapi(::Type{X}, ...)` method in
-    `src/openapi_handwritten_converters.jl`. Returns None when the file is
+    `src/openapi/import_handwritten.jl`. Returns None when the file is
     absent (partial checkout), so callers can skip the drift check instead of
     reporting spurious CONVERTER DRIFT lines."""
     full = os.path.join(psy_path, HANDWRITTEN_CONVERTERS_REL_PATH)
@@ -429,7 +433,7 @@ def explained_schema_only(name, prop, node):
 def check_converter_coverage(psy_path, annotated_types):
     """Converter-plan Task 6 companion: every hand-written converter's
     declared registration (HAND_WRITTEN_CONVERTERS) must match what actually
-    exists in src/openapi_handwritten_converters.jl, in both directions, and
+    exists in src/openapi/import_handwritten.jl, in both directions, and
     no type may be registered as both generated (openapi_type-annotated) and
     hand-written. Returns the drift count."""
     drifts = 0

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "RenewablePowerPlant",
-  "description": "Attribute to represent renewable power plants. Point of common coupling (PCC) connections between units are recorded as PlantAssociation rows with role='pcc'.",
+  "description": "Attribute to represent renewable power plants. Point of common coupling (PCC) connections between units are recorded as SupplementalAttributeAssociation rows, with group_index the PCC number.",
   "type": "object",
   "properties": {
     "id": {
