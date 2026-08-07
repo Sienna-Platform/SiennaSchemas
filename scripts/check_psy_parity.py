@@ -187,6 +187,7 @@ HAND_WRITTEN = {
     "CombinedCycleFractional": "src/plant_attribute.jl",
     "HydroPowerPlant": "src/plant_attribute.jl",
     "RenewablePowerPlant": "src/plant_attribute.jl",
+    "Substation": "src/substation.jl",
     # OnlineReserve/OfflineReserve/GroupReserve are parametric (ReserveDirection,
     # and for OnlineReserve/OfflineReserve also the cost-curve unit type), so the
     # struct entry the descriptor carries lives under `struct_validation_descriptors`
