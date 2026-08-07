@@ -5,7 +5,7 @@
   "type": "object",
   "properties": {
     "base_power": {
-      "description": "System base power. Per-unit values elsewhere in the document are relative to this when the component carries no base of its own.",
+      "description": "System base power. Per-unit values elsewhere in the document are relative to this when the component carries no base of its own. Units: MVA.",
       "type": "number",
       "exclusiveMinimum": 0,
       "x-unit": "MVA"
@@ -33,7 +33,7 @@
       ]
     },
     "frequency": {
-      "description": "Nominal system frequency.",
+      "description": "Nominal system frequency. Units: Hz.",
       "type": "number",
       "exclusiveMinimum": 0,
       "x-unit": "Hz"
@@ -70,7 +70,7 @@
       }
     },
     "ext": {
-      "description": "Source data that no schema field claims, keyed by the stringified component id it belongs to. Kept beside the components rather than inside them: the schemas describe what a component is, and this is whatever else the source happened to state.\n\nThis is recorded debt, not an extension point. A consumer must not silently discard it: keys it knowingly ignores belong on a declared ignore list, and an unlisted key is an error. Every key here is a field the data model should eventually name.",
+      "description": "Source data that no schema field claims, keyed by the stringified component id it belongs to. Only values genuinely unclaimed by any schema field may appear here; a producer must never mirror a value that also landed in a schema field. An absent or empty `ext` means the producer mapped everything. A consumer must consume keys via a declared ignore list: a listed key is skipped, an unlisted key is an error naming the key and the component id — never a silent drop.",
       "type": "object",
       "additionalProperties": {
         "type": "object"
@@ -91,7 +91,6 @@
     "supplemental_attributes",
     "supplemental_attribute_associations",
     "time_series_associations",
-    "ext",
     "time_series_storage_file"
   ]
 }
