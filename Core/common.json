@@ -548,7 +548,7 @@
           "default": "MARKET_BID"
         },
         "no_load_cost": {
-          "description": "No load cost.",
+          "description": "No load cost. Legacy scalar promotion: a bare scalar value `s` from a legacy source converts to an `InputOutputCurve` of `LinearFunctionData` with `constant_term = s` and `proportional_term = 0`.",
           "default": {
             "curve_type": "INPUT_OUTPUT",
             "function_data": {
@@ -565,7 +565,7 @@
           "$ref": "#/definitions/StartUpStages"
         },
         "shut_down": {
-          "description": "Shut-down cost.",
+          "description": "Shut-down cost. Legacy scalar promotion: a bare scalar value `s` from a legacy source converts to an `InputOutputCurve` of `LinearFunctionData` with `constant_term = s` and `proportional_term = 0`.",
           "default": {
             "curve_type": "INPUT_OUTPUT",
             "function_data": {
