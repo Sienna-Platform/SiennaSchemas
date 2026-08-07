@@ -122,6 +122,33 @@ class Bundler:
         body = self.common_doc["definitions"][name]
         self.hoisted[name] = self._rewrite_common_internal(body)
 
+    def _rewrite_discriminator_mapping(self, discriminator):
+        """Rewrite discriminator.mapping targets so they resolve inside the bundle.
+
+        Source schemas spell every mapping target as
+        '#/components/schemas/<Name>' -- the correct pointer once <Name> is a
+        top-level OpenAPI component, but wrong when <Name> is actually a
+        Core/common.json definition, since those are hoisted into the bundle's
+        top-level `definitions` block, not `components.schemas`. The sibling
+        `oneOf`/`$ref` entries for the same property already get this rewrite
+        via hoisting; mapping values must follow the same rule or they dangle.
+        """
+        mapping = discriminator.get("mapping")
+        if not isinstance(mapping, dict):
+            return discriminator
+        rewritten = dict(discriminator)
+        new_mapping = {}
+        for key, target in mapping.items():
+            _, fragment = split_ref(target)
+            name = fragment.rsplit("/", 1)[-1]
+            if name in self.common_doc.get("definitions", {}):
+                self._hoist_common_definition(name)
+                new_mapping[key] = f"#/definitions/{name}"
+            else:
+                new_mapping[key] = target
+        rewritten["mapping"] = new_mapping
+        return rewritten
+
     def _rewrite_common_internal(self, node):
         """Within common.json content, turn '#/definitions/X' refs into bundle
         '#/definitions/X' refs (same spelling) and hoist X. No external refs
@@ -137,7 +164,13 @@ class Bundler:
                 for k, v in node.items():
                     out[k] = v if k == "$ref" else self._rewrite_common_internal(v)
                 return out
-            return {k: self._rewrite_common_internal(v) for k, v in node.items()}
+            out = {}
+            for k, v in node.items():
+                if k == "discriminator":
+                    out[k] = self._rewrite_discriminator_mapping(v)
+                else:
+                    out[k] = self._rewrite_common_internal(v)
+            return out
         if isinstance(node, list):
             return [self._rewrite_common_internal(v) for v in node]
         return node
@@ -202,7 +235,13 @@ class Bundler:
                     merged[k] = self.walk(v, base_path)
                 return merged
             # Ordinary dict: recurse, preserving key order.
-            return {k: self.walk(v, base_path) for k, v in node.items()}
+            out = {}
+            for k, v in node.items():
+                if k == "discriminator":
+                    out[k] = self._rewrite_discriminator_mapping(v)
+                else:
+                    out[k] = self.walk(v, base_path)
+            return out
         if isinstance(node, list):
             return [self.walk(v, base_path) for v in node]
         return node

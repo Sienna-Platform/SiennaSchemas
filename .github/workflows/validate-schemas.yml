@@ -41,6 +41,9 @@ jobs:
       - name: Check bundled specs are up to date
         run: python scripts/bundle_specs.py --check
 
+      - name: Check $ref and discriminator.mapping resolution
+        run: python scripts/check_refs.py
+
       # TODO after psy6 merges to PowerSystems main: drop `ref`
       - name: Checkout PowerSystems (psy6) for parity gate
         uses: actions/checkout@v4
