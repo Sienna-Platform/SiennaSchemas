@@ -68,7 +68,6 @@
     "unit_size_charge": {
       "description": "Used for discrete investment decisions. Unit size of charging capacity. Units: MW.",
       "type": "number",
-      "default": 0.0,
       "x-unit": "MW"
     },
     "unit_size_energy": {
