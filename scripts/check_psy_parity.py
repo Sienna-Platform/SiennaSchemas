@@ -134,11 +134,23 @@ PLANT_SA_STRUCTS = {
 # Fields intentionally present only in the schema, with no PowerSystems.jl
 # counterpart. Unit-basis discriminators (any property whose $ref ends in
 # "UnitBasis") are exempted structurally in explained_schema_only, so they
-# never need an entry here. base_power on the branch types is the SYSTEM base,
-# recorded per component in lieu of a system-level table/JSON entry — a
-# deliberate schema-only exception; PSY stores no such field and never will.
+# never need an entry here.
+#
+# base_power on Line/MonitoredLine/GenericArcImpedance/DiscreteControlledACBranch
+# records the SYSTEM base per component, in lieu of a system-level table/JSON
+# entry -- the deliberate schema design choice. PSY now ALSO stores base_power
+# on these four types (added by add_component!, kept in sync with the system
+# base -- see PSY's branchdata_checks.jl / components.jl BasePowerKind trait),
+# so as of 2026-08-07 both sides agree here and these four entries are not
+# required for the checker to pass. They stay recorded anyway: the SEMANTIC
+# being flagged (a schema field that records the system base per component,
+# not the device base) is the actual deliberate exception, independent of
+# whether PSY happens to carry a same-named field.
+#
 # TModelHVDCLine is the exception among the branches: it per-unitizes against
-# a base current, not a power base.
+# a base current, not a power base, so the schema correctly has base_current
+# with no PSY counterpart. Its own base_power (PSY-only, the opposite
+# direction) is a separate, transitional case -- see PSY_TRANSITIONAL_AHEAD.
 SCHEMA_AHEAD = {
     "Source": {"base_voltage"},
     "Line": {"base_power"},
@@ -146,6 +158,17 @@ SCHEMA_AHEAD = {
     "GenericArcImpedance": {"base_power"},
     "DiscreteControlledACBranch": {"base_power"},
     "TModelHVDCLine": {"base_current"},
+}
+
+# Transitional expected drift: the DECIDED end state (schema-consensus decision
+# R4) is that TModelHVDCLine per-unitizes against a base current, not a power
+# base -- matching SCHEMA_AHEAD's base_current entry above. PSY commit
+# 6aee92cd5 added base_power to TModelHVDCLine ahead of that decision landing;
+# PSY has not yet dropped base_power / added base_current. Remove this entry
+# once that PSY change lands (TModelHVDCLine.base_power should then disappear
+# from the descriptor entirely).
+PSY_TRANSITIONAL_AHEAD = {
+    "TModelHVDCLine": {"base_power"},
 }
 
 # PSY fields that are constructor-managed runtime state, never serialized, so
@@ -216,10 +239,18 @@ HAND_WRITTEN_CONVERTERS = {
     "Line",
     "TransformerCircuit",
     "TwoWindingTransformer",
+    # magnetizing_shunt::Complex{Float64} (same issue as TwoWindingTransformer) plus
+    # three TransformerCircuit references (primary/secondary/tertiary_circuit) instead
+    # of the generator's single-reference assumption.
+    "ThreeWindingTransformer",
     "FixedAdmittance",
     "HydroReservoir",
     "EnergyReservoirStorage",
     "TwoTerminalGenericHVDCLine",
+    # direction_mapping::Dict{String, Int} is unclassifiable to the generator (not
+    # scalar/compound/reference/enum); also carries its own base_power field with a
+    # system-base fallback (_resolve_base_power), same pattern as Area/LoadZone.
+    "TransmissionInterface",
     "OnlineReserve",
     "OfflineReserve",
     "GroupReserve",
@@ -400,6 +431,8 @@ def explained_psy_only(name, field):
     if field in ASSOCIATION_NORMALIZED.get(name, set()):
         return True
     if name in PLANT_SA_STRUCTS and field.endswith("_map"):
+        return True
+    if field in PSY_TRANSITIONAL_AHEAD.get(name, set()):
         return True
     return False
 
