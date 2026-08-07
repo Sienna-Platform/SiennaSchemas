@@ -29,13 +29,19 @@
       "additionalProperties": {
         "type": "integer"
       }
+    },
+    "base_power": {
+      "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
     }
   },
   "required": [
     "id",
     "name",
     "available",
-    "active_power_flow_limits"
+    "active_power_flow_limits",
+    "base_power"
   ],
   "title": "TransmissionInterface",
   "type": "object"

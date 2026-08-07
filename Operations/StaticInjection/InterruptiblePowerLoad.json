@@ -45,7 +45,21 @@
     },
     "operation_cost": {
       "description": "Operational cost of interrupting load. or MarketBidCost",
-      "$ref": "../../Core/common.json#/definitions/LoadCost"
+      "discriminator": {
+        "mapping": {
+          "LOAD": "../../Core/common.json#/definitions/LoadCost",
+          "MARKET_BID": "../../Core/common.json#/definitions/MarketBidCost"
+        },
+        "propertyName": "cost_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "../../Core/common.json#/definitions/LoadCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/MarketBidCost"
+        }
+      ]
     },
     "conformity": {
       "description": "Indicates whether the specified load is conforming or non-conforming.",

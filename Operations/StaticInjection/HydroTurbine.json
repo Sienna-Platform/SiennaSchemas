@@ -50,30 +50,21 @@
     },
     "operation_cost": {
       "description": "Operating cost of generation. or MarketBidCost; default PSY.HydroGenerationCost(nothing)",
-      "default": {
-        "variable": {
-          "variable_cost_type": "COST",
-          "value_curve": {
-            "curve_type": "INPUT_OUTPUT",
-            "function_data": {
-              "function_type": "LINEAR",
-              "constant_term": 0,
-              "proportional_term": 0
-            },
-            "input_at_zero": 0
-          },
-          "vom_cost": {
-            "curve_type": "INPUT_OUTPUT",
-            "function_data": {
-              "function_type": "LINEAR",
-              "constant_term": 0,
-              "proportional_term": 0
-            },
-            "input_at_zero": 0
-          }
-        }
+      "discriminator": {
+        "mapping": {
+          "HYDRO_GEN": "../../Core/common.json#/definitions/HydroGenerationCost",
+          "MARKET_BID": "../../Core/common.json#/definitions/MarketBidCost"
+        },
+        "propertyName": "cost_type"
       },
-      "$ref": "../../Core/common.json#/definitions/HydroGenerationCost"
+      "oneOf": [
+        {
+          "$ref": "../../Core/common.json#/definitions/HydroGenerationCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/MarketBidCost"
+        }
+      ]
     },
     "powerhouse_elevation": {
       "description": "Height level above the sea level of the powerhouse on which the turbine is installed. Units: m.",

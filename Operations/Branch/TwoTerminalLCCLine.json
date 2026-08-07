@@ -293,6 +293,11 @@
         "input_at_zero": 0
       },
       "$ref": "../../Core/common.json#/definitions/TwoTerminalLoss"
+    },
+    "base_power": {
+      "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
     }
   },
   "required": [
@@ -313,7 +318,8 @@
     "inverter_extinction_angle_limits",
     "inverter_rc",
     "inverter_xc",
-    "inverter_base_voltage"
+    "inverter_base_voltage",
+    "base_power"
   ],
   "title": "TwoTerminalLCCLine",
   "type": "object"

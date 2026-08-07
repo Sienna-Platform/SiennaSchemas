@@ -134,6 +134,9 @@
       "StandardLoad": {
         "$ref": "Operations/StaticInjection/StandardLoad.json"
       },
+      "Substation": {
+        "$ref": "Operations/SupplementalAttributes/Substation.json"
+      },
       "SwitchedAdmittance": {
         "$ref": "Operations/StaticInjection/SwitchedAdmittance.json"
       },

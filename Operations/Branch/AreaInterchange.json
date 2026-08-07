@@ -31,6 +31,11 @@
       "description": "Max flow between the areas. It ignores lines and other branches totals. Units: MW.",
       "$ref": "../../Core/common.json#/definitions/FromTo_ToFrom",
       "x-unit": "MW"
+    },
+    "base_power": {
+      "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
     }
   },
   "required": [
@@ -40,7 +45,8 @@
     "active_power_flow",
     "from_area",
     "to_area",
-    "flow_limits"
+    "flow_limits",
+    "base_power"
   ],
   "title": "AreaInterchange",
   "type": "object"

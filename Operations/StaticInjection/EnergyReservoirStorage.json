@@ -27,7 +27,7 @@
       "$ref": "../../Core/common.json#/definitions/StorageTech"
     },
     "storage_capacity": {
-      "description": "Maximum storage capacity (can be in units of, e.g., MWh for batteries or liters for hydrogen). Divided by base_power this gives an approximate duration, assuming unity power factor: in hours under MWH, in minutes under MWMIN. Units: per energy_units — MWH: MWh, MWMIN: MWmin .",
+      "description": "Maximum storage capacity (can be in units of, e.g., MWh for batteries or liters for hydrogen). Divided by base_power this gives an approximate duration, assuming unity power factor: in hours under MWH, in minutes under MWMIN. Units: per energy_units \u2014 MWH: MWh, MWMIN: MWmin .",
       "type": "number",
       "x-unit-discriminator": "energy_units",
       "x-units": {
@@ -90,7 +90,21 @@
     },
     "operation_cost": {
       "description": "Operating cost of storage. or MarketBidCost",
-      "$ref": "../../Core/common.json#/definitions/StorageCost"
+      "discriminator": {
+        "mapping": {
+          "STORAGE": "../../Core/common.json#/definitions/StorageCost",
+          "MARKET_BID": "../../Core/common.json#/definitions/MarketBidCost"
+        },
+        "propertyName": "cost_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "../../Core/common.json#/definitions/StorageCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/MarketBidCost"
+        }
+      ]
     },
     "conversion_factor": {
       "description": "Conversion factor of `storage_capacity` to MWh, if different than 1.0. For example, X MWh/liter hydrogen. Units: 1.",

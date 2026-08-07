@@ -23,8 +23,7 @@
           "discriminator": {
             "mapping": {
               "LINEAR": "#/definitions/LinearFunctionData",
-              "PIECEWISE_LINEAR": "#/definitions/PiecewiseLinearData",
-              "QUADRATIC": "#/definitions/QuadraticFunctionData"
+              "PIECEWISE_STEP": "#/definitions/PiecewiseStepData"
             },
             "propertyName": "function_type"
           },
@@ -33,10 +32,7 @@
               "$ref": "#/definitions/LinearFunctionData"
             },
             {
-              "$ref": "#/definitions/QuadraticFunctionData"
-            },
-            {
-              "$ref": "#/definitions/PiecewiseLinearData"
+              "$ref": "#/definitions/PiecewiseStepData"
             }
           ]
         },
@@ -195,6 +191,10 @@
         "power_units": {
           "$ref": "#/definitions/UnitSystem"
         },
+        "startup_fuel_offtake": {
+          "description": "Fuel consumed during startup, as a curve in the unit's fuel units.",
+          "$ref": "#/definitions/InputOutputCurve"
+        },
         "value_curve": {
           "$ref": "#/definitions/ValueCurve"
         },
@@ -342,7 +342,7 @@
       "type": "string"
     },
     "AdmittanceUnitBasis": {
-      "description": "Unit basis a shunt admittance is stored in. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance). DEVICE_BASE: per-unit on the component's own base (base_power MVA and voltage base) — a per-unit base, not a power at unity voltage, and not an alternative spelling of DEVICE_MVAR; components whose per-unit data was historically on the system base record that system base in base_power. Fixed and switched shunts use ShuntAdmittanceUnitBasis instead, which omits DEVICE_BASE because a shunt has no device MVA rating.",
+      "description": "Unit basis a shunt admittance is stored in. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance). DEVICE_BASE: per-unit on the component's own base (base_power MVA and voltage base) \u2014 a per-unit base, not a power at unity voltage, and not an alternative spelling of DEVICE_MVAR; components whose per-unit data was historically on the system base record that system base in base_power. Fixed and switched shunts use ShuntAdmittanceUnitBasis instead, which omits DEVICE_BASE because a shunt has no device MVA rating.",
       "enum": [
         "NATURAL_UNITS",
         "DEVICE_MVAR",
@@ -352,7 +352,7 @@
       "type": "string"
     },
     "ShuntAdmittanceUnitBasis": {
-      "description": "Subset of AdmittanceUnitBasis for fixed and switched shunts: omits DEVICE_BASE because a shunt has no device MVA rating to per-unitize against. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance) — PSS/E RAW native for shunts.",
+      "description": "Subset of AdmittanceUnitBasis for fixed and switched shunts: omits DEVICE_BASE because a shunt has no device MVA rating to per-unitize against. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance) \u2014 PSS/E RAW native for shunts.",
       "enum": [
         "NATURAL_UNITS",
         "DEVICE_MVAR"

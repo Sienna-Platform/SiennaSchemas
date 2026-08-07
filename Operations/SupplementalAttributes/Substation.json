@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Substation",
+  "description": "Supplemental attribute representing a substation that groups node buses and switching devices of a full-topology (node-breaker) network model. Attach the attribute to every member component. Geospatial data is not stored here; attach a GeographicInfo attribute to the member components instead.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the substation"
+    },
+    "number": {
+      "type": "integer",
+      "description": "Substation number in the source power flow data"
+    },
+    "grounding_resistance": {
+      "type": "number",
+      "description": "Substation grounding DC resistance. Units: ohm.",
+      "default": 0.1,
+      "x-unit": "ohm"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "number",
+    "grounding_resistance"
+  ]
+}
