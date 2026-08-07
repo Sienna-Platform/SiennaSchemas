@@ -22,8 +22,8 @@
         "function_data": {
           "discriminator": {
             "mapping": {
-              "LINEAR": "#/definitions/LinearFunctionData",
-              "PIECEWISE_STEP": "#/definitions/PiecewiseStepData"
+              "LINEAR": "#/components/schemas/LinearFunctionData",
+              "PIECEWISE_STEP": "#/components/schemas/PiecewiseStepData"
             },
             "propertyName": "function_type"
           },
@@ -220,10 +220,10 @@
     "FunctionData": {
       "discriminator": {
         "mapping": {
-          "LINEAR": "#/definitions/LinearFunctionData",
-          "PIECEWISE_LINEAR": "#/definitions/PiecewiseLinearData",
-          "PIECEWISE_STEP": "#/definitions/PiecewiseStepData",
-          "QUADRATIC": "#/definitions/QuadraticFunctionData"
+          "LINEAR": "#/components/schemas/LinearFunctionData",
+          "PIECEWISE_LINEAR": "#/components/schemas/PiecewiseLinearData",
+          "PIECEWISE_STEP": "#/components/schemas/PiecewiseStepData",
+          "QUADRATIC": "#/components/schemas/QuadraticFunctionData"
         },
         "propertyName": "function_type"
       },
@@ -247,9 +247,9 @@
     "GenericOperationCost": {
       "discriminator": {
         "mapping": {
-          "RENEWABLE": "#/definitions/RenewableGenerationCost",
-          "THERMAL": "#/definitions/ThermalGenerationCost",
-          "HYDRO_GEN": "#/definitions/HydroGenerationCost"
+          "RENEWABLE": "#/components/schemas/RenewableGenerationCost",
+          "THERMAL": "#/components/schemas/ThermalGenerationCost",
+          "HYDRO_GEN": "#/components/schemas/HydroGenerationCost"
         },
         "propertyName": "cost_type"
       },
@@ -318,8 +318,8 @@
       "type": "object",
       "discriminator": {
         "mapping": {
-          "HYDRO_GEN": "#/definitions/HydroGenerationCost",
-          "STORAGE": "#/definitions/StorageCost"
+          "HYDRO_GEN": "#/components/schemas/HydroGenerationCost",
+          "STORAGE": "#/components/schemas/StorageCost"
         },
         "propertyName": "cost_type"
       },
@@ -397,8 +397,8 @@
         "function_data": {
           "discriminator": {
             "mapping": {
-              "LINEAR": "#/definitions/LinearFunctionData",
-              "PIECEWISE_STEP": "#/definitions/PiecewiseStepData"
+              "LINEAR": "#/components/schemas/LinearFunctionData",
+              "PIECEWISE_STEP": "#/components/schemas/PiecewiseStepData"
             },
             "propertyName": "function_type"
           },
@@ -456,9 +456,9 @@
         "function_data": {
           "discriminator": {
             "mapping": {
-              "LINEAR": "#/definitions/LinearFunctionData",
-              "PIECEWISE_LINEAR": "#/definitions/PiecewiseLinearData",
-              "QUADRATIC": "#/definitions/QuadraticFunctionData"
+              "LINEAR": "#/components/schemas/LinearFunctionData",
+              "PIECEWISE_LINEAR": "#/components/schemas/PiecewiseLinearData",
+              "QUADRATIC": "#/components/schemas/QuadraticFunctionData"
             },
             "propertyName": "function_type"
           },
@@ -719,8 +719,8 @@
       "title": "ProductionVariableCostCurve",
       "discriminator": {
         "mapping": {
-          "COST": "#/definitions/CostCurve",
-          "FUEL": "#/definitions/FuelCurve"
+          "COST": "#/components/schemas/CostCurve",
+          "FUEL": "#/components/schemas/FuelCurve"
         },
         "propertyName": "variable_cost_type"
       },
@@ -1009,7 +1009,7 @@
         "start_up": {
           "discriminator": {
             "mapping": {
-              "STAGES": "#/definitions/StartUpStages"
+              "STAGES": "#/components/schemas/StartUpStages"
             },
             "propertyName": "startup_stages_type"
           },
@@ -1055,8 +1055,8 @@
       "title": "TwoTerminalLoss",
       "discriminator": {
         "mapping": {
-          "INCREMENTAL": "#/definitions/IncrementalCurve",
-          "INPUT_OUTPUT": "#/definitions/InputOutputCurve"
+          "INCREMENTAL": "#/components/schemas/IncrementalCurve",
+          "INPUT_OUTPUT": "#/components/schemas/InputOutputCurve"
         },
         "propertyName": "curve_type"
       },
@@ -1109,9 +1109,9 @@
     "ValueCurve": {
       "discriminator": {
         "mapping": {
-          "AVERAGE_RATE": "#/definitions/AverageRateCurve",
-          "INCREMENTAL": "#/definitions/IncrementalCurve",
-          "INPUT_OUTPUT": "#/definitions/InputOutputCurve"
+          "AVERAGE_RATE": "#/components/schemas/AverageRateCurve",
+          "INCREMENTAL": "#/components/schemas/IncrementalCurve",
+          "INPUT_OUTPUT": "#/components/schemas/InputOutputCurve"
         },
         "propertyName": "curve_type"
       },

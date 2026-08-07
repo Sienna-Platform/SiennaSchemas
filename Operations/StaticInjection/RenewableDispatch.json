@@ -51,8 +51,8 @@
       "description": "Operating cost of generation. or MarketBidCost",
       "discriminator": {
         "mapping": {
-          "RENEWABLE": "../../Core/common.json#/definitions/RenewableGenerationCost",
-          "MARKET_BID": "../../Core/common.json#/definitions/MarketBidCost"
+          "RENEWABLE": "#/components/schemas/RenewableGenerationCost",
+          "MARKET_BID": "#/components/schemas/MarketBidCost"
         },
         "propertyName": "cost_type"
       },

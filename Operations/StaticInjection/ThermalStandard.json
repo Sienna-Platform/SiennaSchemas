@@ -56,8 +56,8 @@
       "description": "Operating cost of generation, or a MarketBidCost.",
       "discriminator": {
         "mapping": {
-          "THERMAL": "../../Core/common.json#/definitions/ThermalGenerationCost",
-          "MARKET_BID": "../../Core/common.json#/definitions/MarketBidCost"
+          "THERMAL": "#/components/schemas/ThermalGenerationCost",
+          "MARKET_BID": "#/components/schemas/MarketBidCost"
         },
         "propertyName": "cost_type"
       },

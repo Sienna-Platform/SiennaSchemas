@@ -92,8 +92,8 @@
       "description": "Operating cost of storage. or MarketBidCost",
       "discriminator": {
         "mapping": {
-          "STORAGE": "../../Core/common.json#/definitions/StorageCost",
-          "MARKET_BID": "../../Core/common.json#/definitions/MarketBidCost"
+          "STORAGE": "#/components/schemas/StorageCost",
+          "MARKET_BID": "#/components/schemas/MarketBidCost"
         },
         "propertyName": "cost_type"
       },

@@ -56,8 +56,8 @@
       "description": "Operational cost of interrupting load. or MarketBidCost",
       "discriminator": {
         "mapping": {
-          "LOAD": "../../Core/common.json#/definitions/LoadCost",
-          "MARKET_BID": "../../Core/common.json#/definitions/MarketBidCost"
+          "LOAD": "#/components/schemas/LoadCost",
+          "MARKET_BID": "#/components/schemas/MarketBidCost"
         },
         "propertyName": "cost_type"
       },
