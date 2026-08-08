@@ -1,44 +1,23 @@
 #!/usr/bin/env python3
 """Verify every `$ref` and `discriminator.mapping` value actually resolves.
 
-Two passes, because "resolves" means something different for the two artifact
-shapes this repo produces:
+Two passes, because the two artifact shapes resolve differently:
 
-1. Source schemas (Core/, Operations/, Investments/, Dynamics/, the four
-   openapi-<domain>.json aggregates). These are split across many files by
-   design -- that split, and the sibling-annotation loss it causes under
-   naive $ref resolution, is exactly what scripts/bundle_specs.py exists to
-   fix (see its module docstring). A `$ref` here is checked by chasing it
-   across files (external) or within its own file (internal) and confirming
-   the target exists. A `discriminator.mapping` value is a bare `#/...`
-   fragment with no file part, so literal same-file JSON-pointer resolution
-   does not apply to it consistently across this repo's own component files
-   (e.g. Operations/StaticInjection/ThermalStandard.json has neither a
-   `definitions` nor a `components` top-level key, yet legitimately carries
-   a discriminator). Instead each mapping value's tail name is checked
-   against the full universe of names any bundle could resolve it to: every
-   Core/common.json definition name, plus every domain aggregate's top-level
-   `components.schemas` name. This is the check that catches the tracked
-   defect class (a mapping target renamed to a prefix that exists nowhere)
-   without requiring this script to re-litigate which prefix is "correct"
-   for an unbundled file -- that call belongs to the bundler.
+1. Source schemas. A `$ref` is chased across files, or within its own file,
+   and its target must exist. A `discriminator.mapping` value is a bare
+   fragment with no file part, and an unbundled component file has no
+   namespace to resolve it against (Operations/StaticInjection/
+   ThermalStandard.json carries a discriminator but has neither a
+   `definitions` nor a `components` key), so only its tail name is checked --
+   against every Core/common.json definition and every aggregate's
+   `components.schemas` key. Which prefix an unbundled file should spell is
+   the bundler's call, not this script's.
 
-2. Bundled specs (scripts/bundle_specs.py's output for the four domains,
-   built in-process here rather than read from disk -- dist/ is gitignored
-   and may not exist locally). Each bundle is a single, self-contained JSON
-   document with no remaining external refs, so both `$ref` and
-   `discriminator.mapping` are checked by literal JSON-pointer resolution
-   against that one document. This is the strict check, and the one the
-   tracked defect actually broke: bundle_specs.py rewrote `$ref` targets
-   during hoisting but left `discriminator.mapping` pointing at a prefix
-   (`#/components/schemas/<Name>`) the bundle never populates for hoisted
-   Core/common.json definitions.
+2. Bundled specs, built in-process (dist/ is gitignored and may not exist).
+   A bundle is self-contained, so both `$ref` and `discriminator.mapping`
+   must resolve as literal JSON pointers into it.
 
-Usage:
-    python3 scripts/check_refs.py
-
-Exit 1 and print one line per unresolved target if either pass finds one.
-Stdlib only (does not need the bundled files to already exist on disk).
+Exit 1 and print one line per unresolved target.
 """
 
 import json
@@ -78,12 +57,8 @@ def resolve_fragment(doc, fragment):
 
 
 def collect_source_files():
-    """Every schema JSON file plus the four openapi-<domain>.json aggregates.
-
-    Mirrors validate_units.py's SCAN_DIRS convention (excludes units.json,
-    not a schema) and additionally includes the aggregates themselves, since
-    those are where a top-level `components.schemas` name space is defined.
-    """
+    """Every schema JSON file, plus the aggregates that own a `components.schemas`
+    namespace. Excludes units.json, which is not a schema."""
     files = []
     for d in SCAN_DIRS:
         for p in sorted((REPO_ROOT / d).rglob("*.json")):
@@ -96,9 +71,7 @@ def collect_source_files():
 
 
 def build_name_registry():
-    """Every schema name a discriminator.mapping value could legitimately
-    name: Core/common.json's definitions, and each domain aggregate's
-    top-level components.schemas keys."""
+    """Every name a discriminator.mapping value may legitimately point at."""
     names = set(load_json(COMMON_PATH).get("definitions", {}).keys())
     for domain in DOMAINS:
         spec = load_json(REPO_ROOT / f"openapi-{domain}.json")
@@ -115,6 +88,16 @@ def find_nodes(doc, path=""):
     elif isinstance(doc, list):
         for i, v in enumerate(doc):
             yield from find_nodes(v, f"{path}[{i}]")
+
+
+def mapping_targets(node):
+    """Yield (key, target) for each discriminator.mapping entry on `node`."""
+    disc = node.get("discriminator")
+    if not isinstance(disc, dict):
+        return
+    mapping = disc.get("mapping")
+    if isinstance(mapping, dict):
+        yield from mapping.items()
 
 
 def check_source_refs(file_path, doc, errors):
@@ -139,13 +122,7 @@ def check_source_refs(file_path, doc, errors):
 
 def check_source_discriminators(file_path, doc, names, errors):
     for path, node in find_nodes(doc):
-        disc = node.get("discriminator")
-        if not isinstance(disc, dict):
-            continue
-        mapping = disc.get("mapping")
-        if not isinstance(mapping, dict):
-            continue
-        for key, target in mapping.items():
+        for key, target in mapping_targets(node):
             _, fragment = split_ref(target)
             name = fragment.rsplit("/", 1)[-1]
             if name not in names:
@@ -168,13 +145,7 @@ def check_bundle(domain, errors):
                 resolve_fragment(bundled, fragment)
             except KeyError as exc:
                 errors.append(f"bundle:{domain}{path} $ref -> {ref} ({exc})")
-        disc = node.get("discriminator")
-        if not isinstance(disc, dict):
-            continue
-        mapping = disc.get("mapping")
-        if not isinstance(mapping, dict):
-            continue
-        for key, target in mapping.items():
+        for key, target in mapping_targets(node):
             if is_external(target):
                 errors.append(
                     f"bundle:{domain}{path}/discriminator/mapping/{key} "

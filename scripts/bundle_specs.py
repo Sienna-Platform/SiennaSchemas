@@ -123,16 +123,11 @@ class Bundler:
         self.hoisted[name] = self._rewrite_common_internal(body)
 
     def _rewrite_discriminator_mapping(self, discriminator):
-        """Rewrite discriminator.mapping targets so they resolve inside the bundle.
+        """Repoint mapping targets at hoisted Core/common.json definitions.
 
-        Source schemas spell every mapping target as
-        '#/components/schemas/<Name>' -- the correct pointer once <Name> is a
-        top-level OpenAPI component, but wrong when <Name> is actually a
-        Core/common.json definition, since those are hoisted into the bundle's
-        top-level `definitions` block, not `components.schemas`. The sibling
-        `oneOf`/`$ref` entries for the same property already get this rewrite
-        via hoisting; mapping values must follow the same rule or they dangle.
-        """
+        Source schemas spell every target '#/components/schemas/<Name>', which
+        dangles for a common.json definition: hoisting puts those in the bundle's
+        top-level `definitions`, not `components.schemas`."""
         mapping = discriminator.get("mapping")
         if not isinstance(mapping, dict):
             return discriminator
