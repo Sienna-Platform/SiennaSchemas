@@ -8,10 +8,10 @@ enforces on every schema in `Core/`, `Operations/`, `Investments/`, and
 
 ## The vocabulary lives in `Core/units.json`
 
-`Core/units.json` is the single source of truth for the unit vocabulary
-(design decision **D1**). It lists the `quantity_types` (name, dimension,
-default unit) and `allowed_units` (the exact `(quantity_type, unit)` pairs and
-their conversion factor to the default unit).
+`Core/units.json` is the single source of truth for the unit vocabulary. It
+lists the `quantity_types` (name, dimension, default unit) and `allowed_units`
+(the exact `(quantity_type, unit)` pairs and their conversion factor to the
+default unit).
 
 **Every unit string an annotation names must be a `unit` from
 `Core/units.json` `allowed_units`, or the literal `"pu"`.** No other spellings
@@ -193,7 +193,7 @@ annotated property's description is not exactly the canonical form.
 
 ## Conventions this vocabulary encodes
 
-- **DB / interchange carry natural units** (decision **D2**), with one
+- **DB / interchange carry natural units**, with one
   deliberate exception: branch electrical parameters (`r`/`x`/`b`/`g`) may be
   stored in per-unit *or* natural units, and the storage layer records which
   per row (GridDB `transmission_lines.parameter_units`: `DEVICE_BASE` → `pu`,

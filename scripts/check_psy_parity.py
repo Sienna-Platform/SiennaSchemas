@@ -117,7 +117,7 @@ RESERVE_DIRECTION_COMPONENTS = {
 }
 
 # PSY relationship/map fields normalized into SupplementalAttributeAssociation
-# rows (D10) instead of properties.
+# rows instead of properties.
 ASSOCIATION_NORMALIZED = {
     "AGC": {"reserves"},
     "GroupReserve": {"contributing_services"},
@@ -141,11 +141,12 @@ PLANT_SA_STRUCTS = {
 # entry -- the deliberate schema design choice. PSY now ALSO stores base_power
 # on these four types (added by add_component!, kept in sync with the system
 # base -- see PSY's branchdata_checks.jl / components.jl BasePowerKind trait),
-# so as of 2026-08-07 both sides agree here and these four entries are not
-# required for the checker to pass. They stay recorded anyway: the SEMANTIC
-# being flagged (a schema field that records the system base per component,
-# not the device base) is the actual deliberate exception, independent of
-# whether PSY happens to carry a same-named field.
+# so these four entries are not currently required for the checker to pass.
+# They stay recorded anyway: the SEMANTIC being flagged (a schema field that
+# records the system base per component, not the device base) is the actual
+# deliberate exception, independent of whether PSY happens to carry a
+# same-named field. Remove an entry only if the schema stops recording the
+# system base on that component.
 #
 # TModelHVDCLine is the exception among the branches: it per-unitizes against
 # a base current, not a power base, so the schema correctly has base_current
@@ -160,13 +161,11 @@ SCHEMA_AHEAD = {
     "TModelHVDCLine": {"base_current"},
 }
 
-# Transitional expected drift: the DECIDED end state (schema-consensus decision
-# R4) is that TModelHVDCLine per-unitizes against a base current, not a power
-# base -- matching SCHEMA_AHEAD's base_current entry above. PSY commit
-# 6aee92cd5 added base_power to TModelHVDCLine ahead of that decision landing;
-# PSY has not yet dropped base_power / added base_current. Remove this entry
-# once that PSY change lands (TModelHVDCLine.base_power should then disappear
-# from the descriptor entirely).
+# Transitional expected drift: TModelHVDCLine per-unitizes against a base
+# current, not a power base -- matching SCHEMA_AHEAD's base_current entry
+# above. PSY still carries base_power on this type and has not added
+# base_current. Remove this entry once PSY drops TModelHVDCLine.base_power
+# from the descriptor.
 PSY_TRANSITIONAL_AHEAD = {
     "TModelHVDCLine": {"base_power"},
 }
@@ -185,7 +184,7 @@ PSY_INTERNAL = {
 SCHEMA_ONLY_COMPONENTS = {
     # Association normalization (plant groups, combined-cycle HRSGs, and
     # service/reserve participation) is unified into
-    # SupplementalAttributeAssociation rows (D10); PowerSystems keeps the
+    # SupplementalAttributeAssociation rows; PowerSystems keeps the
     # underlying relations on the device/plant side, so there is no PSY struct
     # to match any association table.
     "SupplementalAttributeAssociation",
@@ -230,8 +229,8 @@ IS_GEOGRAPHIC = ("GeographicInfo", "src/geographic_supplemental_attribute.jl")
 # `openapi_type` mechanism cannot emit it (field-name mismatch, non-scalar
 # field, missing base_power anchor, or a parametric struct — see the header
 # comment of openapi/import_handwritten.jl for the reason per type).
-# Derived from source (2026-08-05), not from the converter-plan's progress log,
-# which stops at 12 and is stale (omits FixedAdmittance, added later).
+# Derived from that source; check_converter_coverage below re-derives it and
+# fails on any drift.
 HAND_WRITTEN_CONVERTERS = {
     "Arc",
     "Area",
@@ -282,9 +281,9 @@ def derive_openapi_annotated_types(descriptor):
     }
 
 
-# converter-plan §8's three quantity families (POWER/IMPEDANCE/ADMITTANCE),
-# named by the descriptor's `conversion_unit` value. `Voltage`/`Angle` fields
-# use a different (V_base-anchored) mechanism, not `needs_conversion`+
+# The three quantity families (POWER/IMPEDANCE/ADMITTANCE), named by the
+# descriptor's `conversion_unit` value. `Voltage`/`Angle` fields use a
+# different (V_base-anchored) mechanism, not `needs_conversion`+
 # `conversion_unit`, so they are not part of this table.
 CONVERSION_UNIT_QUANTITY_TYPES = {
     ":mva": {"ActivePower", "ReactivePower", "ApparentPower", "ActivePowerChangeRate"},
@@ -338,7 +337,7 @@ def load_psy_structs(psy_path):
     in `unresolved` so their schema components are skipped instead of
     reported as spurious MISSING STRUCT. `conversions` carries, for every
     openapi_type-annotated struct only, the needs_conversion field metadata
-    (conversion_unit/openapi_unit) Task 6's unit-consistency check needs."""
+    (conversion_unit/openapi_unit) check_unit_consistency needs."""
     descriptor_path = os.path.join(
         psy_path, "src", "descriptors", "power_system_structs.json"
     )
@@ -465,11 +464,11 @@ def explained_schema_only(name, prop, node):
 
 
 def check_converter_coverage(psy_path, annotated_types):
-    """Converter-plan Task 6 companion: every hand-written converter's
-    declared registration (HAND_WRITTEN_CONVERTERS) must match what actually
-    exists in src/openapi/import_handwritten.jl, in both directions, and
-    no type may be registered as both generated (openapi_type-annotated) and
-    hand-written. Returns the drift count."""
+    """Every hand-written converter's declared registration
+    (HAND_WRITTEN_CONVERTERS) must match what actually exists in
+    src/openapi/import_handwritten.jl, in both directions, and no type may be
+    registered as both generated (openapi_type-annotated) and hand-written.
+    Returns the drift count."""
     drifts = 0
     actual = derive_handwritten_converter_types(psy_path)
     if actual is None:
@@ -491,13 +490,13 @@ def check_converter_coverage(psy_path, annotated_types):
 
 
 def check_unit_consistency(conversions, components, families):
-    """Converter-plan Task 6: for every openapi_type-annotated PSY struct,
-    every field with needs_conversion+conversion_unit must have a schema
-    x-unit consistent with it — "pu" when the descriptor's `openapi_unit`
-    key says so (§4b amendment 1), otherwise a natural unit in the
-    conversion_unit's quantity family. The reverse direction (a schema x-unit
-    of "pu" with no matching openapi_unit key) is caught structurally: "pu"
-    is never a member of a natural-unit family, so it fails the same branch.
+    """For every openapi_type-annotated PSY struct, every field with
+    needs_conversion+conversion_unit must have a schema x-unit consistent
+    with it — "pu" when the descriptor's `openapi_unit` key says so,
+    otherwise a natural unit in the conversion_unit's quantity family. The
+    reverse direction (a schema x-unit of "pu" with no matching openapi_unit
+    key) is caught structurally: "pu" is never a member of a natural-unit
+    family, so it fails the same branch.
     Returns the drift count; a missing plain x-unit (absent, or only a
     discriminated x-units) is its own drift rather than silently skipped."""
     drifts = 0
