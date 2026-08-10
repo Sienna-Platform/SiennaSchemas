@@ -148,26 +148,16 @@ PLANT_SA_STRUCTS = {
 # same-named field. Remove an entry only if the schema stops recording the
 # system base on that component.
 #
-# TModelHVDCLine is the exception among the branches: it per-unitizes against
-# a base current, not a power base, so the schema correctly has base_current
-# with no PSY counterpart. Its own base_power (PSY-only, the opposite
-# direction) is a separate, transitional case -- see PSY_TRANSITIONAL_AHEAD.
+# TModelHVDCLine was the exception among the branches -- it per-unitizes
+# against a base current, not a power base -- but base_current now exists on
+# both sides (PSY dropped base_power for this type and added base_current),
+# so it no longer needs an entry here.
 SCHEMA_AHEAD = {
     "Source": {"base_voltage"},
     "Line": {"base_power"},
     "MonitoredLine": {"base_power"},
     "GenericArcImpedance": {"base_power"},
     "DiscreteControlledACBranch": {"base_power"},
-    "TModelHVDCLine": {"base_current"},
-}
-
-# Transitional expected drift: TModelHVDCLine per-unitizes against a base
-# current, not a power base -- matching SCHEMA_AHEAD's base_current entry
-# above. PSY still carries base_power on this type and has not added
-# base_current. Remove this entry once PSY drops TModelHVDCLine.base_power
-# from the descriptor.
-PSY_TRANSITIONAL_AHEAD = {
-    "TModelHVDCLine": {"base_power"},
 }
 
 # PSY fields that are constructor-managed runtime state, never serialized, so
@@ -430,8 +420,6 @@ def explained_psy_only(name, field):
     if field in ASSOCIATION_NORMALIZED.get(name, set()):
         return True
     if name in PLANT_SA_STRUCTS and field.endswith("_map"):
-        return True
-    if field in PSY_TRANSITIONAL_AHEAD.get(name, set()):
         return True
     return False
 
