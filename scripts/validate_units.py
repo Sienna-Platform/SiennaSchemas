@@ -159,8 +159,9 @@ def load_column_allowed_units(griddb_path=None):
     return col_allowed
 
 
-def resolve_ref_enum(ref, source_path):
-    """Resolve a local-file $ref to a definitions entry and return its enum, or None."""
+def resolve_ref_node(ref, source_path):
+    """Resolve a local-or-cross-file $ref to its target node, or None if it
+    doesn't resolve (missing file, missing fragment path)."""
     if "#/" not in ref:
         return None
     filepart, fragment = ref.split("#", 1)
@@ -178,6 +179,12 @@ def resolve_ref_enum(ref, source_path):
             node = node[token]
         else:
             return None
+    return node
+
+
+def resolve_ref_enum(ref, source_path):
+    """Resolve a local-file $ref to a definitions entry and return its enum, or None."""
+    node = resolve_ref_node(ref, source_path)
     if isinstance(node, dict) and "enum" in node:
         return list(node["enum"])
     return None
@@ -196,6 +203,186 @@ def discriminator_enum(disc_prop_schema, source_path):
         if enum is not None:
             return {str(v) for v in enum}
     return None
+
+
+# --------------------------------------------------------------------------- #
+# Rule 7: composite-default fabrication check.
+#
+# A composite (object-valued) "default" literal must be a fully valid instance
+# of its target type, which tempts whoever authors it to fill in *every*
+# property just to make the JSON "complete" -- including properties that are
+# genuinely optional and carry no default of their own. That fabricates a
+# concrete value (e.g. "input_at_zero": 0) for a field whose only honest
+# default is "absent" (renders as `nothing` downstream), corrupting the
+# generated model's semantics the moment a caller leaves that field unset.
+#
+# Two schema-metadata facts gate a flag, both already present in the schema --
+# no guessing about names ("input_at_zero") or values (0 vs 0.0):
+#
+#   1. The key is NOT in its own type's "required" list, AND the property's
+#      own schema (where it is *defined*, not where it's being defaulted)
+#      carries no "default" of its own -- so nothing in the schema says what
+#      an absent value should render as except the generated field's own
+#      (usually `nothing`-sentinel) default.
+#   2. The type that owns the property is itself one of the concrete variants
+#      of an OpenAPI discriminated union (i.e. it appears inside some other
+#      type's "oneOf" list). This second fact is what keeps the rule from
+#      false-positiving on flat leaf records like MinMax/ComplexNumber, whose
+#      fields are equally load-bearing and never individually nullable even
+#      though JSON Schema has no "required" list for them either -- those
+#      types are never oneOf variants, only concrete curve/loss types
+#      (InputOutputCurve, IncrementalCurve, AverageRateCurve, and any type
+#      sharing their shape) are. It is a structural fact read off the schema
+#      corpus, not a heuristic on the field itself.
+# --------------------------------------------------------------------------- #
+
+
+def collect_polymorphic_variant_titles(files):
+    """Return the set of definition titles that appear as a $ref target
+    inside some "oneOf" list, anywhere in the schema corpus. These are the
+    concrete variants of a discriminated union -- the only types Rule 7 is
+    willing to flag inside."""
+    titles = set()
+
+    def walk(node, source_path):
+        if isinstance(node, dict):
+            oneof = node.get("oneOf")
+            if isinstance(oneof, list):
+                for item in oneof:
+                    if isinstance(item, dict) and "$ref" in item:
+                        target = resolve_ref_node(item["$ref"], source_path)
+                        if isinstance(target, dict) and target.get("title"):
+                            titles.add(target["title"])
+            for v in node.values():
+                walk(v, source_path)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item, source_path)
+
+    for path in files:
+        try:
+            doc = load_json_cached(path)
+        except (json.JSONDecodeError, OSError):
+            continue
+        walk(doc, path)
+    return titles
+
+
+def _discriminator_wrapper(schema_node, source_path):
+    """If schema_node is, or resolves (possibly cross-file, via $ref) to, an
+    OpenAPI discriminator+oneOf wrapper, return (wrapper_node,
+    path_of_file_containing_wrapper). Otherwise None."""
+    if not isinstance(schema_node, dict):
+        return None
+    if "discriminator" in schema_node and isinstance(schema_node.get("oneOf"), list):
+        return schema_node, source_path
+    ref = schema_node.get("$ref")
+    if ref:
+        filepart = ref.split("#", 1)[0]
+        target_path = source_path if filepart == "" else (source_path.parent / filepart).resolve()
+        target = resolve_ref_node(ref, source_path)
+        if isinstance(target, dict) and "discriminator" in target and isinstance(target.get("oneOf"), list):
+            return target, target_path
+    return None
+
+
+def _ref_target_path(ref, source_path):
+    """The file a (possibly cross-file) $ref resolves into, without chasing
+    the fragment -- needed because a bare "#/definitions/X" ref inside a
+    definition means "this same file", which after following one cross-file
+    $ref is no longer the file we started scanning."""
+    filepart = ref.split("#", 1)[0]
+    return source_path if filepart == "" else (source_path.parent / filepart).resolve()
+
+
+def resolve_effective_type(schema_node, default_value, source_path):
+    """Return (properties, required-set, title, type_source_path) for the
+    concrete type that default_value is meant to be an instance of, given the
+    schema node that carries the default (a $ref, an inline discriminated
+    oneOf, or an inline object schema). type_source_path is the file the
+    resolved type's own "properties" live in -- callers must resolve any
+    further $refs found there relative to it, not the original source_path,
+    or cross-file nesting silently stops resolving past the first hop.
+    Returns None when the type can't be honestly resolved (e.g. an
+    unresolvable discriminator value) -- callers must skip rather than
+    guess, to avoid false positives."""
+    wrapper = _discriminator_wrapper(schema_node, source_path)
+    if wrapper is not None:
+        wrapper_node, wrapper_path = wrapper
+        disc = wrapper_node.get("discriminator", {})
+        prop_name = disc.get("propertyName")
+        mapping = disc.get("mapping", {})
+        if not isinstance(default_value, dict) or prop_name not in default_value:
+            return None
+        mapped = mapping.get(default_value[prop_name])
+        if mapped is None:
+            return None
+        type_name = mapped.rsplit("/", 1)[-1]
+        variant_ref = f"#/definitions/{type_name}"
+        target = resolve_ref_node(variant_ref, wrapper_path)
+        if not isinstance(target, dict):
+            return None
+        return (target.get("properties") or {}, set(target.get("required") or []),
+                target.get("title", type_name), _ref_target_path(variant_ref, wrapper_path))
+    ref = schema_node.get("$ref") if isinstance(schema_node, dict) else None
+    if ref:
+        target = resolve_ref_node(ref, source_path)
+        if not isinstance(target, dict):
+            return None
+        return (target.get("properties") or {}, set(target.get("required") or []),
+                target.get("title", ref.rsplit("/", 1)[-1]), _ref_target_path(ref, source_path))
+    if isinstance(schema_node, dict) and isinstance(schema_node.get("properties"), dict):
+        return (schema_node["properties"], set(schema_node.get("required") or []),
+                schema_node.get("title"), source_path)
+    return None
+
+
+def check_composite_default(default_dict, schema_node, path, source_path,
+                            source_file, failures, variant_titles):
+    resolved = resolve_effective_type(schema_node, default_dict, source_path)
+    if resolved is None:
+        return
+    properties, required, title, type_source_path = resolved
+    is_variant = title in variant_titles
+    for key, val in default_dict.items():
+        if key not in properties:
+            continue
+        pschema = properties[key]
+        has_own_default = isinstance(pschema, dict) and "default" in pschema
+        if is_variant and key not in required and not has_own_default:
+            failures.append(
+                Failure(source_file, f"{path}/{key}",
+                        "composite-default-fabricated-optional-value",
+                        val,
+                        "key omitted -- this property is optional on "
+                        f"discriminated-union variant '{title}' and has no "
+                        "schema-declared default of its own, so a composite "
+                        "default literal must not fabricate a concrete "
+                        "value for it")
+            )
+        if isinstance(val, dict):
+            check_composite_default(val, pschema, f"{path}/{key}",
+                                    type_source_path, source_file, failures,
+                                    variant_titles)
+
+
+def find_composite_defaults(node, path, source_path, source_file, failures,
+                            variant_titles):
+    """Walk the whole document looking for object-valued "default" blocks and
+    check each one against Rule 7."""
+    if isinstance(node, dict):
+        default = node.get("default")
+        if isinstance(default, dict):
+            check_composite_default(default, node, f"{path}/default",
+                                    source_path, source_file, failures,
+                                    variant_titles)
+        for k, v in node.items():
+            find_composite_defaults(v, f"{path}/{k}", source_path, source_file,
+                                    failures, variant_titles)
+    elif isinstance(node, list):
+        for i, item in enumerate(node):
+            find_composite_defaults(item, f"{path}/{i}", source_path, source_file,
+                                    failures, variant_titles)
 
 
 def validate_x_units_map(x_units, path, enclosing_props, source_path,
@@ -583,6 +770,7 @@ def main():
 def run_validation(files, griddb_path=None):
     allowed_units = load_allowed_units()
     col_allowed = load_column_allowed_units(griddb_path)
+    variant_titles = collect_polymorphic_variant_titles(files)
     failures = []
 
     for path in files:
@@ -597,6 +785,7 @@ def run_validation(files, griddb_path=None):
         check_metaschema(doc, str(rel), failures)
         check_annotations(doc, "", str(rel), path, [], failures, allowed_units,
                           col_allowed)
+        find_composite_defaults(doc, "", path, str(rel), failures, variant_titles)
 
     print(f"Scanned {len(files)} schema file(s) under {', '.join(SCAN_DIRS)}.")
     print(f"Vocabulary: {len(allowed_units) - 1} allowed units + 'pu' from Core/units.json.")

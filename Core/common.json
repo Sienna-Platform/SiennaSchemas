@@ -83,8 +83,7 @@
               "function_type": "LINEAR",
               "constant_term": 0,
               "proportional_term": 0
-            },
-            "input_at_zero": 0
+            }
           },
           "$ref": "#/definitions/InputOutputCurve"
         }
@@ -444,8 +443,7 @@
           "function_type": "LINEAR",
           "constant_term": 0,
           "proportional_term": 0
-        },
-        "input_at_zero": 0
+        }
       },
       "properties": {
         "curve_type": {
@@ -555,8 +553,7 @@
               "function_type": "LINEAR",
               "constant_term": 0,
               "proportional_term": 0
-            },
-            "input_at_zero": 0
+            }
           },
           "$ref": "#/definitions/InputOutputCurve"
         },
@@ -572,8 +569,7 @@
               "function_type": "LINEAR",
               "constant_term": 0,
               "proportional_term": 0
-            },
-            "input_at_zero": 0
+            }
           },
           "$ref": "#/definitions/InputOutputCurve"
         },
@@ -777,8 +773,7 @@
                 "function_type": "LINEAR",
                 "constant_term": 0,
                 "proportional_term": 0
-              },
-              "input_at_zero": 0
+              }
             },
             "vom_cost": {
               "curve_type": "INPUT_OUTPUT",
@@ -786,8 +781,7 @@
                 "function_type": "LINEAR",
                 "constant_term": 0,
                 "proportional_term": 0
-              },
-              "input_at_zero": 0
+              }
             }
           },
           "$ref": "#/definitions/CostCurve"
@@ -1074,8 +1068,7 @@
           "function_type": "LINEAR",
           "constant_term": 0,
           "proportional_term": 0
-        },
-        "input_at_zero": 0
+        }
       },
       "type": "object"
     },

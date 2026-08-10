@@ -126,8 +126,7 @@
           "function_type": "LINEAR",
           "constant_term": 0,
           "proportional_term": 0
-        },
-        "input_at_zero": 0
+        }
       },
       "$ref": "../../Core/common.json#/definitions/InputOutputCurve"
     },
@@ -248,8 +247,7 @@
           "function_type": "LINEAR",
           "constant_term": 0,
           "proportional_term": 0
-        },
-        "input_at_zero": 0
+        }
       },
       "$ref": "../../Core/common.json#/definitions/InputOutputCurve"
     },
