@@ -243,6 +243,13 @@ HAND_WRITTEN_CONVERTERS = {
     "OnlineReserve",
     "OfflineReserve",
     "GroupReserve",
+    # Declared by the PSY "OpenAPI serde: converters for six more types" work: each has a
+    # `from_openapi` method in import_handwritten.jl but was not listed here.
+    "DiscreteControlledACBranch",
+    "FACTSControlDevice",
+    "SwitchedAdmittance",
+    "TwoTerminalLCCLine",
+    "TwoTerminalVSCLine",
 }
 HANDWRITTEN_CONVERTERS_REL_PATH = "src/openapi/import_handwritten.jl"
 
