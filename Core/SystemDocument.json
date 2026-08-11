@@ -56,10 +56,31 @@
       }
     },
     "supplemental_attribute_associations": {
-      "description": "Links each supplemental attribute, or each service acting as one, to the entity it describes or the member it contains. One row per (attribute, entity) or (service, member) pair; `attribute_type` says which.",
+      "description": "Links each plain supplemental attribute (e.g. EmissionsData, GeographicInfo) to the entity it describes. One row per (attribute, entity) pair. Plant, combined-cycle, and service memberships are carried by their own arrays below, not here.",
       "type": "array",
       "items": {
-        "$ref": "SupplementalAttributes/SupplementalAttributeAssociation.json"
+        "$ref": "Associations/SupplementalAttributeAssociation.json"
+      }
+    },
+    "plant_associations": {
+      "description": "Links a power plant supplemental attribute (ThermalPowerPlant, HydroPowerPlant, RenewablePowerPlant, CombinedCycleFractional) to a generating unit and the group it belongs to within the plant: shafts, penstocks, PCCs, or exclusion groups.",
+      "type": "array",
+      "items": {
+        "$ref": "../Operations/Associations/PlantAssociation.json"
+      }
+    },
+    "combined_cycle_associations": {
+      "description": "Links a CombinedCycleBlock plant to a CT or CA unit, identifying which HRSG the unit feeds into or receives from.",
+      "type": "array",
+      "items": {
+        "$ref": "../Operations/Associations/CombinedCycleAssociation.json"
+      }
+    },
+    "service_associations": {
+      "description": "Links a service to one component that contributes to it. One row per (service, member) pair.",
+      "type": "array",
+      "items": {
+        "$ref": "../Operations/Associations/ServiceAssociation.json"
       }
     },
     "time_series_associations": {
@@ -90,6 +111,9 @@
     "components",
     "supplemental_attributes",
     "supplemental_attribute_associations",
+    "plant_associations",
+    "combined_cycle_associations",
+    "service_associations",
     "time_series_associations",
     "time_series_storage_file"
   ]

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ThermalPowerPlant",
-  "description": "Attribute to represent ThermalGen power plants with synchronous generation. Shared shafts between units are recorded as SupplementalAttributeAssociation rows, with group_index the shaft number.",
+  "description": "Attribute to represent ThermalGen power plants with synchronous generation. Shared shafts between units are recorded as PlantAssociation rows with role='shaft'.",
   "type": "object",
   "properties": {
     "id": {

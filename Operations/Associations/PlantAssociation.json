@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PlantAssociation",
+  "description": "Association between a power plant supplemental attribute and a generating unit, identifying the group the unit belongs to within the plant. Covers 1-to-n cases: ThermalPowerPlant shafts, HydroPowerPlant penstocks, RenewablePowerPlant PCCs, and CombinedCycleFractional exclusion groups. The semantics of group_index are determined by the parent plant's type.",
+  "type": "object",
+  "properties": {
+    "plant_id": {
+      "type": "integer",
+      "description": "ID of the parent plant supplemental attribute"
+    },
+    "entity_id": {
+      "type": "integer",
+      "description": "ID of the generating unit (entity) participating in the plant"
+    },
+    "group_index": {
+      "type": "integer",
+      "description": "Group number within the plant (shaft, penstock, PCC, or exclusion group, depending on the parent plant's type)"
+    }
+  },
+  "required": [
+    "plant_id",
+    "entity_id",
+    "group_index"
+  ]
+}

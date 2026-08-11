@@ -52,8 +52,8 @@ Deliberate, allowlisted differences between PSY and the schemas (encoded in
 `check_psy_parity.py`): infra fields (`internal`, `ext`, `services`, container
 fields) are dropped; schemas add integer `id`s; `Reserve{T}` direction is
 flattened to a `reserve_direction` property; PSY relationship/map fields are
-normalized into `SupplementalAttributeAssociation` rows; `Source.base_voltage`
-is schemas-ahead-of-PSY.
+normalized into association components (`PlantAssociation`,
+`CombinedCycleAssociation`); `Source.base_voltage` is schemas-ahead-of-PSY.
 
 ## Release order
 

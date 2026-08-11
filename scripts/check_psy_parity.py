@@ -116,8 +116,8 @@ RESERVE_DIRECTION_COMPONENTS = {
     "GroupReserve",
 }
 
-# PSY relationship/map fields normalized into SupplementalAttributeAssociation
-# rows instead of properties.
+# PSY relationship/map fields normalized into association components
+# (PlantAssociation / CombinedCycleAssociation) instead of properties.
 ASSOCIATION_NORMALIZED = {
     "AGC": {"reserves"},
     "GroupReserve": {"contributing_services"},
@@ -172,11 +172,12 @@ PSY_INTERNAL = {
 # and IS-level concepts). Everything under Investments/ maps to PSIP, not PSY,
 # and is excluded from the scan entirely.
 SCHEMA_ONLY_COMPONENTS = {
-    # Association normalization (plant groups, combined-cycle HRSGs, and
-    # service/reserve participation) is unified into
-    # SupplementalAttributeAssociation rows; PowerSystems keeps the
-    # underlying relations on the device/plant side, so there is no PSY struct
-    # to match any association table.
+    "CombinedCycleAssociation",
+    "PlantAssociation",
+    # Reserve/service participation is normalized to (service_id, entity_id) rows
+    # here. PowerSystems keeps the same relation on the device side as
+    # Device.services, so there is no PSY struct to match.
+    "ServiceAssociation",
     "SupplementalAttributeAssociation",
     "TimeSeriesAssociation",
     # The whole-system serialization envelope, not a component. Its Julia
