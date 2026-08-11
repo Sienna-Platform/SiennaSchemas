@@ -19,6 +19,10 @@
       "type": "number",
       "x-unit": "MW"
     },
+    "variable": {
+      "description": "Operating reserve demand curve for the group, either static or time-series-backed. A group carrying a curve is elastic: its requirement is priced by the curve rather than enforced. Time series values are carried via `time_series_associations` in the sidecar, never inline. Omit when the group has no demand curve.",
+      "$ref": "../../Core/common.json#/definitions/CostCurve"
+    },
     "reserve_direction": {
       "description": "Whether the reserve is an upward, downward, or symmetric reserve product.",
       "$ref": "../../Operations/common.json#/definitions/ReserveDirection"

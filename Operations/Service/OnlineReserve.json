@@ -26,7 +26,7 @@
       "x-unit": "MW"
     },
     "variable": {
-      "description": "Operating reserve demand curve. Omit when the reserve has no demand curve.",
+      "description": "Operating reserve demand curve, either static or time-series-backed. Time series values are carried via `time_series_associations` in the sidecar, never inline. Omit when the reserve has no demand curve.",
       "$ref": "../../Core/common.json#/definitions/CostCurve"
     },
     "sustained_time": {
