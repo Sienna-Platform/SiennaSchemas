@@ -214,7 +214,6 @@ HAND_WRITTEN = {
 # source relative to the InfrastructureSystems.jl checkout.
 IS_HAND_WRITTEN = {
     "GeographicInfo": "src/geographic_supplemental_attribute.jl",
-    # Only on IS's data-source branch; the comparison skips until it merges to IS4.
     "DataSource": "src/data_source_supplemental_attribute.jl",
 }
 
