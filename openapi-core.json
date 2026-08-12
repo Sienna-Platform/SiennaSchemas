@@ -152,6 +152,9 @@
       "GeographicInfo": {
         "$ref": "Core/SupplementalAttributes/GeographicInfo.json"
       },
+      "DataSource": {
+        "$ref": "Core/SupplementalAttributes/DataSource.json"
+      },
       "SupplementalAttributeAssociation": {
         "$ref": "Core/Associations/SupplementalAttributeAssociation.json"
       },

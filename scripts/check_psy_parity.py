@@ -188,7 +188,7 @@ SCHEMA_ONLY_COMPONENTS = {
 }
 
 # Hand-written supplemental-attribute structs: name -> Julia source relative
-# to the PSY checkout (GeographicInfo lives in InfrastructureSystems).
+# to the PSY checkout.
 HAND_WRITTEN = {
     "EmissionsData": "src/emissions_data.jl",
     "ImpedanceCorrectionData": "src/impedance_correction.jl",
@@ -210,7 +210,13 @@ HAND_WRITTEN = {
     "OfflineReserve": "src/models/reserves.jl",
     "GroupReserve": "src/models/reserves.jl",
 }
-IS_GEOGRAPHIC = ("GeographicInfo", "src/geographic_supplemental_attribute.jl")
+# IS-resident hand-written supplemental-attribute structs: name -> Julia
+# source relative to the InfrastructureSystems.jl checkout.
+IS_HAND_WRITTEN = {
+    "GeographicInfo": "src/geographic_supplemental_attribute.jl",
+    # Only on IS's data-source branch; the comparison skips until it merges to IS4.
+    "DataSource": "src/data_source_supplemental_attribute.jl",
+}
 
 # Hand-written `from_openapi` CONVERTERS (src/openapi/import_handwritten.jl):
 # a DIFFERENT category from HAND_WRITTEN above. Every one of these has a normal
@@ -329,7 +335,20 @@ def julia_struct_fields(path, struct_name):
     return fields
 
 
-def load_psy_structs(psy_path):
+def _load_hand_written(structs, unresolved, root, table):
+    """Add each struct in `table` (name -> Julia source relative to `root`) to
+    `structs`, or to `unresolved` when its source file is absent."""
+    for name, rel_path in table.items():
+        full = os.path.normpath(os.path.join(root, rel_path))
+        fields = julia_struct_fields(full, name) if os.path.exists(full) else None
+        if fields is None:
+            unresolved.add(name)
+            print(f"SKIP hand-written struct {name}: {full} not found")
+        else:
+            structs[name] = fields
+
+
+def load_psy_structs(psy_path, is_path):
     """Returns (structs, unresolved, defaults, conversions, annotated_types).
     Hand-written structs whose Julia source is absent (partial checkout) land
     in `unresolved` so their schema components are skipped instead of
@@ -371,24 +390,8 @@ def load_psy_structs(psy_path):
                 for field in entry.get("fields", [])
                 if field.get("needs_conversion")
             }
-    for name, rel_path in HAND_WRITTEN.items():
-        full = os.path.join(psy_path, rel_path)
-        fields = julia_struct_fields(full, name) if os.path.exists(full) else None
-        if fields is None:
-            unresolved.add(name)
-            print(f"SKIP hand-written struct {name}: source not found under {psy_path}")
-        else:
-            structs[name] = fields
-    is_name, is_rel = IS_GEOGRAPHIC
-    is_path = os.path.normpath(
-        os.path.join(psy_path, "..", "InfrastructureSystems.jl", is_rel)
-    )
-    fields = julia_struct_fields(is_path, is_name) if os.path.exists(is_path) else None
-    if fields is None:
-        unresolved.add(is_name)
-        print(f"SKIP hand-written struct {is_name}: InfrastructureSystems.jl checkout not found")
-    else:
-        structs[is_name] = fields
+    _load_hand_written(structs, unresolved, psy_path, HAND_WRITTEN)
+    _load_hand_written(structs, unresolved, is_path, IS_HAND_WRITTEN)
     return structs, unresolved, defaults, conversions, annotated_types
 
 
@@ -537,6 +540,14 @@ def main():
         default=os.path.normpath(os.path.join(REPO_ROOT, "..", "PowerSystems.jl")),
         help="PowerSystems.jl checkout (SKIPs cleanly when absent)",
     )
+    parser.add_argument(
+        "--is-path",
+        default=os.path.normpath(
+            os.path.join(REPO_ROOT, "..", "InfrastructureSystems.jl")
+        ),
+        help="InfrastructureSystems.jl checkout supplying the IS-resident "
+             "hand-written structs (each SKIPs cleanly when absent)",
+    )
     args = parser.parse_args()
 
     descriptor = os.path.join(
@@ -547,7 +558,7 @@ def main():
         return 0
 
     psy_structs, unresolved, psy_defaults, conversions, annotated_types = (
-        load_psy_structs(args.psy_path)
+        load_psy_structs(args.psy_path, args.is_path)
     )
     components, schema_defaults = load_schema_components()
 
