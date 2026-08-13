@@ -7,11 +7,6 @@
     "id": {
       "type": "integer"
     },
-    "time_series_uuid": {
-      "type": "string",
-      "format": "uuid",
-      "description": "UUID of the time series data. May reference inline data or an external store (e.g., HDF5)."
-    },
     "time_series_type": {
       "type": "string"
     },
@@ -63,14 +58,9 @@
         "$ref": "../common.json#/definitions/Feature"
       }
     },
-    "scaling_factor_multiplier": {
+    "element_type": {
       "type": "string",
-      "description": "Dot-encoded function name like PowerSystems.get_max_active_power."
-    },
-    "metadata_uuid": {
-      "type": "string",
-      "format": "uuid",
-      "description": "Usually unique for each association, but not necessarily"
+      "description": "Canonical element type of the stored array: a dtype spelling (`f64`, `f32`, `i64`, `i32`, `u64`, `bool`) for plain scalars, else `tuple(N,dtype)` or a function-data kind (`linear_function`, `quadratic_function`, `piecewise_linear`, `piecewise_step`). It says what one timestep's value *means* and how it is laid out; the physical dtype of the bytes is derived from it rather than recorded separately. Unlike `units` and `quantity_type` this is not a user-facing label — the writing package derives it from the array."
     },
     "units": {
       "type": "string",
@@ -83,11 +73,14 @@
     "unit_system": {
       "$ref": "../common.json#/definitions/UnitSystem",
       "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a DEVICE_BASE series back to natural units needs the owning component's base_power — as with every other per-unit quantity, system-base data records its base there and rides as DEVICE_BASE. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS: a series that never declared a basis must not be read as though someone had said its values were natural."
+    },
+    "application_data": {
+      "type": "string",
+      "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. This is a property of the association, not the component-level `ext` that the PSY parity allowlist drops as an infra field. Element typing does *not* belong here — that is `element_type`, which this layer owns and validates."
     }
   },
   "required": [
     "id",
-    "time_series_uuid",
     "time_series_type",
     "initial_timestamp",
     "resolution",
@@ -95,7 +88,6 @@
     "owner_id",
     "owner_type",
     "owner_category",
-    "features",
-    "metadata_uuid"
+    "features"
   ]
 }
