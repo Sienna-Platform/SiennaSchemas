@@ -74,7 +74,15 @@
     },
     "units": {
       "type": "string",
-      "description": "Unit string for the series values; must be a unit from the Core/units.json vocabulary for the series' quantity type."
+      "description": "Unit string for the series values; must be a unit from the Core/units.json vocabulary allowed for `quantity_type`. Absent when the series declares no unit, and meaningless on its own when `unit_system` is a per-unit basis, where the values are dimensionless."
+    },
+    "quantity_type": {
+      "type": "string",
+      "description": "Kind of physical quantity the values measure; must be a `quantity_types` name from the Core/units.json vocabulary (e.g. ActivePower, ReactivePower, ElectricalEnergy). Not an enum here because Core/units.json is the single source of truth for the vocabulary and duplicating it would give it two homes. It is coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity type can. It is also the only record of what the values measure when `unit_system` is a per-unit basis and they are therefore dimensionless."
+    },
+    "unit_system": {
+      "$ref": "../common.json#/definitions/UnitSystem",
+      "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a DEVICE_BASE series back to natural units needs the owning component's base_power — as with every other per-unit quantity, system-base data records its base there and rides as DEVICE_BASE. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS: a series that never declared a basis must not be read as though someone had said its values were natural."
     }
   },
   "required": [
