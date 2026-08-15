@@ -68,12 +68,15 @@ jobs:
           --psy-path PowerSystems.jl
           --is-path InfrastructureSystems.jl
 
-      # PSIP tracks its investment types in src/descriptors/SiennaInvestSchema.json
-      # on its default branch, so no `ref` override is needed here.
-      - name: Checkout PowerSystemsInvestmentsPortfolios for parity gate
+      # PSIP tracks its investment types in src/descriptors/SiennaInvestSchema.json.
+      # TODO after psy6 merges to PSIP main: drop `ref`. PSIP's default branch
+      # predates the units work, so parity is measured against its psy6 line
+      # branch, same as PSY/IS above.
+      - name: Checkout PowerSystemsInvestmentsPortfolios (psy6) for parity gate
         uses: actions/checkout@v4
         with:
           repository: Sienna-Platform/PowerSystemsInvestmentsPortfolios.jl
+          ref: psy6
           path: PowerSystemsInvestmentsPortfolios.jl
           fetch-depth: 1
 
