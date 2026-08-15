@@ -25,9 +25,9 @@
       "x-unit": "MVAr"
     },
     "max_flow": {
-      "description": "Maximum allowable flow on the generic impedance. Per-unit on system base. Units: pu.",
+      "description": "Maximum allowable flow on the generic impedance. Units: MW.",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit": "MW"
     },
     "arc": {
       "description": "An `Arc` defining this line `from` a bus `to` another bus.",
@@ -39,26 +39,26 @@
       "x-unit": "MVA"
     },
     "parameter_units": {
-      "description": "Unit basis for r and x. SYSTEM_BASE: per-unit on the system base. NATURAL_UNITS: physical ohms.",
-      "default": "SYSTEM_BASE",
+      "description": "Unit basis for r and x. DEVICE_BASE is per-unit on this component's base_power, which records the system base.",
+      "default": "DEVICE_BASE",
       "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
     },
     "r": {
-      "description": "Resistance. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
+      "description": "Resistance. Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
-        "SYSTEM_BASE": "pu",
-        "NATURAL_UNITS": "ohm"
+        "NATURAL_UNITS": "ohm",
+        "DEVICE_BASE": "pu"
       }
     },
     "x": {
-      "description": "Reactance. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
+      "description": "Reactance. Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
-        "SYSTEM_BASE": "pu",
-        "NATURAL_UNITS": "ohm"
+        "NATURAL_UNITS": "ohm",
+        "DEVICE_BASE": "pu"
       }
     }
   },

@@ -22,9 +22,8 @@
         "function_data": {
           "discriminator": {
             "mapping": {
-              "LINEAR": "#/definitions/LinearFunctionData",
-              "PIECEWISE_LINEAR": "#/definitions/PiecewiseLinearData",
-              "QUADRATIC": "#/definitions/QuadraticFunctionData"
+              "LINEAR": "#/components/schemas/LinearFunctionData",
+              "PIECEWISE_STEP": "#/components/schemas/PiecewiseStepData"
             },
             "propertyName": "function_type"
           },
@@ -33,10 +32,7 @@
               "$ref": "#/definitions/LinearFunctionData"
             },
             {
-              "$ref": "#/definitions/QuadraticFunctionData"
-            },
-            {
-              "$ref": "#/definitions/PiecewiseLinearData"
+              "$ref": "#/definitions/PiecewiseStepData"
             }
           ]
         },
@@ -87,9 +83,8 @@
               "function_type": "LINEAR",
               "constant_term": 0,
               "proportional_term": 0
-            },
-            "input_at_zero": 0
-          },  
+            }
+          },
           "$ref": "#/definitions/InputOutputCurve"
         }
       },
@@ -129,6 +124,15 @@
         "MWH"
       ],
       "title": "EnergyUnit",
+      "type": "string"
+    },
+    "EnergyUnitBasis": {
+      "description": "Unit basis a stored-energy quantity is recorded in (distinct from EnergyUnit, which names fuel energy content). MWH: megawatt-hours, the conventional interchange form. MWMIN: megawatt-minutes, consistent with the minutes basis used for operational durations, so a duration computed as energy over power comes out in minutes with no hidden factor of 60. Defaults to MWH: MWMIN is supported, not preferred.",
+      "enum": [
+        "MWH",
+        "MWMIN"
+      ],
+      "title": "EnergyUnitBasis",
       "type": "string"
     },
     "FdbdPnts": {
@@ -186,6 +190,10 @@
         "power_units": {
           "$ref": "#/definitions/UnitSystem"
         },
+        "startup_fuel_offtake": {
+          "description": "Fuel consumed during startup, as a curve in the unit's fuel units.",
+          "$ref": "#/definitions/InputOutputCurve"
+        },
         "value_curve": {
           "$ref": "#/definitions/ValueCurve"
         },
@@ -211,10 +219,10 @@
     "FunctionData": {
       "discriminator": {
         "mapping": {
-          "LINEAR": "#/definitions/LinearFunctionData",
-          "PIECEWISE_LINEAR": "#/definitions/PiecewiseLinearData",
-          "PIECEWISE_STEP": "#/definitions/PiecewiseStepData",
-          "QUADRATIC": "#/definitions/QuadraticFunctionData"
+          "LINEAR": "#/components/schemas/LinearFunctionData",
+          "PIECEWISE_LINEAR": "#/components/schemas/PiecewiseLinearData",
+          "PIECEWISE_STEP": "#/components/schemas/PiecewiseStepData",
+          "QUADRATIC": "#/components/schemas/QuadraticFunctionData"
         },
         "propertyName": "function_type"
       },
@@ -238,9 +246,9 @@
     "GenericOperationCost": {
       "discriminator": {
         "mapping": {
-          "RENEWABLE": "#/definitions/RenewableGenerationCost",
-          "THERMAL": "#/definitions/ThermalGenerationCost",
-          "HYDRO_GEN": "#/definitions/HydroGenerationCost"
+          "RENEWABLE": "#/components/schemas/RenewableGenerationCost",
+          "THERMAL": "#/components/schemas/ThermalGenerationCost",
+          "HYDRO_GEN": "#/components/schemas/HydroGenerationCost"
         },
         "propertyName": "cost_type"
       },
@@ -309,8 +317,8 @@
       "type": "object",
       "discriminator": {
         "mapping": {
-          "HYDRO_GEN": "#/definitions/HydroGenerationCost",
-          "STORAGE": "#/definitions/StorageCost"
+          "HYDRO_GEN": "#/components/schemas/HydroGenerationCost",
+          "STORAGE": "#/components/schemas/StorageCost"
         },
         "propertyName": "cost_type"
       },
@@ -324,15 +332,31 @@
       ]
     },
     "ImpedanceUnitBasis": {
-      "description": "Unit basis a branch/injection impedance is stored in. SYSTEM_BASE: per-unit on the system MVA/voltage base. NATURAL_UNITS: physical ohms (PSS/E RAW native for DC-line impedances).",
-      "enum": ["SYSTEM_BASE", "NATURAL_UNITS"],
+      "description": "Unit basis a branch/injection impedance is stored in. NATURAL_UNITS: physical ohms (PSS/E RAW native for DC-line impedances). DEVICE_BASE: per-unit on the component's own base (base_power MVA and voltage base); components whose per-unit data was historically on the system base record that system base in base_power, so there is no separate system-base option. PSS/E supplies device base for DC-line converters and CZ=2 transformer windings.",
+      "enum": [
+        "NATURAL_UNITS",
+        "DEVICE_BASE"
+      ],
       "title": "ImpedanceUnitBasis",
       "type": "string"
     },
     "AdmittanceUnitBasis": {
-      "description": "Unit basis a shunt admittance is stored in. SYSTEM_BASE: per-unit on the system base. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance) — PSS/E RAW native for fixed/switched shunts.",
-      "enum": ["SYSTEM_BASE", "NATURAL_UNITS", "DEVICE_MVAR"],
+      "description": "Unit basis a shunt admittance is stored in. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance). DEVICE_BASE: per-unit on the component's own base (base_power MVA and voltage base) \u2014 a per-unit base, not a power at unity voltage, and not an alternative spelling of DEVICE_MVAR; components whose per-unit data was historically on the system base record that system base in base_power. Fixed and switched shunts use ShuntAdmittanceUnitBasis instead, which omits DEVICE_BASE because a shunt has no device MVA rating.",
+      "enum": [
+        "NATURAL_UNITS",
+        "DEVICE_MVAR",
+        "DEVICE_BASE"
+      ],
       "title": "AdmittanceUnitBasis",
+      "type": "string"
+    },
+    "ShuntAdmittanceUnitBasis": {
+      "description": "Subset of AdmittanceUnitBasis for fixed and switched shunts: omits DEVICE_BASE because a shunt has no device MVA rating to per-unitize against. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance) \u2014 PSS/E RAW native for shunts.",
+      "enum": [
+        "NATURAL_UNITS",
+        "DEVICE_MVAR"
+      ],
+      "title": "ShuntAdmittanceUnitBasis",
       "type": "string"
     },
     "ImportExportCost": {
@@ -372,8 +396,8 @@
         "function_data": {
           "discriminator": {
             "mapping": {
-              "LINEAR": "#/definitions/LinearFunctionData",
-              "PIECEWISE_STEP": "#/definitions/PiecewiseStepData"
+              "LINEAR": "#/components/schemas/LinearFunctionData",
+              "PIECEWISE_STEP": "#/components/schemas/PiecewiseStepData"
             },
             "propertyName": "function_type"
           },
@@ -419,8 +443,7 @@
           "function_type": "LINEAR",
           "constant_term": 0,
           "proportional_term": 0
-        },
-        "input_at_zero": 0
+        }
       },
       "properties": {
         "curve_type": {
@@ -431,9 +454,9 @@
         "function_data": {
           "discriminator": {
             "mapping": {
-              "LINEAR": "#/definitions/LinearFunctionData",
-              "PIECEWISE_LINEAR": "#/definitions/PiecewiseLinearData",
-              "QUADRATIC": "#/definitions/QuadraticFunctionData"
+              "LINEAR": "#/components/schemas/LinearFunctionData",
+              "PIECEWISE_LINEAR": "#/components/schemas/PiecewiseLinearData",
+              "QUADRATIC": "#/components/schemas/QuadraticFunctionData"
             },
             "propertyName": "function_type"
           },
@@ -523,15 +546,14 @@
           "default": "MARKET_BID"
         },
         "no_load_cost": {
-          "description": "No load cost.",
+          "description": "No load cost. Legacy scalar promotion: a bare scalar value `s` from a legacy source converts to an `InputOutputCurve` of `LinearFunctionData` with `constant_term = s` and `proportional_term = 0`.",
           "default": {
             "curve_type": "INPUT_OUTPUT",
             "function_data": {
               "function_type": "LINEAR",
               "constant_term": 0,
               "proportional_term": 0
-            },
-            "input_at_zero": 0
+            }
           },
           "$ref": "#/definitions/InputOutputCurve"
         },
@@ -540,15 +562,14 @@
           "$ref": "#/definitions/StartUpStages"
         },
         "shut_down": {
-          "description": "Shut-down cost.",
+          "description": "Shut-down cost. Legacy scalar promotion: a bare scalar value `s` from a legacy source converts to an `InputOutputCurve` of `LinearFunctionData` with `constant_term = s` and `proportional_term = 0`.",
           "default": {
             "curve_type": "INPUT_OUTPUT",
             "function_data": {
               "function_type": "LINEAR",
               "constant_term": 0,
               "proportional_term": 0
-            },
-            "input_at_zero": 0
+            }
           },
           "$ref": "#/definitions/InputOutputCurve"
         },
@@ -650,6 +671,8 @@
         "N2O",
         "NOX",
         "SO2",
+        "CO",
+        "VOC",
         "PM25",
         "PM10",
         "HG",
@@ -692,8 +715,8 @@
       "title": "ProductionVariableCostCurve",
       "discriminator": {
         "mapping": {
-          "COST": "#/definitions/CostCurve",
-          "FUEL": "#/definitions/FuelCurve"
+          "COST": "#/components/schemas/CostCurve",
+          "FUEL": "#/components/schemas/FuelCurve"
         },
         "propertyName": "variable_cost_type"
       },
@@ -750,8 +773,7 @@
                 "function_type": "LINEAR",
                 "constant_term": 0,
                 "proportional_term": 0
-              },
-              "input_at_zero": 0
+              }
             },
             "vom_cost": {
               "curve_type": "INPUT_OUTPUT",
@@ -759,9 +781,8 @@
                 "function_type": "LINEAR",
                 "constant_term": 0,
                 "proportional_term": 0
-              },
-              "input_at_zero": 0
-            } 
+              }
+            }
           },
           "$ref": "#/definitions/CostCurve"
         },
@@ -939,7 +960,7 @@
         "PROPANE",
         "SYNTHESIS_GAS_PETROLEUM_COKE",
         "WASTE_OIL",
-        "BLASTE_FURNACE_GAS",
+        "BLAST_FURNACE_GAS",
         "NATURAL_GAS",
         "OTHER_GAS",
         "AG_BYPRODUCT",
@@ -951,10 +972,10 @@
         "BLACK_LIQUOR",
         "WOOD_WASTE_LIQUIDS",
         "LANDFILL_GAS",
-        "OTHEHR_BIOMASS_GAS",
+        "OTHER_BIOMASS_GAS",
         "NUCLEAR",
         "WASTE_HEAT",
-        "TIREDERIVED_FUEL",
+        "TIRE_DERIVED_FUEL",
         "COAL",
         "GEOTHERMAL",
         "OTHER"
@@ -982,19 +1003,19 @@
         "start_up": {
           "discriminator": {
             "mapping": {
-              "STAGES": "#/definitions/StartUpStages"
-            },  
+              "STAGES": "#/components/schemas/StartUpStages"
+            },
             "propertyName": "startup_stages_type"
-          },  
+          },
           "description": "Start-up cost can take linear or multi-stage cost",
           "oneOf": [
-            {   
+            {
               "type": "number"
             },
-            {   
+            {
               "$ref": "#/definitions/StartUpStages"
             }
-          ]   
+          ]
         },
         "variable": {
           "$ref": "#/definitions/ProductionVariableCostCurve"
@@ -1028,18 +1049,18 @@
       "title": "TwoTerminalLoss",
       "discriminator": {
         "mapping": {
-          "INCREMENTAL": "#/definitions/IncrementalCurve",
-          "INPUT_OUTPUT": "#/definitions/InputOutputCurve"
-        },  
+          "INCREMENTAL": "#/components/schemas/IncrementalCurve",
+          "INPUT_OUTPUT": "#/components/schemas/InputOutputCurve"
+        },
         "propertyName": "curve_type"
-      },  
+      },
       "oneOf": [
-        {   
+        {
           "$ref": "#/definitions/InputOutputCurve"
-        },  
-        {   
+        },
+        {
           "$ref": "#/definitions/IncrementalCurve"
-        }   
+        }
       ],
       "default": {
         "curve_type": "INPUT_OUTPUT",
@@ -1047,14 +1068,13 @@
           "function_type": "LINEAR",
           "constant_term": 0,
           "proportional_term": 0
-        }, 
-        "input_at_zero": 0
+        }
       },
-      "type": "object"  
+      "type": "object"
     },
     "UnitSystem": {
+      "description": "Unit basis curve power values are stored in. DEVICE_BASE: per-unit on the component's own base_power. NATURAL_UNITS: MW/MVA. There is no system-base option: per-unit data historically on the system base records that base in the component's base_power and rides as DEVICE_BASE.",
       "enum": [
-        "SYSTEM_BASE",
         "DEVICE_BASE",
         "NATURAL_UNITS"
       ],
@@ -1082,9 +1102,9 @@
     "ValueCurve": {
       "discriminator": {
         "mapping": {
-          "AVERAGE_RATE": "#/definitions/AverageRateCurve",
-          "INCREMENTAL": "#/definitions/IncrementalCurve",
-          "INPUT_OUTPUT": "#/definitions/InputOutputCurve"
+          "AVERAGE_RATE": "#/components/schemas/AverageRateCurve",
+          "INCREMENTAL": "#/components/schemas/IncrementalCurve",
+          "INPUT_OUTPUT": "#/components/schemas/InputOutputCurve"
         },
         "propertyName": "curve_type"
       },
@@ -1103,28 +1123,28 @@
       "type": "object"
     },
     "TechnologyFinancialData": {
-        "properties": {
-          "capital_recovery_period": {
-              "type": "integer"
-          },
-          "technology_base_year": {
-              "type": "integer"
-          },
-          "debt_fraction": {
-              "type": "number"
-          },
-          "debt_rate": {
-              "type": "number"
-          },
-          "return_on_equity": {
-              "type": "number"
-          },
-          "tax_rate": {
-              "type": "number"
-          }
+      "properties": {
+        "capital_recovery_period": {
+          "type": "integer"
         },
-        "title": "TechnologyFinancialData",
-        "type": "object"
+        "technology_base_year": {
+          "type": "integer"
+        },
+        "debt_fraction": {
+          "type": "number"
+        },
+        "debt_rate": {
+          "type": "number"
+        },
+        "return_on_equity": {
+          "type": "number"
+        },
+        "tax_rate": {
+          "type": "number"
+        }
+      },
+      "title": "TechnologyFinancialData",
+      "type": "object"
     },
     "XY_Coords": {
       "properties": {

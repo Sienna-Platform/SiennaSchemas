@@ -50,30 +50,21 @@
     },
     "operation_cost": {
       "description": "Operating cost of generation. or MarketBidCost; default PSY.HydroGenerationCost(nothing)",
-      "default": {
-        "variable": {
-          "variable_cost_type": "COST",
-          "value_curve": {
-            "curve_type": "INPUT_OUTPUT",
-            "function_data": {
-              "function_type": "LINEAR",
-              "constant_term": 0,
-              "proportional_term": 0
-            },
-            "input_at_zero": 0
-          },
-          "vom_cost": {
-            "curve_type": "INPUT_OUTPUT",
-            "function_data": {
-              "function_type": "LINEAR",
-              "constant_term": 0,
-              "proportional_term": 0
-            },
-            "input_at_zero": 0
-          }
-        }
+      "discriminator": {
+        "mapping": {
+          "HYDRO_GEN": "#/components/schemas/HydroGenerationCost",
+          "MARKET_BID": "#/components/schemas/MarketBidCost"
+        },
+        "propertyName": "cost_type"
       },
-      "$ref": "../../Core/common.json#/definitions/HydroGenerationCost"
+      "oneOf": [
+        {
+          "$ref": "../../Core/common.json#/definitions/HydroGenerationCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/MarketBidCost"
+        }
+      ]
     },
     "powerhouse_elevation": {
       "description": "Height level above the sea level of the powerhouse on which the turbine is installed. Units: m.",
@@ -87,9 +78,9 @@
       "x-unit": "MW/min"
     },
     "time_limits": {
-      "description": "Minimum up and minimum down time limits. Units: h.",
+      "description": "Minimum up and minimum down time limits. Units: min.",
       "$ref": "../../Core/common.json#/definitions/UpDown",
-      "x-unit": "h"
+      "x-unit": "min"
     },
     "outflow_limits": {
       "description": "Turbine outflow limits. Set to `null` if not applicable. Units: m3/s.",
@@ -130,9 +121,13 @@
       "default": "HY"
     },
     "travel_time": {
-      "description": "Downstream (from reservoir into turbine) travel time. Units: h.",
-      "type": "number",
-      "x-unit": "h"
+      "description": "Downstream (from reservoir into turbine) travel time. Set to `null` if not applicable. Units: min.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "x-unit": "min",
+      "default": null
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection device, if any.",

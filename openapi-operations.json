@@ -24,22 +24,13 @@
         "$ref": "Operations/Branch/AreaInterchange.json"
       },
       "CombinedCycleAssociation": {
-        "$ref": "Operations/SupplementalAttributes/CombinedCycleAssociation.json"
+        "$ref": "Operations/Associations/CombinedCycleAssociation.json"
       },
       "CombinedCycleBlock": {
         "$ref": "Operations/SupplementalAttributes/CombinedCycleBlock.json"
       },
       "CombinedCycleFractional": {
         "$ref": "Operations/SupplementalAttributes/CombinedCycleFractional.json"
-      },
-      "ConstantReserve": {
-        "$ref": "Operations/Service/ConstantReserve.json"
-      },
-      "ConstantReserveGroup": {
-        "$ref": "Operations/Service/ConstantReserveGroup.json"
-      },
-      "ConstantReserveNonSpinning": {
-        "$ref": "Operations/Service/ConstantReserveNonSpinning.json"
       },
       "DCBus": {
         "$ref": "Operations/Topology/DCBus.json"
@@ -64,6 +55,9 @@
       },
       "FixedForcedOutage": {
         "$ref": "Operations/SupplementalAttributes/FixedForcedOutage.json"
+      },
+      "GroupReserve": {
+        "$ref": "Operations/Service/GroupReserve.json"
       },
       "GenericArcImpedance": {
         "$ref": "Operations/Branch/GenericArcImpedance.json"
@@ -113,11 +107,17 @@
       "MotorLoad": {
         "$ref": "Operations/StaticInjection/MotorLoad.json"
       },
+      "OfflineReserve": {
+        "$ref": "Operations/Service/OfflineReserve.json"
+      },
+      "OnlineReserve": {
+        "$ref": "Operations/Service/OnlineReserve.json"
+      },
       "PlannedOutage": {
         "$ref": "Operations/SupplementalAttributes/PlannedOutage.json"
       },
       "PlantAssociation": {
-        "$ref": "Operations/SupplementalAttributes/PlantAssociation.json"
+        "$ref": "Operations/Associations/PlantAssociation.json"
       },
       "PowerLoad": {
         "$ref": "Operations/StaticInjection/PowerLoad.json"
@@ -131,6 +131,9 @@
       "RenewablePowerPlant": {
         "$ref": "Operations/SupplementalAttributes/RenewablePowerPlant.json"
       },
+      "ServiceAssociation": {
+        "$ref": "Operations/Associations/ServiceAssociation.json"
+      },
       "ShiftablePowerLoad": {
         "$ref": "Operations/StaticInjection/ShiftablePowerLoad.json"
       },
@@ -139,6 +142,9 @@
       },
       "StandardLoad": {
         "$ref": "Operations/StaticInjection/StandardLoad.json"
+      },
+      "Substation": {
+        "$ref": "Operations/SupplementalAttributes/Substation.json"
       },
       "SwitchedAdmittance": {
         "$ref": "Operations/StaticInjection/SwitchedAdmittance.json"
@@ -178,12 +184,6 @@
       },
       "TwoWindingTransformer": {
         "$ref": "Operations/Branch/TwoWindingTransformer.json"
-      },
-      "VariableReserve": {
-        "$ref": "Operations/Service/VariableReserve.json"
-      },
-      "VariableReserveNonSpinning": {
-        "$ref": "Operations/Service/VariableReserveNonSpinning.json"
       },
       "VSCACControlModes": {"$ref": "Operations/common.json#/definitions/VSCACControlModes"},
       "VSCDCControlModes": {"$ref": "Operations/common.json#/definitions/VSCDCControlModes"},

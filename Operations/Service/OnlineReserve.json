@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A reserve product with a constant procurement requirement, such as 3% of the system base power at all times. This reserve product includes online generators that can respond right away after an unexpected contingency, such as a transmission line or generator outage. When defining the reserve, the `ReserveDirection` must be specified to define this as a `ReserveUp`, `ReserveDown`, or `ReserveSymmetric`.",
+  "description": "A reserve product provided by devices already synchronized with the system. The procurement requirement is static unless a `requirement` time series is attached, in which case `requirement` is the scaling factor. Attach an Operating Reserve Demand Curve through `variable` to price the requirement rather than enforce it; omit `variable` when the reserve has no demand curve.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -21,14 +21,19 @@
     },
     "requirement": {
       "description": "The value of required reserves. Units: MW.",
+      "default": 0.0,
       "type": "number",
       "x-unit": "MW"
     },
+    "variable": {
+      "description": "Operating reserve demand curve, either static or time-series-backed. Time series values are carried via `time_series_associations` in the sidecar, never inline. Omit when the reserve has no demand curve.",
+      "$ref": "../../Core/common.json#/definitions/CostCurve"
+    },
     "sustained_time": {
-      "description": "The time reserve contribution must be sustained at a specified level. Units: s.",
-      "default": 3600.0,
+      "description": "The time reserve contribution must be sustained at a specified level. Units: min.",
+      "default": 60.0,
       "type": "number",
-      "x-unit": "s"
+      "x-unit": "min"
     },
     "max_output_fraction": {
       "description": "The maximum fraction of each device's output that can be assigned to the service.",
@@ -55,9 +60,8 @@
     "name",
     "available",
     "time_frame",
-    "requirement",
     "reserve_direction"
   ],
-  "title": "ConstantReserve",
+  "title": "OnlineReserve",
   "type": "object"
 }

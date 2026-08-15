@@ -1,24 +1,24 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A topological directed edge connecting two buses. Arcs are used to define the `from` and `to` buses when defining a line or transformer.",
+  "description": "A topological directed edge connecting two buses. Arcs are used to define the `from_id` and `to_id` endpoints when defining a line or transformer.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
-    "from": {
+    "from_id": {
       "description": "ID of the initial bus.",
       "type": "integer"
     },
-    "to": {
+    "to_id": {
       "description": "ID of the terminal bus.",
       "type": "integer"
     }
   },
   "required": [
     "id",
-    "from",
-    "to"
+    "from_id",
+    "to_id"
   ],
   "title": "Arc",
   "type": "object"

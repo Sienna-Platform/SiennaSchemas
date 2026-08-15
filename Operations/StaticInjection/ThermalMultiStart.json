@@ -66,14 +66,14 @@
       "x-unit": "MW"
     },
     "time_limits": {
-      "description": "Minimum up and minimum down time limits. Units: h.",
+      "description": "Minimum up and minimum down time limits. Units: min.",
       "$ref": "../../Core/common.json#/definitions/UpDown",
-      "x-unit": "h"
+      "x-unit": "min"
     },
     "start_time_limits": {
-      "description": "Time limits for start-up based on turbine temperature. Units: h.",
+      "description": "Time limits for start-up based on turbine temperature. Units: min.",
       "$ref": "../../Core/common.json#/definitions/StartUpStages",
-      "x-unit": "h"
+      "x-unit": "min"
     },
     "start_types": {
       "description": "Number of start-up based on turbine temperature, where `1` = *hot*, `2` = *warm*, and `3` = *cold*.",
@@ -81,7 +81,21 @@
     },
     "operation_cost": {
       "description": "Operating cost of generation. or MarketBidCost",
-      "$ref": "../../Core/common.json#/definitions/ThermalGenerationCost"
+      "discriminator": {
+        "mapping": {
+          "THERMAL": "#/components/schemas/ThermalGenerationCost",
+          "MARKET_BID": "#/components/schemas/MarketBidCost"
+        },
+        "propertyName": "cost_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "../../Core/common.json#/definitions/ThermalGenerationCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/MarketBidCost"
+        }
+      ]
     },
     "base_power": {
       "description": "Base power of the unit for per unitization. Units: MVA.",
@@ -89,10 +103,10 @@
       "x-unit": "MVA"
     },
     "time_at_status": {
-      "description": "Time the generator has been on or off, as indicated by `status`. Units: h.",
-      "default": 10000.0,
+      "description": "Time the generator has been on or off, as indicated by `status`. Units: min.",
+      "default": 600000.0,
       "type": "number",
-      "x-unit": "h"
+      "x-unit": "min"
     },
     "must_run": {
       "description": "Set to `true` if the unit is must run.",

@@ -1,21 +1,40 @@
 # SiennaSchemas — Claude Guide
 
-The **single source of truth for Sienna data-model schemas**: hand-written JSON Schema (draft-07) definitions organized by domain, the OpenAPI specs that select what each generated package contains, the **unit vocabulary** (`Core/units.json`), and the units validator. Everything here is source; the generated side lives downstream. Platform conventions: `.claude/Sienna.md`; workspace architecture: the psy6 workspace root `CLAUDE.md`.
+The **single source of truth for Sienna data-model schemas**: hand-written JSON Schema (draft-07) definitions organized by domain, the OpenAPI specs that select what each generated package contains, the **unit vocabulary** (`Core/units.json`), and the units validator. Everything here is source; the generated side lives downstream. Platform conventions: the `sienna-psy6` skill. The end-to-end pipeline and its gates are documented in `docs/PIPELINE.md`; the annotation spec is `docs/UNIT_ANNOTATIONS.md`.
 
-Current branch: `jm/units` (units-annotation effort, PR #15). Master plan: the psy6 workspace root's `.claude/plans/2026-07-05-units-ecosystem-closure.md`.
+Branch and repo state change constantly — read them, don't trust them written down: `git branch --show-current`, `git status --short`, `git log --oneline origin/main..HEAD`.
+
+## Working agreement
+
+**Responses.** Keep responses focused and concise. Spend most of the response on the main answer and keep caveats short. When asked to explain something, give a high-level summary unless an in-depth explanation is requested.
+
+**Scope.** Deliver what was asked, at the scope intended. Make routine judgment calls yourself, and check in only when different readings of the request would lead to materially different work. If the request seems mistaken or a better approach exists, say so in a sentence and continue with the task as asked rather than quietly narrowing, widening, or transforming it. Finish the whole task, and stop short of actions clearly beyond what was asked. Two concrete limits here: the PSY ⇄ OpenAPI ⇄ GridDB converter does not exist — don't improvise a partial one; and generated downstream packages are outputs, so fix their inputs, never hand-edit them.
+
+**Communication.** Before the first tool call, say in one sentence what you're about to do. While working, give a brief update only when you find something important or change direction. When finishing, lead with the outcome: the first sentence answers "what happened" or "what did you find", with supporting detail after it.
+
+**Corrections.** Only correct an earlier statement when the error would change the user's code, conclusions, or decisions. State the correction plainly and briefly, then continue. For slips that change nothing, make the fix and move on without noting it.
+
+**Verification.** `docs/PIPELINE.md` lists the five gates and what each one catches — run those; they are real build steps, not self-checking. Beyond them, don't add verification passes or re-check work already checked.
+
+**Reviews and audits.** When reviewing schemas or auditing drift, report everything found and filter in a separate pass. Pre-filtering to "high severity only" suppresses real findings.
+
+**Written output.** Match document length to what the task needs: cover the substance without filler sections, redundant summaries, or boilerplate.
+
+**Delegation.** Use subagents only when explicitly requested. When they are, delegate only genuinely independent, sizeable tracks — a wide sweep across the whole domain schema tree, say — never to verify your own work, and keep spawn counts low.
 
 ## Multi-repository pipeline
 
 ```
 SiennaSchemas (this repo — hand-written source)
-  │  git tag vX.Y.Z → GH Actions release tarball; downstream polls; .schema-version records consumed tag
   ├─ openapi-*.json ──datamodel-codegen──▶ power-openapi-models   (Python / pydantic v2)
-  ├─ openapi-*.json ──openapi-generator──▶ PowerOpenAPIModels     (5 Julia packages)
+  ├─ openapi-*.json ──openapi-generator──▶ PowerOpenAPIModels     (Julia packages)
   └─ Core/units.json ──SiennaGridDB/scripts/generate_unit_registry.py──▶ GridDB sealed unit registry
 ```
 
-- Schemas mirror **PowerSystems.jl component types field-for-field** but in natural units with integer-id references (PSY internals are per-unit with object references). A PSY field change without a schema change is drift — the C1 sync tooling (schemas ↔ GridDB registry ↔ PSY descriptor) exists to catch it. Live example of drift: `Operations/StaticInjection/HydroReservoir.json` still `$ref`s `ValueCurve` for `head_to_volume_factor` while PSY psy6 (commit `ed30a682`) moved it to `FunctionData` — this is the regression fixture for the sync check.
-- **The PSY6 System ⇄ OpenAPI ⇄ GridDB serialize/deserialize loop is not closed yet** — no converter exists in either direction; that bridge is the next stage. Until then, validators are the only consistency mechanism; treat annotation/vocabulary correctness as load-bearing.
+- Schemas mirror **PowerSystems.jl component types field-for-field** but in natural units with integer-id references (PSY internals are per-unit with object references). A PSY field change without a schema change is drift; `scripts/check_psy_parity.py` is the gate that catches it.
+- No converter exists between a PSY `System` and these types or GridDB rows, so **validators are the only consistency mechanism** — treat annotation and vocabulary correctness as load-bearing.
+- Component coverage against PSY is complete for everything except Dynamics: every non-dynamics PSY struct has a schema, and the absent structs are all in the dynamics family (AVR, TurbineGov, Machine, PSS, DynamicInjection, filters, limiters), deferred by design. Fields absent **by convention rather than drift**: `services`/`reserves`/`contributing_services` (many-to-many), `n_states`/`states`/`states_types` (read-only dynamic metadata), and `TransformerCircuit.base_value` (derived units anchor PSY marks "do not modify"). Don't re-flag these as gaps.
+- **Known gap:** Service components exist, but no schema records *which devices contribute to which service* — there is no membership type here, unlike `Core/SupplementalAttributes/SupplementalAttributeAssociation.json`. The DB side of the same gap is noted in SiennaGridDB.
 
 ## Generated package membership
 
@@ -40,33 +59,38 @@ Investments/             # Technologies/, Financials/, Requirements/, Attributes
 Dynamics/                # DynamicGeneratorComponent/, DynamicInverterComponent/
 openapi-{core,operations,investments,dynamics}.json     # $ref wrappers selecting package membership
 openapi-config-*.json    # generator configs (inlineSchemaNameMappings)
-scripts/validate_units.py   # x-unit annotation validator
-scripts/bundle_specs.py     # → dist/openapi-*-bundled.json (units ride as Units: sentences)
-dist/                       # bundled specs for codegen consumers
-docs/UNIT_ANNOTATIONS.md
-.github/workflows/          # release.yml, validate-schemas.yml
+scripts/                 # validate_units.py, bundle_specs.py,
+                         # check_psy_parity.py, check_psip_parity.py
+dist/                    # bundled specs for codegen consumers (gitignored)
+docs/                    # PIPELINE.md (gates), UNIT_ANNOTATIONS.md (annotation spec)
+.github/workflows/       # release.yml, validate-schemas.yml
 ```
 
 Cross-references are relative paths (`"$ref": "../../Core/common.json#/definitions/MinMax"`) — **directory layout is load-bearing**; moving a file breaks every `$ref` to it.
 
-## Units annotations (the active effort)
+## Unit vocabulary and annotations
 
-- `Core/units.json` is the unit vocabulary — single source of truth, consumed by the validator here and by SiennaGridDB's registry generator (sibling-checkout relative path `../SiennaSchemas`).
-- Every numeric property carries `x-unit` (or `x-units` + `x-unit-discriminator` for discriminated cases; `x-unit-base` names a sibling property). Values must be in `units.json` `allowed_units` or the literal `"pu"`. For the four branch-impedance quantities (Resistance/Reactance/Susceptance/Conductance), `pu` **is** a registered vocabulary unit — it is one of two discriminated storage options (per-row basis recorded by GridDB `transmission_lines.parameter_units`); elsewhere `"pu"` is just an annotation channel.
-- Vocabulary rules: reactive power is `MVAr` (not MW — 63 fields across 27 files are being corrected); impedance/admittance annotations move from `ohm`/`S` to `"pu"`; percent is banned (store fractions).
-- Validate: `python3 scripts/validate_units.py` (spec in `docs/UNIT_ANNOTATIONS.md`). Use `python3`, never `python`; the venv is `.venv-units` at the psy6 workspace root.
-- Remaining annotation debt (post-PR #15): Dynamics numerics (deferred by design) and the ~56 documented sync-check WARNs (`SiennaGridDB/scripts/check_units_sync.py`) — gaps, not contradictions. Operations and Investments are annotated; `base_power` defaults are gone.
+`Core/units.json` is the vocabulary and the single source of truth, consumed by the validator here and by SiennaGridDB's registry generator. The full annotation spec is `docs/UNIT_ANNOTATIONS.md` — read it before adding an annotation form; the rules below are the parts most often needed.
+
+- Every numeric property carries `x-unit`, or `x-units` + `x-unit-discriminator` for discriminated cases (`x-unit-base` names a sibling property). Values must appear in `allowed_units` or be the literal `"pu"`.
+- For the four branch-impedance quantities (Resistance/Reactance/Susceptance/Conductance), `pu` **is** a registered vocabulary unit — one of **two** discriminated storage options, with GridDB recording which per row (`DEVICE_BASE` → `pu`, `NATURAL_UNITS` → `ohm`/`S`). Per `docs/UNIT_ANNOTATIONS.md` these branch parameters are the *only* deliberate exception to natural-unit storage; everywhere else `"pu"` is a model-layer annotation, never a stored unit.
+- **`SYSTEM_BASE` is not a valid unit basis.** Every basis enum offers exactly `NATURAL_UNITS` and a per-unit option: `DEVICE_BASE`, per-unit on the component's own recorded base — components whose per-unit data was historically on the system base record that base in their own `base_power` (`base_current` for `TModelHVDCLine`, which per-unitizes against a current). Shunts use `DEVICE_MVAR` (a power at unity voltage, **not** a respelling of `DEVICE_BASE`) via `ShuntAdmittanceUnitBasis`, which omits `DEVICE_BASE` because a shunt has no device MVA rating.
+- Reactive power is `MVAr`, never `MW`. Percent is banned — store fractions.
+- **Time is three quantity types, each with exactly one allowed unit so the vocabulary enforces the tier:** `Duration` (`s`) for continuous time constants; `OperationalDuration` (`min`) for scheduling and commitment durations; `CalendarPeriod` (`yr`) for planning spans. The tier fixes the unit, not the numeric type — `units.json` owns the integrality policy. Hours are not a vocabulary unit — an hours-valued field is a tier error, not a conversion. `CalendarPeriod` carries no `to_default` bridge on purpose: a calendar year is not a fixed number of seconds.
+- Durations reuse the real-valued shared structs (`MinMax`/`UpDown`/`TurbinePump`/`StartUpStages`) with `x-unit: min`; there is no parallel integer struct family.
+- Only dependency is `jsonschema`. `validate_units.py --fix-descriptions` regenerates the canonical `Units:` sentences; `--check-descriptions` is the CI gate.
+- **The `x-unit-quantity` pairing rule needs a GridDB checkout** (`--griddb-path`, default `../SiennaGridDB`) and is silently skipped when absent — see the `load_column_allowed_units` docstring in `scripts/validate_units.py` for the full behavior. CI has no GridDB checkout, so a green CI run is not evidence the pairing rule is satisfied.
+- Remaining annotation debt: Dynamics numerics (deferred by design) and the sync-check warnings from GridDB, which are gaps rather than contradictions — GridDB's README defines that distinction.
 
 ## Schema conventions
 
 - JSON Schema draft-07 (`"$schema": "http://json-schema.org/draft-07/schema#"`).
 - Discriminated unions: `oneOf` + a `discriminator` block (`propertyName` + `mapping`).
 - Component base properties: `id` (integer), `name` (string), `available` (boolean).
-- `ext`, supplemental attributes, and many-to-many relations are stored *separately*; one-to-many relations become integer id references.
-- Natural units throughout, with the deliberate exceptions of power factor, cost curves, and branch electrical parameters (r/x/b/g), which are annotated `x-unit: "pu"` (system base) and stored downstream in per-unit or natural units via a per-row discriminator.
-- Avoid read-only fields (e.g. for dynamic components).
+- `ext`, supplemental attributes, and many-to-many relations are stored *separately*; one-to-many relations become integer id references, named with an `_id` / `_ids` suffix.
+- Avoid read-only and derived fields — PSY has them, this layer does not.
 - Property ordering follows Sienna conventions: id, name, bus, …
-- Path-aliasing problems are resolved via `inlineSchemaNameMappings` in `openapi-config-*.json` (workaround for [openapi-generator #18948](https://github.com/OpenAPITools/openapi-generator/issues/18948)).
+- Path-aliasing collisions are resolved via `inlineSchemaNameMappings` in `openapi-config-*.json` (workaround for [openapi-generator #18948](https://github.com/OpenAPITools/openapi-generator/issues/18948)). The alias count is empirical — confirm it by running codegen, not by reasoning about consumer counts.
 
 ## Generator configs & local codegen check
 
@@ -74,16 +98,16 @@ Cross-references are relative paths (`"$ref": "../../Core/common.json#/definitio
 openapi-generator generate -c openapi-config-core.json -g julia-server -o ./PowerCoreOpenAPIModels.jl
 ```
 
-Config files are language-agnostic; pick `-g python` or `-g julia-server` on the command line. (The production Julia generation actually happens in the PowerOpenAPIModels repo via `julia-client` + its `reorganize.jl`; the Python side uses datamodel-codegen, not openapi-generator — bug classes differ between the two toolchains.)
+Config files are language-agnostic; pick `-g python` or `-g julia-server` on the command line. Production Julia generation happens in the PowerOpenAPIModels repo via `julia-client` plus its `reorganize.jl` and needs Docker with a codegen image; the Python side uses datamodel-codegen. The two toolchains fail in different ways, so a change that generates cleanly in one is **not** proven in the other — regenerate both. Each downstream repo documents its own environment setup.
 
 ## Recipe: change a schema (end-to-end)
 
-1. Edit the domain JSON (respect conventions below); keep `$ref` paths valid — layout is load-bearing.
-2. Annotate numerics with `x-unit` from `Core/units.json`; run `python3 scripts/validate_units.py`.
-3. Rebundle: `python3 scripts/bundle_specs.py` → `dist/` (units ride as `Units:` description sentences for generators that drop vendor extensions).
-4. If the change mirrors a PSY descriptor change, confirm both sides (drift check); if it affects DB columns, coordinate `SiennaGridDB/schema/column_conventions.json` + registry regeneration — **Schemas release before GridDB regenerates**.
-5. Regenerate and validate both model packages (`power-openapi-models`: `make generate && make validate`; `PowerOpenAPIModels`: `make generate && make validate`) — codegen breakage is cheapest to catch here.
-6. Tag a release when the change set is coherent (see below).
+1. Edit the domain JSON; keep `$ref` paths valid — layout is load-bearing.
+2. Annotate numerics with `x-unit` from `Core/units.json`.
+3. Run the gates in `docs/PIPELINE.md`, then rebundle with `bundle_specs.py` → `dist/` (units ride as `Units:` sentences for generators that drop vendor extensions).
+4. If the change mirrors a PSY descriptor change, confirm both sides. If it affects DB columns, coordinate `SiennaGridDB/schema/column_conventions.json` and registry regeneration — **tag a Schemas release before GridDB regenerates**.
+5. Regenerate both model packages (`make generate && make validate` in each). Codegen breakage is cheapest to catch here.
+6. Tag a release when the change set is coherent.
 
 ## Creating a release
 
@@ -92,19 +116,8 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-The tag push triggers the GH Actions release workflow (schema tarball → GitHub Release). Downstream repos poll for releases and record the consumed tag in their `.schema-version`. Note: both downstream `.schema-version` files currently read `none` — the release-driven regeneration loop has never fired; current generated models came from ad-hoc sibling-checkout generation.
+The tag push triggers the GH Actions release workflow (schema tarball → GitHub Release). Downstream repos poll for releases and record the consumed tag in their `.schema-version` — check a downstream repo to see whether the loop has fired for a given tag.
 
-## Units effort — where the docs live
-
-The units annotation work is documented for humans in `README.md` (Units section) and
-`docs/UNIT_ANNOTATIONS.md` (the annotation spec). The vocabulary is `Core/units.json`;
-validate with `scripts/validate_units.py`; bundle for codegen with `scripts/bundle_specs.py`
-(units also ride to consumers as `Units:` sentences in bundled descriptions, since
-openapi-generator drops the `x-unit` vendor extension). The downstream registry lives in
-SiennaGridDB (`scripts/generate_unit_registry.py --units-json ../SiennaSchemas/Core/units.json`),
-kept in lockstep by its `scripts/check_units_sync.py`. Merge order is load-bearing: tag a
-SiennaSchemas release (with `units.json` + `dist/` bundles) **before** GridDB regenerates.
-
-## Branch/merge state (2026-07 snapshot)
-
-`origin/main` is merged into `jm/units` (merge commit `dff9f40`; the 4 Dynamics-controller conflicts are resolved). `main`'s `Core/TimeSeries/TimeSeriesAssociation.json` `units` property now carries a vocabulary-pointing description; `GeographicInfo.json` arrived unchanged. Keep this branch discipline: Schemas on `jm/units`, SiennaGridDB on `jm/units_v2`, IS on `IS4`, PSY on `psy6`.
+<tone_preference>
+Keep outputs reasonably concise. Lead with the outcome, and let the pipeline gates stand in for extra verification passes.
+</tone_preference>

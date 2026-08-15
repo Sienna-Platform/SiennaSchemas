@@ -17,6 +17,15 @@ jobs:
       - name: Install dependencies
         run: pip install jsonschema
 
+      # NOTE: without a SiennaGridDB checkout the (quantity_type, unit) pairing
+      # rule is SKIPPED, not satisfied — this step passing does not prove that
+      # rule holds. Enable it by checking GridDB out and passing --griddb-path
+      # once GridDB re-types its time columns to OperationalDuration /
+      # CalendarPeriod; until then the rule fails on known, tracked drift:
+      #
+      #   - uses: actions/checkout@v4
+      #     with: { repository: Sienna-Platform/SiennaGridDB, path: SiennaGridDB, fetch-depth: 1 }
+      #   - run: python scripts/validate_units.py --griddb-path SiennaGridDB
       - name: Validate unit annotations
         run: python scripts/validate_units.py
 
@@ -32,6 +41,9 @@ jobs:
       - name: Check bundled specs are up to date
         run: python scripts/bundle_specs.py --check
 
+      - name: Check $ref and discriminator.mapping resolution
+        run: python scripts/check_refs.py
+
       # TODO after psy6 merges to PowerSystems main: drop `ref`
       - name: Checkout PowerSystems (psy6) for parity gate
         uses: actions/checkout@v4
@@ -42,8 +54,7 @@ jobs:
           fetch-depth: 1
 
       # TODO after IS4 merges to InfrastructureSystems main: drop `ref`
-      # The parity script finds IS as a sibling of the PSY checkout.
-      - name: Checkout InfrastructureSystems (IS4) for GeographicInfo parity
+      - name: Checkout InfrastructureSystems (IS4) for IS-resident struct parity
         uses: actions/checkout@v4
         with:
           repository: Sienna-Platform/InfrastructureSystems.jl
@@ -52,14 +63,20 @@ jobs:
           fetch-depth: 1
 
       - name: PSY struct parity gate
-        run: python scripts/check_psy_parity.py --psy-path PowerSystems.jl
+        run: >-
+          python scripts/check_psy_parity.py
+          --psy-path PowerSystems.jl
+          --is-path InfrastructureSystems.jl
 
-      # PSIP tracks its investment types in src/descriptors/SiennaInvestSchema.json
-      # on its default branch, so no `ref` override is needed here.
-      - name: Checkout PowerSystemsInvestmentsPortfolios for parity gate
+      # PSIP tracks its investment types in src/descriptors/SiennaInvestSchema.json.
+      # TODO after psy6 merges to PSIP main: drop `ref`. PSIP's default branch
+      # predates the units work, so parity is measured against its psy6 line
+      # branch, same as PSY/IS above.
+      - name: Checkout PowerSystemsInvestmentsPortfolios (psy6) for parity gate
         uses: actions/checkout@v4
         with:
           repository: Sienna-Platform/PowerSystemsInvestmentsPortfolios.jl
+          ref: psy6
           path: PowerSystemsInvestmentsPortfolios.jl
           fetch-depth: 1
 

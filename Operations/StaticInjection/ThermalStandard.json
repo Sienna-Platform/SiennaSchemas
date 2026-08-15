@@ -53,8 +53,22 @@
       "x-unit": "MW/min"
     },
     "operation_cost": {
-      "description": "Operating cost of generation. or MarketBidCost",
-      "$ref": "../../Core/common.json#/definitions/ThermalGenerationCost"
+      "description": "Operating cost of generation, or a MarketBidCost.",
+      "discriminator": {
+        "mapping": {
+          "THERMAL": "#/components/schemas/ThermalGenerationCost",
+          "MARKET_BID": "#/components/schemas/MarketBidCost"
+        },
+        "propertyName": "cost_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "../../Core/common.json#/definitions/ThermalGenerationCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/MarketBidCost"
+        }
+      ]
     },
     "base_power": {
       "description": "Base power of the unit for per unitization. Must be positive; a zero base would make per-unit conversion undefined. Units: MVA.",
@@ -62,9 +76,9 @@
       "x-unit": "MVA"
     },
     "time_limits": {
-      "description": "Minimum up and minimum down time limits. Units: h.",
+      "description": "Minimum up and minimum down time limits. Units: min.",
       "$ref": "../../Core/common.json#/definitions/UpDown",
-      "x-unit": "h"
+      "x-unit": "min"
     },
     "must_run": {
       "description": "Set to `true` if the unit is must run.",
@@ -83,10 +97,10 @@
       "default": "OTHER"
     },
     "time_at_status": {
-      "description": "Time the generator has been on or off, as indicated by `status`. Units: h.",
-      "default": 10000.0,
+      "description": "Time the generator has been on or off, as indicated by `status`. Units: min.",
+      "default": 600000.0,
       "type": "number",
-      "x-unit": "h"
+      "x-unit": "min"
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection device, if any.",

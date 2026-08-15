@@ -29,11 +29,17 @@
       "Feature": {
         "$ref": "Core/common.json#/definitions/Feature"
       },
+      "EnergyUnitBasis": {
+        "$ref": "Core/common.json#/definitions/EnergyUnitBasis"
+      },
       "ImpedanceUnitBasis": {
         "$ref": "Core/common.json#/definitions/ImpedanceUnitBasis"
       },
       "AdmittanceUnitBasis": {
         "$ref": "Core/common.json#/definitions/AdmittanceUnitBasis"
+      },
+      "ShuntAdmittanceUnitBasis": {
+        "$ref": "Core/common.json#/definitions/ShuntAdmittanceUnitBasis"
       },
       "FdbdPnts": {
         "$ref": "Core/common.json#/definitions/FdbdPnts"
@@ -145,6 +151,12 @@
       },
       "GeographicInfo": {
         "$ref": "Core/SupplementalAttributes/GeographicInfo.json"
+      },
+      "DataSource": {
+        "$ref": "Core/SupplementalAttributes/DataSource.json"
+      },
+      "SupplementalAttributeAssociation": {
+        "$ref": "Core/Associations/SupplementalAttributeAssociation.json"
       },
       "TimeSeriesAssociation": {
         "$ref": "Core/TimeSeries/TimeSeriesAssociation.json"

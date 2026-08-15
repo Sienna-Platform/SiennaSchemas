@@ -49,7 +49,21 @@
     },
     "operation_cost": {
       "description": "Operating cost of generation. or MarketBidCost",
-      "$ref": "../../Core/common.json#/definitions/RenewableGenerationCost"
+      "discriminator": {
+        "mapping": {
+          "RENEWABLE": "#/components/schemas/RenewableGenerationCost",
+          "MARKET_BID": "#/components/schemas/MarketBidCost"
+        },
+        "propertyName": "cost_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "../../Core/common.json#/definitions/RenewableGenerationCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/MarketBidCost"
+        }
+      ]
     },
     "base_power": {
       "description": "Base power of the unit for per unitization. Units: MVA.",

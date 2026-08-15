@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A non-spinning reserve product with a constant procurement requirement, such as 3% of the system base power at all times. This reserve product includes back-up generators that might not be currently synchronized with the power system, but can come online quickly after an unexpected contingency, such as a transmission line or generator outage. This is only an upwards reserve. For faster-responding upwards or downwards reserves from components already synchronized with the system, see `ConstantReserve`.",
+  "description": "A non-spinning reserve product from devices not currently synchronized with the system but able to come online quickly after an unexpected contingency. Upward only, so unlike `OnlineReserve` there is no reserve direction. The procurement requirement is static unless a `requirement` time series is attached, in which case `requirement` is the scaling factor.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -15,20 +15,25 @@
       "type": "boolean"
     },
     "time_frame": {
-      "description": "The saturation time frame that a participating device must provide its reserve contribution. Units: min.",
+      "description": "The saturation time frame to provide reserve contribution. Units: min.",
       "type": "number",
       "x-unit": "min"
     },
     "requirement": {
       "description": "The value of required reserves. Units: MW.",
+      "default": 0.0,
       "type": "number",
       "x-unit": "MW"
     },
+    "variable": {
+      "description": "Operating reserve demand curve, either static or time-series-backed. Time series values are carried via `time_series_associations` in the sidecar, never inline. Omit when the reserve has no demand curve.",
+      "$ref": "../../Core/common.json#/definitions/CostCurve"
+    },
     "sustained_time": {
-      "description": "The time reserve contribution must be sustained at a specified level. Units: s.",
-      "default": 3600.0,
+      "description": "The time reserve contribution must be sustained at a specified level. Units: min.",
+      "default": 60.0,
       "type": "number",
-      "x-unit": "s"
+      "x-unit": "min"
     },
     "max_output_fraction": {
       "description": "The maximum fraction of each device's output that can be assigned to the service.",
@@ -50,9 +55,8 @@
     "id",
     "name",
     "available",
-    "time_frame",
-    "requirement"
+    "time_frame"
   ],
-  "title": "ConstantReserveNonSpinning",
+  "title": "OfflineReserve",
   "type": "object"
 }

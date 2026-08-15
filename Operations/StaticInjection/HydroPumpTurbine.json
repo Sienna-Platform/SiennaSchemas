@@ -64,9 +64,9 @@
       "x-unit": "MW/min"
     },
     "time_limits": {
-      "description": "Minimum up and minimum down time limits. in psy5 a required param with an option to be nothing Units: h.",
+      "description": "Minimum up and minimum down time limits. in psy5 a required param with an option to be nothing Units: min.",
       "$ref": "../../Core/common.json#/definitions/UpDown",
-      "x-unit": "h"
+      "x-unit": "min"
     },
     "base_power": {
       "description": "Base power of the unit for per unitization. Units: MVA.",
@@ -74,7 +74,7 @@
       "x-unit": "MVA"
     },
     "status": {
-      "description": "Initial Operating status of a pumped-storage hydro unit. See `PumpHydroStatus` for reference.",
+      "description": "Initial Operating status of a pumped-storage hydro unit. See `HydroPumpTurbineStatus` for reference.",
       "default": "OFF",
       "type": "string",
       "enum": [
@@ -84,37 +84,28 @@
       ]
     },
     "time_at_status": {
-      "description": "Time the generator has been on or off, as indicated by `status`. default is psy const INFINITE_TIME = 1e4 Units: h.",
-      "default": 10000.0,
+      "description": "Time the generator has been on or off, as indicated by `status`. default is PowerSystems.jl's INFINITE_TIME sentinel (1e4 hours, 600000 minutes). Units: min.",
+      "default": 600000.0,
       "type": "number",
-      "x-unit": "h"
+      "x-unit": "min"
     },
     "operation_cost": {
       "description": "Operating cost of generation. or MarketBidCost; default PSY.HydroGenerationCost(nothing)",
-      "default": {
-        "variable": {
-          "variable_cost_type": "COST",
-          "value_curve": {
-            "curve_type": "INPUT_OUTPUT",
-            "function_data": {
-              "function_type": "LINEAR",
-              "constant_term": 0,
-              "proportional_term": 0
-            },
-            "input_at_zero": 0
-          },
-          "vom_cost": {
-            "curve_type": "INPUT_OUTPUT",
-            "function_data": {
-              "function_type": "LINEAR",
-              "constant_term": 0,
-              "proportional_term": 0
-            },
-            "input_at_zero": 0
-          }
-        }
+      "discriminator": {
+        "mapping": {
+          "HYDRO_GEN": "#/components/schemas/HydroGenerationCost",
+          "MARKET_BID": "#/components/schemas/MarketBidCost"
+        },
+        "propertyName": "cost_type"
       },
-      "$ref": "../../Core/common.json#/definitions/HydroGenerationCost"
+      "oneOf": [
+        {
+          "$ref": "../../Core/common.json#/definitions/HydroGenerationCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/MarketBidCost"
+        }
+      ]
     },
     "active_power_pump": {
       "description": "Initial active power set point of the pump unit. For power flow, this is the steady state operating point of the system. For production cost modeling, this may or may not be used as the initial starting point for the solver, depending on the solver used. Units: MW.",
@@ -131,27 +122,31 @@
       "$ref": "../../Core/common.json#/definitions/TurbinePump"
     },
     "transition_time": {
-      "description": "Transition time to switch into the specific mode. Units: h.",
+      "description": "Transition time to switch into the specific mode. Units: min.",
       "default": {
         "turbine": 0.0,
         "pump": 0.0
       },
       "$ref": "../../Core/common.json#/definitions/TurbinePump",
-      "x-unit": "h"
+      "x-unit": "min"
     },
     "minimum_time": {
-      "description": "Minimum operating time for the specific mode. Units: h.",
+      "description": "Minimum operating time for the specific mode. Units: min.",
       "default": {
         "turbine": 0.0,
         "pump": 0.0
       },
       "$ref": "../../Core/common.json#/definitions/TurbinePump",
-      "x-unit": "h"
+      "x-unit": "min"
     },
     "travel_time": {
-      "description": "Downstream (from reservoir into turbine) travel time. Units: h.",
-      "type": "number",
-      "x-unit": "h"
+      "description": "Downstream (from reservoir into turbine) travel time. Set to `null` if not applicable. Units: min.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "x-unit": "min",
+      "default": null
     },
     "conversion_factor": {
       "description": "Conversion factor from flow/volume to energy: m^3 -> p.u-hr. Units: 1.",

@@ -29,12 +29,12 @@
       "type": "integer"
     },
     "r": {
-      "description": "Resistance. Per-unit on system base. Units: pu.",
+      "description": "Resistance. Per-unit on `base_power`, which records the system base. Units: pu.",
       "type": "number",
       "x-unit": "pu"
     },
     "x": {
-      "description": "Reactance. Per-unit on system base. Units: pu.",
+      "description": "Reactance. Per-unit on `base_power`, which records the system base. Units: pu.",
       "type": "number",
       "x-unit": "pu"
     },
@@ -44,7 +44,7 @@
       "x-unit": "MVA"
     },
     "b": {
-      "description": "Shunt susceptance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value. Per-unit on system base. Units: pu.",
+      "description": "Shunt susceptance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value. Per-unit on `base_power`, which records the system base. Units: pu.",
       "$ref": "../../Core/common.json#/definitions/FromTo",
       "x-unit": "pu"
     },
@@ -69,7 +69,7 @@
       "x-unit": "rad"
     },
     "g": {
-      "description": "Shunt conductance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value. Per-unit on system base. Units: pu.",
+      "description": "Shunt conductance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value. Per-unit on `base_power`, which records the system base. Units: pu.",
       "default": {
         "from": 0.0,
         "to": 0.0

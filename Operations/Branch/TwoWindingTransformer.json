@@ -14,14 +14,24 @@
       "description": "The `TransformerCircuit` carrying this transformer's series electrical data.",
       "type": "integer"
     },
+    "admittance_units": {
+      "description": "Unit basis for the magnetizing_shunt admittance.",
+      "default": "DEVICE_BASE",
+      "$ref": "../../Core/common.json#/definitions/AdmittanceUnitBasis"
+    },
     "magnetizing_shunt": {
-      "description": "Magnetizing shunt admittance in pu (device base on the circuit's `base_power`) referenced to the circuit's `base_voltage_primary`. Units: pu.",
+      "description": "Magnetizing shunt admittance referenced to the circuit's `base_voltage_primary`. Units: per admittance_units — NATURAL_UNITS: S, DEVICE_MVAR: MVAr, DEVICE_BASE: pu .",
       "default": {
         "real": 0.0,
         "imag": 0.0
       },
       "$ref": "../../Core/common.json#/definitions/ComplexNumber",
-      "x-unit": "pu"
+      "x-unit-discriminator": "admittance_units",
+      "x-units": {
+        "NATURAL_UNITS": "S",
+        "DEVICE_MVAR": "MVAr",
+        "DEVICE_BASE": "pu"
+      }
     },
     "shunt_location": {
       "description": "Placement of `magnetizing_shunt` on the two sides of the circuit arc.",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A reserve product met by a group of individual reserves. The group reserve requirement is added in addition to any individual reserve requirements, and devices that contribute to individual reserves within the group can also contribute to the overarching group reserve requirement. Example: A group of spinning and non-spinning reserves, where online generators providing spinning reserves can also contribute to the non-spinning reserve requirement. This model has a constant procurement requirement, such as 3% of the system base power at all times. When defining the reserve, the `ReserveDirection` must be specified to define this as a `ReserveUp`, `ReserveDown`, or `ReserveSymmetric`.",
+  "description": "A reserve product met by a group of individual reserves. The group requirement is additional to each member's own requirement, and a device contributing to a member reserve also counts toward the group. Membership is carried by `ServiceAssociation` rows, not by a field here.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -19,6 +19,10 @@
       "type": "number",
       "x-unit": "MW"
     },
+    "variable": {
+      "description": "Operating reserve demand curve for the group, either static or time-series-backed. A group carrying a curve is elastic: its requirement is priced by the curve rather than enforced. Time series values are carried via `time_series_associations` in the sidecar, never inline. Omit when the group has no demand curve.",
+      "$ref": "../../Core/common.json#/definitions/CostCurve"
+    },
     "reserve_direction": {
       "description": "Whether the reserve is an upward, downward, or symmetric reserve product.",
       "$ref": "../../Operations/common.json#/definitions/ReserveDirection"
@@ -31,6 +35,6 @@
     "requirement",
     "reserve_direction"
   ],
-  "title": "ConstantReserveGroup",
+  "title": "GroupReserve",
   "type": "object"
 }

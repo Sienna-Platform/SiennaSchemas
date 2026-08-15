@@ -50,27 +50,27 @@
     },
     "parameter_units": {
       "description": "Unit basis for this source's impedance fields (R_th, X_th).",
-      "default": "SYSTEM_BASE",
+      "default": "DEVICE_BASE",
       "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
     },
     "R_th": {
-      "description": "Source Thevenin resistance. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
+      "description": "Source Thevenin resistance. Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
-        "SYSTEM_BASE": "pu",
-        "NATURAL_UNITS": "ohm"
+        "NATURAL_UNITS": "ohm",
+        "DEVICE_BASE": "pu"
       }
     },
     "X_th": {
-      "description": "Source Thevenin reactance. Per-unit on system base. Units: pu. Units: per parameter_units — SYSTEM_BASE: pu, NATURAL_UNITS: ohm .",
+      "description": "Source Thevenin reactance. Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
-        "SYSTEM_BASE": "pu",
-        "NATURAL_UNITS": "ohm"
+        "NATURAL_UNITS": "ohm",
+        "DEVICE_BASE": "pu"
       }
     },
     "internal_voltage": {
@@ -108,8 +108,7 @@
               "function_type": "LINEAR",
               "constant_term": 0,
               "proportional_term": 0
-            },
-            "input_at_zero": 0
+            }
           },
           "vom_cost": {
             "curve_type": "INPUT_OUTPUT",
@@ -117,8 +116,7 @@
               "function_type": "LINEAR",
               "constant_term": 0,
               "proportional_term": 0
-            },
-            "input_at_zero": 0
+            }
           }
         },
         "export_offer_curves": {
@@ -129,8 +127,7 @@
               "function_type": "LINEAR",
               "constant_term": 0,
               "proportional_term": 0
-            },
-            "input_at_zero": 0
+            }
           },
           "vom_cost": {
             "curve_type": "INPUT_OUTPUT",
@@ -138,8 +135,7 @@
               "function_type": "LINEAR",
               "constant_term": 0,
               "proportional_term": 0
-            },
-            "input_at_zero": 0
+            }
           }
         },
         "energy_import_weekly_limit": 1000000.0,

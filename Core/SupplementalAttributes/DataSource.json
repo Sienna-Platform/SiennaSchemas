@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DataSource",
+  "description": "Records data provenance for a component's field values: which organization or dataset the data came from, the URL it was retrieved from, and when it was retrieved. Mirrors the `DataSource` supplemental attribute from InfrastructureSystems.jl, with two deliberate divergences: `organization` is optional here although it is required upstream, and `extra` is narrowed from an any-valued map to a string-valued one. Linked to the entity it describes through Core/Associations/SupplementalAttributeAssociation.json with attribute_type: \"DataSource\".",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "organization": {
+      "type": "string",
+      "description": "Publishing organization, e.g. 'U.S. Energy Information Administration'."
+    },
+    "retrieved_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the data was obtained."
+    },
+    "dataset": {
+      "type": "string",
+      "description": "Dataset identifier within the publishing organization, e.g. 'EIA-860 2023, Schedule 3'."
+    },
+    "url": {
+      "type": "string",
+      "description": "URL the data was retrieved from."
+    },
+    "version": {
+      "type": "string",
+      "description": "Data version or vintage, e.g. '2023 final'."
+    },
+    "published_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When the source published the data; null if unknown."
+    },
+    "confidence": {
+      "type": "string",
+      "description": "Confidence qualifier, e.g. 'high', 'medium'."
+    },
+    "recorded_by": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "User or agent that recorded the value."
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Names of the component fields this provenance record applies to."
+    },
+    "extra": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Additional string-valued provenance metadata."
+    }
+  },
+  "required": [
+    "id",
+    "retrieved_at",
+    "fields"
+  ]
+}

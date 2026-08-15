@@ -26,35 +26,64 @@
       "description": "Star (hidden) Bus that this component (equivalent model) is connected to.",
       "type": "integer"
     },
+    "parameter_units": {
+      "description": "Unit basis for the pairwise measured impedance fields (r_12, x_12, r_23, x_23, r_31, x_31). PSS/E supplies a single CZ flag for the whole three-winding transformer record, so one basis governs all three winding pairs.",
+      "default": "DEVICE_BASE",
+      "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
+    },
     "r_12": {
-      "description": "Measured resistance in pu (device base on `base_power_12`), referenced to the primary winding's base voltage, from primary to secondary windings (R1-2 with CZ = 1 in PSS/E). Units: pu.",
+      "description": "Measured resistance, referenced to the primary winding's base voltage, from primary to secondary windings (R1-2 in PSS/E). Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "ohm",
+        "DEVICE_BASE": "pu"
+      }
     },
     "x_12": {
-      "description": "Measured reactance in pu (device base on `base_power_12`), referenced to the primary winding's base voltage, from primary to secondary windings (X1-2 with CZ = 1 in PSS/E). Units: pu.",
+      "description": "Measured reactance, referenced to the primary winding's base voltage, from primary to secondary windings (X1-2 in PSS/E). Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "ohm",
+        "DEVICE_BASE": "pu"
+      }
     },
     "r_23": {
-      "description": "Measured resistance in pu (device base on `base_power_23`), referenced to the secondary winding's base voltage, from secondary to tertiary windings (R2-3 with CZ = 1 in PSS/E). Units: pu.",
+      "description": "Measured resistance, referenced to the secondary winding's base voltage, from secondary to tertiary windings (R2-3 in PSS/E). Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "ohm",
+        "DEVICE_BASE": "pu"
+      }
     },
     "x_23": {
-      "description": "Measured reactance in pu (device base on `base_power_23`), referenced to the secondary winding's base voltage, from secondary to tertiary windings (X2-3 with CZ = 1 in PSS/E). Units: pu.",
+      "description": "Measured reactance, referenced to the secondary winding's base voltage, from secondary to tertiary windings (X2-3 in PSS/E). Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "ohm",
+        "DEVICE_BASE": "pu"
+      }
     },
     "r_31": {
-      "description": "Measured resistance in pu (device base on `base_power_31`), referenced to the tertiary winding's base voltage, from tertiary to primary windings (R3-1 with CZ = 1 in PSS/E). Units: pu.",
+      "description": "Measured resistance, referenced to the tertiary winding's base voltage, from tertiary to primary windings (R3-1 in PSS/E). Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "ohm",
+        "DEVICE_BASE": "pu"
+      }
     },
     "x_31": {
-      "description": "Measured reactance in pu (device base on `base_power_31`), referenced to the tertiary winding's base voltage, from tertiary to primary windings (X3-1 with CZ = 1 in PSS/E). Units: pu.",
+      "description": "Measured reactance, referenced to the tertiary winding's base voltage, from tertiary to primary windings (X3-1 in PSS/E). Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "ohm",
+        "DEVICE_BASE": "pu"
+      }
     },
     "base_power_12": {
       "description": "Base power for per unitization for primary-secondary windings. Units: MVA.",
@@ -71,14 +100,24 @@
       "type": "number",
       "x-unit": "MVA"
     },
+    "admittance_units": {
+      "description": "Unit basis for the magnetizing_shunt admittance.",
+      "default": "DEVICE_BASE",
+      "$ref": "../../Core/common.json#/definitions/AdmittanceUnitBasis"
+    },
     "magnetizing_shunt": {
-      "description": "Magnetizing shunt admittance in pu (device base on the primary circuit's `base_power`) referenced to the primary circuit's base voltage. Units: pu.",
+      "description": "Magnetizing shunt admittance referenced to the primary circuit's base voltage. Units: per admittance_units — NATURAL_UNITS: S, DEVICE_MVAR: MVAr, DEVICE_BASE: pu .",
       "default": {
         "real": 0.0,
         "imag": 0.0
       },
       "$ref": "../../Core/common.json#/definitions/ComplexNumber",
-      "x-unit": "pu"
+      "x-unit-discriminator": "admittance_units",
+      "x-units": {
+        "NATURAL_UNITS": "S",
+        "DEVICE_MVAR": "MVAr",
+        "DEVICE_BASE": "pu"
+      }
     },
     "shunt_location": {
       "description": "Placement of `magnetizing_shunt` in the equivalent star model.",
