@@ -76,45 +76,50 @@
       "default": "AC_VOLTAGE",
       "$ref": "../../Operations/common.json#/definitions/VSCACControlModes"
     },
+    "setpoint_voltage_units": {
+      "description": "Unit basis for the DC_VOLTAGE/DC_VOLTAGE_DROOP/AC_VOLTAGE branches of dc_setpoint_from/to and ac_setpoint_from/to. Independent of voltage_units, which covers voltage_limits_from/to only.",
+      "default": "NATURAL_UNITS",
+      "$ref": "../../Operations/common.json#/definitions/VoltageUnitBasis"
+    },
     "dc_setpoint_from": {
-      "description": "Converter DC setpoint in the `from` bus converter. When `dc_control_from` regulates DC voltage this number is the DC voltage on the DC side of the converter; when it controls DC power this value is the power demand in MW, if positive the converter is supplying power to the AC network at the `from` bus; if negative, the converter is withdrawing power from the AC network at the `from` bus. Units: per dc_control_from — DC_POWER: MW, DC_VOLTAGE: (per voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu), DC_VOLTAGE_DROOP: (per voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu) .",
+      "description": "Converter DC setpoint in the `from` bus converter. When `dc_control_from` regulates DC voltage this number is the DC voltage on the DC side of the converter; when it controls DC power this value is the power demand in MW, if positive the converter is supplying power to the AC network at the `from` bus; if negative, the converter is withdrawing power from the AC network at the `from` bus. Units: per dc_control_from — DC_POWER: MW, DC_VOLTAGE: (per setpoint_voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu), DC_VOLTAGE_DROOP: (per setpoint_voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu) .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "dc_control_from",
       "x-units": {
         "DC_POWER": "MW",
         "DC_VOLTAGE": {
-          "x-unit-discriminator": "voltage_units",
+          "x-unit-discriminator": "setpoint_voltage_units",
           "x-units": {
             "NATURAL_UNITS": "kV",
             "DEVICE_BASE": "pu"
           },
-          "description": "Units: per voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
+          "description": "Units: per setpoint_voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
         },
         "DC_VOLTAGE_DROOP": {
-          "x-unit-discriminator": "voltage_units",
+          "x-unit-discriminator": "setpoint_voltage_units",
           "x-units": {
             "NATURAL_UNITS": "kV",
             "DEVICE_BASE": "pu"
           },
-          "description": "Units: per voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
+          "description": "Units: per setpoint_voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
         }
       }
     },
     "ac_setpoint_from": {
-      "description": "Converter AC setpoint in the `from` bus converter. When `ac_control_from` regulates AC voltage this number is the AC voltage on the AC side of the converter; when it controls reactive power this value is the power factor setpoint. Units: per ac_control_from — AC_REACTIVE_POWER: 1, AC_VOLTAGE: (per voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu) .",
+      "description": "Converter AC setpoint in the `from` bus converter. When `ac_control_from` regulates AC voltage this number is the AC voltage on the AC side of the converter; when it controls reactive power this value is the power factor setpoint. Units: per ac_control_from — AC_REACTIVE_POWER: 1, AC_VOLTAGE: (per setpoint_voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu) .",
       "default": 1.0,
       "type": "number",
       "x-unit-discriminator": "ac_control_from",
       "x-units": {
         "AC_REACTIVE_POWER": "1",
         "AC_VOLTAGE": {
-          "x-unit-discriminator": "voltage_units",
+          "x-unit-discriminator": "setpoint_voltage_units",
           "x-units": {
             "NATURAL_UNITS": "kV",
             "DEVICE_BASE": "pu"
           },
-          "description": "Units: per voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
+          "description": "Units: per setpoint_voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
         }
       }
     },
@@ -158,7 +163,7 @@
       "x-unit": "1"
     },
     "voltage_units": {
-      "description": "Unit basis for the DC bus voltage limits.",
+      "description": "Unit basis for the DC bus voltage limits (voltage_limits_from/to only). Independent of setpoint_voltage_units, which covers dc_setpoint_from/to and ac_setpoint_from/to.",
       "default": "NATURAL_UNITS",
       "$ref": "../../Operations/common.json#/definitions/VoltageUnitBasis"
     },
@@ -198,44 +203,44 @@
       "$ref": "../../Operations/common.json#/definitions/VSCACControlModes"
     },
     "dc_setpoint_to": {
-      "description": "Converter DC setpoint in the `to` bus converter. When `dc_control_to` regulates DC voltage this number is the DC voltage on the DC side of the converter; when it controls DC power this value is the power demand in MW, if positive the converter is supplying power to the AC network at the `to` bus; if negative, the converter is withdrawing power from the AC network at the `to` bus. Units: per dc_control_to — DC_POWER: MW, DC_VOLTAGE: (per voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu), DC_VOLTAGE_DROOP: (per voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu) .",
+      "description": "Converter DC setpoint in the `to` bus converter. When `dc_control_to` regulates DC voltage this number is the DC voltage on the DC side of the converter; when it controls DC power this value is the power demand in MW, if positive the converter is supplying power to the AC network at the `to` bus; if negative, the converter is withdrawing power from the AC network at the `to` bus. Units: per dc_control_to — DC_POWER: MW, DC_VOLTAGE: (per setpoint_voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu), DC_VOLTAGE_DROOP: (per setpoint_voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu) .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "dc_control_to",
       "x-units": {
         "DC_POWER": "MW",
         "DC_VOLTAGE": {
-          "x-unit-discriminator": "voltage_units",
+          "x-unit-discriminator": "setpoint_voltage_units",
           "x-units": {
             "NATURAL_UNITS": "kV",
             "DEVICE_BASE": "pu"
           },
-          "description": "Units: per voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
+          "description": "Units: per setpoint_voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
         },
         "DC_VOLTAGE_DROOP": {
-          "x-unit-discriminator": "voltage_units",
+          "x-unit-discriminator": "setpoint_voltage_units",
           "x-units": {
             "NATURAL_UNITS": "kV",
             "DEVICE_BASE": "pu"
           },
-          "description": "Units: per voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
+          "description": "Units: per setpoint_voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
         }
       }
     },
     "ac_setpoint_to": {
-      "description": "Converter AC setpoint in the `to` bus converter. When `ac_control_to` regulates AC voltage this number is the AC voltage on the AC side of the converter; when it controls reactive power this value is the power factor setpoint. Units: per ac_control_to — AC_REACTIVE_POWER: 1, AC_VOLTAGE: (per voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu) .",
+      "description": "Converter AC setpoint in the `to` bus converter. When `ac_control_to` regulates AC voltage this number is the AC voltage on the AC side of the converter; when it controls reactive power this value is the power factor setpoint. Units: per ac_control_to — AC_REACTIVE_POWER: 1, AC_VOLTAGE: (per setpoint_voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu) .",
       "default": 1.0,
       "type": "number",
       "x-unit-discriminator": "ac_control_to",
       "x-units": {
         "AC_REACTIVE_POWER": "1",
         "AC_VOLTAGE": {
-          "x-unit-discriminator": "voltage_units",
+          "x-unit-discriminator": "setpoint_voltage_units",
           "x-units": {
             "NATURAL_UNITS": "kV",
             "DEVICE_BASE": "pu"
           },
-          "description": "Units: per voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
+          "description": "Units: per setpoint_voltage_units — NATURAL_UNITS: kV, DEVICE_BASE: pu ."
         }
       }
     },
