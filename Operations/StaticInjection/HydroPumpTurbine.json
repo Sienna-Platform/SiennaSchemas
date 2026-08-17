@@ -74,7 +74,7 @@
       "x-unit": "MVA"
     },
     "status": {
-      "description": "Initial Operating status of a pumped-storage hydro unit. See `PumpHydroStatus` for reference.",
+      "description": "Initial Operating status of a pumped-storage hydro unit. See `HydroPumpTurbineStatus` for reference.",
       "default": "OFF",
       "type": "string",
       "enum": [

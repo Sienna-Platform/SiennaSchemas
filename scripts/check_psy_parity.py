@@ -256,12 +256,18 @@ HAND_WRITTEN_CONVERTERS = {
     "SwitchedAdmittance",
     "TwoTerminalLCCLine",
     "TwoTerminalVSCLine",
+    "GenericArcImpedance",
+    "HybridSystem",
+    "InterconnectingConverter",
+    "MonitoredLine",
+    "Source",
+    "TModelHVDCLine",
 }
 HANDWRITTEN_CONVERTERS_REL_PATH = "src/openapi/import_handwritten.jl"
 
 
 def derive_handwritten_converter_types(psy_path):
-    """Type names with an actual `from_openapi(::Type{X}, ...)` method in
+    """Type names with an actual `from_openapi(po::PO.X, ...)` method in
     `src/openapi/import_handwritten.jl`. Returns None when the file is
     absent (partial checkout), so callers can skip the drift check instead of
     reporting spurious CONVERTER DRIFT lines."""
@@ -270,7 +276,7 @@ def derive_handwritten_converter_types(psy_path):
         return None
     with open(full, encoding="utf-8") as f:
         text = f.read()
-    return set(re.findall(r"from_openapi\(\s*::Type\{(\w+)\}", text))
+    return set(re.findall(r"from_openapi\(\s*po::PO\.(\w+)", text))
 
 
 def derive_openapi_annotated_types(descriptor):
