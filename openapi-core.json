@@ -26,9 +26,6 @@
       "DbdPnts": {
         "$ref": "Core/common.json#/definitions/DbdPnts"
       },
-      "Feature": {
-        "$ref": "Core/common.json#/definitions/Feature"
-      },
       "EnergyUnitBasis": {
         "$ref": "Core/common.json#/definitions/EnergyUnitBasis"
       },
@@ -157,9 +154,6 @@
       },
       "SupplementalAttributeAssociation": {
         "$ref": "Core/Associations/SupplementalAttributeAssociation.json"
-      },
-      "TimeSeriesAssociation": {
-        "$ref": "Core/TimeSeries/TimeSeriesAssociation.json"
       },
       "PollutantType": {
         "$ref": "Core/common.json#/definitions/PollutantType"

@@ -44,6 +44,18 @@ jobs:
       - name: Check $ref and discriminator.mapping resolution
         run: python scripts/check_refs.py
 
+      # Instance-level gate: the checks above validate annotations and $ref
+      # structure, not whether a real association row validates. This catches a
+      # oneOf matching two branches and a wrong `required` list.
+      - name: Validate time series fixtures
+        run: python scripts/validate_fixtures.py
+
+      # Field-name parity against infrastore's catalog row. SKIPs cleanly when
+      # no infrastore checkout is present, so a green run here is not evidence
+      # the rule holds -- see check_infrastore_parity.py's docstring.
+      - name: Check infrastore field parity
+        run: python scripts/check_infrastore_parity.py
+
       # TODO after psy6 merges to PowerSystems main: drop `ref`
       - name: Checkout PowerSystems (psy6) for parity gate
         uses: actions/checkout@v4

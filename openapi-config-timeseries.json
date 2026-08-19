@@ -1,0 +1,12 @@
+{
+    "inputSpec": "openapi-timeseries.json",
+    "inlineSchemaNameMappings": {
+        "Deterministic_1": "Deterministic",
+        "DeterministicSingleTimeSeries_1": "DeterministicSingleTimeSeries",
+        "NonSequentialTimeSeries_1": "NonSequentialTimeSeries",
+        "Probabilistic_1": "Probabilistic",
+        "Scenarios_1": "Scenarios",
+        "SingleTimeSeries_1": "SingleTimeSeries",
+        "TimeSeriesFeatureValue_1": "TimeSeriesFeatureValue"
+    }
+}

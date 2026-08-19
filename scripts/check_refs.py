@@ -26,11 +26,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from bundle_specs import DOMAINS, bundle_spec, is_external, split_ref  # noqa: E402
+from bundle_specs import COMMON_FILES, DOMAINS, bundle_spec, is_external, split_ref  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-COMMON_PATH = (REPO_ROOT / "Core" / "common.json").resolve()
-SCAN_DIRS = ["Core", "Operations", "Investments", "Dynamics"]
+SCAN_DIRS = ["Core", "Operations", "Investments", "Dynamics", "TimeSeries"]
 
 _doc_cache = {}
 
@@ -72,7 +71,9 @@ def collect_source_files():
 
 def build_name_registry():
     """Every name a discriminator.mapping value may legitimately point at."""
-    names = set(load_json(COMMON_PATH).get("definitions", {}).keys())
+    names = set()
+    for rel in COMMON_FILES:
+        names |= set(load_json((REPO_ROOT / rel).resolve()).get("definitions", {}).keys())
     for domain in DOMAINS:
         spec = load_json(REPO_ROOT / f"openapi-{domain}.json")
         names |= set(spec.get("components", {}).get("schemas", {}).keys())

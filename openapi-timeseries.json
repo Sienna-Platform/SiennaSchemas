@@ -1,0 +1,52 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "PowerTimeSeriesOpenAPIModels",
+    "version": "1.0.0",
+    "description": "Time series associations: the six canonical InfrastructureSystems time series types and their metadata, without the dense values"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "TimeSeriesAssociation": {
+        "$ref": "TimeSeries/TimeSeriesAssociation.json"
+      },
+      "SingleTimeSeries": {
+        "$ref": "TimeSeries/SingleTimeSeries.json"
+      },
+      "NonSequentialTimeSeries": {
+        "$ref": "TimeSeries/NonSequentialTimeSeries.json"
+      },
+      "Deterministic": {
+        "$ref": "TimeSeries/Deterministic.json"
+      },
+      "DeterministicSingleTimeSeries": {
+        "$ref": "TimeSeries/DeterministicSingleTimeSeries.json"
+      },
+      "Probabilistic": {
+        "$ref": "TimeSeries/Probabilistic.json"
+      },
+      "Scenarios": {
+        "$ref": "TimeSeries/Scenarios.json"
+      },
+      "OwnerCategory": {
+        "$ref": "TimeSeries/common.json#/definitions/OwnerCategory"
+      },
+      "TimeSeriesFeatures": {
+        "$ref": "TimeSeries/common.json#/definitions/TimeSeriesFeatures"
+      },
+      "TimeSeriesFeatureValue": {
+        "$ref": "TimeSeries/common.json#/definitions/TimeSeriesFeatureValue"
+      },
+      "ElementType": {
+        "$ref": "TimeSeries/common.json#/definitions/ElementType"
+      },
+      "Period": {
+        "$ref": "TimeSeries/common.json#/definitions/Period"
+      },
+      "UnitSystem": {
+        "$ref": "Core/common.json#/definitions/UnitSystem"
+      }
+    }
+  }
+}

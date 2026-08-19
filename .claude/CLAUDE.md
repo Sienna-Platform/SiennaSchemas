@@ -38,7 +38,7 @@ SiennaSchemas (this repo — hand-written source)
 
 ## Generated package membership
 
-Four packages (each generated in both Julia and Python):
+Five packages (each generated in both Julia and Python):
 
 | Package | Contents | Dependencies |
 |---|---|---|
@@ -46,6 +46,7 @@ Four packages (each generated in both Julia and Python):
 | **PowerOperationsOpenAPIModels** | Topology, Branch, StaticInjection, Service | Core |
 | **PowerInvestmentsOpenAPIModels** | Technologies, Financials, Requirements, Attributes, Regions, Portfolio | Core |
 | **PowerDynamicsOpenAPIModels** | DynamicGeneratorComponent, DynamicInverterComponent | Core |
+| **PowerTimeSeriesOpenAPIModels** | The six time series types (SingleTimeSeries, NonSequentialTimeSeries, Deterministic, DeterministicSingleTimeSeries, Probabilistic, Scenarios) and their shared value types | Core (`UnitSystem` only) |
 
 Investments depends only on Core (not Operations); integer ID cross-references are semantic, not formal type dependencies.
 
@@ -53,11 +54,12 @@ Investments depends only on Core (not Operations); integer ID cross-references a
 
 ```
 Core/                    # common.json (shared types), units.json (unit vocabulary),
-                         # TimeSeries/, SupplementalAttributes/
+                         # SupplementalAttributes/
 Operations/              # Topology/, Branch/, StaticInjection/, Service/, SupplementalAttributes/
 Investments/             # Technologies/, Financials/, Requirements/, Attributes/, Regions/, Portfolio/
 Dynamics/                # DynamicGeneratorComponent/, DynamicInverterComponent/
-openapi-{core,operations,investments,dynamics}.json     # $ref wrappers selecting package membership
+TimeSeries/              # common.json, the six per-type schemas, TimeSeriesAssociation.json (oneOf wrapper)
+openapi-{core,operations,investments,dynamics,timeseries}.json     # $ref wrappers selecting package membership
 openapi-config-*.json    # generator configs (inlineSchemaNameMappings)
 scripts/                 # validate_units.py, bundle_specs.py,
                          # check_psy_parity.py, check_psip_parity.py
@@ -73,8 +75,8 @@ Cross-references are relative paths (`"$ref": "../../Core/common.json#/definitio
 `Core/units.json` is the vocabulary and the single source of truth, consumed by the validator here and by SiennaGridDB's registry generator. The full annotation spec is `docs/UNIT_ANNOTATIONS.md` — read it before adding an annotation form; the rules below are the parts most often needed.
 
 - Every numeric property carries `x-unit`, or `x-units` + `x-unit-discriminator` for discriminated cases (`x-unit-base` names a sibling property). Values must appear in `allowed_units` or be the literal `"pu"`.
-- For the four branch-impedance quantities (Resistance/Reactance/Susceptance/Conductance), `pu` **is** a registered vocabulary unit — one of **two** discriminated storage options, with GridDB recording which per row (`DEVICE_BASE` → `pu`, `NATURAL_UNITS` → `ohm`/`S`). Per `docs/UNIT_ANNOTATIONS.md` these branch parameters are the *only* deliberate exception to natural-unit storage; everywhere else `"pu"` is a model-layer annotation, never a stored unit.
-- **`SYSTEM_BASE` is not a valid unit basis.** Every basis enum offers exactly `NATURAL_UNITS` and a per-unit option: `DEVICE_BASE`, per-unit on the component's own recorded base — components whose per-unit data was historically on the system base record that base in their own `base_power` (`base_current` for `TModelHVDCLine`, which per-unitizes against a current). Shunts use `DEVICE_MVAR` (a power at unity voltage, **not** a respelling of `DEVICE_BASE`) via `ShuntAdmittanceUnitBasis`, which omits `DEVICE_BASE` because a shunt has no device MVA rating.
+- For the four branch-impedance quantities (Resistance/Reactance/Susceptance/Conductance), `pu` **is** a registered vocabulary unit — one of **two** discriminated storage options, with GridDB recording which per row (`COMPONENT_BASE` → `pu`, `NATURAL_UNITS` → `ohm`/`S`). Per `docs/UNIT_ANNOTATIONS.md` these branch parameters are the *only* deliberate exception to natural-unit storage; everywhere else `"pu"` is a model-layer annotation, never a stored unit.
+- **`SYSTEM_BASE` is not a valid unit basis.** Every basis enum offers exactly `NATURAL_UNITS` and a per-unit option: `COMPONENT_BASE`, per-unit on the component's own recorded base — components whose per-unit data was historically on the system base record that base in their own `base_power` (`base_current` for `TModelHVDCLine`, which per-unitizes against a current). Shunts use `COMPONENT_MVAR` (a power at unity voltage, **not** a respelling of `COMPONENT_BASE`) via `ShuntAdmittanceUnitBasis`, which omits `COMPONENT_BASE` because a shunt has no device MVA rating.
 - Reactive power is `MVAr`, never `MW`. Percent is banned — store fractions.
 - **Time is three quantity types, each with exactly one allowed unit so the vocabulary enforces the tier:** `Duration` (`s`) for continuous time constants; `OperationalDuration` (`min`) for scheduling and commitment durations; `CalendarPeriod` (`yr`) for planning spans. The tier fixes the unit, not the numeric type — `units.json` owns the integrality policy. Hours are not a vocabulary unit — an hours-valued field is a tier error, not a conversion. `CalendarPeriod` carries no `to_default` bridge on purpose: a calendar year is not a fixed number of seconds.
 - Durations reuse the real-valued shared structs (`MinMax`/`UpDown`/`TurbinePump`/`StartUpStages`) with `x-unit: min`; there is no parallel integer struct family.

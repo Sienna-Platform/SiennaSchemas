@@ -11,12 +11,8 @@
       "x-unit": "MVA"
     },
     "unit_system": {
-      "description": "The convention every stored value in this document follows. Values are only interpretable against the convention they were written in; the `x-unit` annotations name the natural unit either way. There is no system-base option: per-unit data historically on the system base records that base in the component's own `base_power` and rides as DEVICE_BASE.",
-      "type": "string",
-      "enum": [
-        "NATURAL_UNITS",
-        "DEVICE_BASE"
-      ]
+      "$ref": "common.json#/definitions/UnitSystem",
+      "description": "The convention every stored value in this document follows. Values are only interpretable against the convention they were written in; the `x-unit` annotations name the natural unit either way. There is no system-base option: per-unit data historically on the system base records that base in the component's own `base_power` and rides as COMPONENT_BASE."
     },
     "name": {
       "description": "Optional system name.",
@@ -84,10 +80,10 @@
       }
     },
     "time_series_associations": {
-      "description": "Time series metadata rows. The values themselves live in the file named by `time_series_storage_file`.",
+      "description": "Time series metadata rows, one per (series, owner) association. Each row names the store holding its values in its own `address`; `time_series_storage_file` remains the document-level sidecar name.",
       "type": "array",
       "items": {
-        "$ref": "TimeSeries/TimeSeriesAssociation.json"
+        "$ref": "../TimeSeries/TimeSeriesAssociation.json"
       }
     },
     "ext": {

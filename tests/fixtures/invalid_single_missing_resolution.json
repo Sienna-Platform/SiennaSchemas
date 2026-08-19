@@ -1,0 +1,14 @@
+{
+  "id": 101,
+  "owner_id": 42,
+  "owner_type": "ThermalStandard",
+  "owner_category": "Component",
+  "time_series_type": "SingleTimeSeries",
+  "name": "max_active_power",
+  "features": {},
+  "address": "infrastore://systems/base.h5",
+  "element_type": "f64",
+  "element_shape": [],
+  "initial_timestamp": "2030-01-01T00:00:00Z",
+  "length": 8760
+}
