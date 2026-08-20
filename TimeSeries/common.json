@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "TimeSeriesCommon",
-  "description": "Shared value types for the time series association schemas. Field names, shapes, and wire forms mirror infrastore (crates/infrastore-core/src/types/) exactly; only the Features/FeatureValue/Descriptors names carry a TimeSeries prefix, because the bare names are too generic for a shared schema namespace.",
+  "description": "Shared value types for the time series association schemas. Field names, shapes, and wire forms mirror the backing time-series store's types exactly; only the Features/FeatureValue/Descriptors names carry a TimeSeries prefix, because the bare names are too generic for a shared schema namespace.",
   "definitions": {
     "OwnerCategory": {
       "title": "OwnerCategory",
@@ -10,7 +10,7 @@
         "Component",
         "SupplementalAttribute"
       ],
-      "description": "Whether a time series' owner is a component or a supplemental attribute. The two id streams are independent, so the same owner_id can name one of each; the category keeps their associations distinct. These are the display and serde spellings; infrastore's catalog stores them as the integer codes 0 and 1."
+      "description": "Whether a time series' owner is a component or a supplemental attribute. The producing data layer allocates both kinds of id from one stream, so an owner_id never names one of each; the category is required regardless, because the store's catalog contract still supports independent streams from other producers and remains the store's disambiguator. These are the display and serde spellings; the store's catalog holds them as the integer codes 0 and 1."
     },
     "TimeSeriesFeatureValue": {
       "title": "TimeSeriesFeatureValue",
@@ -28,7 +28,7 @@
           "type": "string"
         }
       ],
-      "description": "One feature value. Four kinds, matching infrastore's FeatureValue: int, float, bool, str. `anyOf` rather than `oneOf` is required, not stylistic: JSON Schema's `integer` is a subset of `number`, so an integer instance matches both branches and `oneOf` — which demands exactly one match — would reject every integer feature. A float feature is compared and hashed by its bit pattern rather than by IEEE comparison, so 0.0 and -0.0 are two different series; NaN and negative zero are rejected on write because the catalog cannot store either faithfully."
+      "description": "One feature value. Four kinds, matching the backing store's feature-value type: int, float, bool, str. `anyOf` rather than `oneOf` is required, not stylistic: JSON Schema's `integer` is a subset of `number`, so an integer instance matches both branches and `oneOf` — which demands exactly one match — would reject every integer feature. A float feature is compared and hashed by its bit pattern rather than by IEEE comparison, so 0.0 and -0.0 are two different series; NaN and negative zero are rejected on write because the catalog cannot store either faithfully."
     },
     "TimeSeriesFeatures": {
       "title": "TimeSeriesFeatures",
@@ -68,7 +68,7 @@
           ]
         }
       },
-      "description": "User-defined key/value tags forming part of a series' identity. A map, matching infrastore's Features (a BTreeMap whose sort order is load-bearing, because the hash of the feature map keys the catalog's uniqueness index). The excluded property names each already name a field of a time series or of the tuple that addresses one: consumers routinely spread a feature map into keyword arguments, where a feature called `name` or `resolution` would shadow the real field and silently change what a query means. The comparison is exact and case-sensitive — `resolution` is reserved, `Resolution` is not."
+      "description": "User-defined key/value tags forming part of a series' identity. A map, matching the backing store's feature-map type (a BTreeMap whose sort order is load-bearing, because the hash of the feature map keys the catalog's uniqueness index). The excluded property names each already name a field of a time series or of the tuple that addresses one: consumers routinely spread a feature map into keyword arguments, where a feature called `name` or `resolution` would shadow the real field and silently change what a query means. The comparison is exact and case-sensitive — `resolution` is reserved, `Resolution` is not."
     },
     "ElementType": {
       "title": "ElementType",

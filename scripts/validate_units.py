@@ -44,7 +44,7 @@ from jsonschema import Draft7Validator
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 UNITS_JSON = REPO_ROOT / "Core" / "units.json"
-SCAN_DIRS = ["Core", "Operations", "Investments", "Dynamics"]
+SCAN_DIRS = ["Core", "Operations", "Investments", "Dynamics", "TimeSeries"]
 
 _ref_doc_cache = {}
 
