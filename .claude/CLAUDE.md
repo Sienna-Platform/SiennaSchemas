@@ -86,6 +86,7 @@ Cross-references are relative paths (`"$ref": "../../Core/common.json#/definitio
 
 ## Schema conventions
 
+- Schema content (titles, descriptions, examples) must never reference specific Sienna library/package/repo names — describe systems by role (the store, the data layer, the relational mirror, the producing parsers, the consumer packages). Package-specific facts belong in package docs, not in schemas.
 - JSON Schema draft-07 (`"$schema": "http://json-schema.org/draft-07/schema#"`).
 - Discriminated unions: `oneOf` + a `discriminator` block (`propertyName` + `mapping`).
 - Component base properties: `id` (integer), `name` (string), `available` (boolean).

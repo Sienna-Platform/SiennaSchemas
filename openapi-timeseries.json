@@ -3,7 +3,7 @@
   "info": {
     "title": "PowerTimeSeriesOpenAPIModels",
     "version": "1.0.0",
-    "description": "Time series associations: the six canonical InfrastructureSystems time series types and their metadata, without the dense values"
+    "description": "Time series associations: the six canonical time series types defined by the upstream data layer and their metadata, without the dense values"
   },
   "paths": {},
   "components": {
