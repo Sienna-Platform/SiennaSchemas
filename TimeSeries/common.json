@@ -64,7 +64,8 @@
             "time_series_type",
             "timestamps",
             "unit_system",
-            "units"
+            "units",
+            "uri"
           ]
         }
       },

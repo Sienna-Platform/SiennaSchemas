@@ -8,7 +8,7 @@
   "features": {
     "model_year": 2030
   },
-  "address": "infrastore://systems/base.h5",
+  "uri": "infrastore://systems/base.h5",
   "element_type": "f64",
   "element_shape": [],
   "units": "MW",

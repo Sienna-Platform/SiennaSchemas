@@ -31,8 +31,9 @@ SCHEMAS = [
 
 # Present here, absent from infrastore's catalog -- each deliberate.
 ALLOWED_SCHEMA_ONLY = {
-    # infrastore IS the store, so it never needs to locate itself.
-    "address",
+    # infrastore IS the store, so it never needs to locate itself in its own
+    # catalog; it fills uri with its own content hash instead.
+    "uri",
     # On infrastore's Scenarios struct but in no catalog column: it reads the
     # count off the stored array's leading dim, and JSON carries no array.
     "scenario_count",
@@ -48,8 +49,7 @@ ALLOWED_SCHEMA_ONLY = {
 
 # Present in infrastore's catalog, absent here -- each deliberate.
 ALLOWED_INFRASTORE_ONLY = {
-    # Content addresses for bytes this layer does not carry.
-    "data_hash",
+    # Content address for bytes this layer does not carry.
     "timestamps_hash",
     # features is inlined as a map here, matching the TimeSeriesMetadata struct,
     # rather than carried as the hash of a shared feature_sets row.

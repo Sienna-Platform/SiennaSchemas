@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "SingleTimeSeries",
   "type": "object",
-  "description": "A static time series on a regular grid: values at `initial_timestamp + k * resolution`. One of a closed set of six canonical time series types owned by the data layer. This schema records the association and its metadata; the dense values live in the store named by `address`.",
+  "description": "A static time series on a regular grid: values at `initial_timestamp + k * resolution`. One of a closed set of six canonical time series types owned by the data layer. This schema records the association and its metadata; the dense values live in the store named by `uri`.",
   "properties": {
     "id": {
       "type": "integer",
@@ -34,9 +34,13 @@
       "$ref": "common.json#/definitions/TimeSeriesFeatures",
       "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
     },
-    "address": {
+    "uri": {
       "type": "string",
-      "description": "Opaque locator for the dense data. Never parsed or interpreted here — the owner of the store decides what it means; the backing time-series store resolves it. This layer records where the values are, never the values."
+      "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+    },
+    "data_hash": {
+      "type": "string",
+      "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
     },
     "element_type": {
       "$ref": "common.json#/definitions/ElementType",
@@ -93,7 +97,7 @@
     "time_series_type",
     "name",
     "features",
-    "address",
+    "uri",
     "element_type",
     "element_shape",
     "initial_timestamp",
