@@ -49,6 +49,9 @@ ALLOWED_SCHEMA_ONLY = {
 
 # Present in infrastore's catalog, absent here -- each deliberate.
 ALLOWED_INFRASTORE_ONLY = {
+    # Surrogate primary key of the catalog row; a SQLite rowid meaningful only
+    # within one store. Not exported across stores, hence removed from schemas.
+    "id",
     # Content address for bytes this layer does not carry.
     "timestamps_hash",
     # features is inlined as a map here, matching the TimeSeriesMetadata struct,
