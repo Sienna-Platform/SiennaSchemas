@@ -123,6 +123,12 @@
         }
       }
     },
+    "rated_ac_voltage_from": {
+      "description": "Rated (base) AC voltage at the `from` converter's AC terminal in kV. Used as the AC voltage base for interpreting ac_setpoint_from when ac_control_from is AC_VOLTAGE; 0.0 means unspecified (the setpoint is taken as per-unit directly). Units: kV.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "kV"
+    },
     "converter_loss_from": {
       "description": "Loss model coefficients in the `from` bus converter. It accepts a linear model or quadratic. Same converter data is used in both ends.",
       "default": {
@@ -243,6 +249,12 @@
           "description": "Units: per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu ."
         }
       }
+    },
+    "rated_ac_voltage_to": {
+      "description": "Rated (base) AC voltage at the `to` converter's AC terminal in kV. Used as the AC voltage base for interpreting ac_setpoint_to when ac_control_to is AC_VOLTAGE; 0.0 means unspecified (the setpoint is taken as per-unit directly). Units: kV.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "kV"
     },
     "converter_loss_to": {
       "description": "Loss model coefficients in the `to` bus converter. It accepts a linear model or quadratic. Same converter data is used in both ends.",
