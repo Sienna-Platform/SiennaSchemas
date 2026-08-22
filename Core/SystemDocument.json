@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "SystemDocument",
-  "description": "The serialized form of a whole power system: every component, the association tables that link them, and the name of the HDF5 sidecar holding time series values. This is the interchange format between producers (PowerTableDataParser, PowerFlowFileParser, PowerSystems) and consumers (PowerSystems, SiennaGridDB, non-Julia clients), so the shape is defined here rather than by convention in each producer.\n\nDeliberately excluded from openapi-generator: `components` is a map from type name to an array of heterogeneous component objects, which the generated Julia client cannot express as typed buckets. The hand-written container in PowerCoreOpenAPIModels (`src/document.jl`) is the single Julia representation, and its fields are checked against this file. This schema remains authoritative for every other language binding.\n\nTime series *values* never appear here. `time_series_associations` carries the metadata rows and `time_series_storage_file` names the sidecar; reading or writing that file is the consumer's job.",
+  "description": "The serialized form of a whole power system: every component, the association tables that link them, and the name of the HDF5 sidecar holding time series values. This is the interchange format between producers (the producing parsers and the data model library) and consumers (the data model library, the relational mirror, non-Julia clients), so the shape is defined here rather than by convention in each producer.\n\nDeliberately excluded from openapi-generator: `components` is a map from type name to an array of heterogeneous component objects, which the generated Julia client cannot express as typed buckets. The hand-written container in the generated core model package (`src/document.jl`) is the single Julia representation, and its fields are checked against this file. This schema remains authoritative for every other language binding.\n\nTime series *values* never appear here. `time_series_associations` carries the metadata rows and `time_series_storage_file` names the sidecar; reading or writing that file is the consumer's job.",
   "type": "object",
   "properties": {
     "base_power": {
@@ -11,12 +11,8 @@
       "x-unit": "MVA"
     },
     "unit_system": {
-      "description": "The convention every stored value in this document follows. Values are only interpretable against the convention they were written in; the `x-unit` annotations name the natural unit either way. There is no system-base option: per-unit data historically on the system base records that base in the component's own `base_power` and rides as DEVICE_BASE.",
-      "type": "string",
-      "enum": [
-        "NATURAL_UNITS",
-        "DEVICE_BASE"
-      ]
+      "$ref": "common.json#/definitions/UnitSystem",
+      "description": "The convention every stored value in this document follows. Values are only interpretable against the convention they were written in; the `x-unit` annotations name the natural unit either way. There is no system-base option: per-unit data historically on the system base records that base in the component's own `base_power` and rides as COMPONENT_BASE."
     },
     "name": {
       "description": "Optional system name.",
@@ -84,10 +80,10 @@
       }
     },
     "time_series_associations": {
-      "description": "Time series metadata rows. The values themselves live in the file named by `time_series_storage_file`.",
+      "description": "Time series metadata rows, one per (series, owner) association. Each row names the store holding its values in its own `address`; `time_series_storage_file` remains the document-level sidecar name.",
       "type": "array",
       "items": {
-        "$ref": "TimeSeries/TimeSeriesAssociation.json"
+        "$ref": "../TimeSeries/TimeSeriesAssociation.json"
       }
     },
     "ext": {

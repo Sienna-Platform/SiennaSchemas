@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bundle the four openapi-<domain>.json specs into self-contained specs.
+"""Bundle the five openapi-<domain>.json specs into self-contained specs.
 
 For each ``openapi-<domain>.json`` at the repo root this resolves every
 external-file ``$ref`` (a ``$ref`` whose value names a file, i.e. does not start
@@ -55,10 +55,14 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DIST_DIR = REPO_ROOT / "dist"
-DOMAINS = ["core", "operations", "investments", "dynamics"]
-COMMON_REL = "Core/common.json"
+DOMAINS = ["core", "operations", "investments", "dynamics", "timeseries"]
 
-# Shared across all four domain bundles: common.json (and any multiply-$ref'd
+# Files whose top-level `definitions` block is addressed by other schemas via
+# a two-token `<file>#/definitions/<Name>` external ref, and so is hoisted
+# into a bundle's own `definitions` rather than left as a dangling pointer.
+COMMON_FILES = ["Core/common.json", "TimeSeries/common.json"]
+
+# Shared across all five domain bundles: common.json (and any multiply-$ref'd
 # file) is parsed from disk once. Keyed by resolved absolute path.
 _file_cache = {}
 
@@ -100,34 +104,60 @@ def resolve_fragment(doc, fragment):
 
 
 class Bundler:
-    """Bundles one spec. Hoists Core/common.json definitions into `definitions`."""
+    """Bundles one spec. Hoists common-file (Core/common.json,
+    TimeSeries/common.json, ...) definitions into `definitions`.
+
+    "Common file" is not a fixed path: any file addressed via a two-token
+    `<file>#/definitions/<Name>` external ref, whose own top-level
+    `definitions` actually holds `<Name>`, is treated as one. An internal
+    `#/definitions/<Name>` ref resolves against *whichever* file is currently
+    being walked, per plain JSON-pointer semantics -- that file is what
+    `source_path` names below.
+    """
 
     def __init__(self):
-        self.common_path = (REPO_ROOT / COMMON_REL).resolve()
-        self.common_doc = load_json(self.common_path)
-        # Names of common.json definitions pulled into the bundle's `definitions`.
+        # Names of common-file definitions pulled into the bundle's
+        # `definitions`, mapped to their rewritten body.
         self.hoisted = {}
+        # Resolved paths of the known common files. Membership in this set --
+        # not merely "the target has a #/definitions/<Name> shape" -- is what
+        # gates hoisting: any file can coincidentally have a `definitions`
+        # block, but only a file listed in COMMON_FILES is meant to be one.
+        self._common_paths = {(REPO_ROOT / rel).resolve() for rel in COMMON_FILES}
+        # name -> resolved source path, for every definition any known common
+        # file exposes. Used only to resolve discriminator.mapping targets,
+        # which are spelled '#/components/schemas/<Name>' by convention and
+        # need to be told apart from a genuine components.schemas entry --
+        # unlike a real $ref, that lookup is not scoped to one walked file.
+        self._common_owner = {}
+        for common_path in self._common_paths:
+            doc = load_json(common_path)
+            for name in doc.get("definitions", {}):
+                self._common_owner[name] = common_path
 
-    def _hoist_common_definition(self, name):
-        """Ensure a common.json definition is inlined into the bundle definitions.
+    def _hoist_common_definition(self, name, source_path):
+        """Ensure a common-file definition is inlined into the bundle definitions.
 
         Resolves its own internal defn->defn refs to bundle-internal
         #/definitions refs (recursively hoisting the targets)."""
         if name in self.hoisted:
             return
-        if name not in self.common_doc.get("definitions", {}):
-            raise KeyError(f"Core/common.json has no definition '{name}'")
+        doc = load_json(source_path)
+        if name not in doc.get("definitions", {}):
+            raise KeyError(f"{source_path} has no definition '{name}'")
         # Placeholder to break cycles.
         self.hoisted[name] = None
-        body = self.common_doc["definitions"][name]
-        self.hoisted[name] = self._rewrite_common_internal(body)
+        body = doc["definitions"][name]
+        self.hoisted[name] = self._rewrite_common_internal(body, source_path)
 
     def _rewrite_discriminator_mapping(self, discriminator):
-        """Repoint mapping targets at hoisted Core/common.json definitions.
+        """Repoint mapping targets at hoisted common-file definitions.
 
         Source schemas spell every target '#/components/schemas/<Name>', which
-        dangles for a common.json definition: hoisting puts those in the bundle's
-        top-level `definitions`, not `components.schemas`."""
+        dangles for a common-file definition: hoisting puts those in the
+        bundle's top-level `definitions`, not `components.schemas`. A target
+        naming something else (an actual components.schemas entry) is left
+        untouched."""
         mapping = discriminator.get("mapping")
         if not isinstance(mapping, dict):
             return discriminator
@@ -136,54 +166,63 @@ class Bundler:
         for key, target in mapping.items():
             _, fragment = split_ref(target)
             name = fragment.rsplit("/", 1)[-1]
-            if name in self.common_doc.get("definitions", {}):
-                self._hoist_common_definition(name)
+            source_path = self._common_owner.get(name)
+            if source_path is not None:
+                self._hoist_common_definition(name, source_path)
                 new_mapping[key] = f"#/definitions/{name}"
             else:
                 new_mapping[key] = target
         rewritten["mapping"] = new_mapping
         return rewritten
 
-    def _rewrite_common_internal(self, node):
-        """Within common.json content, turn '#/definitions/X' refs into bundle
-        '#/definitions/X' refs (same spelling) and hoist X. No external refs
-        exist inside common.json, so only internal ones are handled here."""
+    def _rewrite_common_internal(self, node, source_path):
+        """Within a common file's content, turn '#/definitions/X' refs into
+        bundle '#/definitions/X' refs (same spelling) and hoist X from
+        source_path. No external refs exist inside a common file, so only
+        internal ones are handled here."""
         if isinstance(node, dict):
             if "$ref" in node and not is_external(node["$ref"]):
                 _, fragment = split_ref(node["$ref"])
                 tokens = fragment.strip("/").split("/")
                 if len(tokens) == 2 and tokens[0] == "definitions":
-                    self._hoist_common_definition(tokens[1])
+                    self._hoist_common_definition(tokens[1], source_path)
                 # Merge any siblings (rare inside common) onto a rewritten copy.
                 out = {}
                 for k, v in node.items():
-                    out[k] = v if k == "$ref" else self._rewrite_common_internal(v)
+                    out[k] = (
+                        v if k == "$ref" else self._rewrite_common_internal(v, source_path)
+                    )
                 return out
             out = {}
             for k, v in node.items():
                 if k == "discriminator":
                     out[k] = self._rewrite_discriminator_mapping(v)
                 else:
-                    out[k] = self._rewrite_common_internal(v)
+                    out[k] = self._rewrite_common_internal(v, source_path)
             return out
         if isinstance(node, list):
-            return [self._rewrite_common_internal(v) for v in node]
+            return [self._rewrite_common_internal(v, source_path) for v in node]
         return node
 
     def _resolve_external(self, ref, base_path):
         """Return (resolved_content, target_path, fragment, common_name).
 
-        common_name is the definition name if this targets Core/common.json's
-        definitions, else None."""
+        common_name is the definition name if this targets a common file's
+        own definitions (a two-token `definitions/<Name>` fragment that the
+        target file actually defines), else None."""
         filepart, fragment = split_ref(ref)
         target = (base_path.parent / filepart).resolve()
         doc = load_json(target)
         content = resolve_fragment(doc, fragment)
         common_name = None
-        if target == self.common_path:
-            tokens = fragment.strip("/").split("/")
-            if len(tokens) == 2 and tokens[0] == "definitions":
-                common_name = tokens[1]
+        tokens = fragment.strip("/").split("/")
+        if (
+            target in self._common_paths
+            and len(tokens) == 2
+            and tokens[0] == "definitions"
+            and tokens[1] in doc.get("definitions", {})
+        ):
+            common_name = tokens[1]
         return content, target, fragment, common_name
 
     def walk(self, node, base_path):
@@ -191,19 +230,19 @@ class Bundler:
         base_path (the file the node currently lives in)."""
         if isinstance(node, dict):
             if "$ref" in node and not is_external(node["$ref"]):
-                # Internal ref. If we are walking common.json content (inlined
-                # with siblings), its #/definitions/X targets must be hoisted
-                # into the bundle so the internal ref resolves there.
-                if base_path == self.common_path:
+                # Internal ref: resolves within base_path's own document, per
+                # JSON-pointer semantics. Only hoist when base_path is itself
+                # a known common file -- an internal ref inside an ordinary
+                # schema file has no #/definitions namespace to hoist from.
+                if base_path in self._common_paths:
                     _, fragment = split_ref(node["$ref"])
                     tokens = fragment.strip("/").split("/")
                     if len(tokens) == 2 and tokens[0] == "definitions":
-                        self._hoist_common_definition(tokens[1])
-                    out = {}
-                    for k, v in node.items():
-                        out[k] = v if k == "$ref" else self.walk(v, base_path)
-                    return out
-                return {k: self.walk(v, base_path) for k, v in node.items()}
+                        self._hoist_common_definition(tokens[1], base_path)
+                return {
+                    k: (v if k == "$ref" else self.walk(v, base_path))
+                    for k, v in node.items()
+                }
             if "$ref" in node and is_external(node["$ref"]):
                 siblings = {k: v for k, v in node.items() if k != "$ref"}
                 content, target, _, common_name = self._resolve_external(
@@ -211,7 +250,7 @@ class Bundler:
                 )
                 if common_name is not None and not siblings:
                     # No siblings: hoist and point to internal definition.
-                    self._hoist_common_definition(common_name)
+                    self._hoist_common_definition(common_name, target)
                     return {"$ref": f"#/definitions/{common_name}"}
                 # Inline the resolved content (deep-resolved in its own file
                 # context), then merge siblings on top (siblings win).

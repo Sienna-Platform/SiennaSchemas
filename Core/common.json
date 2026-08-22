@@ -332,29 +332,29 @@
       ]
     },
     "ImpedanceUnitBasis": {
-      "description": "Unit basis a branch/injection impedance is stored in. NATURAL_UNITS: physical ohms (PSS/E RAW native for DC-line impedances). DEVICE_BASE: per-unit on the component's own base (base_power MVA and voltage base); components whose per-unit data was historically on the system base record that system base in base_power, so there is no separate system-base option. PSS/E supplies device base for DC-line converters and CZ=2 transformer windings.",
+      "description": "Unit basis a branch/injection impedance is stored in. NATURAL_UNITS: physical ohms (PSS/E RAW native for DC-line impedances). COMPONENT_BASE: per-unit on the component's own base (base_power MVA and voltage base); components whose per-unit data was historically on the system base record that system base in base_power, so there is no separate system-base option. PSS/E supplies device base for DC-line converters and CZ=2 transformer windings.",
       "enum": [
         "NATURAL_UNITS",
-        "DEVICE_BASE"
+        "COMPONENT_BASE"
       ],
       "title": "ImpedanceUnitBasis",
       "type": "string"
     },
     "AdmittanceUnitBasis": {
-      "description": "Unit basis a shunt admittance is stored in. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance). DEVICE_BASE: per-unit on the component's own base (base_power MVA and voltage base) \u2014 a per-unit base, not a power at unity voltage, and not an alternative spelling of DEVICE_MVAR; components whose per-unit data was historically on the system base record that system base in base_power. Fixed and switched shunts use ShuntAdmittanceUnitBasis instead, which omits DEVICE_BASE because a shunt has no device MVA rating.",
+      "description": "Unit basis a shunt admittance is stored in. NATURAL_UNITS: physical siemens. COMPONENT_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance). COMPONENT_BASE: per-unit on the component's own base (base_power MVA and voltage base) \u2014 a per-unit base, not a power at unity voltage, and not an alternative spelling of COMPONENT_MVAR; components whose per-unit data was historically on the system base record that system base in base_power. Fixed and switched shunts use ShuntAdmittanceUnitBasis instead, which omits COMPONENT_BASE because a shunt has no device MVA rating.",
       "enum": [
         "NATURAL_UNITS",
-        "DEVICE_MVAR",
-        "DEVICE_BASE"
+        "COMPONENT_MVAR",
+        "COMPONENT_BASE"
       ],
       "title": "AdmittanceUnitBasis",
       "type": "string"
     },
     "ShuntAdmittanceUnitBasis": {
-      "description": "Subset of AdmittanceUnitBasis for fixed and switched shunts: omits DEVICE_BASE because a shunt has no device MVA rating to per-unitize against. NATURAL_UNITS: physical siemens. DEVICE_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance) \u2014 PSS/E RAW native for shunts.",
+      "description": "Subset of AdmittanceUnitBasis for fixed and switched shunts: omits COMPONENT_BASE because a shunt has no device MVA rating to per-unitize against. NATURAL_UNITS: physical siemens. COMPONENT_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance) \u2014 PSS/E RAW native for shunts.",
       "enum": [
         "NATURAL_UNITS",
-        "DEVICE_MVAR"
+        "COMPONENT_MVAR"
       ],
       "title": "ShuntAdmittanceUnitBasis",
       "type": "string"
@@ -923,25 +923,6 @@
       "title": "StorageTech",
       "type": "string"
     },
-    "Feature": {
-      "type": "object",
-      "minProperties": 1,
-      "maxProperties": 1,
-      "additionalProperties": {
-        "oneOf": [
-          {
-            "type": "boolean"
-          },
-          {
-            "type": "integer"
-          },
-          {
-            "type": "string"
-          }
-        ]
-      },
-      "title": "Feature"
-    },
     "ThermalFuels": {
       "description": "Thermal fuels that reflect options in the EIA annual energy review.",
       "enum": [
@@ -1073,9 +1054,9 @@
       "type": "object"
     },
     "UnitSystem": {
-      "description": "Unit basis curve power values are stored in. DEVICE_BASE: per-unit on the component's own base_power. NATURAL_UNITS: MW/MVA. There is no system-base option: per-unit data historically on the system base records that base in the component's base_power and rides as DEVICE_BASE.",
+      "description": "Unit basis curve power values are stored in. COMPONENT_BASE: per-unit on the component's own base_power. NATURAL_UNITS: MW/MVA. There is no system-base option: per-unit data historically on the system base records that base in the component's base_power and rides as COMPONENT_BASE.",
       "enum": [
-        "DEVICE_BASE",
+        "COMPONENT_BASE",
         "NATURAL_UNITS"
       ],
       "title": "UnitSystem",

@@ -1,0 +1,12 @@
+{
+  "owner_id": 42,
+  "owner_type": "ThermalStandard",
+  "owner_category": "Component",
+  "time_series_type": "NonSequentialTimeSeries",
+  "name": "forced_outage_events",
+  "features": {},
+  "uri": "infrastore://systems/base.h5",
+  "element_type": "bool",
+  "element_shape": [],
+  "length": 37
+}

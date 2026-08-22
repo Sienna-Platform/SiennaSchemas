@@ -28,27 +28,27 @@
     },
     "parameter_units": {
       "description": "Unit basis for this circuit's impedance fields (r, x).",
-      "default": "DEVICE_BASE",
+      "default": "COMPONENT_BASE",
       "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
     },
     "r": {
-      "description": "Circuit resistance. Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
+      "description": "Circuit resistance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
         "NATURAL_UNITS": "ohm",
-        "DEVICE_BASE": "pu"
+        "COMPONENT_BASE": "pu"
       }
     },
     "x": {
-      "description": "Circuit reactance. Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
+      "description": "Circuit reactance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
         "NATURAL_UNITS": "ohm",
-        "DEVICE_BASE": "pu"
+        "COMPONENT_BASE": "pu"
       }
     },
     "control_objective": {
