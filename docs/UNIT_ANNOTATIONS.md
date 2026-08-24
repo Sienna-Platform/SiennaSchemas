@@ -35,7 +35,7 @@ Reactance, Susceptance, Conductance), `pu` **is a registered vocabulary unit**
 (`to_default: null`, since the pu→natural conversion depends on the recorded base rather
 than a fixed factor). It is one of two discriminated storage options in the downstream
 registry: GridDB stores each branch parameter in either per-unit or natural units and
-records which per row via `transmission_lines.parameter_units` (`DEVICE_BASE` → `pu`;
+records which per row via `transmission_lines.parameter_units` (`COMPONENT_BASE` → `pu`;
 `NATURAL_UNITS` → `ohm`/`S`).
 Elsewhere, `"pu"` remains purely an annotation channel; no other quantity registers `pu`.
 
@@ -114,9 +114,9 @@ An `x-units` **value** may therefore be either a unit string (leaf) or a nested
   "x-units": {
     "DC_POWER": "MW",
     "DC_VOLTAGE":       { "x-unit-discriminator": "voltage_units",
-                          "x-units": { "DEVICE_BASE": "pu", "NATURAL_UNITS": "kV" } },
+                          "x-units": { "COMPONENT_BASE": "pu", "NATURAL_UNITS": "kV" } },
     "DC_VOLTAGE_DROOP": { "x-unit-discriminator": "voltage_units",
-                          "x-units": { "DEVICE_BASE": "pu", "NATURAL_UNITS": "kV" } }
+                          "x-units": { "COMPONENT_BASE": "pu", "NATURAL_UNITS": "kV" } }
   }
 }
 ```
@@ -196,16 +196,18 @@ annotated property's description is not exactly the canonical form.
 - **DB / interchange carry natural units**, with one
   deliberate exception: branch electrical parameters (`r`/`x`/`b`/`g`) may be
   stored in per-unit *or* natural units, and the storage layer records which
-  per row (GridDB `transmission_lines.parameter_units`: `DEVICE_BASE` → `pu`,
+  per row (GridDB `transmission_lines.parameter_units`: `COMPONENT_BASE` → `pu`,
   `NATURAL_UNITS` → `ohm`/`S`). For every other quantity the DB stores natural
   units only and `"pu"` is a model-layer annotation, not a stored unit.
 - **Percent is banned.** Fractions and dimensionless quantities use the unit
   `"1"` and are stored as fractions (`0.95`, not `95`). There is no `"%"` unit.
 - **`unit` / `units` string properties.** Any property literally named `unit`
-  or `units` and typed `string` (e.g.
-  `Core/TimeSeries/TimeSeriesAssociation.json`) must have a description
-  pointing at `Core/units.json` — its value is a free-text unit string that
-  must come from the vocabulary. This is enforced as rule 6.
+  or `units` and typed `string` (e.g. `TimeSeries/SingleTimeSeries.json`'s
+  `units`) must have a description pointing at `Core/units.json` — its value
+  is a free-text unit string that must come from the vocabulary. This is
+  enforced as rule 6. (`TimeSeries/TimeSeriesAssociation.json` is the `oneOf`
+  wrapper over the six per-type schemas and carries no `units` property of
+  its own, so it is not this rule's example.)
 
 ## Maintaining the vocabulary
 

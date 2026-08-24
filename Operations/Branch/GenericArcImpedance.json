@@ -39,26 +39,26 @@
       "x-unit": "MVA"
     },
     "parameter_units": {
-      "description": "Unit basis for r and x. DEVICE_BASE is per-unit on this component's base_power, which records the system base.",
-      "default": "DEVICE_BASE",
+      "description": "Unit basis for r and x. COMPONENT_BASE is per-unit on this component's base_power, which records the system base.",
+      "default": "COMPONENT_BASE",
       "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
     },
     "r": {
-      "description": "Resistance. Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
+      "description": "Resistance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
         "NATURAL_UNITS": "ohm",
-        "DEVICE_BASE": "pu"
+        "COMPONENT_BASE": "pu"
       }
     },
     "x": {
-      "description": "Reactance. Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
+      "description": "Reactance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
         "NATURAL_UNITS": "ohm",
-        "DEVICE_BASE": "pu"
+        "COMPONENT_BASE": "pu"
       }
     }
   },

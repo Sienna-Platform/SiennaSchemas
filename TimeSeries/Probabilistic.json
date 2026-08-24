@@ -1,0 +1,121 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Probabilistic",
+  "type": "object",
+  "description": "A probabilistic forecast: per-percentile, per-window horizon arrays. Adds a percentile axis in front of the deterministic layout.",
+  "properties": {
+    "owner_id": {
+      "type": "integer",
+      "description": "ID of the owning component or supplemental attribute. The producing data layer allocates both from one id stream, so an `owner_id` never collides across the two categories; `owner_category` remains required because the store's catalog contract still supports independent streams from other producers, and it is still the store's disambiguator."
+    },
+    "owner_type": {
+      "type": "string",
+      "description": "Type name of the owning entity. Descriptive, not part of the series' identity."
+    },
+    "owner_category": {
+      "$ref": "common.json#/definitions/OwnerCategory",
+      "description": "Whether the owner is a component or a supplemental attribute."
+    },
+    "time_series_type": {
+      "const": "Probabilistic",
+      "type": "string",
+      "default": "Probabilistic",
+      "description": "Discriminator. Fixed to Probabilistic for this schema, pinned with `const` to match this repo's existing discriminators (Core/common.json's `curve_type`), which generate a plain string literal in both toolchains."
+    },
+    "name": {
+      "type": "string",
+      "description": "Time series name (e.g. max_active_power). Part of the series' identity, and often carrying a disambiguating suffix; `component_field` records what the values are for."
+    },
+    "features": {
+      "$ref": "common.json#/definitions/TimeSeriesFeatures",
+      "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
+    },
+    "uri": {
+      "type": "string",
+      "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+    },
+    "data_hash": {
+      "type": "string",
+      "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
+    },
+    "element_type": {
+      "$ref": "common.json#/definitions/ElementType",
+      "description": "What one timestep's values mean and how they are laid out. The physical dtype of the stored bytes derives from this and is not recorded separately. Unlike `units` and `quantity_kind` this is not a user-facing label — the writing package derives it from the array."
+    },
+    "element_shape": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "description": "Per-step element shape: the trailing dims after time. An empty array means a scalar element."
+    },
+    "units": {
+      "type": "string",
+      "description": "Unit label for the series values. Set by whoever creates the series and returned unchanged; not part of the series' identity, so two series differing only in this label are duplicates. Meaningless on its own when `unit_system` is a per-unit basis, where the values are dimensionless. By convention drawn from the unit vocabulary in Core/units.json, though this field is a free-text label the store does not validate against it."
+    },
+    "quantity_kind": {
+      "type": "string",
+      "description": "Kind of physical quantity the values measure (e.g. ActivePower, ReactivePower, ElectricalEnergy). Coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity kind can. It is also the only record of what the values measure when `unit_system` is a per-unit basis."
+    },
+    "unit_system": {
+      "$ref": "../Core/common.json#/definitions/UnitSystem",
+      "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a COMPONENT_BASE series back to natural units needs the owning component's base_power. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS."
+    },
+    "component_field": {
+      "type": "string",
+      "description": "The field on the owning component or supplemental attribute whose value these values are the time-varying form of (e.g. max_active_power, rating). Free-form: it names a field in the consumer's own object model. Records what the values are for, where `name` only says which series they are."
+    },
+    "application_data": {
+      "type": "string",
+      "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. Element typing does not belong here — that is `element_type`."
+    },
+    "initial_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start of the first forecast window."
+    },
+    "resolution": {
+      "$ref": "common.json#/definitions/Period",
+      "description": "Cadence within a forecast window. Always present for a forecast, and part of the series' identity."
+    },
+    "horizon": {
+      "$ref": "common.json#/definitions/Period",
+      "description": "Length of one forecast window. Descriptive, not part of the series' identity."
+    },
+    "interval": {
+      "$ref": "common.json#/definitions/Period",
+      "description": "Step between the start of consecutive forecast windows. Part of the series' identity: two forecasts of one variable at the same resolution but different intervals — a day-ahead and a real-time forecast — are distinct series. `PT0S` is the canonical interval of a single-window forecast, which has no second window to step to."
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of forecast windows. Descriptive, not part of the series' identity."
+    },
+    "percentiles": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 1,
+      "description": "The percentiles this forecast carries, one per leading axis entry of the stored array."
+    }
+  },
+  "required": [
+    "owner_id",
+    "owner_type",
+    "owner_category",
+    "time_series_type",
+    "name",
+    "features",
+    "uri",
+    "element_type",
+    "element_shape",
+    "initial_timestamp",
+    "resolution",
+    "horizon",
+    "interval",
+    "count",
+    "percentiles"
+  ]
+}

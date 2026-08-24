@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TimeSeriesAssociation",
+  "type": "object",
+  "description": "Metadata linking one time series to the component or supplemental attribute that owns it — the JSON form of a row in the store's `time_series_associations` catalog table. A closed set of six canonical types owned by the data layer: two static (SingleTimeSeries on a regular grid, NonSequentialTimeSeries on explicit irregular timestamps) and four forecasts. The type decides which timing fields the row carries, which is why each is its own schema rather than one row with everything nullable.\n\nDense values never appear here. `uri` names the store location that holds them; `data_hash` optionally carries a content hash of that array. Other content hashes (features_hash, timestamps_hash) remain store-internal and deliberately absent.",
+  "discriminator": {
+    "propertyName": "time_series_type",
+    "mapping": {
+      "SingleTimeSeries": "#/components/schemas/SingleTimeSeries",
+      "NonSequentialTimeSeries": "#/components/schemas/NonSequentialTimeSeries",
+      "Deterministic": "#/components/schemas/Deterministic",
+      "DeterministicSingleTimeSeries": "#/components/schemas/DeterministicSingleTimeSeries",
+      "Probabilistic": "#/components/schemas/Probabilistic",
+      "Scenarios": "#/components/schemas/Scenarios"
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "SingleTimeSeries.json"
+    },
+    {
+      "$ref": "NonSequentialTimeSeries.json"
+    },
+    {
+      "$ref": "Deterministic.json"
+    },
+    {
+      "$ref": "DeterministicSingleTimeSeries.json"
+    },
+    {
+      "$ref": "Probabilistic.json"
+    },
+    {
+      "$ref": "Scenarios.json"
+    }
+  ]
+}

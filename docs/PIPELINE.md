@@ -22,7 +22,7 @@ Core/units.json ──► JSON Schemas (x-unit annotated)
                          └── scripts/check_units_sync.py        (three-layer unit sync gate)
 ```
 
-## The five gates
+## The seven gates
 
 | Gate | Repo | Command | Prevents |
 |---|---|---|---|
@@ -30,6 +30,8 @@ Core/units.json ──► JSON Schemas (x-unit annotated)
 | Description channel | SiennaSchemas | `python3 scripts/validate_units.py --check-descriptions` | silent unit loss in generated code (descriptions are the channel openapi-generator renders) |
 | Bundle staleness | SiennaSchemas | `python3 scripts/bundle_specs.py --check` | codegen consuming stale `dist/` artifacts that drop `$ref`-sibling annotations |
 | PSY parity | SiennaSchemas | `python3 scripts/check_psy_parity.py --psy-path ../PowerSystems.jl` | structural drift between PowerSystems.jl structs and schema components (missing schemas, field drift); SKIPs cleanly when PSY is absent |
+| Time series fixtures | SiennaSchemas | `python3 scripts/validate_fixtures.py` | a broken `oneOf` discriminator, a wrong `required` list, or a discriminator `mapping` naming the wrong schema, exercised against real example instances rather than structure alone |
+| Infrastore parity | SiennaSchemas | `python3 scripts/check_infrastore_parity.py` | field-name drift between the six time series schemas and infrastore's `time_series_associations` catalog row; SKIPs cleanly when no infrastore checkout is present, so a green run there is not proof the check ran — mirroring how PSY parity SKIPs when PSY is absent |
 | DB sync | SiennaGridDB | `python3 scripts/check_units_sync.py` and `python3 scripts/generate_sql_schema.py --check --diff` | unit contradictions between registry and schemas; DDL drifting from the schema projection |
 
 ## Change protocol

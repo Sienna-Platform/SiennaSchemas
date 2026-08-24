@@ -1,0 +1,21 @@
+{
+  "owner_id": 7,
+  "owner_type": "RenewableDispatch",
+  "owner_category": "Component",
+  "time_series_type": "Deterministic",
+  "name": "max_active_power",
+  "features": {
+    "scenario": "high"
+  },
+  "uri": "infrastore://systems/base.h5",
+  "element_type": "f64",
+  "element_shape": [],
+  "units": "MW",
+  "quantity_kind": "ActivePower",
+  "unit_system": "COMPONENT_BASE",
+  "initial_timestamp": "2030-01-01T00:00:00Z",
+  "resolution": "PT1H",
+  "horizon": "PT24H",
+  "interval": "PT1H",
+  "count": 365
+}

@@ -34,12 +34,12 @@
       "x-unit": "A"
     },
     "r": {
-      "description": "Total series resistance, split equally on both sides of the shunt capacitance. Units: per parameter_units — NATURAL_UNITS: ohm, DEVICE_BASE: pu .",
+      "description": "Total series resistance, split equally on both sides of the shunt capacitance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
         "NATURAL_UNITS": "ohm",
-        "DEVICE_BASE": "pu"
+        "COMPONENT_BASE": "pu"
       }
     },
     "l": {

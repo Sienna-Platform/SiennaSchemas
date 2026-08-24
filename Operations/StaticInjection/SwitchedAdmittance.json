@@ -19,17 +19,17 @@
       "type": "integer"
     },
     "admittance_units": {
-      "description": "Unit basis for the shunt admittance Y. DEVICE_MVAR is PSS/E RAW native (Mvar/MW at unity voltage).",
-      "default": "DEVICE_MVAR",
+      "description": "Unit basis for the shunt admittance Y. COMPONENT_MVAR is PSS/E RAW native (Mvar/MW at unity voltage).",
+      "default": "COMPONENT_MVAR",
       "$ref": "../../Core/common.json#/definitions/ShuntAdmittanceUnitBasis"
     },
     "Y": {
-      "description": "Initial admittance at N = 0. Units: per admittance_units — NATURAL_UNITS: S, DEVICE_MVAR: MVAr .",
+      "description": "Initial admittance at N = 0. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
       "$ref": "../../Core/common.json#/definitions/ComplexNumber",
       "x-unit-discriminator": "admittance_units",
       "x-units": {
         "NATURAL_UNITS": "S",
-        "DEVICE_MVAR": "MVAr"
+        "COMPONENT_MVAR": "MVAr"
       }
     },
     "initial_status": {
@@ -47,7 +47,7 @@
       }
     },
     "Y_increase": {
-      "description": "Vector with admittance increment step for each adjustable shunt block. For example, `Y_increase[2]` is the complex admittance increment for each step at block 2. Units: per admittance_units — NATURAL_UNITS: S, DEVICE_MVAR: MVAr .",
+      "description": "Vector with admittance increment step for each adjustable shunt block. For example, `Y_increase[2]` is the complex admittance increment for each step at block 2. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
       "type": "array",
       "items": {
         "$ref": "../../Core/common.json#/definitions/ComplexNumber"
@@ -55,11 +55,11 @@
       "x-unit-discriminator": "admittance_units",
       "x-units": {
         "NATURAL_UNITS": "S",
-        "DEVICE_MVAR": "MVAr"
+        "COMPONENT_MVAR": "MVAr"
       }
     },
     "admittance_limits": {
-      "description": "Shunt admittance limits for switched shunt model. Units: per admittance_units — NATURAL_UNITS: S, DEVICE_MVAR: MVAr .",
+      "description": "Shunt admittance limits for switched shunt model. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
       "default": {
         "min": 1.0,
         "max": 1.0
@@ -68,7 +68,7 @@
       "x-unit-discriminator": "admittance_units",
       "x-units": {
         "NATURAL_UNITS": "S",
-        "DEVICE_MVAR": "MVAr"
+        "COMPONENT_MVAR": "MVAr"
       }
     },
     "control_mode": {

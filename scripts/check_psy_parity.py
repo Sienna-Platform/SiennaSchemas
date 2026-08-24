@@ -179,11 +179,23 @@ SCHEMA_ONLY_COMPONENTS = {
     # Device.services, so there is no PSY struct to match.
     "ServiceAssociation",
     "SupplementalAttributeAssociation",
+    # The time series association family: JSON metadata rows, not components.
+    # All seven are allowlisted, not just the wrapper -- PSY re-exports
+    # SingleTimeSeries, Deterministic, DeterministicSingleTimeSeries,
+    # Probabilistic, and Scenarios from InfrastructureSystems, so without these
+    # the gate finds same-named Julia structs and compares a metadata schema
+    # against a struct that carries data arrays.
     "TimeSeriesAssociation",
+    "SingleTimeSeries",
+    "NonSequentialTimeSeries",
+    "Deterministic",
+    "DeterministicSingleTimeSeries",
+    "Probabilistic",
+    "Scenarios",
     # The whole-system serialization envelope, not a component. Its Julia
-    # counterpart is the hand-written container in PowerCoreOpenAPIModels
-    # (src/document.jl), checked against the schema by that repo's own
-    # validate.jl -- there is no PSY struct to match.
+    # counterpart is the hand-written container in the umbrella
+    # PowerOpenAPIModels.jl package (src/document.jl), checked against the
+    # schema by that repo's own validate.jl -- there is no PSY struct to match.
     "SystemDocument",
 }
 

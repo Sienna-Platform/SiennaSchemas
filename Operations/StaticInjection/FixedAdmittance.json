@@ -19,17 +19,17 @@
       "type": "integer"
     },
     "admittance_units": {
-      "description": "Unit basis for the shunt admittance Y. DEVICE_MVAR is PSS/E RAW native (Mvar/MW at unity voltage).",
-      "default": "DEVICE_MVAR",
+      "description": "Unit basis for the shunt admittance Y. COMPONENT_MVAR is PSS/E RAW native (Mvar/MW at unity voltage).",
+      "default": "COMPONENT_MVAR",
       "$ref": "../../Core/common.json#/definitions/ShuntAdmittanceUnitBasis"
     },
     "Y": {
-      "description": "Fixed admittance. Units: per admittance_units — NATURAL_UNITS: S, DEVICE_MVAR: MVAr .",
+      "description": "Fixed admittance. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
       "$ref": "../../Core/common.json#/definitions/ComplexNumber",
       "x-unit-discriminator": "admittance_units",
       "x-units": {
         "NATURAL_UNITS": "S",
-        "DEVICE_MVAR": "MVAr"
+        "COMPONENT_MVAR": "MVAr"
       }
     },
     "base_power": {
