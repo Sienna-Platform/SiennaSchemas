@@ -104,7 +104,25 @@
       }
     },
     "operation_cost": {
-      "$ref": "../../Core/common.json#/definitions/HydroReservoirCost"
+      "discriminator": {
+        "mapping": {
+          "HYDRO_RES": "#/components/schemas/HydroReservoirCost",
+          "MARKET_BID_TIME_SERIES": "#/components/schemas/MarketBidTimeSeriesCost",
+          "IMPORT_EXPORT_TIME_SERIES": "#/components/schemas/ImportExportTimeSeriesCost"
+        },
+        "propertyName": "cost_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "../../Core/common.json#/definitions/HydroReservoirCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/MarketBidTimeSeriesCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/ImportExportTimeSeriesCost"
+        }
+      ]
     },
     "evaporative_loss": {
       "description": "Standing loss from evaporation as a fraction of the reservoir's stored volume/energy lost per hour. Units: 1.",

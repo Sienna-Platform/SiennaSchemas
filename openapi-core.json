@@ -68,6 +68,9 @@
       "ImportExportCost": {
         "$ref": "Core/common.json#/definitions/ImportExportCost"
       },
+      "ImportExportTimeSeriesCost": {
+        "$ref": "Core/common.json#/definitions/ImportExportTimeSeriesCost"
+      },
       "InOut": {
         "$ref": "Core/common.json#/definitions/InOut"
       },
@@ -82,6 +85,9 @@
       },
       "LoadCost": {
         "$ref": "Core/common.json#/definitions/LoadCost"
+      },
+      "MarketBidTimeSeriesCost": {
+        "$ref": "Core/common.json#/definitions/MarketBidTimeSeriesCost"
       },
       "MinMax": {
         "$ref": "Core/common.json#/definitions/MinMax"
@@ -166,6 +172,27 @@
       },
       "EnergyUnit": {
         "$ref": "Core/common.json#/definitions/EnergyUnit"
+      },
+      "TimeSeriesAverageRateCurve": {
+        "$ref": "Core/common.json#/definitions/TimeSeriesAverageRateCurve"
+      },
+      "TimeSeriesIncrementalCurve": {
+        "$ref": "Core/common.json#/definitions/TimeSeriesIncrementalCurve"
+      },
+      "TimeSeriesInputOutputCurve": {
+        "$ref": "Core/common.json#/definitions/TimeSeriesInputOutputCurve"
+      },
+      "TimeSeriesLinearFunctionData": {
+        "$ref": "Core/common.json#/definitions/TimeSeriesLinearFunctionData"
+      },
+      "TimeSeriesPiecewiseLinearData": {
+        "$ref": "Core/common.json#/definitions/TimeSeriesPiecewiseLinearData"
+      },
+      "TimeSeriesPiecewiseStepData": {
+        "$ref": "Core/common.json#/definitions/TimeSeriesPiecewiseStepData"
+      },
+      "TimeSeriesQuadraticFunctionData": {
+        "$ref": "Core/common.json#/definitions/TimeSeriesQuadraticFunctionData"
       }
     }
   }
