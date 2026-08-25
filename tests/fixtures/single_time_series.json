@@ -1,4 +1,5 @@
 {
+  "association_id": 1,
   "owner_id": 42,
   "owner_type": "ThermalStandard",
   "owner_category": "Component",

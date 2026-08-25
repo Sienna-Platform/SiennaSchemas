@@ -4,6 +4,10 @@
   "type": "object",
   "description": "A synthetic deterministic forecast derived from a SingleTimeSeries by `transform_single_time_series`. Field-identical to Deterministic, and it reads back as one; it stays a distinct type because the catalog records which rows are synthetic, and a request for Deterministic matches both while a request for this type narrows to the synthetic ones alone.",
   "properties": {
+    "association_id": {
+      "type": "integer",
+      "description": "Derived surrogate id of this association: a 53-bit truncated SHA-256 over the identity tuple (owner_id, owner_category, time_series_type, name, resolution, interval, features), computed by the store. Identical in every store holding the same association — unlike a storage rowid, which this deliberately is not. Consumers treat it as the wire handle for the association; it is never assigned, only derived."
+    },
     "owner_id": {
       "type": "integer",
       "description": "ID of the owning component or supplemental attribute. The producing data layer allocates both from one id stream, so an `owner_id` never collides across the two categories; `owner_category` remains required because the store's catalog contract still supports independent streams from other producers, and it is still the store's disambiguator."
@@ -94,6 +98,7 @@
     }
   },
   "required": [
+    "association_id",
     "owner_id",
     "owner_type",
     "owner_category",
