@@ -6,7 +6,8 @@
   "properties": {
     "association_id": {
       "type": "integer",
-      "description": "Derived surrogate id of this association: a 53-bit truncated SHA-256 over the identity tuple (owner_id, owner_category, time_series_type, name, resolution, interval, features), computed by the store. Identical in every store holding the same association — unlike a storage rowid, which this deliberately is not. Consumers treat it as the wire handle for the association; it is never assigned, only derived."
+      "description": "Surrogate id of this association, minted by the store that holds it. Assigned once when the association is created and never changed: renaming the series or reassigning its owner leaves it alone, so a consumer may persist it as a durable reference. Ids are never reused, and they are store-local — resolve one against the same store the document was exported from, not against an independently built store. Assigned by the store, never by a document author.",
+      "readOnly": true
     },
     "owner_id": {
       "type": "integer",

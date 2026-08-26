@@ -189,7 +189,7 @@
             "integer",
             "null"
           ],
-          "description": "Derived surrogate id of the fuel-cost time series association, or null when fuel_cost carries a fixed value. Exactly one of the two is set."
+          "description": "Store-minted id of the fuel-cost time series association, or null when fuel_cost carries a fixed value. Exactly one of the two is set."
         },
         "power_units": {
           "$ref": "#/definitions/UnitSystem"
@@ -677,7 +677,7 @@
         },
         "start_up_association_id": {
           "type": "integer",
-          "description": "Derived surrogate id of a time series of three-stage (hot, warm, cold) start-up costs."
+          "description": "Store-minted id of a time series of three-stage (hot, warm, cold) start-up costs."
         },
         "shut_down": {
           "$ref": "#/definitions/TimeSeriesInputOutputCurve",
@@ -1137,14 +1137,14 @@
             "integer",
             "null"
           ],
-          "description": "Derived surrogate id of the time series supplying the initial input value, or null."
+          "description": "Store-minted id of the time series supplying the initial input value, or null."
         },
         "input_at_zero_association_id": {
           "type": [
             "integer",
             "null"
           ],
-          "description": "Derived surrogate id of the time series supplying the input at zero output, or null."
+          "description": "Store-minted id of the time series supplying the input at zero output, or null."
         }
       },
       "required": [
@@ -1171,14 +1171,14 @@
             "integer",
             "null"
           ],
-          "description": "Derived surrogate id of the time series supplying the initial input value, or null."
+          "description": "Store-minted id of the time series supplying the initial input value, or null."
         },
         "input_at_zero_association_id": {
           "type": [
             "integer",
             "null"
           ],
-          "description": "Derived surrogate id of the time series supplying the input at zero output, or null."
+          "description": "Store-minted id of the time series supplying the input at zero output, or null."
         }
       },
       "required": [
@@ -1225,7 +1225,7 @@
         },
         "association_id": {
           "type": "integer",
-          "description": "Derived surrogate id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; never assigned by a document producer."
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
         }
       },
       "required": [
@@ -1244,7 +1244,7 @@
         },
         "association_id": {
           "type": "integer",
-          "description": "Derived surrogate id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; never assigned by a document producer."
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
         }
       },
       "required": [
@@ -1263,7 +1263,7 @@
         },
         "association_id": {
           "type": "integer",
-          "description": "Derived surrogate id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; never assigned by a document producer."
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
         }
       },
       "required": [
@@ -1282,7 +1282,7 @@
         },
         "association_id": {
           "type": "integer",
-          "description": "Derived surrogate id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; never assigned by a document producer."
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
         }
       },
       "required": [
