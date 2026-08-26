@@ -392,10 +392,14 @@
           "$ref": "#/definitions/CostCurve"
         },
         "energy_import_weekly_limit": {
-          "type": "number"
+          "type": "number",
+          "x-unit": "MWh",
+          "description": "Weekly limit on imported energy, in MWh. MWh is the only representation: neither producers nor consumers rescale it by a system base."
         },
         "energy_export_weekly_limit": {
-          "type": "number"
+          "type": "number",
+          "x-unit": "MWh",
+          "description": "Weekly limit on exported energy, in MWh. MWh is the only representation: neither producers nor consumers rescale it by a system base."
         }
       },
       "required": [
@@ -424,12 +428,12 @@
         "energy_import_weekly_limit": {
           "type": "number",
           "x-unit": "MWh",
-          "description": "Weekly limit on imported energy. Producers converting from a per-unit representation rescale by their system base before writing. Units: MWh."
+          "description": "Weekly limit on imported energy, in MWh. MWh is the only representation: neither producers nor consumers rescale it by a system base."
         },
         "energy_export_weekly_limit": {
           "type": "number",
           "x-unit": "MWh",
-          "description": "Weekly limit on exported energy. Producers converting from a per-unit representation rescale by their system base before writing. Units: MWh."
+          "description": "Weekly limit on exported energy, in MWh. MWh is the only representation: neither producers nor consumers rescale it by a system base."
         },
         "ancillary_service_offers": {
           "type": "array",
