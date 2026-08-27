@@ -79,6 +79,13 @@
         "$ref": "../Operations/Associations/ServiceAssociation.json"
       }
     },
+    "trading_hub_associations": {
+      "description": "Links a trading hub to one associated entity: a member bus or a market transaction settling at the hub. One row per (hub, member) pair.",
+      "type": "array",
+      "items": {
+        "$ref": "../Operations/Associations/TradingHubAssociation.json"
+      }
+    },
     "time_series_associations": {
       "description": "Time series metadata rows, one per (series, owner) association. Each row names the store holding its values in its own `address`; `time_series_storage_file` remains the document-level sidecar name.",
       "type": "array",
@@ -110,6 +117,7 @@
     "plant_associations",
     "combined_cycle_associations",
     "service_associations",
+    "trading_hub_associations",
     "time_series_associations",
     "time_series_storage_file"
   ]

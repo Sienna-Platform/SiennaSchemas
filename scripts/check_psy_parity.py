@@ -106,6 +106,7 @@ TRANSLITERATION = {
     "α_tertiary": "alpha_tertiary",
     "from": "from_id",
     "to": "to_id",
+    "settlement_point": "settlement_point_id",
 }
 
 # PSY encodes reserve direction in the Reserve{T} type parameter; schemas
@@ -121,6 +122,11 @@ RESERVE_DIRECTION_COMPONENTS = {
 ASSOCIATION_NORMALIZED = {
     "AGC": {"reserves"},
     "GroupReserve": {"contributing_services"},
+    # Hub membership mirrors service membership: rows in trading_hub_associations,
+    # not an inline list on TradingHub.
+    "TradingHub": {"buses"},
+    # Same hub-membership normalization, on the participant side.
+    "VirtualParticipant": {"trading_hubs"},
 }
 PLANT_SA_STRUCTS = {
     "ThermalPowerPlant",
@@ -179,6 +185,12 @@ SCHEMA_ONLY_COMPONENTS = {
     # Device.services, so there is no PSY struct to match.
     "ServiceAssociation",
     "SupplementalAttributeAssociation",
+    # Hub membership normalized to (trading_hub_id, entity_id) rows, same as
+    # ServiceAssociation above -- no PSY struct to match.
+    "TradingHubAssociation",
+    # Bilateral-transaction settlement ledger: schema-only by design, no
+    # power-balance impact and no PSY struct to match.
+    "BilateralTransaction",
     # The time series association family: JSON metadata rows, not components.
     # All seven are allowlisted, not just the wrapper -- PSY re-exports
     # SingleTimeSeries, Deterministic, DeterministicSingleTimeSeries,

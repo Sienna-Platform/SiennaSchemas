@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TradingHubAssociation",
+  "description": "Links a trading hub to one associated entity. One record per (hub, member) pair. `entity_id` may name a bus (hub membership) or a market transaction settling at the hub, resolved through the entity registry, so no member-type discriminator is needed — the same shape as ServiceAssociation.",
+  "type": "object",
+  "properties": {
+    "trading_hub_id": {
+      "description": "ID of the trading hub the association belongs to.",
+      "type": "integer"
+    },
+    "entity_id": {
+      "description": "ID of the associated entity: a bus or a market transaction.",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "trading_hub_id",
+    "entity_id"
+  ]
+}

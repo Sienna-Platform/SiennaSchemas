@@ -23,6 +23,9 @@
       "AreaInterchange": {
         "$ref": "Operations/Branch/AreaInterchange.json"
       },
+      "BilateralTransaction": {
+        "$ref": "Operations/Market/BilateralTransaction.json"
+      },
       "CombinedCycleAssociation": {
         "$ref": "Operations/Associations/CombinedCycleAssociation.json"
       },
@@ -119,6 +122,9 @@
       "PlantAssociation": {
         "$ref": "Operations/Associations/PlantAssociation.json"
       },
+      "PointToPointBid": {
+        "$ref": "Operations/Market/PointToPointBid.json"
+      },
       "PowerLoad": {
         "$ref": "Operations/StaticInjection/PowerLoad.json"
       },
@@ -167,6 +173,12 @@
       "ThreeWindingTransformer": {
         "$ref": "Operations/Branch/ThreeWindingTransformer.json"
       },
+      "TradingHub": {
+        "$ref": "Operations/Market/TradingHub.json"
+      },
+      "TradingHubAssociation": {
+        "$ref": "Operations/Associations/TradingHubAssociation.json"
+      },
       "TransformerCircuit": {
         "$ref": "Operations/Branch/TransformerCircuit.json"
       },
@@ -185,6 +197,9 @@
       "TwoWindingTransformer": {
         "$ref": "Operations/Branch/TwoWindingTransformer.json"
       },
+      "VirtualParticipant": {
+        "$ref": "Operations/Market/VirtualParticipant.json"
+      },
       "VSCACControlModes": {"$ref": "Operations/common.json#/definitions/VSCACControlModes"},
       "VSCDCControlModes": {"$ref": "Operations/common.json#/definitions/VSCDCControlModes"},
       "CombinedCycleConfiguration": {"$ref": "Operations/common.json#/definitions/CombinedCycleConfiguration"},
@@ -193,7 +208,10 @@
       "TwoWindingTransformerShuntLocation": {"$ref": "Operations/common.json#/definitions/TwoWindingTransformerShuntLocation"},
       "ThreeWindingTransformerShuntLocation": {"$ref": "Operations/common.json#/definitions/ThreeWindingTransformerShuntLocation"},
       "VoltageUnitBasis": {"$ref": "Operations/common.json#/definitions/VoltageUnitBasis"},
-      "LoadConformity": {"$ref": "Operations/common.json#/definitions/LoadConformity"}
+      "LoadConformity": {"$ref": "Operations/common.json#/definitions/LoadConformity"},
+      "BilateralProduct": {"$ref": "Operations/common.json#/definitions/BilateralProduct"},
+      "MarketStage": {"$ref": "Operations/common.json#/definitions/MarketStage"},
+      "BilateralConfirmation": {"$ref": "Operations/common.json#/definitions/BilateralConfirmation"}
     }
   }
 }

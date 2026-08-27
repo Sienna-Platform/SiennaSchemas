@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PointToPointBid",
+  "description": "A priced point-to-point spread bid (e.g. an up-to-congestion or PTP obligation bid): a willingness-to-pay curve on the price spread between two locations. Clears as a withdrawal at the source terminal and an injection at the sink terminal.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the bid is available for market clearing (`true`) or not (`false`).",
+      "type": "boolean"
+    },
+    "from_id": {
+      "description": "ID of the source terminal (withdrawal side), resolved through the entity registry: a topology record or a trading hub.",
+      "type": "integer"
+    },
+    "to_id": {
+      "description": "ID of the sink terminal (injection side), resolved through the entity registry: a topology record or a trading hub; must differ from `from_id`.",
+      "type": "integer"
+    },
+    "max_active_power": {
+      "description": "MW envelope for the bid. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
+    },
+    "spread_bid": {
+      "description": "Willingness-to-pay curve on the to-minus-from price spread, as an offer-curve operating cost (incremental side only).",
+      "discriminator": {
+        "mapping": {
+          "MARKET_BID": "#/components/schemas/MarketBidCost",
+          "MARKET_BID_TIME_SERIES": "#/components/schemas/MarketBidTimeSeriesCost"
+        },
+        "propertyName": "cost_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "../../Core/common.json#/definitions/MarketBidCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/MarketBidTimeSeriesCost"
+        }
+      ]
+    },
+    "price_limits": {
+      "description": "Tariff bid-price bounds on the spread. Units: USD/MWh.",
+      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "x-unit": "USD/MWh"
+    },
+    "linked_crr": {
+      "description": "Identifier of a linked congestion-right instrument, when the market couples the bid to one.",
+      "type": ["string", "null"]
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "available",
+    "from_id",
+    "to_id",
+    "max_active_power",
+    "spread_bid",
+    "price_limits"
+  ]
+}

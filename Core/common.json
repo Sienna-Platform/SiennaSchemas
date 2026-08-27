@@ -612,8 +612,8 @@
           "type": "string",
           "default": "MARKET_BID"
         },
-        "no_load_cost": {
-          "description": "No load cost. Legacy scalar promotion: a bare scalar value `s` from a legacy source converts to an `InputOutputCurve` of `LinearFunctionData` with `constant_term = s` and `proportional_term = 0`.",
+        "minimum_energy_offer": {
+          "description": "Minimum-energy offer: cost to operate at minimum stable level, in $/MWh at the curve's minimum power, stored as submitted. $/h sources convert at parse (MEO = no-load cost / P_min). Legacy scalar promotion: a bare scalar value `s` from a legacy source converts to an `InputOutputCurve` of `LinearFunctionData` with `constant_term = s` and `proportional_term = 0`.",
           "default": {
             "curve_type": "INPUT_OUTPUT",
             "function_data": {
@@ -654,10 +654,26 @@
           "items": {
             "type": "integer"
           }
+        },
+        "incremental_slope": {
+          "description": "Linear-interpolation flag for the incremental offer curves; false (default) is the step interpretation. Mutually exclusive with block groups on the same curve.",
+          "type": "boolean",
+          "default": false
+        },
+        "decremental_slope": {
+          "description": "Linear-interpolation flag for the decremental offer curves; false (default) is the step interpretation. Mutually exclusive with block groups on the same curve.",
+          "type": "boolean",
+          "default": false
+        },
+        "curve_style": {
+          "description": "Curve-clearing style for the bid: 0 = CURVE (ordinary divisible price-setting curve, default); 1 = FIXED (clears as one indivisible all-or-nothing package over its period); 2 = VARIABLE (divisible quantity, block-priced, cannot set the settlement-point price). Corresponds to ERCOT's DAM PriceCurve curveStyle field (CURVE/FIXED/VARIABLE). A non-zero value is mutually exclusive with incremental_slope/decremental_slope.",
+          "type": "integer",
+          "enum": [0, 1, 2],
+          "default": 0
         }
       },
       "required": [
-        "no_load_cost",
+        "minimum_energy_offer",
         "start_up",
         "shut_down",
         "incremental_offer_curves",
@@ -675,9 +691,9 @@
           "type": "string",
           "default": "MARKET_BID_TIME_SERIES"
         },
-        "no_load_cost": {
+        "minimum_energy_offer": {
           "$ref": "#/definitions/TimeSeriesInputOutputCurve",
-          "description": "No-load cost as a time-series-backed linear curve. Only the TIME_SERIES_LINEAR function-data variant is admissible here; the consuming constructor rejects any other."
+          "description": "Minimum-energy offer: cost to operate at minimum stable level, in $/MWh at the curve's minimum power, stored as submitted. $/h sources convert at parse (MEO = no-load cost / P_min). Time-series-backed linear curve; only the TIME_SERIES_LINEAR function-data variant is admissible here — the consuming constructor rejects any other."
         },
         "start_up_association_id": {
           "type": "integer",
@@ -701,11 +717,27 @@
             "type": "integer"
           },
           "description": "IDs of the ancillary service components that this bid offers into."
+        },
+        "incremental_slope": {
+          "description": "Linear-interpolation flag for the incremental offer curves; false (default) is the step interpretation. Mutually exclusive with block groups on the same curve.",
+          "type": "boolean",
+          "default": false
+        },
+        "decremental_slope": {
+          "description": "Linear-interpolation flag for the decremental offer curves; false (default) is the step interpretation. Mutually exclusive with block groups on the same curve.",
+          "type": "boolean",
+          "default": false
+        },
+        "curve_style": {
+          "description": "Curve-clearing style for the bid: 0 = CURVE (ordinary divisible price-setting curve, default); 1 = FIXED (clears as one indivisible all-or-nothing package over its period); 2 = VARIABLE (divisible quantity, block-priced, cannot set the settlement-point price). Corresponds to ERCOT's DAM PriceCurve curveStyle field (CURVE/FIXED/VARIABLE). A non-zero value is mutually exclusive with incremental_slope/decremental_slope.",
+          "type": "integer",
+          "enum": [0, 1, 2],
+          "default": 0
         }
       },
       "required": [
         "cost_type",
-        "no_load_cost",
+        "minimum_energy_offer",
         "start_up_association_id",
         "shut_down",
         "incremental_offer_curves",
