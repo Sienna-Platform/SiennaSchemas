@@ -40,6 +40,8 @@
         "not": {
           "enum": [
             "application_data",
+            "array_shape",
+            "association_id",
             "component_field",
             "count",
             "data",
@@ -50,6 +52,7 @@
             "ext",
             "features",
             "horizon",
+            "id",
             "initial_timestamp",
             "interval",
             "length",
@@ -61,6 +64,7 @@
             "quantity_kind",
             "resolution",
             "scenario_count",
+            "time_reference",
             "time_series_type",
             "timestamps",
             "unit_system",
@@ -75,6 +79,11 @@
       "title": "ElementType",
       "type": "string",
       "description": "Canonical element type of the stored array: a dtype spelling (`f64`, `f32`, `i64`, `i32`, `u64`, `u32`, `u16`, `u8`, `i16`, `i8`, `bool`) for plain scalars, else `tuple(N,dtype)` or a function-data kind (`linear_function`, `quadratic_function`, `piecewise_linear`, `piecewise_step`). It says what one timestep's value means and how it is laid out; the physical dtype of the bytes derives from it rather than being recorded separately. `linear_function` occupies 2 slots, `quadratic_function` 3; the two piecewise kinds are ragged, with the used count in the row's leading element."
+    },
+    "TimeReference": {
+      "title": "TimeReference",
+      "type": "string",
+      "description": "How a series' timestamps were spelled, recorded so a read hands back what the write declared instead of relabelling every series UTC. Four forms share one string, and are unambiguous because a zone name that would read as either literal or as an offset is rejected: `utc`; `zoneless` for a wall clock, which names no instant; a fixed UTC offset (`-07:00`, `+0530`, `+05`); or an IANA zone name (`America/Denver`). Only the name's shape is checked here — whether a zone exists is a tz-database question, and the store records the name either way. A spelling, not a grid: it does not change what a calendar `resolution` steps on, and a series on a local-clock grid is a NonSequentialTimeSeries. Descriptive, so two series differing only in it are duplicates rather than distinct series, but not inert — a query's bounds must match the series' spelling, and the zoneless series form their own group."
     },
     "Period": {
       "title": "Period",

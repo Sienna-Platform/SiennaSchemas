@@ -9,5 +9,7 @@
   "uri": "infrastore://systems/base.h5",
   "element_type": "bool",
   "element_shape": [],
+  "array_shape": [37],
+  "time_reference": "zoneless",
   "length": 37
 }
