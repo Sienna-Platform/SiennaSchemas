@@ -11,6 +11,7 @@
   "uri": "infrastore://systems/base.h5",
   "element_type": "f64",
   "element_shape": [],
+  "array_shape": [3, 24, 365],
   "units": "MW",
   "quantity_kind": "ActivePower",
   "unit_system": "COMPONENT_BASE",

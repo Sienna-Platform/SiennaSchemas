@@ -45,13 +45,15 @@ ALLOWED_SCHEMA_ONLY = {
     # plain `features` column -- it only has the content-addressed
     # `features_hash`; see that entry in ALLOWED_INFRASTORE_ONLY.
     "features",
+    # The stored array's full native shape. Derived, not stored: the catalog
+    # keeps `length` and `element_shape` and the array itself carries the rest,
+    # so there is no column to match. It travels because a forecast's layout is
+    # a producer convention and cannot be rebuilt from horizon/count.
+    "array_shape",
 }
 
 # Present in infrastore's catalog, absent here -- each deliberate.
 ALLOWED_INFRASTORE_ONLY = {
-    # Surrogate primary key of the catalog row; a SQLite rowid meaningful only
-    # within one store. Not exported across stores, hence removed from schemas.
-    "id",
     # Content address for bytes this layer does not carry.
     "timestamps_hash",
     # features is inlined as a map here, matching the TimeSeriesMetadata struct,
@@ -60,6 +62,12 @@ ALLOWED_INFRASTORE_ONLY = {
     # See ALLOWED_SCHEMA_ONLY["percentiles"].
     "percentiles_json",
 }
+
+# Catalog column -> schema property, for the one field the two layers spell
+# differently. The catalog's `id` is unambiguous inside a store whose only
+# table of these rows is the one it sits in; a document carrying components and
+# supplemental attributes alongside them needs the name to say which id it is.
+RENAMES = {"id": "association_id"}
 
 
 def infrastore_columns(ddl_path):
@@ -99,6 +107,22 @@ def main():
 
     catalog = infrastore_columns(ddl_path)
     ours = schema_properties()
+
+    # A rename that stops matching on either side would otherwise read as two
+    # unrelated drifts (or, worse, silently rename nothing), so check both ends
+    # of every mapping before applying it -- the same reasoning the allowlist
+    # presence checks below are built on.
+    bad_renames = [
+        f"{column} -> {prop}"
+        for column, prop in RENAMES.items()
+        if column not in catalog or prop not in ours
+    ]
+    if bad_renames:
+        print("FAIL: a declared rename no longer connects two live names:", file=sys.stderr)
+        for entry in bad_renames:
+            print(f"  - {entry}", file=sys.stderr)
+        return 1
+    catalog = {RENAMES.get(name, name) for name in catalog}
 
     schema_only = (ours - catalog) - ALLOWED_SCHEMA_ONLY
     infrastore_only = (catalog - ours) - ALLOWED_INFRASTORE_ONLY
