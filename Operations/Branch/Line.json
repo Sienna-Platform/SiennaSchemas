@@ -29,24 +29,41 @@
       "type": "integer"
     },
     "r": {
-      "description": "Resistance. Per-unit on `base_power`, which records the system base. Units: pu.",
+      "description": "Resistance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "ohm",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "x": {
-      "description": "Reactance. Per-unit on `base_power`, which records the system base. Units: pu.",
+      "description": "Reactance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "ohm",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "base_power": {
       "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",
       "type": "number",
       "x-unit": "MVA"
     },
+    "parameter_units": {
+      "description": "Unit basis for this line's impedance and shunt admittance fields (r, x, b, g).",
+      "default": "COMPONENT_BASE",
+      "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
+    },
     "b": {
-      "description": "Shunt susceptance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value. Per-unit on `base_power`, which records the system base. Units: pu.",
+      "description": "Shunt susceptance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value. Units: per parameter_units — NATURAL_UNITS: S, COMPONENT_BASE: pu .",
       "$ref": "../../Core/common.json#/definitions/FromTo",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "S",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "rating": {
       "description": "Thermal rating. Flow on the line must be between -`rating` and `rating`. Units: MVA.",
@@ -69,13 +86,17 @@
       "x-unit": "rad"
     },
     "g": {
-      "description": "Shunt conductance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value. Per-unit on `base_power`, which records the system base. Units: pu.",
+      "description": "Shunt conductance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value. Units: per parameter_units — NATURAL_UNITS: S, COMPONENT_BASE: pu .",
       "default": {
         "from": 0.0,
         "to": 0.0
       },
       "$ref": "../../Core/common.json#/definitions/FromTo",
-      "x-unit": "pu"
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "S",
+        "COMPONENT_BASE": "pu"
+      }
     }
   },
   "required": [
