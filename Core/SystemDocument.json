@@ -80,7 +80,8 @@
       }
     },
     "trading_hub_associations": {
-      "description": "Links a trading hub to one associated entity: a member bus or a market transaction settling at the hub. One row per (hub, member) pair.",
+      "description": "Links a trading hub to one associated entity: a member bus or a market transaction settling at the hub. One row per (hub, member) pair. Optional, defaulting to empty: unlike the association arrays that have been required since the format existed, this one was added later, so documents written before it exist and omit it.",
+      "default": [],
       "type": "array",
       "items": {
         "$ref": "../Operations/Associations/TradingHubAssociation.json"
@@ -117,7 +118,6 @@
     "plant_associations",
     "combined_cycle_associations",
     "service_associations",
-    "trading_hub_associations",
     "time_series_associations",
     "time_series_storage_file"
   ]
