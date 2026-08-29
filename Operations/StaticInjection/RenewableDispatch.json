@@ -52,7 +52,9 @@
       "discriminator": {
         "mapping": {
           "RENEWABLE": "#/components/schemas/RenewableGenerationCost",
-          "MARKET_BID": "#/components/schemas/MarketBidCost"
+          "MARKET_BID": "#/components/schemas/MarketBidCost",
+          "MARKET_BID_TIME_SERIES": "#/components/schemas/MarketBidTimeSeriesCost",
+          "IMPORT_EXPORT_TIME_SERIES": "#/components/schemas/ImportExportTimeSeriesCost"
         },
         "propertyName": "cost_type"
       },
@@ -62,6 +64,12 @@
         },
         {
           "$ref": "../../Core/common.json#/definitions/MarketBidCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/MarketBidTimeSeriesCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/ImportExportTimeSeriesCost"
         }
       ]
     },

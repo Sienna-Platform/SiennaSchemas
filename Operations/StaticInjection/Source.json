@@ -98,8 +98,28 @@
       "x-unit": "MVA"
     },
     "operation_cost": {
-      "description": "ImportExportCost of the source. default PSY.ImportExportCost(nothing)",
+      "description": "Cost of importing and exporting power at the source. or MarketBidCost",
+      "discriminator": {
+        "mapping": {
+          "IMPORTEXPORT": "#/components/schemas/ImportExportCost",
+          "MARKET_BID_TIME_SERIES": "#/components/schemas/MarketBidTimeSeriesCost",
+          "IMPORT_EXPORT_TIME_SERIES": "#/components/schemas/ImportExportTimeSeriesCost"
+        },
+        "propertyName": "cost_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "../../Core/common.json#/definitions/ImportExportCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/MarketBidTimeSeriesCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/definitions/ImportExportTimeSeriesCost"
+        }
+      ],
       "default": {
+        "cost_type": "IMPORTEXPORT",
         "import_offer_curves": {
           "variable_cost_type": "COST",
           "value_curve": {
@@ -140,8 +160,7 @@
         },
         "energy_import_weekly_limit": 1000000.0,
         "energy_export_weekly_limit": 1000000.0
-      },
-      "$ref": "../../Core/common.json#/definitions/ImportExportCost"
+      }
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection device, if any.",

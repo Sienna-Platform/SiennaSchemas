@@ -22,7 +22,7 @@ Core/units.json ──► JSON Schemas (x-unit annotated)
                          └── scripts/check_units_sync.py        (three-layer unit sync gate)
 ```
 
-## The seven gates
+## The eight gates
 
 | Gate | Repo | Command | Prevents |
 |---|---|---|---|
@@ -32,6 +32,7 @@ Core/units.json ──► JSON Schemas (x-unit annotated)
 | PSY parity | SiennaSchemas | `python3 scripts/check_psy_parity.py --psy-path ../PowerSystems.jl` | structural drift between PowerSystems.jl structs and schema components (missing schemas, field drift); SKIPs cleanly when PSY is absent |
 | Time series fixtures | SiennaSchemas | `python3 scripts/validate_fixtures.py` | a broken `oneOf` discriminator, a wrong `required` list, or a discriminator `mapping` naming the wrong schema, exercised against real example instances rather than structure alone |
 | Infrastore parity | SiennaSchemas | `python3 scripts/check_infrastore_parity.py` | field-name drift between the six time series schemas and infrastore's `time_series_associations` catalog row; SKIPs cleanly when no infrastore checkout is present, so a green run there is not proof the check ran — mirroring how PSY parity SKIPs when PSY is absent |
+| Inline schema aliases | PowerOpenAPIModels | `make validate` (`test/validate.jl`) | a shared schema silently duplicated as `<Base>1`, `<Base>2`, … because the reference site had no `inlineSchemaNameMappings` entry in this repo's `openapi-config-*.json`. Lives downstream because the evidence is the generated output: the alias names are assigned by openapi-generator and cannot be derived statically from the schemas, so a check here would have false negatives. Keys on the unsuffixed base existing, so real digit-suffixed type names (`SteamTurbineGov1`) are not flagged |
 | DB sync | SiennaGridDB | `python3 scripts/check_units_sync.py` and `python3 scripts/generate_sql_schema.py --check --diff` | unit contradictions between registry and schemas; DDL drifting from the schema projection |
 
 ## Change protocol

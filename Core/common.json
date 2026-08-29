@@ -178,14 +178,18 @@
     "FuelCurve": {
       "properties": {
         "fuel_cost": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "number"
-            }
-          ]
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Fixed fuel cost per unit of fuel, or null when fuel_cost_time_series names a time-varying one. Exactly one of the two is set; producers and consumers enforce it."
+        },
+        "fuel_cost_time_series": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Store-minted id of the fuel-cost time series association, or null when fuel_cost carries a fixed value. Exactly one of the two is set."
         },
         "power_units": {
           "$ref": "#/definitions/UnitSystem"
@@ -209,7 +213,6 @@
       "required": [
         "value_curve",
         "power_units",
-        "fuel_cost",
         "vom_cost",
         "variable_cost_type"
       ],
@@ -222,7 +225,11 @@
           "LINEAR": "#/components/schemas/LinearFunctionData",
           "PIECEWISE_LINEAR": "#/components/schemas/PiecewiseLinearData",
           "PIECEWISE_STEP": "#/components/schemas/PiecewiseStepData",
-          "QUADRATIC": "#/components/schemas/QuadraticFunctionData"
+          "QUADRATIC": "#/components/schemas/QuadraticFunctionData",
+          "TIME_SERIES_LINEAR": "#/components/schemas/TimeSeriesLinearFunctionData",
+          "TIME_SERIES_QUADRATIC": "#/components/schemas/TimeSeriesQuadraticFunctionData",
+          "TIME_SERIES_PIECEWISE_LINEAR": "#/components/schemas/TimeSeriesPiecewiseLinearData",
+          "TIME_SERIES_PIECEWISE_STEP": "#/components/schemas/TimeSeriesPiecewiseStepData"
         },
         "propertyName": "function_type"
       },
@@ -238,6 +245,18 @@
         },
         {
           "$ref": "#/definitions/PiecewiseStepData"
+        },
+        {
+          "$ref": "#/definitions/TimeSeriesLinearFunctionData"
+        },
+        {
+          "$ref": "#/definitions/TimeSeriesQuadraticFunctionData"
+        },
+        {
+          "$ref": "#/definitions/TimeSeriesPiecewiseLinearData"
+        },
+        {
+          "$ref": "#/definitions/TimeSeriesPiecewiseStepData"
         }
       ],
       "title": "FunctionData",
@@ -332,7 +351,7 @@
       ]
     },
     "ImpedanceUnitBasis": {
-      "description": "Unit basis a branch/injection impedance is stored in. NATURAL_UNITS: physical ohms (PSS/E RAW native for DC-line impedances). COMPONENT_BASE: per-unit on the component's own base (base_power MVA and voltage base); components whose per-unit data was historically on the system base record that system base in base_power, so there is no separate system-base option. PSS/E supplies device base for DC-line converters and CZ=2 transformer windings.",
+      "description": "Unit basis a branch/injection impedance is stored in. NATURAL_UNITS: physical ohms (PSS/E RAW native for DC-line impedances). COMPONENT_BASE: per-unit on the component's own base (base_power MVA and voltage base); components whose per-unit data was historically on the system base record that system base in base_power, so there is no separate system-base option. PSS/E supplies device base for DC-line converters and CZ=2 transformer windings. A branch's shunt admittance halves (b, g) share the branch's one basis: NATURAL_UNITS stores them in siemens.",
       "enum": [
         "NATURAL_UNITS",
         "COMPONENT_BASE"
@@ -341,7 +360,7 @@
       "type": "string"
     },
     "AdmittanceUnitBasis": {
-      "description": "Unit basis a shunt admittance is stored in. NATURAL_UNITS: physical siemens. COMPONENT_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance). COMPONENT_BASE: per-unit on the component's own base (base_power MVA and voltage base) \u2014 a per-unit base, not a power at unity voltage, and not an alternative spelling of COMPONENT_MVAR; components whose per-unit data was historically on the system base record that system base in base_power. Fixed and switched shunts use ShuntAdmittanceUnitBasis instead, which omits COMPONENT_BASE because a shunt has no device MVA rating.",
+      "description": "Unit basis a shunt admittance is stored in. NATURAL_UNITS: physical siemens. COMPONENT_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance). COMPONENT_BASE: per-unit on the component's own base (base_power MVA and voltage base) — a per-unit base, not a power at unity voltage, and not an alternative spelling of COMPONENT_MVAR; components whose per-unit data was historically on the system base record that system base in base_power. Fixed and switched shunts use ShuntAdmittanceUnitBasis instead, which omits COMPONENT_BASE because a shunt has no device MVA rating.",
       "enum": [
         "NATURAL_UNITS",
         "COMPONENT_MVAR",
@@ -351,7 +370,7 @@
       "type": "string"
     },
     "ShuntAdmittanceUnitBasis": {
-      "description": "Subset of AdmittanceUnitBasis for fixed and switched shunts: omits COMPONENT_BASE because a shunt has no device MVA rating to per-unitize against. NATURAL_UNITS: physical siemens. COMPONENT_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance) \u2014 PSS/E RAW native for shunts.",
+      "description": "Subset of AdmittanceUnitBasis for fixed and switched shunts: omits COMPONENT_BASE because a shunt has no device MVA rating to per-unitize against. NATURAL_UNITS: physical siemens. COMPONENT_MVAR: reactive power at unity voltage (Mvar for susceptance, MW for conductance) — PSS/E RAW native for shunts.",
       "enum": [
         "NATURAL_UNITS",
         "COMPONENT_MVAR"
@@ -373,10 +392,14 @@
           "$ref": "#/definitions/CostCurve"
         },
         "energy_import_weekly_limit": {
-          "type": "number"
+          "type": "number",
+          "x-unit": "MWh",
+          "description": "Weekly limit on imported energy, in MWh. MWh is the only representation: neither producers nor consumers rescale it by a system base. Units: MWh."
         },
         "energy_export_weekly_limit": {
-          "type": "number"
+          "type": "number",
+          "x-unit": "MWh",
+          "description": "Weekly limit on exported energy, in MWh. MWh is the only representation: neither producers nor consumers rescale it by a system base. Units: MWh."
         }
       },
       "required": [
@@ -384,6 +407,50 @@
         "energy_export_weekly_limit"
       ],
       "title": "ImportExportCost",
+      "type": "object"
+    },
+    "ImportExportTimeSeriesCost": {
+      "description": "Cost representation for time-varying imports and exports with neighboring areas. The static counterpart is ImportExportCost.",
+      "properties": {
+        "cost_type": {
+          "const": "IMPORT_EXPORT_TIME_SERIES",
+          "type": "string",
+          "default": "IMPORT_EXPORT_TIME_SERIES"
+        },
+        "import_offer_curves": {
+          "$ref": "#/definitions/CostCurve",
+          "description": "Import price curves whose value curve admits only the TIME_SERIES_INCREMENTAL variant; any other variant is rejected by the consuming constructor."
+        },
+        "export_offer_curves": {
+          "$ref": "#/definitions/CostCurve",
+          "description": "Export price curves whose value curve admits only the TIME_SERIES_INCREMENTAL variant; any other variant is rejected by the consuming constructor."
+        },
+        "energy_import_weekly_limit": {
+          "type": "number",
+          "x-unit": "MWh",
+          "description": "Weekly limit on imported energy, in MWh. MWh is the only representation: neither producers nor consumers rescale it by a system base. Units: MWh."
+        },
+        "energy_export_weekly_limit": {
+          "type": "number",
+          "x-unit": "MWh",
+          "description": "Weekly limit on exported energy, in MWh. MWh is the only representation: neither producers nor consumers rescale it by a system base. Units: MWh."
+        },
+        "ancillary_service_offers": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "required": [
+        "cost_type",
+        "import_offer_curves",
+        "export_offer_curves",
+        "energy_import_weekly_limit",
+        "energy_export_weekly_limit",
+        "ancillary_service_offers"
+      ],
+      "title": "ImportExportTimeSeriesCost",
       "type": "object"
     },
     "IncrementalCurve": {
@@ -598,6 +665,54 @@
         "ancillary_service_offers"
       ],
       "title": "MarketBidCost",
+      "type": "object"
+    },
+    "MarketBidTimeSeriesCost": {
+      "description": "Cost representation for time-varying market bids of energy and ancillary services. The static counterpart is MarketBidCost.",
+      "properties": {
+        "cost_type": {
+          "const": "MARKET_BID_TIME_SERIES",
+          "type": "string",
+          "default": "MARKET_BID_TIME_SERIES"
+        },
+        "no_load_cost": {
+          "$ref": "#/definitions/TimeSeriesInputOutputCurve",
+          "description": "No-load cost as a time-series-backed linear curve. Only the TIME_SERIES_LINEAR function-data variant is admissible here; the consuming constructor rejects any other."
+        },
+        "start_up_association_id": {
+          "type": "integer",
+          "description": "Store-minted id of a time series of three-stage (hot, warm, cold) start-up costs."
+        },
+        "shut_down": {
+          "$ref": "#/definitions/TimeSeriesInputOutputCurve",
+          "description": "Shut-down cost as a time-series-backed linear curve. Only the TIME_SERIES_LINEAR function-data variant is admissible here; the consuming constructor rejects any other."
+        },
+        "incremental_offer_curves": {
+          "$ref": "#/definitions/CostCurve",
+          "description": "Sell offer curves whose value curve is a time-series-backed piecewise incremental curve. Only the TIME_SERIES_INCREMENTAL variant is admissible here; any other variant is rejected by the consuming constructor."
+        },
+        "decremental_offer_curves": {
+          "$ref": "#/definitions/CostCurve",
+          "description": "Buy offer curves whose value curve is a time-series-backed piecewise incremental curve. Only the TIME_SERIES_INCREMENTAL variant is admissible here; any other variant is rejected by the consuming constructor."
+        },
+        "ancillary_service_offers": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "IDs of the ancillary service components that this bid offers into."
+        }
+      },
+      "required": [
+        "cost_type",
+        "no_load_cost",
+        "start_up_association_id",
+        "shut_down",
+        "incremental_offer_curves",
+        "decremental_offer_curves",
+        "ancillary_service_offers"
+      ],
+      "title": "MarketBidTimeSeriesCost",
       "type": "object"
     },
     "MinMax": {
@@ -1010,6 +1125,177 @@
       ],
       "type": "object"
     },
+    "TimeSeriesAverageRateCurve": {
+      "properties": {
+        "curve_type": {
+          "const": "TIME_SERIES_AVERAGE_RATE",
+          "type": "string",
+          "default": "TIME_SERIES_AVERAGE_RATE"
+        },
+        "function_data": {
+          "$ref": "#/definitions/FunctionData",
+          "description": "Only TIME_SERIES_LINEAR or TIME_SERIES_PIECEWISE_STEP is admissible here; all other FunctionData variants, static or time-series-backed, are rejected by the consuming constructor."
+        },
+        "initial_input_association_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Store-minted id of the time series supplying the initial input value, or null."
+        },
+        "input_at_zero_association_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Store-minted id of the time series supplying the input at zero output, or null."
+        }
+      },
+      "required": [
+        "function_data",
+        "curve_type"
+      ],
+      "title": "TimeSeriesAverageRateCurve",
+      "description": "A time-series-backed average rate curve. The static counterpart is AverageRateCurve.",
+      "type": "object"
+    },
+    "TimeSeriesIncrementalCurve": {
+      "properties": {
+        "curve_type": {
+          "const": "TIME_SERIES_INCREMENTAL",
+          "type": "string",
+          "default": "TIME_SERIES_INCREMENTAL"
+        },
+        "function_data": {
+          "$ref": "#/definitions/FunctionData",
+          "description": "Only TIME_SERIES_LINEAR or TIME_SERIES_PIECEWISE_STEP is admissible here; all other FunctionData variants, static or time-series-backed, are rejected by the consuming constructor."
+        },
+        "initial_input_association_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Store-minted id of the time series supplying the initial input value, or null."
+        },
+        "input_at_zero_association_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Store-minted id of the time series supplying the input at zero output, or null."
+        }
+      },
+      "required": [
+        "function_data",
+        "curve_type"
+      ],
+      "title": "TimeSeriesIncrementalCurve",
+      "description": "A time-series-backed incremental curve. The static counterpart is IncrementalCurve.",
+      "type": "object"
+    },
+    "TimeSeriesInputOutputCurve": {
+      "properties": {
+        "curve_type": {
+          "const": "TIME_SERIES_INPUT_OUTPUT",
+          "type": "string",
+          "default": "TIME_SERIES_INPUT_OUTPUT"
+        },
+        "function_data": {
+          "$ref": "#/definitions/FunctionData",
+          "description": "Only TIME_SERIES_LINEAR, TIME_SERIES_QUADRATIC, or TIME_SERIES_PIECEWISE_LINEAR is admissible here; the static variants and TIME_SERIES_PIECEWISE_STEP are invalid and rejected by the consuming constructor."
+        },
+        "input_at_zero": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Optional explicit input value at zero output. A number here, unlike the incremental and average-rate variants, where it is a time series reference."
+        }
+      },
+      "required": [
+        "function_data",
+        "curve_type"
+      ],
+      "title": "TimeSeriesInputOutputCurve",
+      "description": "A time-series-backed input-output curve. The static counterpart is InputOutputCurve.",
+      "type": "object"
+    },
+    "TimeSeriesLinearFunctionData": {
+      "properties": {
+        "function_type": {
+          "const": "TIME_SERIES_LINEAR",
+          "type": "string",
+          "default": "TIME_SERIES_LINEAR"
+        },
+        "association_id": {
+          "type": "integer",
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
+        }
+      },
+      "required": [
+        "function_type",
+        "association_id"
+      ],
+      "title": "TimeSeriesLinearFunctionData",
+      "type": "object"
+    },
+    "TimeSeriesPiecewiseLinearData": {
+      "properties": {
+        "function_type": {
+          "const": "TIME_SERIES_PIECEWISE_LINEAR",
+          "type": "string",
+          "default": "TIME_SERIES_PIECEWISE_LINEAR"
+        },
+        "association_id": {
+          "type": "integer",
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
+        }
+      },
+      "required": [
+        "function_type",
+        "association_id"
+      ],
+      "title": "TimeSeriesPiecewiseLinearData",
+      "type": "object"
+    },
+    "TimeSeriesPiecewiseStepData": {
+      "properties": {
+        "function_type": {
+          "const": "TIME_SERIES_PIECEWISE_STEP",
+          "type": "string",
+          "default": "TIME_SERIES_PIECEWISE_STEP"
+        },
+        "association_id": {
+          "type": "integer",
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
+        }
+      },
+      "required": [
+        "function_type",
+        "association_id"
+      ],
+      "title": "TimeSeriesPiecewiseStepData",
+      "type": "object"
+    },
+    "TimeSeriesQuadraticFunctionData": {
+      "properties": {
+        "function_type": {
+          "const": "TIME_SERIES_QUADRATIC",
+          "type": "string",
+          "default": "TIME_SERIES_QUADRATIC"
+        },
+        "association_id": {
+          "type": "integer",
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
+        }
+      },
+      "required": [
+        "function_type",
+        "association_id"
+      ],
+      "title": "TimeSeriesQuadraticFunctionData",
+      "type": "object"
+    },
     "TurbinePump": {
       "properties": {
         "turbine": {
@@ -1085,7 +1371,10 @@
         "mapping": {
           "AVERAGE_RATE": "#/components/schemas/AverageRateCurve",
           "INCREMENTAL": "#/components/schemas/IncrementalCurve",
-          "INPUT_OUTPUT": "#/components/schemas/InputOutputCurve"
+          "INPUT_OUTPUT": "#/components/schemas/InputOutputCurve",
+          "TIME_SERIES_INPUT_OUTPUT": "#/components/schemas/TimeSeriesInputOutputCurve",
+          "TIME_SERIES_INCREMENTAL": "#/components/schemas/TimeSeriesIncrementalCurve",
+          "TIME_SERIES_AVERAGE_RATE": "#/components/schemas/TimeSeriesAverageRateCurve"
         },
         "propertyName": "curve_type"
       },
@@ -1098,6 +1387,15 @@
         },
         {
           "$ref": "#/definitions/AverageRateCurve"
+        },
+        {
+          "$ref": "#/definitions/TimeSeriesInputOutputCurve"
+        },
+        {
+          "$ref": "#/definitions/TimeSeriesIncrementalCurve"
+        },
+        {
+          "$ref": "#/definitions/TimeSeriesAverageRateCurve"
         }
       ],
       "title": "ValueCurve",
