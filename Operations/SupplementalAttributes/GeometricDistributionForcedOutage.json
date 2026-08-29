@@ -7,9 +7,9 @@
       "type": "integer"
     },
     "mean_time_to_recovery": {
-      "description": "Mean time elapsed between a failure and the return to service, as a whole number of minutes. Units: min.",
-      "type": "integer",
-      "default": 0,
+      "description": "Mean time elapsed between a failure and the return to service, in minutes. Units: min.",
+      "type": "number",
+      "default": 0.0,
       "x-unit": "min"
     },
     "outage_transition_probability": {
