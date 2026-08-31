@@ -44,6 +44,13 @@ jobs:
       - name: Check $ref and discriminator.mapping resolution
         run: python scripts/check_refs.py
 
+      # Layering gate: the InfrastructureCore package must carry no power
+      # semantics, so the data layer and the time series store never inherit
+      # ACBusType, ThermalFuels, or a cost curve. Membership is pinned in the
+      # script, so widening the generic layer is an explicit edit.
+      - name: Check package layering
+        run: python scripts/check_layering.py
+
       # Instance-level gate: the checks above validate annotations and $ref
       # structure, not whether a real association row validates. This catches a
       # oneOf matching two branches and a wrong `required` list.

@@ -17,9 +17,6 @@
       "AverageRateCurve": {
         "$ref": "Core/common.json#/definitions/AverageRateCurve"
       },
-      "ComplexNumber": {
-        "$ref": "Core/common.json#/definitions/ComplexNumber"
-      },
       "CostCurve": {
         "$ref": "Core/common.json#/definitions/CostCurve"
       },
@@ -41,17 +38,8 @@
       "FdbdPnts": {
         "$ref": "Core/common.json#/definitions/FdbdPnts"
       },
-      "FromTo": {
-        "$ref": "Core/common.json#/definitions/FromTo"
-      },
-      "FromTo_ToFrom": {
-        "$ref": "Core/common.json#/definitions/FromTo_ToFrom"
-      },
       "FuelCurve": {
         "$ref": "Core/common.json#/definitions/FuelCurve"
-      },
-      "FunctionData": {
-        "$ref": "Core/common.json#/definitions/FunctionData"
       },
       "GenericOperationCost": {
         "$ref": "Core/common.json#/definitions/GenericOperationCost"
@@ -71,17 +59,11 @@
       "ImportExportTimeSeriesCost": {
         "$ref": "Core/common.json#/definitions/ImportExportTimeSeriesCost"
       },
-      "InOut": {
-        "$ref": "Core/common.json#/definitions/InOut"
-      },
       "IncrementalCurve": {
         "$ref": "Core/common.json#/definitions/IncrementalCurve"
       },
       "InputOutputCurve": {
         "$ref": "Core/common.json#/definitions/InputOutputCurve"
-      },
-      "LinearFunctionData": {
-        "$ref": "Core/common.json#/definitions/LinearFunctionData"
       },
       "LoadCost": {
         "$ref": "Core/common.json#/definitions/LoadCost"
@@ -89,23 +71,11 @@
       "MarketBidTimeSeriesCost": {
         "$ref": "Core/common.json#/definitions/MarketBidTimeSeriesCost"
       },
-      "MinMax": {
-        "$ref": "Core/common.json#/definitions/MinMax"
-      },
-      "PiecewiseLinearData": {
-        "$ref": "Core/common.json#/definitions/PiecewiseLinearData"
-      },
-      "PiecewiseStepData": {
-        "$ref": "Core/common.json#/definitions/PiecewiseStepData"
-      },
       "PrimeMovers": {
         "$ref": "Core/common.json#/definitions/PrimeMovers"
       },
       "ProductionVariableCostCurve": {
         "$ref": "Core/common.json#/definitions/ProductionVariableCostCurve"
-      },
-      "QuadraticFunctionData": {
-        "$ref": "Core/common.json#/definitions/QuadraticFunctionData"
       },
       "RenewableGenerationCost": {
         "$ref": "Core/common.json#/definitions/RenewableGenerationCost"
@@ -140,26 +110,8 @@
       "TwoTerminalLoss": {
         "$ref": "Core/common.json#/definitions/TwoTerminalLoss"
       },
-      "UnitSystem": {
-        "$ref": "Core/common.json#/definitions/UnitSystem"
-      },
-      "UpDown": {
-        "$ref": "Core/common.json#/definitions/UpDown"
-      },
       "ValueCurve": {
         "$ref": "Core/common.json#/definitions/ValueCurve"
-      },
-      "XY_Coords": {
-        "$ref": "Core/common.json#/definitions/XY_Coords"
-      },
-      "GeographicInfo": {
-        "$ref": "Core/SupplementalAttributes/GeographicInfo.json"
-      },
-      "DataSource": {
-        "$ref": "Core/SupplementalAttributes/DataSource.json"
-      },
-      "SupplementalAttributeAssociation": {
-        "$ref": "Core/Associations/SupplementalAttributeAssociation.json"
       },
       "PollutantType": {
         "$ref": "Core/common.json#/definitions/PollutantType"
@@ -181,18 +133,6 @@
       },
       "TimeSeriesInputOutputCurve": {
         "$ref": "Core/common.json#/definitions/TimeSeriesInputOutputCurve"
-      },
-      "TimeSeriesLinearFunctionData": {
-        "$ref": "Core/common.json#/definitions/TimeSeriesLinearFunctionData"
-      },
-      "TimeSeriesPiecewiseLinearData": {
-        "$ref": "Core/common.json#/definitions/TimeSeriesPiecewiseLinearData"
-      },
-      "TimeSeriesPiecewiseStepData": {
-        "$ref": "Core/common.json#/definitions/TimeSeriesPiecewiseStepData"
-      },
-      "TimeSeriesQuadraticFunctionData": {
-        "$ref": "Core/common.json#/definitions/TimeSeriesQuadraticFunctionData"
       }
     }
   }

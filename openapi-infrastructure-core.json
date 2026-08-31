@@ -1,0 +1,33 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "InfrastructureCoreOpenAPIModels",
+    "version": "1.0.0",
+    "description": "Domain-neutral shared types: the unit convention, the function-data family, and the value shapes and supplemental attributes that carry no power semantics. Consumed by the data layer and the time series store, neither of which should inherit power-specific definitions."
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "UnitSystem": { "$ref": "Core/common.json#/definitions/UnitSystem" },
+      "ComplexNumber": { "$ref": "Core/common.json#/definitions/ComplexNumber" },
+      "XY_Coords": { "$ref": "Core/common.json#/definitions/XY_Coords" },
+      "MinMax": { "$ref": "Core/common.json#/definitions/MinMax" },
+      "UpDown": { "$ref": "Core/common.json#/definitions/UpDown" },
+      "InOut": { "$ref": "Core/common.json#/definitions/InOut" },
+      "FromTo": { "$ref": "Core/common.json#/definitions/FromTo" },
+      "FromTo_ToFrom": { "$ref": "Core/common.json#/definitions/FromTo_ToFrom" },
+      "FunctionData": { "$ref": "Core/common.json#/definitions/FunctionData" },
+      "LinearFunctionData": { "$ref": "Core/common.json#/definitions/LinearFunctionData" },
+      "QuadraticFunctionData": { "$ref": "Core/common.json#/definitions/QuadraticFunctionData" },
+      "PiecewiseLinearData": { "$ref": "Core/common.json#/definitions/PiecewiseLinearData" },
+      "PiecewiseStepData": { "$ref": "Core/common.json#/definitions/PiecewiseStepData" },
+      "TimeSeriesLinearFunctionData": { "$ref": "Core/common.json#/definitions/TimeSeriesLinearFunctionData" },
+      "TimeSeriesQuadraticFunctionData": { "$ref": "Core/common.json#/definitions/TimeSeriesQuadraticFunctionData" },
+      "TimeSeriesPiecewiseLinearData": { "$ref": "Core/common.json#/definitions/TimeSeriesPiecewiseLinearData" },
+      "TimeSeriesPiecewiseStepData": { "$ref": "Core/common.json#/definitions/TimeSeriesPiecewiseStepData" },
+      "GeographicInfo": { "$ref": "Core/SupplementalAttributes/GeographicInfo.json" },
+      "DataSource": { "$ref": "Core/SupplementalAttributes/DataSource.json" },
+      "SupplementalAttributeAssociation": { "$ref": "Core/Associations/SupplementalAttributeAssociation.json" }
+    }
+  }
+}

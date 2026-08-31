@@ -55,7 +55,14 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DIST_DIR = REPO_ROOT / "dist"
-DOMAINS = ["core", "operations", "investments", "dynamics", "timeseries"]
+DOMAINS = [
+    "infrastructure-core",
+    "core",
+    "operations",
+    "investments",
+    "dynamics",
+    "timeseries",
+]
 
 # Files whose top-level `definitions` block is addressed by other schemas via
 # a two-token `<file>#/definitions/<Name>` external ref, and so is hoisted

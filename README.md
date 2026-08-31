@@ -2,6 +2,11 @@
 
 JSON Schema definitions for power system data models. This repository is the single source of truth for data structures used across the Sienna ecosystem.
 
+> [!WARNING]
+> **Pre-release.** Every version below `1.0` is a pre-release. Schemas can change
+> incompatibly in any release, and no stability is promised until `1.0`. Pin an exact
+> tag if you depend on this.
+
 ## How It Works
 
 Tagged releases (e.g., `v1.2.0`) trigger a GitHub Actions workflow that packages all schemas into a tarball and publishes a GitHub Release. Downstream repositories poll for new releases and automatically regenerate their artifacts using their own language-specific codegen containers.
@@ -32,7 +37,7 @@ openapi-generator generate -c openapi-config-core.json \
   -o ./power_core_openapi_models
 ```
 
-Replace `core` with `operations`, `investments`, or `dynamics` for other packages.
+Replace `core` with `infrastructure-core`, `operations`, `investments`, `dynamics`, or `timeseries` for other packages.
 
 ## Units
 
@@ -57,8 +62,8 @@ Every numeric property in the schemas carries a unit annotation (`x-unit`, or
 ## Creating a Release
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+git tag v0.1.0
+git push origin v0.1.0
 ```
 
 This triggers the release workflow, which publishes the schema tarball. Downstream repos will pick up the new version on their next polling cycle (every 6 hours) or via manual workflow dispatch.
