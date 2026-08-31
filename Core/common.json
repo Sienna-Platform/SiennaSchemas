@@ -65,7 +65,7 @@
     "CostCurve": {
       "properties": {
         "power_units": {
-          "default": "NATURAL_UNITS",
+          "default": "NaturalUnit",
           "$ref": "#/definitions/UnitSystem"
         },
         "value_curve": {
@@ -1073,10 +1073,10 @@
       "type": "object"
     },
     "UnitSystem": {
-      "description": "Unit basis curve power values are stored in. DEVICE_BASE: per-unit on the component's own base_power. NATURAL_UNITS: MW/MVA. There is no system-base option: per-unit data historically on the system base records that base in the component's base_power and rides as DEVICE_BASE.",
+      "description": "Unit basis curve power values are stored in. Tokens are the InfrastructureSystems `AbstractUnitSystem` type names, as serialized by `ValueCurveWithUnits`. DeviceBaseUnit: per-unit on the component's own base_power. NaturalUnit: MW/MVA. There is no system-base option: per-unit data historically on the system base records that base in the component's base_power and rides as DeviceBaseUnit.",
       "enum": [
-        "DEVICE_BASE",
-        "NATURAL_UNITS"
+        "DeviceBaseUnit",
+        "NaturalUnit"
       ],
       "title": "UnitSystem",
       "type": "string"
