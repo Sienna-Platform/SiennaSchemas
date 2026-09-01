@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "An AC transmission line with additional power flow constraints specified by the system operator, more restrictive than the line's thermal limits.\n\nFor example, monitored lines can be used to restrict line flow following a contingency elsewhere in the network. See the `flow_limits` parameter. If monitoring is not needed, see `Line`.",
   "properties": {
     "id": {
@@ -15,14 +15,22 @@
       "type": "boolean"
     },
     "active_power_flow": {
-      "description": "Initial condition of active power flow on the line. Units: MW.",
+      "description": "Initial condition of active power flow on the line. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "reactive_power_flow": {
-      "description": "Initial condition of reactive power flow on the line. Units: MVAr.",
+      "description": "Initial condition of reactive power flow on the line. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "arc": {
       "description": "An `Arc` defining this line `from` a bus `to` another bus.",
@@ -51,14 +59,18 @@
       "type": "number",
       "x-unit": "MVA"
     },
+    "power_units": {
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "$ref": "../../Core/common.json#/$defs/UnitSystem"
+    },
     "parameter_units": {
       "description": "Unit basis for this line's impedance and shunt admittance fields (r, x, b, g).",
       "default": "COMPONENT_BASE",
-      "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
+      "$ref": "../../Core/common.json#/$defs/ImpedanceUnitBasis"
     },
     "b": {
       "description": "Shunt susceptance, specified both on the `from` and `to` ends of the line. These are commonly modeled with the same value. Units: per parameter_units — NATURAL_UNITS: S, COMPONENT_BASE: pu .",
-      "$ref": "../../Core/common.json#/definitions/FromTo",
+      "$ref": "../../Core/common.json#/$defs/FromTo",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
         "NATURAL_UNITS": "S",
@@ -66,28 +78,44 @@
       }
     },
     "flow_limits": {
-      "description": "Minimum and maximum permissable flow on the line, if different from the thermal rating defined in `rating`. Units: MW.",
-      "$ref": "../../Core/common.json#/definitions/FromTo_ToFrom",
-      "x-unit": "MW"
+      "description": "Minimum and maximum permissable flow on the line, if different from the thermal rating defined in `rating`. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "$ref": "../../Core/common.json#/$defs/FromTo_ToFrom",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "rating": {
-      "description": "Thermal rating. Flow through the transformer must be between -`rating` and `rating`. Units: MVA.",
+      "description": "Thermal rating. Flow through the transformer must be between -`rating` and `rating`. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVA"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "rating_b": {
-      "description": "Second current rating. Units: MVA.",
+      "description": "Second current rating. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVA"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "rating_c": {
-      "description": "Third current rating. Units: MVA.",
+      "description": "Third current rating. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVA"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "angle_limits": {
       "description": "Minimum and maximum angle limits. Units: rad.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "rad"
     },
     "g": {
@@ -96,7 +124,7 @@
         "from": 0.0,
         "to": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/FromTo",
+      "$ref": "../../Core/common.json#/$defs/FromTo",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
         "NATURAL_UNITS": "S",
@@ -114,6 +142,7 @@
     "r",
     "x",
     "base_power",
+    "power_units",
     "b",
     "flow_limits",
     "rating",

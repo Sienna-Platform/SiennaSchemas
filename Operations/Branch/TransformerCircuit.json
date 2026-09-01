@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "The data defining one modeled arc of a transformer.\n\nA `TwoWindingTransformer` has one circuit; a `ThreeWindingTransformer` has three, each connecting a terminal bus to the star bus. Circuit `available` is the single source of truth for availability; the owning transformer derives its availability from its circuits. `r`/`x` are the circuit impedance (for a two-winding transformer, the series impedance; for a three-winding transformer, the star-leg equivalent), in pu (device base) on `base_power` referenced to `base_voltage_primary`. Tap-changer / phase-shifter control is described by the flat control fields: `control_objective = UNDEFINED` means the circuit has no control block. For a `TwoWindingTransformer`, the single circuit's `base_power` is the transformer's device base.",
   "properties": {
     "id": {
@@ -29,7 +29,7 @@
     "parameter_units": {
       "description": "Unit basis for this circuit's impedance fields (r, x).",
       "default": "COMPONENT_BASE",
-      "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
+      "$ref": "../../Core/common.json#/$defs/ImpedanceUnitBasis"
     },
     "r": {
       "description": "Circuit resistance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
@@ -54,7 +54,7 @@
     "control_objective": {
       "description": "Tap-changer / phase-shifter control objective (PSS/E COD). `UNDEFINED` means this circuit has no control block.",
       "default": "UNDEFINED",
-      "$ref": "../../Operations/common.json#/definitions/TransformerControlObjective"
+      "$ref": "../../Operations/common.json#/$defs/TransformerControlObjective"
     },
     "regulated_bus_number": {
       "description": "Controlled bus number (PSS/E CONT; sign = regulation side).",
@@ -67,7 +67,7 @@
         "min": 0.9,
         "max": 1.1
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit-discriminator": "control_objective",
       "x-units": {
         "UNDEFINED": "1",
@@ -90,7 +90,7 @@
         "min": 0.9,
         "max": 1.1
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit-discriminator": "control_objective",
       "x-units": {
         "UNDEFINED": "pu",
@@ -113,37 +113,61 @@
       "type": "integer"
     },
     "rating": {
-      "description": "Thermal rating. Units: MVA.",
+      "description": "Thermal rating. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVA"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "rating_b": {
-      "description": "Second current rating. Units: MVA.",
+      "description": "Second current rating. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVA"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "rating_c": {
-      "description": "Third current rating. Units: MVA.",
+      "description": "Third current rating. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVA"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "active_power_flow": {
-      "description": "Initial condition of active power flow through this circuit. Units: MW.",
+      "description": "Initial condition of active power flow through this circuit. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "reactive_power_flow": {
-      "description": "Initial condition of reactive power flow through this circuit. Units: MVAr.",
+      "description": "Initial condition of reactive power flow through this circuit. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "base_power": {
       "description": "Base power for per unitization of this circuit. Units: MVA.",
       "default": 100.0,
       "type": "number",
       "x-unit": "MVA"
+    },
+    "power_units": {
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "$ref": "../../Core/common.json#/$defs/UnitSystem"
     },
     "base_voltage_primary": {
       "description": "Primary (from) terminal-side base voltage; the reference voltage for this circuit's per-unit impedance. Units: kV.",
@@ -159,7 +183,8 @@
   "required": [
     "id",
     "available",
-    "arc"
+    "arc",
+    "power_units"
   ],
   "title": "TransformerCircuit",
   "type": "object"

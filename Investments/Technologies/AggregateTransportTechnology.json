@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "An aggregated representation of a transmission interchange between two regions. Capacity is added in discrete units of `unit_size`, priced by a capital cost curve, and derated by a proportional line loss.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -27,12 +28,12 @@
     },
     "capacity_limits": {
       "description": "Allowable capacity for a transmission line. Units: MW.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "MW"
     },
     "capital_costs": {
       "description": "Cost of adding new capacity to the nodal transmission line. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
       "x-unit": "USD/MW"
     },
     "line_loss": {
@@ -55,16 +56,16 @@
     },
     "financial_data": {
       "description": "Struct containing relevant financial information for a technology.",
-      "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
+      "$ref": "../Financials/TechnologyFinancialData.json"
     }
   },
   "required": [
-    "available", 
-    "end_region", 
-    "financial_data", 
-    "id", 
-    "name", 
-    "power_systems_type", 
+    "available",
+    "end_region",
+    "financial_data",
+    "id",
+    "name",
+    "power_systems_type",
     "start_region"
   ],
   "title": "AggregateTransportTechnology",

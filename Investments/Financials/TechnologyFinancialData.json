@@ -1,10 +1,7 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Financial data for a candidate technology: the capital recovery period used to derive overnight capital cost from annualized investment cost, the dollar-year its cost data is reported in, and the debt fraction, debt rate, return on equity, and tax rate that together set its cost of capital.",
   "properties": {
-    "id": {
-      "description": "ID for individual component.",
-      "type": "integer"
-    },
     "capital_recovery_period": {
       "description": "Period over which capital costs are recovered for net present value calculations. Units: yr.",
       "type": "integer",
@@ -36,7 +33,6 @@
     }
   },
   "required": [
-    "id",
     "capital_recovery_period",
     "technology_base_year",
     "debt_fraction",

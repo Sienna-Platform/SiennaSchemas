@@ -1,0 +1,31 @@
+title: SiennaSchemas
+description: Type reference for the Sienna power system data model schemas
+url: "https://sienna-platform.github.io"
+baseurl: "/SiennaSchemas"
+
+# Loaded as a remote theme, not a local gem: the GitHub Pages build
+# (actions/jekyll-build-pages) uses the default Pages gem set, which does not
+# include just-the-docs. jekyll-remote-theme, which fetches it, is allowlisted
+# for Pages builds.
+remote_theme: just-the-docs/just-the-docs
+permalink: pretty
+
+plugins:
+  - jekyll-remote-theme
+  - jekyll-relative-links
+
+relative_links:
+  enabled: true
+  collections: false
+
+color_scheme: light
+search_enabled: true
+heading_anchors: true
+
+exclude:
+  - PIPELINE.md
+  - UNIT_ANNOTATIONS.md
+
+aux_links:
+  "SiennaSchemas on GitHub":
+    - "https://github.com/Sienna-Platform/SiennaSchemas"

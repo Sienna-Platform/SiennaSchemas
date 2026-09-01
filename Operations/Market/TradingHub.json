@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "TradingHub",
   "description": "A market trading hub: a named set of member buses at which hub-settled bids are priced. Membership is carried as TradingHubAssociation rows rather than a list on this record, matching the service-membership convention.",
   "type": "object",

@@ -5,7 +5,7 @@ Runs over every schema JSON file in Core/, Operations/, Investments/, and
 Dynamics/ (excluding Core/units.json itself and the openapi-*.json specs) and
 enforces:
 
-  1. Every schema validates against the JSON Schema draft-07 meta-schema.
+  1. Every schema validates against the JSON Schema 2020-12 meta-schema.
   2. Every x-unit / x-units value is a unit string in Core/units.json
      allowed_units, or the literal "pu".
   3. Every x-unit-base and x-unit-discriminator names an existing sibling
@@ -40,7 +40,7 @@ import sys
 from pathlib import Path
 
 import jsonschema
-from jsonschema import Draft7Validator
+from jsonschema import Draft202012Validator
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 UNITS_JSON = REPO_ROOT / "Core" / "units.json"
@@ -183,7 +183,7 @@ def resolve_ref_node(ref, source_path):
 
 
 def resolve_ref_enum(ref, source_path):
-    """Resolve a local-file $ref to a definitions entry and return its enum, or None."""
+    """Resolve a local-file $ref to a $defs entry and return its enum, or None."""
     node = resolve_ref_node(ref, source_path)
     if isinstance(node, dict) and "enum" in node:
         return list(node["enum"])
@@ -288,7 +288,7 @@ def _discriminator_wrapper(schema_node, source_path):
 
 def _ref_target_path(ref, source_path):
     """The file a (possibly cross-file) $ref resolves into, without chasing
-    the fragment -- needed because a bare "#/definitions/X" ref inside a
+    the fragment -- needed because a bare "#/$defs/X" ref inside a
     definition means "this same file", which after following one cross-file
     $ref is no longer the file we started scanning."""
     filepart = ref.split("#", 1)[0]
@@ -318,7 +318,7 @@ def resolve_effective_type(schema_node, default_value, source_path):
         if mapped is None:
             return None
         type_name = mapped.rsplit("/", 1)[-1]
-        variant_ref = f"#/definitions/{type_name}"
+        variant_ref = f"#/$defs/{type_name}"
         target = resolve_ref_node(variant_ref, wrapper_path)
         if not isinstance(target, dict):
             return None
@@ -579,14 +579,14 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
 
 
 def check_metaschema(doc, source_file, failures):
-    """Rule 1: validate against the draft-07 meta-schema."""
+    """Rule 1: validate against the 2020-12 meta-schema."""
     try:
-        Draft7Validator.check_schema(doc)
+        Draft202012Validator.check_schema(doc)
     except jsonschema.exceptions.SchemaError as exc:
         loc = "/" + "/".join(str(p) for p in exc.absolute_path)
         failures.append(
-            Failure(source_file, loc, "draft-07-meta-schema",
-                    exc.message, "a valid draft-07 schema")
+            Failure(source_file, loc, "2020-12-meta-schema",
+                    exc.message, "a valid 2020-12 schema")
         )
 
 

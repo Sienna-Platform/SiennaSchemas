@@ -1,19 +1,9 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "SystemDocument",
-  "description": "The serialized form of a whole power system: every component, the association tables that link them, and the name of the HDF5 sidecar holding time series values. This is the interchange format between producers (the producing parsers and the data model library) and consumers (the data model library, the relational mirror, non-Julia clients), so the shape is defined here rather than by convention in each producer.\n\nDeliberately excluded from openapi-generator: `components` is a map from type name to an array of heterogeneous component objects, which the generated Julia client cannot express as typed buckets. The hand-written container in the generated core model package (`src/document.jl`) is the single Julia representation, and its fields are checked against this file. This schema remains authoritative for every other language binding.\n\nTime series *values* never appear here. `time_series_associations` carries the metadata rows and `time_series_storage_file` names the sidecar; reading or writing that file is the consumer's job.",
+  "description": "The serialized form of a whole power system: every component, the association tables that link them, and the name of the HDF5 sidecar holding time series values. This is the interchange format between producers (the producing parsers and the data model library) and consumers (the data model library, the relational mirror, non-Julia clients), so the shape is defined here rather than by convention in each producer.\n\nThere is no document-level unit system or base power: every value in the document is interpretable from its own component blob alone. A discriminated field is resolved against a basis-selector property recorded on that same blob (`power_units`, `parameter_units`, `energy_units`, and the like) and, for a COMPONENT_BASE reading, against that blob's own `base_power` — never a document-wide table. A field with a fixed `x-unit` is already in its natural unit and needs no basis at all. This applies uniformly to component blobs and to any embedded cost payload's own `power_units`; a time series association's `unit_system` likewise governs only that one series.\n\nDeliberately excluded from openapi-generator: `components` is a map from type name to an array of heterogeneous component objects, which the generated Julia client cannot express as typed buckets. The hand-written container in the generated core model package (`src/document.jl`) is the single Julia representation, and its fields are checked against this file. This schema remains authoritative for every other language binding.\n\nTime series *values* never appear here. `time_series_associations` carries the metadata rows and `time_series_storage_file` names the sidecar; reading or writing that file is the consumer's job.",
   "type": "object",
   "properties": {
-    "base_power": {
-      "description": "System base power. Per-unit values elsewhere in the document are relative to this when the component carries no base of its own. Units: MVA.",
-      "type": "number",
-      "exclusiveMinimum": 0,
-      "x-unit": "MVA"
-    },
-    "unit_system": {
-      "$ref": "common.json#/definitions/UnitSystem",
-      "description": "The convention every stored value in this document follows. Values are only interpretable against the convention they were written in; the `x-unit` annotations name the natural unit either way. There is no system-base option: per-unit data historically on the system base records that base in the component's own `base_power` and rides as COMPONENT_BASE."
-    },
     "name": {
       "description": "Optional system name.",
       "type": [
@@ -110,8 +100,6 @@
     }
   },
   "required": [
-    "base_power",
-    "unit_system",
     "components",
     "supplemental_attributes",
     "supplemental_attribute_associations",

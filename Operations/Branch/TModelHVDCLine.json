@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A High Voltage DC transmission line for modeling DC transmission networks.\n\nThis line must be connected to a `DCBus` on each end. It uses a T-Model of the line impedance. This is suitable for operational simulations with a multi-terminal DC network.",
   "properties": {
     "id": {
@@ -26,7 +26,7 @@
     "parameter_units": {
       "description": "Unit basis for this line's impedance field (r).",
       "default": "NATURAL_UNITS",
-      "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
+      "$ref": "../../Core/common.json#/$defs/ImpedanceUnitBasis"
     },
     "base_current": {
       "description": "Base current for per-unitization of this line's per-unit fields — this DC line per-unitizes against a current base, not a power base. Units: A.",
@@ -54,12 +54,12 @@
     },
     "active_power_limits_from": {
       "description": "Minimum and maximum active power flows to the FROM node. Units: MW.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "MW"
     },
     "active_power_limits_to": {
       "description": "Minimum and maximum active power flows to the TO node. Units: MW.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "MW"
     }
   },

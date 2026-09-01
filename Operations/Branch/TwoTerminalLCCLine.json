@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A Non-Capacitor Line Commutated Converter (LCC)-HVDC transmission line. As implemented in PSS/E.",
   "properties": {
     "id": {
@@ -19,14 +19,18 @@
       "type": "integer"
     },
     "active_power_flow": {
-      "description": "Initial condition of active power flow on the line. Units: MW.",
+      "description": "Initial condition of active power flow on the line. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "parameter_units": {
       "description": "Unit basis for this line's impedance fields (r, rectifier/inverter rc/xc, capacitor reactances, compounding_resistance).",
       "default": "NATURAL_UNITS",
-      "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
+      "$ref": "../../Core/common.json#/$defs/ImpedanceUnitBasis"
     },
     "r": {
       "description": "Series resistance of the DC line. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
@@ -49,7 +53,7 @@
     "dc_voltage_units": {
       "description": "Unit basis for the DC voltage fields (scheduled_dc_voltage, switch_mode_voltage, min_compounding_voltage).",
       "default": "NATURAL_UNITS",
-      "$ref": "../../Operations/common.json#/definitions/VoltageUnitBasis"
+      "$ref": "../../Operations/common.json#/$defs/VoltageUnitBasis"
     },
     "scheduled_dc_voltage": {
       "description": "Scheduled compounded DC voltage. By default this parameter is the scheduled DC voltage in the inverter bus. This parameter must not be specified in per-unit. Units: kV. Units: per dc_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
@@ -66,7 +70,7 @@
     },
     "rectifier_delay_angle_limits": {
       "description": "Minimum and maximum rectifier firing delay angle (alpha). Units: rad.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "rad"
     },
     "rectifier_rc": {
@@ -98,7 +102,7 @@
     },
     "inverter_extinction_angle_limits": {
       "description": "Minimum and maximum inverter extinction angle (gamma). Units: rad.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "rad"
     },
     "inverter_rc": {
@@ -177,7 +181,7 @@
         "min": 0.51,
         "max": 1.5
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "1"
     },
     "rectifier_tap_step": {
@@ -220,7 +224,7 @@
         "min": 0.51,
         "max": 1.5
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "1"
     },
     "inverter_tap_step": {
@@ -246,40 +250,56 @@
       }
     },
     "active_power_limits_from": {
-      "description": "Minimum and maximum active power flows to the FROM node. Units: MW.",
+      "description": "Minimum and maximum active power flows to the FROM node. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "default": {
         "min": 0.0,
         "max": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MW"
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "active_power_limits_to": {
-      "description": "Minimum and maximum active power flows to the TO node. Units: MW.",
+      "description": "Minimum and maximum active power flows to the TO node. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "default": {
         "min": 0.0,
         "max": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MW"
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "reactive_power_limits_from": {
-      "description": "Minimum and maximum reactive power limits to the FROM node. Units: MVAr.",
+      "description": "Minimum and maximum reactive power limits to the FROM node. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": {
         "min": 0.0,
         "max": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MVAr"
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "reactive_power_limits_to": {
-      "description": "Minimum and maximum reactive power limits to the TO node. Units: MVAr.",
+      "description": "Minimum and maximum reactive power limits to the TO node. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": {
         "min": 0.0,
         "max": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MVAr"
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "loss": {
       "description": "A generic loss model coefficients. It accepts a linear model with a constant loss and a proportional loss rate (MW of loss per MW of flow). It also accepts a Piecewise loss, with N segments to specify different proportional losses for different segments.",
@@ -291,12 +311,16 @@
           "proportional_term": 0
         }
       },
-      "$ref": "../../Core/common.json#/definitions/TwoTerminalLoss"
+      "$ref": "../../Core/common.json#/$defs/TwoTerminalLoss"
     },
     "base_power": {
       "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",
       "type": "number",
       "x-unit": "MVA"
+    },
+    "power_units": {
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "$ref": "../../Core/common.json#/$defs/UnitSystem"
     }
   },
   "required": [
@@ -318,7 +342,8 @@
     "inverter_rc",
     "inverter_xc",
     "inverter_base_voltage",
-    "base_power"
+    "base_power",
+    "power_units"
   ],
   "title": "TwoTerminalLCCLine",
   "type": "object"

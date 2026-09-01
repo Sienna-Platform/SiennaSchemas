@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A fixed admittance.\n\nMost often used in dynamics or AC power flow studies as a source of reactive power.",
   "properties": {
     "id": {
@@ -21,11 +21,11 @@
     "admittance_units": {
       "description": "Unit basis for the shunt admittance Y. COMPONENT_MVAR is PSS/E RAW native (Mvar/MW at unity voltage).",
       "default": "COMPONENT_MVAR",
-      "$ref": "../../Core/common.json#/definitions/ShuntAdmittanceUnitBasis"
+      "$ref": "../../Core/common.json#/$defs/ShuntAdmittanceUnitBasis"
     },
     "Y": {
       "description": "Fixed admittance. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
-      "$ref": "../../Core/common.json#/definitions/ComplexNumber",
+      "$ref": "../../Core/common.json#/$defs/ComplexNumber",
       "x-unit-discriminator": "admittance_units",
       "x-units": {
         "NATURAL_UNITS": "S",

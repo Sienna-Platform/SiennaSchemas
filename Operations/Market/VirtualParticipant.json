@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "VirtualParticipant",
   "description": "A virtual (convergence) market participant. Supply offers map to the operating cost's incremental offer curves; demand bids map to decremental offer curves. Settles either at a settlement point or at associated trading hubs — the two are mutually exclusive; hub membership is carried as TradingHubAssociation rows rather than a list on this record, matching the trading hub's own membership convention.",
   "type": "object",
@@ -18,7 +18,10 @@
     },
     "settlement_point_id": {
       "description": "ID of the location this participant settles at — a bus, area, or load zone. `null` when the participant settles at trading hubs instead.",
-      "type": ["integer", "null"]
+      "type": [
+        "integer",
+        "null"
+      ]
     },
     "max_supply": {
       "description": "Maximum envelope for the incremental (supply) side. Units: MW.",
@@ -41,10 +44,10 @@
       },
       "oneOf": [
         {
-          "$ref": "../../Core/common.json#/definitions/MarketBidCost"
+          "$ref": "../../Core/common.json#/$defs/MarketBidCost"
         },
         {
-          "$ref": "../../Core/common.json#/definitions/MarketBidTimeSeriesCost"
+          "$ref": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost"
         }
       ]
     }

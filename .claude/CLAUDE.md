@@ -43,7 +43,7 @@ Six packages (each generated in both Julia and Python):
 | Package | Contents | Dependencies |
 |---|---|---|
 | **InfrastructureCoreOpenAPIModels** | Domain-neutral: `UnitSystem`, the function-data family, value shapes (`MinMax`, `UpDown`, `InOut`, `FromTo`, `FromTo_ToFrom`, `ComplexNumber`, `XY_Coords`), and the supplemental attributes (`GeographicInfo`, `DataSource`, `SupplementalAttributeAssociation`) | None |
-| **PowerCoreOpenAPIModels** | Shared types: curves, enums, helpers (MinMax, UpDown, CostCurve, FunctionData, …) | InfrastructureCore |
+| **PowerCoreOpenAPIModels** | Shared types: curves, enums, helpers (CostCurve, ValueCurve, ThermalFuels, TurbinePump, …) | InfrastructureCore |
 | **PowerOperationsOpenAPIModels** | Topology, Branch, StaticInjection, Service | PowerCore |
 | **PowerInvestmentsOpenAPIModels** | Technologies, Financials, Requirements, Attributes, Regions, Portfolio | PowerCore |
 | **PowerDynamicsOpenAPIModels** | DynamicGeneratorComponent, DynamicInverterComponent | PowerCore |

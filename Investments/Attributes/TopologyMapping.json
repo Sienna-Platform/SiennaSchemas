@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Supplemental attribute storing the mapping between a zone and the associated buses in the base system.",
   "properties": {
     "id": {
       "description": "ID for individual component.",

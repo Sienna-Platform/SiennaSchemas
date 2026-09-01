@@ -1,7 +1,8 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
     "ACBusType": {
+      "description": "Classification of an AC bus for power flow, following the MATPOWER bus-type convention. `PQ` fixes the active and reactive injections and solves for voltage magnitude and angle; `PV` fixes active power and voltage magnitude and solves for reactive power and angle; `REF` names the reference for the system voltage angle; `SLACK` balances the system active and reactive mismatch and sets the reference angle; `ISOLATED` marks a bus not connected to the network.",
       "enum": [
         "PQ",
         "PV",
@@ -13,6 +14,7 @@
       "type": "string"
     },
     "AverageRateCurve": {
+      "description": "A curve whose y values are the average rate `f(x)/x` at production level `x` — total cost or fuel divided by output, the form heat rate tables use when they report MBTU/MWh against MW. `initial_input` records the total input at the minimum production point and is what makes conversion to an `InputOutputCurve` possible. Use `IncrementalCurve` when the data gives marginal rather than average rates.",
       "properties": {
         "curve_type": {
           "const": "AVERAGE_RATE",
@@ -29,10 +31,10 @@
           },
           "oneOf": [
             {
-              "$ref": "#/definitions/LinearFunctionData"
+              "$ref": "#/$defs/LinearFunctionData"
             },
             {
-              "$ref": "#/definitions/PiecewiseStepData"
+              "$ref": "#/$defs/PiecewiseStepData"
             }
           ]
         },
@@ -51,6 +53,7 @@
       "type": "object"
     },
     "ComplexNumber": {
+      "description": "A complex number, given as its `real` and `imag` parts.",
       "properties": {
         "real": {
           "type": "number"
@@ -63,13 +66,14 @@
       "type": "object"
     },
     "CostCurve": {
+      "description": "Variable operation cost of a device expressed directly in currency. Wraps a `ValueCurve` that may be in input-output, incremental, or average-rate form, with `power_units` declaring the basis of the x axis and `vom_cost` adding a proportional variable operation and maintenance term.",
       "properties": {
         "power_units": {
           "default": "NATURAL_UNITS",
-          "$ref": "#/definitions/UnitSystem"
+          "$ref": "#/$defs/UnitSystem"
         },
         "value_curve": {
-          "$ref": "#/definitions/ValueCurve"
+          "$ref": "#/$defs/ValueCurve"
         },
         "variable_cost_type": {
           "const": "COST",
@@ -85,7 +89,7 @@
               "proportional_term": 0
             }
           },
-          "$ref": "#/definitions/InputOutputCurve"
+          "$ref": "#/$defs/InputOutputCurve"
         }
       },
       "required": [
@@ -98,6 +102,7 @@
       "type": "object"
     },
     "DbdPnts": {
+      "description": "A pair of deadband thresholds `(dbd1, dbd2)` on a voltage or reactive-power error signal, inside which the controller does not act.",
       "properties": {
         "dbd1": {
           "type": "number"
@@ -110,6 +115,7 @@
       "type": "object"
     },
     "EmissionBasis": {
+      "description": "What an emission rate is measured against: `FUEL_INPUT` for mass per unit of heat input, `POWER_OUTPUT` for mass per unit of electrical output. The choice constrains the accompanying energy unit — a heat unit for `FUEL_INPUT`, `MWH` for `POWER_OUTPUT`.",
       "enum": [
         "FUEL_INPUT",
         "POWER_OUTPUT"
@@ -118,6 +124,7 @@
       "type": "string"
     },
     "EnergyUnit": {
+      "description": "Energy unit forming the denominator of an emission rate: `MMBTU` or `GJ` for a fuel-input basis, `MWH` for a power-output basis.",
       "enum": [
         "MMBTU",
         "GJ",
@@ -136,6 +143,7 @@
       "type": "string"
     },
     "FdbdPnts": {
+      "description": "A pair of deadband thresholds `(fdbd1, fdbd2)` on a frequency error signal, inside which the controller does not act.",
       "properties": {
         "fdbd1": {
           "type": "number"
@@ -148,6 +156,7 @@
       "type": "object"
     },
     "FromTo": {
+      "description": "A pair of values, one at the `from` end and one at the `to` end of a directed edge.",
       "properties": {
         "from": {
           "title": "From",
@@ -162,6 +171,7 @@
       "type": "object"
     },
     "FromTo_ToFrom": {
+      "description": "A pair of values for a directed edge, one for each orientation: `from_to` and `to_from`. The two are carried separately because the quantity need not be equal in the two directions.",
       "properties": {
         "from_to": {
           "title": "FromTo",
@@ -176,6 +186,7 @@
       "type": "object"
     },
     "FuelCurve": {
+      "description": "Variable operation cost of a device expressed in fuel consumed — MBTU, liters, m^3 — together with the price that converts fuel to currency. Wraps a `ValueCurve` in input-output, incremental, or average-rate form; exactly one of `fuel_cost` and `fuel_cost_time_series` supplies the price.",
       "properties": {
         "fuel_cost": {
           "type": [
@@ -192,14 +203,14 @@
           "description": "Store-minted id of the fuel-cost time series association, or null when fuel_cost carries a fixed value. Exactly one of the two is set."
         },
         "power_units": {
-          "$ref": "#/definitions/UnitSystem"
+          "$ref": "#/$defs/UnitSystem"
         },
         "startup_fuel_offtake": {
           "description": "Fuel consumed during startup, as a curve in the unit's fuel units.",
-          "$ref": "#/definitions/InputOutputCurve"
+          "$ref": "#/$defs/InputOutputCurve"
         },
         "value_curve": {
-          "$ref": "#/definitions/ValueCurve"
+          "$ref": "#/$defs/ValueCurve"
         },
         "variable_cost_type": {
           "const": "FUEL",
@@ -207,7 +218,7 @@
           "default": "FUEL"
         },
         "vom_cost": {
-          "$ref": "#/definitions/InputOutputCurve"
+          "$ref": "#/$defs/InputOutputCurve"
         }
       },
       "required": [
@@ -220,6 +231,7 @@
       "type": "object"
     },
     "FunctionData": {
+      "description": "Raw mathematical data defining a function `f(x)` — coefficients or point tables with no units or interpretation attached. `function_type` selects the shape: linear, quadratic, piecewise linear through (x, y) points, or piecewise constant between x endpoints. What `x` and `y` stand for is supplied by whatever wraps this, and the `TIME_SERIES_*` variants hold a reference to a stored series in place of the numbers.",
       "discriminator": {
         "mapping": {
           "LINEAR": "#/components/schemas/LinearFunctionData",
@@ -235,34 +247,35 @@
       },
       "oneOf": [
         {
-          "$ref": "#/definitions/LinearFunctionData"
+          "$ref": "#/$defs/LinearFunctionData"
         },
         {
-          "$ref": "#/definitions/QuadraticFunctionData"
+          "$ref": "#/$defs/QuadraticFunctionData"
         },
         {
-          "$ref": "#/definitions/PiecewiseLinearData"
+          "$ref": "#/$defs/PiecewiseLinearData"
         },
         {
-          "$ref": "#/definitions/PiecewiseStepData"
+          "$ref": "#/$defs/PiecewiseStepData"
         },
         {
-          "$ref": "#/definitions/TimeSeriesLinearFunctionData"
+          "$ref": "#/$defs/TimeSeriesLinearFunctionData"
         },
         {
-          "$ref": "#/definitions/TimeSeriesQuadraticFunctionData"
+          "$ref": "#/$defs/TimeSeriesQuadraticFunctionData"
         },
         {
-          "$ref": "#/definitions/TimeSeriesPiecewiseLinearData"
+          "$ref": "#/$defs/TimeSeriesPiecewiseLinearData"
         },
         {
-          "$ref": "#/definitions/TimeSeriesPiecewiseStepData"
+          "$ref": "#/$defs/TimeSeriesPiecewiseStepData"
         }
       ],
       "title": "FunctionData",
       "type": "object"
     },
     "GenericOperationCost": {
+      "description": "Operating cost of a generation technology, selected by `cost_type` among the thermal (`THERMAL`), renewable (`RENEWABLE`), and hydro (`HYDRO_GEN`) generation cost representations.",
       "discriminator": {
         "mapping": {
           "RENEWABLE": "#/components/schemas/RenewableGenerationCost",
@@ -273,13 +286,13 @@
       },
       "oneOf": [
         {
-          "$ref": "#/definitions/ThermalGenerationCost"
+          "$ref": "#/$defs/ThermalGenerationCost"
         },
         {
-          "$ref": "#/definitions/RenewableGenerationCost"
+          "$ref": "#/$defs/RenewableGenerationCost"
         },
         {
-          "$ref": "#/definitions/HydroGenerationCost"
+          "$ref": "#/$defs/HydroGenerationCost"
         }
       ],
       "title": "GenericOperationCost",
@@ -297,12 +310,12 @@
           "default": 0.0,
           "type": "number"
         },
-        "variable": {
-          "$ref": "#/definitions/ProductionVariableCostCurve"
+        "variable_operation_cost": {
+          "$ref": "#/$defs/ProductionVariableCostCurve"
         }
       },
       "required": [
-        "variable"
+        "variable_operation_cost"
       ],
       "title": "HydroGenerationCost",
       "type": "object"
@@ -332,6 +345,7 @@
       "type": "object"
     },
     "HydroStorageGenerationCost": {
+      "description": "Operating cost of hydro generation with storage, selected by `cost_type` between the hydro generation (`HYDRO_GEN`) and storage (`STORAGE`) cost representations.",
       "title": "HydroStorageGenerationCost",
       "type": "object",
       "discriminator": {
@@ -343,10 +357,10 @@
       },
       "oneOf": [
         {
-          "$ref": "#/definitions/HydroGenerationCost"
+          "$ref": "#/$defs/HydroGenerationCost"
         },
         {
-          "$ref": "#/definitions/StorageCost"
+          "$ref": "#/$defs/StorageCost"
         }
       ]
     },
@@ -379,6 +393,7 @@
       "type": "string"
     },
     "ImportExportCost": {
+      "description": "Cost representation for static (non-time-varying) imports and exports with neighboring areas, together with the ancillary services offered alongside them. The offer curves are piecewise incremental cost curves with an implied zero cost at zero power, and a weekly energy limit bounds each direction. The time-varying counterpart is `ImportExportTimeSeriesCost`.",
       "properties": {
         "cost_type": {
           "const": "IMPORTEXPORT",
@@ -386,10 +401,10 @@
           "default": "IMPORTEXPORT"
         },
         "import_offer_curves": {
-          "$ref": "#/definitions/CostCurve"
+          "$ref": "#/$defs/CostCurve"
         },
         "export_offer_curves": {
-          "$ref": "#/definitions/CostCurve"
+          "$ref": "#/$defs/CostCurve"
         },
         "energy_import_weekly_limit": {
           "type": "number",
@@ -418,11 +433,11 @@
           "default": "IMPORT_EXPORT_TIME_SERIES"
         },
         "import_offer_curves": {
-          "$ref": "#/definitions/CostCurve",
+          "$ref": "#/$defs/CostCurve",
           "description": "Import price curves whose value curve admits only the TIME_SERIES_INCREMENTAL variant; any other variant is rejected by the consuming constructor."
         },
         "export_offer_curves": {
-          "$ref": "#/definitions/CostCurve",
+          "$ref": "#/$defs/CostCurve",
           "description": "Export price curves whose value curve admits only the TIME_SERIES_INCREMENTAL variant; any other variant is rejected by the consuming constructor."
         },
         "energy_import_weekly_limit": {
@@ -454,6 +469,7 @@
       "type": "object"
     },
     "IncrementalCurve": {
+      "description": "A curve whose y values are the marginal rate `f'(x)` at production level `x` — the native form for market bid stacks and incremental heat rate data. `initial_input` records the total input at the minimum production point, anchoring the absolute level and enabling conversion to an `InputOutputCurve`. Use `InputOutputCurve` when the data gives total cost at each output level.",
       "properties": {
         "curve_type": {
           "const": "INCREMENTAL",
@@ -470,10 +486,10 @@
           },
           "oneOf": [
             {
-              "$ref": "#/definitions/LinearFunctionData"
+              "$ref": "#/$defs/LinearFunctionData"
             },
             {
-              "$ref": "#/definitions/PiecewiseStepData"
+              "$ref": "#/$defs/PiecewiseStepData"
             }
           ]
         },
@@ -492,6 +508,7 @@
       "type": "object"
     },
     "InOut": {
+      "description": "A pair of values, one for the inbound (`in`) and one for the outbound (`out`) direction of a quantity.",
       "properties": {
         "in": {
           "type": "number"
@@ -504,6 +521,7 @@
       "type": "object"
     },
     "InputOutputCurve": {
+      "description": "A curve whose y values are the total input `f(x)` at production level `x` — currency per hour against MW in a cost curve, fuel per hour against MW in a fuel curve. The y axis is an absolute quantity, not a rate; use `IncrementalCurve` for marginal-rate data.",
       "default": {
         "curve_type": "INPUT_OUTPUT",
         "function_data": {
@@ -529,13 +547,13 @@
           },
           "oneOf": [
             {
-              "$ref": "#/definitions/QuadraticFunctionData"
+              "$ref": "#/$defs/QuadraticFunctionData"
             },
             {
-              "$ref": "#/definitions/LinearFunctionData"
+              "$ref": "#/$defs/LinearFunctionData"
             },
             {
-              "$ref": "#/definitions/PiecewiseLinearData"
+              "$ref": "#/$defs/PiecewiseLinearData"
             }
           ]
         },
@@ -551,6 +569,7 @@
       "type": "object"
     },
     "LinearFunctionData": {
+      "description": "Data for a linear function `f(x) = proportional_term * x + constant_term`.",
       "properties": {
         "constant_term": {
           "type": "number"
@@ -584,17 +603,18 @@
           "default": 0.0,
           "type": "number"
         },
-        "variable": {
-          "$ref": "#/definitions/CostCurve"
+        "variable_operation_cost": {
+          "$ref": "#/$defs/CostCurve"
         }
       },
       "required": [
-        "variable"
+        "variable_operation_cost"
       ],
       "title": "LoadCost",
       "type": "object"
     },
     "MassUnit": {
+      "description": "Mass unit an emission quantity is reported in: kilograms, pounds, short tons (2000 lb), or metric tons (1000 kg).",
       "enum": [
         "KG",
         "LB",
@@ -622,11 +642,11 @@
               "proportional_term": 0
             }
           },
-          "$ref": "#/definitions/InputOutputCurve"
+          "$ref": "#/$defs/InputOutputCurve"
         },
         "start_up": {
           "description": "Start-up cost at different stages of the thermal cycle (hot, warm, cold).",
-          "$ref": "#/definitions/StartUpStages"
+          "$ref": "#/$defs/StartUpStages"
         },
         "shut_down": {
           "description": "Shut-down cost. Legacy scalar promotion: a bare scalar value `s` from a legacy source converts to an `InputOutputCurve` of `LinearFunctionData` with `constant_term = s` and `proportional_term = 0`.",
@@ -638,15 +658,15 @@
               "proportional_term": 0
             }
           },
-          "$ref": "#/definitions/InputOutputCurve"
+          "$ref": "#/$defs/InputOutputCurve"
         },
         "incremental_offer_curves": {
           "description": "Sell offer curves data as a `CostCurve` of `PiecewiseIncrementalCurve`.",
-          "$ref": "#/definitions/CostCurve"
+          "$ref": "#/$defs/CostCurve"
         },
         "decremental_offer_curves": {
           "description": "Buy offer curves data as a `CostCurve` of `PiecewiseIncrementalCurve`.",
-          "$ref": "#/definitions/CostCurve"
+          "$ref": "#/$defs/CostCurve"
         },
         "ancillary_service_offers": {
           "description": "IDs of the ancillary service components that this market bid offers into.",
@@ -668,7 +688,11 @@
         "curve_style": {
           "description": "Curve-clearing style for the bid: 0 = CURVE (ordinary divisible price-setting curve, default); 1 = FIXED (clears as one indivisible all-or-nothing package over its period); 2 = VARIABLE (divisible quantity, block-priced, cannot set the settlement-point price). Corresponds to ERCOT's DAM PriceCurve curveStyle field (CURVE/FIXED/VARIABLE). A non-zero value is mutually exclusive with incremental_slope/decremental_slope.",
           "type": "integer",
-          "enum": [0, 1, 2],
+          "enum": [
+            0,
+            1,
+            2
+          ],
           "default": 0
         }
       },
@@ -692,7 +716,7 @@
           "default": "MARKET_BID_TIME_SERIES"
         },
         "minimum_energy_offer": {
-          "$ref": "#/definitions/TimeSeriesInputOutputCurve",
+          "$ref": "#/$defs/TimeSeriesInputOutputCurve",
           "description": "Minimum-energy offer: cost to operate at minimum stable level, in $/MWh at the curve's minimum power, stored as submitted. $/h sources convert at parse (MEO = no-load cost / P_min). Time-series-backed linear curve; only the TIME_SERIES_LINEAR function-data variant is admissible here — the consuming constructor rejects any other."
         },
         "start_up_association_id": {
@@ -700,15 +724,15 @@
           "description": "Store-minted id of a time series of three-stage (hot, warm, cold) start-up costs."
         },
         "shut_down": {
-          "$ref": "#/definitions/TimeSeriesInputOutputCurve",
+          "$ref": "#/$defs/TimeSeriesInputOutputCurve",
           "description": "Shut-down cost as a time-series-backed linear curve. Only the TIME_SERIES_LINEAR function-data variant is admissible here; the consuming constructor rejects any other."
         },
         "incremental_offer_curves": {
-          "$ref": "#/definitions/CostCurve",
+          "$ref": "#/$defs/CostCurve",
           "description": "Sell offer curves whose value curve is a time-series-backed piecewise incremental curve. Only the TIME_SERIES_INCREMENTAL variant is admissible here; any other variant is rejected by the consuming constructor."
         },
         "decremental_offer_curves": {
-          "$ref": "#/definitions/CostCurve",
+          "$ref": "#/$defs/CostCurve",
           "description": "Buy offer curves whose value curve is a time-series-backed piecewise incremental curve. Only the TIME_SERIES_INCREMENTAL variant is admissible here; any other variant is rejected by the consuming constructor."
         },
         "ancillary_service_offers": {
@@ -731,7 +755,11 @@
         "curve_style": {
           "description": "Curve-clearing style for the bid: 0 = CURVE (ordinary divisible price-setting curve, default); 1 = FIXED (clears as one indivisible all-or-nothing package over its period); 2 = VARIABLE (divisible quantity, block-priced, cannot set the settlement-point price). Corresponds to ERCOT's DAM PriceCurve curveStyle field (CURVE/FIXED/VARIABLE). A non-zero value is mutually exclusive with incremental_slope/decremental_slope.",
           "type": "integer",
-          "enum": [0, 1, 2],
+          "enum": [
+            0,
+            1,
+            2
+          ],
           "default": 0
         }
       },
@@ -748,6 +776,7 @@
       "type": "object"
     },
     "MinMax": {
+      "description": "A pair of values bounding a quantity from below (`min`) and from above (`max`).",
       "properties": {
         "max": {
           "title": "Max",
@@ -762,6 +791,7 @@
       "type": "object"
     },
     "PiecewiseLinearData": {
+      "description": "Data for a piecewise linear function defined by (x, y) points and interpolated linearly between consecutive ones. The y values are absolute values at each x, not per-segment slopes; use `PiecewiseStepData` when the data gives per-segment rates. Points run in ascending x order, and two of them define one segment.",
       "properties": {
         "function_type": {
           "const": "PIECEWISE_LINEAR",
@@ -770,7 +800,7 @@
         },
         "points": {
           "items": {
-            "$ref": "#/definitions/XY_Coords"
+            "$ref": "#/$defs/XY_Coords"
           },
           "type": "array"
         }
@@ -783,6 +813,7 @@
       "type": "object"
     },
     "PiecewiseStepData": {
+      "description": "Data for a step function, constant on each segment, defined by the x coordinates of the segment endpoints and one y value per segment. The y values are per-segment rates, not absolute values; use `PiecewiseLinearData` when the data gives a value at each point. `x_coords` ascends and holds at least two entries, and `y_coords` holds exactly one fewer.",
       "properties": {
         "function_type": {
           "const": "PIECEWISE_STEP",
@@ -811,6 +842,7 @@
       "type": "object"
     },
     "PollutantType": {
+      "description": "Pollutant an emission rate is reported for, spanning greenhouse gases (`CO2`, `CO2E`, `CH4`, `N2O`), criteria pollutants (`NOX`, `SO2`, `CO`, `VOC`, `PM25`, `PM10`), and toxics (`HG`, `HAP`), with `CUSTOM` for a user-defined pollutant.",
       "enum": [
         "CO2",
         "CO2E",
@@ -830,6 +862,7 @@
       "type": "string"
     },
     "PrimeMovers": {
+      "description": "Prime mover of a generating unit — the engine, turbine, water wheel, or similar machine that drives the generator — using the code set from the EIA Form 923 instructions. `PVe` is photovoltaic, spelled that way so it does not collide with the `PV` bus type.",
       "enum": [
         "BA",
         "BT",
@@ -859,6 +892,7 @@
       "type": "string"
     },
     "ProductionVariableCostCurve": {
+      "description": "Variable production cost of a device, selected by `variable_cost_type` between a curve denominated directly in currency (`COST`) and one denominated in fuel with a separate fuel price (`FUEL`).",
       "title": "ProductionVariableCostCurve",
       "discriminator": {
         "mapping": {
@@ -869,15 +903,16 @@
       },
       "oneOf": [
         {
-          "$ref": "#/definitions/CostCurve"
+          "$ref": "#/$defs/CostCurve"
         },
         {
-          "$ref": "#/definitions/FuelCurve"
+          "$ref": "#/$defs/FuelCurve"
         }
       ],
       "type": "object"
     },
     "QuadraticFunctionData": {
+      "description": "Data for a quadratic function `f(x) = quadratic_term * x^2 + proportional_term * x + constant_term`. A non-negative `quadratic_term` makes the function convex.",
       "properties": {
         "constant_term": {
           "type": "number"
@@ -931,10 +966,10 @@
               }
             }
           },
-          "$ref": "#/definitions/CostCurve"
+          "$ref": "#/$defs/CostCurve"
         },
-        "variable": {
-          "$ref": "#/definitions/CostCurve"
+        "variable_operation_cost": {
+          "$ref": "#/$defs/CostCurve"
         },
         "fixed": {
           "type": "number",
@@ -942,12 +977,13 @@
         }
       },
       "required": [
-        "variable"
+        "variable_operation_cost"
       ],
       "title": "RenewableGenerationCost",
       "type": "object"
     },
     "ReservoirLocation": {
+      "description": "Position of a hydro reservoir relative to its turbine: `HEAD` upstream of the turbine, typically at higher elevation; `TAIL` downstream, at lower or equal elevation.",
       "enum": [
         "HEAD",
         "TAIL"
@@ -956,6 +992,7 @@
       "type": "string"
     },
     "StartUpShutDown": {
+      "description": "A pair of values, one for the start-up phase and one for the shut-down phase of a unit's cycle.",
       "properties": {
         "startup": {
           "title": "StartUp",
@@ -970,6 +1007,7 @@
       "type": "object"
     },
     "StartUpStages": {
+      "description": "A triple of values, one for each stage of a thermal unit's start-up: `hot`, `warm`, and `cold`.",
       "properties": {
         "startup_stages_type": {
           "const": "STAGES",
@@ -1003,10 +1041,10 @@
           "default": "STORAGE"
         },
         "charge_variable_cost": {
-          "$ref": "#/definitions/CostCurve"
+          "$ref": "#/$defs/CostCurve"
         },
         "discharge_variable_cost": {
-          "$ref": "#/definitions/CostCurve"
+          "$ref": "#/$defs/CostCurve"
         },
         "fixed": {
           "default": 0.0,
@@ -1141,16 +1179,16 @@
               "type": "number"
             },
             {
-              "$ref": "#/definitions/StartUpStages"
+              "$ref": "#/$defs/StartUpStages"
             }
           ]
         },
-        "variable": {
-          "$ref": "#/definitions/ProductionVariableCostCurve"
+        "variable_operation_cost": {
+          "$ref": "#/$defs/ProductionVariableCostCurve"
         }
       },
       "required": [
-        "variable",
+        "variable_operation_cost",
         "fixed",
         "start_up",
         "shut_down"
@@ -1165,7 +1203,7 @@
           "default": "TIME_SERIES_AVERAGE_RATE"
         },
         "function_data": {
-          "$ref": "#/definitions/FunctionData",
+          "$ref": "#/$defs/FunctionData",
           "description": "Only TIME_SERIES_LINEAR or TIME_SERIES_PIECEWISE_STEP is admissible here; all other FunctionData variants, static or time-series-backed, are rejected by the consuming constructor."
         },
         "initial_input_association_id": {
@@ -1199,7 +1237,7 @@
           "default": "TIME_SERIES_INCREMENTAL"
         },
         "function_data": {
-          "$ref": "#/definitions/FunctionData",
+          "$ref": "#/$defs/FunctionData",
           "description": "Only TIME_SERIES_LINEAR or TIME_SERIES_PIECEWISE_STEP is admissible here; all other FunctionData variants, static or time-series-backed, are rejected by the consuming constructor."
         },
         "initial_input_association_id": {
@@ -1233,7 +1271,7 @@
           "default": "TIME_SERIES_INPUT_OUTPUT"
         },
         "function_data": {
-          "$ref": "#/definitions/FunctionData",
+          "$ref": "#/$defs/FunctionData",
           "description": "Only TIME_SERIES_LINEAR, TIME_SERIES_QUADRATIC, or TIME_SERIES_PIECEWISE_LINEAR is admissible here; the static variants and TIME_SERIES_PIECEWISE_STEP are invalid and rejected by the consuming constructor."
         },
         "input_at_zero": {
@@ -1253,6 +1291,7 @@
       "type": "object"
     },
     "TimeSeriesLinearFunctionData": {
+      "description": "Time-series-backed variant of `LinearFunctionData`. In place of inline coefficients it carries `association_id`, referencing a stored series that supplies them at each step; use it when the coefficients change over time.",
       "properties": {
         "function_type": {
           "const": "TIME_SERIES_LINEAR",
@@ -1272,6 +1311,7 @@
       "type": "object"
     },
     "TimeSeriesPiecewiseLinearData": {
+      "description": "Time-series-backed variant of `PiecewiseLinearData`. In place of an inline point table it carries `association_id`, referencing a stored series that supplies one at each step; use it when the points change over time.",
       "properties": {
         "function_type": {
           "const": "TIME_SERIES_PIECEWISE_LINEAR",
@@ -1291,6 +1331,7 @@
       "type": "object"
     },
     "TimeSeriesPiecewiseStepData": {
+      "description": "Time-series-backed variant of `PiecewiseStepData`. In place of inline coordinate vectors it carries `association_id`, referencing a stored series that supplies them at each step; use it when the segments change over time.",
       "properties": {
         "function_type": {
           "const": "TIME_SERIES_PIECEWISE_STEP",
@@ -1310,6 +1351,7 @@
       "type": "object"
     },
     "TimeSeriesQuadraticFunctionData": {
+      "description": "Time-series-backed variant of `QuadraticFunctionData`. In place of inline coefficients it carries `association_id`, referencing a stored series that supplies them at each step; use it when the coefficients change over time.",
       "properties": {
         "function_type": {
           "const": "TIME_SERIES_QUADRATIC",
@@ -1329,6 +1371,7 @@
       "type": "object"
     },
     "TurbinePump": {
+      "description": "A pair of values, one for the turbine (generating) mode and one for the pump (charging) mode of a pumped hydro unit.",
       "properties": {
         "turbine": {
           "type": "number"
@@ -1345,6 +1388,7 @@
       "type": "object"
     },
     "TwoTerminalLoss": {
+      "description": "Loss model of a two-terminal HVDC line as a function of flow, selected by `curve_type`. It accepts a linear model with a constant loss and a proportional loss rate (MW of loss per MW of flow), or a piecewise model giving different proportional losses on different flow segments.",
       "title": "TwoTerminalLoss",
       "discriminator": {
         "mapping": {
@@ -1355,10 +1399,10 @@
       },
       "oneOf": [
         {
-          "$ref": "#/definitions/InputOutputCurve"
+          "$ref": "#/$defs/InputOutputCurve"
         },
         {
-          "$ref": "#/definitions/IncrementalCurve"
+          "$ref": "#/$defs/IncrementalCurve"
         }
       ],
       "default": {
@@ -1372,7 +1416,7 @@
       "type": "object"
     },
     "UnitSystem": {
-      "description": "Unit basis curve power values are stored in. COMPONENT_BASE: per-unit on the component's own base_power. NATURAL_UNITS: MW/MVA. There is no system-base option: per-unit data historically on the system base records that base in the component's base_power and rides as COMPONENT_BASE.",
+      "description": "Unit basis a stored value is expressed in. COMPONENT_BASE: per-unit against a base the component records itself. NATURAL_UNITS: the quantity's own physical unit. No system-wide option: a value per-unitized against a shared base records that base on the component and rides as COMPONENT_BASE. Used in three scopes, each read against its own record rather than a document-wide table: a component's own `power_units` (against that component's `base_power`), a cost payload's own `power_units` (e.g. `CostCurve`, against the owning component's `base_power`), and a time series association's own `unit_system` (governing only that one series).",
       "enum": [
         "COMPONENT_BASE",
         "NATURAL_UNITS"
@@ -1381,6 +1425,7 @@
       "type": "string"
     },
     "UpDown": {
+      "description": "A pair of values, one for the upward (`up`) and one for the downward (`down`) direction of a quantity.",
       "properties": {
         "down": {
           "title": "Down",
@@ -1399,6 +1444,7 @@
       "type": "object"
     },
     "ValueCurve": {
+      "description": "A cost or fuel curve: function data plus a declaration of how to read its y axis. `INPUT_OUTPUT` reads y as the total `f(x)`, `INCREMENTAL` as the marginal rate `f'(x)`, and `AVERAGE_RATE` as the average `f(x)/x`; the three can express the same underlying function and are inter-convertible given `initial_input`. The `TIME_SERIES_*` variants are the time-varying equivalents. Which form to use follows the data source: bid stacks are incremental, total cost tables input-output, efficiency tables average rate.",
       "discriminator": {
         "mapping": {
           "AVERAGE_RATE": "#/components/schemas/AverageRateCurve",
@@ -1412,52 +1458,29 @@
       },
       "oneOf": [
         {
-          "$ref": "#/definitions/InputOutputCurve"
+          "$ref": "#/$defs/InputOutputCurve"
         },
         {
-          "$ref": "#/definitions/IncrementalCurve"
+          "$ref": "#/$defs/IncrementalCurve"
         },
         {
-          "$ref": "#/definitions/AverageRateCurve"
+          "$ref": "#/$defs/AverageRateCurve"
         },
         {
-          "$ref": "#/definitions/TimeSeriesInputOutputCurve"
+          "$ref": "#/$defs/TimeSeriesInputOutputCurve"
         },
         {
-          "$ref": "#/definitions/TimeSeriesIncrementalCurve"
+          "$ref": "#/$defs/TimeSeriesIncrementalCurve"
         },
         {
-          "$ref": "#/definitions/TimeSeriesAverageRateCurve"
+          "$ref": "#/$defs/TimeSeriesAverageRateCurve"
         }
       ],
       "title": "ValueCurve",
       "type": "object"
     },
-    "TechnologyFinancialData": {
-      "properties": {
-        "capital_recovery_period": {
-          "type": "integer"
-        },
-        "technology_base_year": {
-          "type": "integer"
-        },
-        "debt_fraction": {
-          "type": "number"
-        },
-        "debt_rate": {
-          "type": "number"
-        },
-        "return_on_equity": {
-          "type": "number"
-        },
-        "tax_rate": {
-          "type": "number"
-        }
-      },
-      "title": "TechnologyFinancialData",
-      "type": "object"
-    },
     "XY_Coords": {
+      "description": "A single point, given as its `x` and `y` coordinates.",
       "properties": {
         "x": {
           "type": "number"
@@ -1473,6 +1496,5 @@
       "title": "XY_Coords",
       "type": "object"
     }
-  },
-  "id": "#root"
+  }
 }

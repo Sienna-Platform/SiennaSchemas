@@ -18,15 +18,15 @@ Resolution rules
 ----------------
 * External-file ``$ref`` (value contains a file part, e.g.
   ``Operations/StaticInjection/ThermalStandard.json`` or
-  ``../../Core/common.json#/definitions/MinMax``) is resolved to the referenced
+  ``../../Core/common.json#/$defs/MinMax``) is resolved to the referenced
   file+fragment and inlined.
 * When the referring node carries sibling keys next to ``$ref`` those siblings
   are merged onto a copy of the resolved referent. **Sibling keys win over
   referent keys on conflict** (so a property's own ``description`` and ``x-unit``
   override the shared definition's).
-* ``Core/common.json#/definitions/<Name>`` targets are hoisted once into a
-  top-level ``definitions`` block of the bundle. A ref to such a definition that
-  has **no** siblings is rewritten to the internal ``#/definitions/<Name>``.
+* ``Core/common.json#/$defs/<Name>`` targets are hoisted once into a
+  top-level ``$defs`` block of the bundle. A ref to such a definition that
+  has **no** siblings is rewritten to the internal ``#/$defs/<Name>``.
   A ref that **does** carry siblings is inlined in place (a merged copy) because
   the merged object is unique to that use site.
 * Refs already internal to the spec (``#/...``) are left untouched -- draft-07
@@ -36,7 +36,7 @@ Determinism
 -----------
 Output uses stable insertion order: keys are emitted in the order they are first
 seen while walking (spec order, then referent order), and the hoisted
-``definitions`` block is emitted in sorted key order. ``json.dump`` is called
+``$defs`` block is emitted in sorted key order. ``json.dump`` is called
 with ``ensure_ascii=False`` and a trailing newline. Given identical inputs the
 bytes are identical, which ``--check`` relies on.
 
@@ -64,9 +64,9 @@ DOMAINS = [
     "timeseries",
 ]
 
-# Files whose top-level `definitions` block is addressed by other schemas via
-# a two-token `<file>#/definitions/<Name>` external ref, and so is hoisted
-# into a bundle's own `definitions` rather than left as a dangling pointer.
+# Files whose top-level `$defs` block is addressed by other schemas via
+# a two-token `<file>#/$defs/<Name>` external ref, and so is hoisted
+# into a bundle's own `$defs` rather than left as a dangling pointer.
 COMMON_FILES = ["Core/common.json", "TimeSeries/common.json"]
 
 # Shared across all five domain bundles: common.json (and any multiply-$ref'd
@@ -112,23 +112,23 @@ def resolve_fragment(doc, fragment):
 
 class Bundler:
     """Bundles one spec. Hoists common-file (Core/common.json,
-    TimeSeries/common.json, ...) definitions into `definitions`.
+    TimeSeries/common.json, ...) definitions into `$defs`.
 
     "Common file" is not a fixed path: any file addressed via a two-token
-    `<file>#/definitions/<Name>` external ref, whose own top-level
-    `definitions` actually holds `<Name>`, is treated as one. An internal
-    `#/definitions/<Name>` ref resolves against *whichever* file is currently
+    `<file>#/$defs/<Name>` external ref, whose own top-level
+    `$defs` actually holds `<Name>`, is treated as one. An internal
+    `#/$defs/<Name>` ref resolves against *whichever* file is currently
     being walked, per plain JSON-pointer semantics -- that file is what
     `source_path` names below.
     """
 
     def __init__(self):
         # Names of common-file definitions pulled into the bundle's
-        # `definitions`, mapped to their rewritten body.
+        # `$defs`, mapped to their rewritten body.
         self.hoisted = {}
         # Resolved paths of the known common files. Membership in this set --
-        # not merely "the target has a #/definitions/<Name> shape" -- is what
-        # gates hoisting: any file can coincidentally have a `definitions`
+        # not merely "the target has a #/$defs/<Name> shape" -- is what
+        # gates hoisting: any file can coincidentally have a `$defs`
         # block, but only a file listed in COMMON_FILES is meant to be one.
         self._common_paths = {(REPO_ROOT / rel).resolve() for rel in COMMON_FILES}
         # name -> resolved source path, for every definition any known common
@@ -139,22 +139,22 @@ class Bundler:
         self._common_owner = {}
         for common_path in self._common_paths:
             doc = load_json(common_path)
-            for name in doc.get("definitions", {}):
+            for name in doc.get("$defs", {}):
                 self._common_owner[name] = common_path
 
     def _hoist_common_definition(self, name, source_path):
-        """Ensure a common-file definition is inlined into the bundle definitions.
+        """Ensure a common-file definition is inlined into the bundle $defs.
 
         Resolves its own internal defn->defn refs to bundle-internal
-        #/definitions refs (recursively hoisting the targets)."""
+        #/$defs refs (recursively hoisting the targets)."""
         if name in self.hoisted:
             return
         doc = load_json(source_path)
-        if name not in doc.get("definitions", {}):
+        if name not in doc.get("$defs", {}):
             raise KeyError(f"{source_path} has no definition '{name}'")
         # Placeholder to break cycles.
         self.hoisted[name] = None
-        body = doc["definitions"][name]
+        body = doc["$defs"][name]
         self.hoisted[name] = self._rewrite_common_internal(body, source_path)
 
     def _rewrite_discriminator_mapping(self, discriminator):
@@ -162,7 +162,7 @@ class Bundler:
 
         Source schemas spell every target '#/components/schemas/<Name>', which
         dangles for a common-file definition: hoisting puts those in the
-        bundle's top-level `definitions`, not `components.schemas`. A target
+        bundle's top-level `$defs`, not `components.schemas`. A target
         naming something else (an actual components.schemas entry) is left
         untouched."""
         mapping = discriminator.get("mapping")
@@ -176,22 +176,22 @@ class Bundler:
             source_path = self._common_owner.get(name)
             if source_path is not None:
                 self._hoist_common_definition(name, source_path)
-                new_mapping[key] = f"#/definitions/{name}"
+                new_mapping[key] = f"#/$defs/{name}"
             else:
                 new_mapping[key] = target
         rewritten["mapping"] = new_mapping
         return rewritten
 
     def _rewrite_common_internal(self, node, source_path):
-        """Within a common file's content, turn '#/definitions/X' refs into
-        bundle '#/definitions/X' refs (same spelling) and hoist X from
+        """Within a common file's content, turn '#/$defs/X' refs into
+        bundle '#/$defs/X' refs (same spelling) and hoist X from
         source_path. No external refs exist inside a common file, so only
         internal ones are handled here."""
         if isinstance(node, dict):
             if "$ref" in node and not is_external(node["$ref"]):
                 _, fragment = split_ref(node["$ref"])
                 tokens = fragment.strip("/").split("/")
-                if len(tokens) == 2 and tokens[0] == "definitions":
+                if len(tokens) == 2 and tokens[0] == "$defs":
                     self._hoist_common_definition(tokens[1], source_path)
                 # Merge any siblings (rare inside common) onto a rewritten copy.
                 out = {}
@@ -215,7 +215,7 @@ class Bundler:
         """Return (resolved_content, target_path, fragment, common_name).
 
         common_name is the definition name if this targets a common file's
-        own definitions (a two-token `definitions/<Name>` fragment that the
+        own definitions (a two-token `$defs/<Name>` fragment that the
         target file actually defines), else None."""
         filepart, fragment = split_ref(ref)
         target = (base_path.parent / filepart).resolve()
@@ -226,8 +226,8 @@ class Bundler:
         if (
             target in self._common_paths
             and len(tokens) == 2
-            and tokens[0] == "definitions"
-            and tokens[1] in doc.get("definitions", {})
+            and tokens[0] == "$defs"
+            and tokens[1] in doc.get("$defs", {})
         ):
             common_name = tokens[1]
         return content, target, fragment, common_name
@@ -240,11 +240,11 @@ class Bundler:
                 # Internal ref: resolves within base_path's own document, per
                 # JSON-pointer semantics. Only hoist when base_path is itself
                 # a known common file -- an internal ref inside an ordinary
-                # schema file has no #/definitions namespace to hoist from.
+                # schema file has no #/$defs namespace to hoist from.
                 if base_path in self._common_paths:
                     _, fragment = split_ref(node["$ref"])
                     tokens = fragment.strip("/").split("/")
-                    if len(tokens) == 2 and tokens[0] == "definitions":
+                    if len(tokens) == 2 and tokens[0] == "$defs":
                         self._hoist_common_definition(tokens[1], base_path)
                 return {
                     k: (v if k == "$ref" else self.walk(v, base_path))
@@ -258,7 +258,7 @@ class Bundler:
                 if common_name is not None and not siblings:
                     # No siblings: hoist and point to internal definition.
                     self._hoist_common_definition(common_name, target)
-                    return {"$ref": f"#/definitions/{common_name}"}
+                    return {"$ref": f"#/$defs/{common_name}"}
                 # Inline the resolved content (deep-resolved in its own file
                 # context), then merge siblings on top (siblings win).
                 resolved = self.walk(content, target)
@@ -292,7 +292,7 @@ class Bundler:
         bundled = self.walk(spec, spec_path)
         if self.hoisted:
             defs = {name: self.hoisted[name] for name in sorted(self.hoisted)}
-            bundled["definitions"] = defs
+            bundled["$defs"] = defs
         return bundled
 
 

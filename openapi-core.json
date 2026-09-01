@@ -9,130 +9,127 @@
   "components": {
     "schemas": {
       "ACBusType": {
-        "$ref": "Core/common.json#/definitions/ACBusType"
+        "$ref": "Core/common.json#/$defs/ACBusType"
       },
       "MarketBidCost": {
-        "$ref": "Core/common.json#/definitions/MarketBidCost"
+        "$ref": "Core/common.json#/$defs/MarketBidCost"
       },
       "AverageRateCurve": {
-        "$ref": "Core/common.json#/definitions/AverageRateCurve"
+        "$ref": "Core/common.json#/$defs/AverageRateCurve"
       },
       "CostCurve": {
-        "$ref": "Core/common.json#/definitions/CostCurve"
+        "$ref": "Core/common.json#/$defs/CostCurve"
       },
       "DbdPnts": {
-        "$ref": "Core/common.json#/definitions/DbdPnts"
+        "$ref": "Core/common.json#/$defs/DbdPnts"
       },
       "EnergyUnitBasis": {
-        "$ref": "Core/common.json#/definitions/EnergyUnitBasis"
+        "$ref": "Core/common.json#/$defs/EnergyUnitBasis"
       },
       "ImpedanceUnitBasis": {
-        "$ref": "Core/common.json#/definitions/ImpedanceUnitBasis"
+        "$ref": "Core/common.json#/$defs/ImpedanceUnitBasis"
       },
       "AdmittanceUnitBasis": {
-        "$ref": "Core/common.json#/definitions/AdmittanceUnitBasis"
+        "$ref": "Core/common.json#/$defs/AdmittanceUnitBasis"
       },
       "ShuntAdmittanceUnitBasis": {
-        "$ref": "Core/common.json#/definitions/ShuntAdmittanceUnitBasis"
+        "$ref": "Core/common.json#/$defs/ShuntAdmittanceUnitBasis"
       },
       "FdbdPnts": {
-        "$ref": "Core/common.json#/definitions/FdbdPnts"
+        "$ref": "Core/common.json#/$defs/FdbdPnts"
       },
       "FuelCurve": {
-        "$ref": "Core/common.json#/definitions/FuelCurve"
+        "$ref": "Core/common.json#/$defs/FuelCurve"
       },
       "GenericOperationCost": {
-        "$ref": "Core/common.json#/definitions/GenericOperationCost"
+        "$ref": "Core/common.json#/$defs/GenericOperationCost"
       },
       "HydroGenerationCost": {
-        "$ref": "Core/common.json#/definitions/HydroGenerationCost"
+        "$ref": "Core/common.json#/$defs/HydroGenerationCost"
       },
       "HydroReservoirCost": {
-        "$ref": "Core/common.json#/definitions/HydroReservoirCost"
+        "$ref": "Core/common.json#/$defs/HydroReservoirCost"
       },
       "HydroStorageGenerationCost": {
-        "$ref": "Core/common.json#/definitions/HydroStorageGenerationCost"
+        "$ref": "Core/common.json#/$defs/HydroStorageGenerationCost"
       },
       "ImportExportCost": {
-        "$ref": "Core/common.json#/definitions/ImportExportCost"
+        "$ref": "Core/common.json#/$defs/ImportExportCost"
       },
       "ImportExportTimeSeriesCost": {
-        "$ref": "Core/common.json#/definitions/ImportExportTimeSeriesCost"
+        "$ref": "Core/common.json#/$defs/ImportExportTimeSeriesCost"
       },
       "IncrementalCurve": {
-        "$ref": "Core/common.json#/definitions/IncrementalCurve"
+        "$ref": "Core/common.json#/$defs/IncrementalCurve"
       },
       "InputOutputCurve": {
-        "$ref": "Core/common.json#/definitions/InputOutputCurve"
+        "$ref": "Core/common.json#/$defs/InputOutputCurve"
       },
       "LoadCost": {
-        "$ref": "Core/common.json#/definitions/LoadCost"
+        "$ref": "Core/common.json#/$defs/LoadCost"
       },
       "MarketBidTimeSeriesCost": {
-        "$ref": "Core/common.json#/definitions/MarketBidTimeSeriesCost"
+        "$ref": "Core/common.json#/$defs/MarketBidTimeSeriesCost"
       },
       "PrimeMovers": {
-        "$ref": "Core/common.json#/definitions/PrimeMovers"
+        "$ref": "Core/common.json#/$defs/PrimeMovers"
       },
       "ProductionVariableCostCurve": {
-        "$ref": "Core/common.json#/definitions/ProductionVariableCostCurve"
+        "$ref": "Core/common.json#/$defs/ProductionVariableCostCurve"
       },
       "RenewableGenerationCost": {
-        "$ref": "Core/common.json#/definitions/RenewableGenerationCost"
+        "$ref": "Core/common.json#/$defs/RenewableGenerationCost"
       },
       "ReservoirLocation": {
-        "$ref": "Core/common.json#/definitions/ReservoirLocation"
+        "$ref": "Core/common.json#/$defs/ReservoirLocation"
       },
       "StartUpShutDown": {
-        "$ref": "Core/common.json#/definitions/StartUpShutDown"
+        "$ref": "Core/common.json#/$defs/StartUpShutDown"
       },
       "StartUpStages": {
-        "$ref": "Core/common.json#/definitions/StartUpStages"
+        "$ref": "Core/common.json#/$defs/StartUpStages"
       },
       "StorageCost": {
-        "$ref": "Core/common.json#/definitions/StorageCost"
+        "$ref": "Core/common.json#/$defs/StorageCost"
       },
       "StorageTech": {
-        "$ref": "Core/common.json#/definitions/StorageTech"
-      },
-      "TechnologyFinancialData": {
-        "$ref": "Core/common.json#/definitions/TechnologyFinancialData"
+        "$ref": "Core/common.json#/$defs/StorageTech"
       },
       "ThermalFuels": {
-        "$ref": "Core/common.json#/definitions/ThermalFuels"
+        "$ref": "Core/common.json#/$defs/ThermalFuels"
       },
       "ThermalGenerationCost": {
-        "$ref": "Core/common.json#/definitions/ThermalGenerationCost"
+        "$ref": "Core/common.json#/$defs/ThermalGenerationCost"
       },
       "TurbinePump": {
-        "$ref": "Core/common.json#/definitions/TurbinePump"
+        "$ref": "Core/common.json#/$defs/TurbinePump"
       },
       "TwoTerminalLoss": {
-        "$ref": "Core/common.json#/definitions/TwoTerminalLoss"
+        "$ref": "Core/common.json#/$defs/TwoTerminalLoss"
       },
       "ValueCurve": {
-        "$ref": "Core/common.json#/definitions/ValueCurve"
+        "$ref": "Core/common.json#/$defs/ValueCurve"
       },
       "PollutantType": {
-        "$ref": "Core/common.json#/definitions/PollutantType"
+        "$ref": "Core/common.json#/$defs/PollutantType"
       },
       "EmissionBasis": {
-        "$ref": "Core/common.json#/definitions/EmissionBasis"
+        "$ref": "Core/common.json#/$defs/EmissionBasis"
       },
       "MassUnit": {
-        "$ref": "Core/common.json#/definitions/MassUnit"
+        "$ref": "Core/common.json#/$defs/MassUnit"
       },
       "EnergyUnit": {
-        "$ref": "Core/common.json#/definitions/EnergyUnit"
+        "$ref": "Core/common.json#/$defs/EnergyUnit"
       },
       "TimeSeriesAverageRateCurve": {
-        "$ref": "Core/common.json#/definitions/TimeSeriesAverageRateCurve"
+        "$ref": "Core/common.json#/$defs/TimeSeriesAverageRateCurve"
       },
       "TimeSeriesIncrementalCurve": {
-        "$ref": "Core/common.json#/definitions/TimeSeriesIncrementalCurve"
+        "$ref": "Core/common.json#/$defs/TimeSeriesIncrementalCurve"
       },
       "TimeSeriesInputOutputCurve": {
-        "$ref": "Core/common.json#/definitions/TimeSeriesInputOutputCurve"
+        "$ref": "Core/common.json#/$defs/TimeSeriesInputOutputCurve"
       }
     }
   }

@@ -107,6 +107,10 @@
     {"quantity_type": "Resistance", "unit": "pu", "to_default": null},
     {"quantity_type": "Reactance", "unit": "pu", "to_default": null},
     {"quantity_type": "Susceptance", "unit": "pu", "to_default": null},
-    {"quantity_type": "Conductance", "unit": "pu", "to_default": null}
+    {"quantity_type": "Conductance", "unit": "pu", "to_default": null},
+    {"quantity_type": "ActivePower", "unit": "pu", "to_default": null},
+    {"quantity_type": "ReactivePower", "unit": "pu", "to_default": null},
+    {"quantity_type": "ApparentPower", "unit": "pu", "to_default": null},
+    {"quantity_type": "ActivePowerChangeRate", "unit": "pu/min", "to_default": null}
   ]
 }

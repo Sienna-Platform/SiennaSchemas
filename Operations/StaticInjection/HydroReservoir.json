@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A hydropower reservoir feeding, or fed by, the turbines attached to it. Storage level, inflow, outflow, and spillage are recorded in the basis named by `level_data_type` — volume, head, or energy — and the upstream and downstream associations set the reservoir's place in a cascade.",
   "properties": {
     "id": {
       "type": "integer"
@@ -11,7 +12,7 @@
       "type": "boolean"
     },
     "storage_level_limits": {
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit-discriminator": "level_data_type",
       "x-units": {
         "USABLE_VOLUME": "m3",
@@ -34,7 +35,7 @@
     },
     "spillage_limits": {
       "description": "in psy5 a required param with an option to be nothing Units: per level_data_type — USABLE_VOLUME: m3/s, TOTAL_VOLUME: m3/s, HEAD: m/s, ENERGY: MW .",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit-discriminator": "level_data_type",
       "x-units": {
         "USABLE_VOLUME": "m3/s",
@@ -83,7 +84,7 @@
     },
     "head_to_volume_factor": {
       "description": "`FunctionData` mapping reservoir head to stored volume.",
-      "$ref": "../../Core/common.json#/definitions/FunctionData"
+      "$ref": "../../Core/common.json#/$defs/FunctionData"
     },
     "upstream_turbines": {
       "type": "array",
@@ -114,13 +115,13 @@
       },
       "oneOf": [
         {
-          "$ref": "../../Core/common.json#/definitions/HydroReservoirCost"
+          "$ref": "../../Core/common.json#/$defs/HydroReservoirCost"
         },
         {
-          "$ref": "../../Core/common.json#/definitions/MarketBidTimeSeriesCost"
+          "$ref": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost"
         },
         {
-          "$ref": "../../Core/common.json#/definitions/ImportExportTimeSeriesCost"
+          "$ref": "../../Core/common.json#/$defs/ImportExportTimeSeriesCost"
         }
       ]
     },

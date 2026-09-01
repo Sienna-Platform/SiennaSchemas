@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "BilateralTransaction",
   "description": "A bilaterally negotiated trade reported into the settlement ledger. Settlement-only: it carries no power-balance impact and never clears against a market model. It exists for round-tripping submissions and offline settlement.",
   "type": "object",
@@ -26,19 +26,22 @@
     },
     "to_id": {
       "description": "ID of the sink location, resolved through the entity registry: a topology record or a trading hub. `null` for a single-location trade.",
-      "type": ["integer", "null"]
+      "type": [
+        "integer",
+        "null"
+      ]
     },
     "product": {
       "description": "Traded product.",
-      "$ref": "../common.json#/definitions/BilateralProduct"
+      "$ref": "../common.json#/$defs/BilateralProduct"
     },
     "market": {
       "description": "Market stage the transaction was reported against.",
-      "$ref": "../common.json#/definitions/MarketStage"
+      "$ref": "../common.json#/$defs/MarketStage"
     },
     "confirmation": {
       "description": "Confirmation status the transaction settled under.",
-      "$ref": "../common.json#/definitions/BilateralConfirmation"
+      "$ref": "../common.json#/$defs/BilateralConfirmation"
     },
     "max_active_power": {
       "description": "MW envelope of the transaction. Units: MW.",
@@ -47,7 +50,10 @@
     },
     "active_power_association_id": {
       "description": "Store-minted id of the time series supplying the trade's delivered active-power schedule, or null when `max_active_power` alone describes the trade.",
-      "type": ["integer", "null"]
+      "type": [
+        "integer",
+        "null"
+      ]
     }
   },
   "required": [

@@ -200,18 +200,42 @@
       "VirtualParticipant": {
         "$ref": "Operations/Market/VirtualParticipant.json"
       },
-      "VSCACControlModes": {"$ref": "Operations/common.json#/definitions/VSCACControlModes"},
-      "VSCDCControlModes": {"$ref": "Operations/common.json#/definitions/VSCDCControlModes"},
-      "CombinedCycleConfiguration": {"$ref": "Operations/common.json#/definitions/CombinedCycleConfiguration"},
-      "ReserveDirection": {"$ref": "Operations/common.json#/definitions/ReserveDirection"},
-      "TransformerControlObjective": {"$ref": "Operations/common.json#/definitions/TransformerControlObjective"},
-      "TwoWindingTransformerShuntLocation": {"$ref": "Operations/common.json#/definitions/TwoWindingTransformerShuntLocation"},
-      "ThreeWindingTransformerShuntLocation": {"$ref": "Operations/common.json#/definitions/ThreeWindingTransformerShuntLocation"},
-      "VoltageUnitBasis": {"$ref": "Operations/common.json#/definitions/VoltageUnitBasis"},
-      "LoadConformity": {"$ref": "Operations/common.json#/definitions/LoadConformity"},
-      "BilateralProduct": {"$ref": "Operations/common.json#/definitions/BilateralProduct"},
-      "MarketStage": {"$ref": "Operations/common.json#/definitions/MarketStage"},
-      "BilateralConfirmation": {"$ref": "Operations/common.json#/definitions/BilateralConfirmation"}
+      "VSCACControlModes": {
+        "$ref": "Operations/common.json#/$defs/VSCACControlModes"
+      },
+      "VSCDCControlModes": {
+        "$ref": "Operations/common.json#/$defs/VSCDCControlModes"
+      },
+      "CombinedCycleConfiguration": {
+        "$ref": "Operations/common.json#/$defs/CombinedCycleConfiguration"
+      },
+      "ReserveDirection": {
+        "$ref": "Operations/common.json#/$defs/ReserveDirection"
+      },
+      "TransformerControlObjective": {
+        "$ref": "Operations/common.json#/$defs/TransformerControlObjective"
+      },
+      "TwoWindingTransformerShuntLocation": {
+        "$ref": "Operations/common.json#/$defs/TwoWindingTransformerShuntLocation"
+      },
+      "ThreeWindingTransformerShuntLocation": {
+        "$ref": "Operations/common.json#/$defs/ThreeWindingTransformerShuntLocation"
+      },
+      "VoltageUnitBasis": {
+        "$ref": "Operations/common.json#/$defs/VoltageUnitBasis"
+      },
+      "LoadConformity": {
+        "$ref": "Operations/common.json#/$defs/LoadConformity"
+      },
+      "BilateralProduct": {
+        "$ref": "Operations/common.json#/$defs/BilateralProduct"
+      },
+      "MarketStage": {
+        "$ref": "Operations/common.json#/$defs/MarketStage"
+      },
+      "BilateralConfirmation": {
+        "$ref": "Operations/common.json#/$defs/BilateralConfirmation"
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "PointToPointBid",
   "description": "A priced point-to-point spread bid (e.g. an up-to-congestion or PTP obligation bid): a willingness-to-pay curve on the price spread between two locations. Clears as a withdrawal at the source terminal and an injection at the sink terminal.",
   "type": "object",
@@ -40,21 +40,24 @@
       },
       "oneOf": [
         {
-          "$ref": "../../Core/common.json#/definitions/MarketBidCost"
+          "$ref": "../../Core/common.json#/$defs/MarketBidCost"
         },
         {
-          "$ref": "../../Core/common.json#/definitions/MarketBidTimeSeriesCost"
+          "$ref": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost"
         }
       ]
     },
     "price_limits": {
       "description": "Tariff bid-price bounds on the spread. Units: USD/MWh.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "USD/MWh"
     },
     "linked_crr": {
       "description": "Identifier of a linked congestion-right instrument, when the market couples the bid to one.",
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
   "required": [

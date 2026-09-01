@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "An infinite bus with a constant voltage output.\n\nCommonly used in dynamics simulations to represent a very large machine on a single bus or for the representation of import/exports in operational simulations.",
   "properties": {
     "id": {
@@ -19,39 +19,55 @@
       "type": "integer"
     },
     "active_power": {
-      "description": "Initial active power set point of the unit. For power flow, this is the steady state operating point of the system. For production cost modeling, this may or may not be used as the initial starting point for the solver, depending on the solver used. Units: MW.",
+      "description": "Initial active power set point of the unit. For power flow, this is the steady state operating point of the system. For production cost modeling, this may or may not be used as the initial starting point for the solver, depending on the solver used. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "reactive_power": {
-      "description": "Initial reactive power set point of the unit. Units: MVAr.",
+      "description": "Initial reactive power set point of the unit. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "active_power_limits": {
-      "description": "Minimum and maximum stable active power levels. Units: MW.",
+      "description": "Minimum and maximum stable active power levels. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "default": {
         "min": 0.0,
         "max": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MW"
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "reactive_power_limits": {
-      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. Units: MVAr.",
+      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": {
         "min": 0.0,
         "max": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MVAr"
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "parameter_units": {
       "description": "Unit basis for this source's impedance fields (R_th, X_th).",
       "default": "COMPONENT_BASE",
-      "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
+      "$ref": "../../Core/common.json#/$defs/ImpedanceUnitBasis"
     },
     "R_th": {
       "description": "Source Thevenin resistance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
@@ -97,6 +113,10 @@
       "type": "number",
       "x-unit": "MVA"
     },
+    "power_units": {
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "$ref": "../../Core/common.json#/$defs/UnitSystem"
+    },
     "operation_cost": {
       "description": "Cost of importing and exporting power at the source. or MarketBidCost",
       "discriminator": {
@@ -109,13 +129,13 @@
       },
       "oneOf": [
         {
-          "$ref": "../../Core/common.json#/definitions/ImportExportCost"
+          "$ref": "../../Core/common.json#/$defs/ImportExportCost"
         },
         {
-          "$ref": "../../Core/common.json#/definitions/MarketBidTimeSeriesCost"
+          "$ref": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost"
         },
         {
-          "$ref": "../../Core/common.json#/definitions/ImportExportTimeSeriesCost"
+          "$ref": "../../Core/common.json#/$defs/ImportExportTimeSeriesCost"
         }
       ],
       "default": {
@@ -175,7 +195,8 @@
     "name",
     "available",
     "bus",
-    "operation_cost"
+    "operation_cost",
+    "power_units"
   ],
   "title": "Source",
   "type": "object"

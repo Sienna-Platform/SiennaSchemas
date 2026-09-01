@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A unit of spatial aggregation for nodal capacity expansion models. Used to define locations for supply, demand, transport, and storage technologies and the relevant policy requirements.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -12,7 +13,7 @@
     "bus_type": {
       "description": "AC Bus Type for a node.",
       "default": "PQ",
-      "$ref": "../../Core/common.json#/definitions/ACBusType"
+      "$ref": "../../Core/common.json#/$defs/ACBusType"
     }
   },
   "required": [
