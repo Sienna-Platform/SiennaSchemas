@@ -158,4 +158,4 @@ or via manual workflow dispatch. SiennaSchemas tags first — see "Release order
 
 ## License
 
-SiennaSchemas is released under a BSD [license](https://github.com/Sienna-Platform/SiennaSchemas/blob/main/LICENSE). SiennaSchemas has been developed as part of the Sienna ecosystem as a collaboration between [QXT Energy](qxt.energy) the U.S. Department of Energy's National Laboratory of the Rockies ([NLR](https://www.nlr.gov/)), formerly known as NREL with support from OpenGrids and Breaktrough Energy. 
+SiennaSchemas is released under a BSD [license](https://github.com/Sienna-Platform/SiennaSchemas/blob/main/LICENSE). SiennaSchemas has been developed as part of the Sienna ecosystem as a collaboration between [QXT Energy](qxt.energy) the U.S. Department of Energy's National Laboratory of the Rockies [NLR](https://www.nlr.gov/) (formerly known as NREL) with support from OpenGrids, Breaktrough Energy and the U.S. Department of Energy.
