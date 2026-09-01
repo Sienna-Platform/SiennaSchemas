@@ -29,7 +29,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "rating": {
       "description": "Maximum output power rating of the converter. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
@@ -38,7 +39,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVA",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ApparentPower"
     },
     "active_power_limits": {
       "description": "Minimum and maximum stable active power levels. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
@@ -47,7 +49,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "base_power": {
       "description": "Base power of the converter for per unitization. Units: MVA.",
@@ -65,7 +68,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVAr",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ReactivePower"
     },
     "dc_current": {
       "description": "DC current on the converter. Units: A.",
@@ -121,7 +125,8 @@
           },
           "description": "Units: per voltage_setpoint_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu ."
         }
-      }
+      },
+      "x-quantity": "Voltage"
     },
     "ac_setpoint": {
       "description": "AC-voltage magnitude target (when `ac_control` regulates AC voltage) or power factor setpoint (otherwise). Units: per ac_control — AC_REACTIVE_POWER: 1, AC_VOLTAGE: (per voltage_setpoint_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu) .",
@@ -138,13 +143,18 @@
           },
           "description": "Units: per voltage_setpoint_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu ."
         }
+      },
+      "x-quantity": {
+        "1": "PowerFactor",
+        "pu": "Voltage"
       }
     },
     "dc_voltage_droop": {
       "description": "DC-voltage droop gain relating DC voltage to converter active power as `V_dc = dc_setpoint - dc_voltage_droop * P_c`. A value of 0.0 disables droop. Units: pu.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "pu"
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
     },
     "remote_bus_control": {
       "description": "Number of the AC bus whose voltage the converter regulates when `ac_control` is `AC_VOLTAGE`; null regulates its own terminal bus.",
@@ -158,13 +168,15 @@
       "description": "Percent of the total Mvar required to hold the voltage at the bus regulated by this converter that is contributed by this converter. Units: 1.",
       "default": 100.0,
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "power_factor_weighting_fraction": {
       "description": "Power weighting factor fraction used in reducing the active power order and either the reactive power order when the converter rating is violated. When is 0.0, only the active power is reduced; when is 1.0, only the reactive power is reduced; otherwise, a weighted reduction of both active and reactive power is applied. Units: 1.",
       "default": 1.0,
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "voltage_limits": {
       "description": "Limits on the voltage at the DC bus in per unit. Units: pu.",
@@ -173,7 +185,8 @@
         "max": 999.9
       },
       "$ref": "../../Core/common.json#/$defs/MinMax",
-      "x-unit": "pu"
+      "x-unit": "pu",
+      "x-quantity": "Voltage"
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection device, if any.",

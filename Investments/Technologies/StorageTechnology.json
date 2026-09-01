@@ -29,7 +29,8 @@
       "description": "Minimum discharge as a fraction of total discharge capacity. Units: 1.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "prime_mover_type": {
       "description": "Prime mover for generator.",
@@ -100,13 +101,15 @@
     "efficiency": {
       "description": "Efficiency of charging storage, fraction of total charge (in) and discharge (out) capacity. Units: 1.",
       "$ref": "../../Core/common.json#/$defs/InOut",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "losses": {
       "description": "Self-discharge of storage (fraction of energy stored per hour). Units: 1.",
       "type": "number",
       "default": 1.0,
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "lifetime": {
       "description": "Maximum number of years a technology can be active once installed. Units: yr.",

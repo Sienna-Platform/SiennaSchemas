@@ -26,7 +26,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "reactive_power": {
       "description": "Initial reactive power set point of the unit. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
@@ -36,7 +37,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVAr",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ReactivePower"
     },
     "active_power_limits": {
       "description": "Minimum and maximum stable active power levels. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
@@ -49,7 +51,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "reactive_power_limits": {
       "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
@@ -62,7 +65,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVAr",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ReactivePower"
     },
     "parameter_units": {
       "description": "Unit basis for this source's impedance fields (R_th, X_th).",
@@ -77,7 +81,8 @@
       "x-units": {
         "NATURAL_UNITS": "ohm",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Resistance"
     },
     "X_th": {
       "description": "Source Thevenin reactance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
@@ -87,13 +92,15 @@
       "x-units": {
         "NATURAL_UNITS": "ohm",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Reactance"
     },
     "internal_voltage": {
       "description": "Internal voltage. Units: pu.",
       "default": 1.0,
       "type": "number",
       "x-unit": "pu",
+      "x-quantity": "Voltage",
       "x-unit-base": "base_voltage"
     },
     "internal_angle": {

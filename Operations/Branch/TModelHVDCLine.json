@@ -40,17 +40,20 @@
       "x-units": {
         "NATURAL_UNITS": "ohm",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Resistance"
     },
     "l": {
       "description": "Total series inductance, split equally on both sides of the shunt capacitance. Per-unit on this line's `base_current`. Units: pu.",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "c": {
       "description": "Shunt capacitance. Per-unit on this line's `base_current`. Units: pu.",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit": "pu",
+      "x-quantity": "Susceptance"
     },
     "active_power_limits_from": {
       "description": "Minimum and maximum active power flows to the FROM node. Units: MW.",

@@ -21,7 +21,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "reactive_power_flow": {
       "description": "Initial condition of reactive power flow on the line. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
@@ -30,7 +31,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVAr",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ReactivePower"
     },
     "arc": {
       "description": "An `Arc` defining this line `from` a bus `to` another bus.",
@@ -48,12 +50,14 @@
     "r": {
       "description": "Resistance. Per-unit on `base_power`, which records the system base. Units: pu.",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
     },
     "x": {
       "description": "Reactance. Per-unit on `base_power`, which records the system base. Units: pu.",
       "type": "number",
-      "x-unit": "pu"
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "rating": {
       "description": "Thermal rating. Flow on the branch must be between -`rating` and `rating`. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
@@ -62,7 +66,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVA",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ApparentPower"
     },
     "discrete_branch_type": {
       "description": "Type of discrete control.",

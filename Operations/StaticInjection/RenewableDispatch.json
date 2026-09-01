@@ -25,7 +25,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "reactive_power": {
       "description": "Initial reactive power set point of the unit, used in some production cost modeling simulations. To set the reactive power in a load flow, use `power_factor`. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
@@ -34,7 +35,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVAr",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ReactivePower"
     },
     "rating": {
       "description": "Maximum AC side output power rating of the unit. Not to be confused with base_power. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
@@ -43,7 +45,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVA",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ApparentPower"
     },
     "prime_mover_type": {
       "description": "Prime mover technology according to EIA 923.",
@@ -56,12 +59,14 @@
       "x-units": {
         "NATURAL_UNITS": "MVAr",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ReactivePower"
     },
     "power_factor": {
       "description": "Power factor [0, 1] set-point, used in some production cost modeling and in load flow if the unit is connected to a `PQ` bus. Units: 1.",
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "PowerFactor"
     },
     "operation_cost": {
       "description": "Operating cost of generation. or MarketBidCost",

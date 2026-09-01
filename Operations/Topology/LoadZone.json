@@ -17,7 +17,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "peak_reactive_power": {
       "description": "Peak reactive power in the zone. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
@@ -26,7 +27,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVAr",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ReactivePower"
     },
     "base_power": {
       "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",

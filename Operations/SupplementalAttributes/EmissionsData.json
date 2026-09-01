@@ -48,7 +48,8 @@
       "type": "number",
       "description": "GWP100 multiplier for CO2-equivalent reporting. Must be finite and non-negative. Units: 1.",
       "default": 1.0,
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Dimensionless"
     },
     "available": {
       "type": "boolean",

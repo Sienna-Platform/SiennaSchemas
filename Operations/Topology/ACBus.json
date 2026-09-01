@@ -31,12 +31,14 @@
       "description": "Voltage as a multiple of `base_voltage`. Units: pu.",
       "type": "number",
       "x-unit": "pu",
+      "x-quantity": "Voltage",
       "x-unit-base": "base_voltage"
     },
     "voltage_limits": {
       "description": "Limits on the voltage variation as multiples of `base_voltage`. Units: pu.",
       "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "pu",
+      "x-quantity": "Voltage",
       "x-unit-base": "base_voltage"
     },
     "base_voltage": {

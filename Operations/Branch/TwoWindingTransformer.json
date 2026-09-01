@@ -31,7 +31,8 @@
         "NATURAL_UNITS": "S",
         "COMPONENT_MVAR": "MVAr",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Susceptance"
     },
     "shunt_location": {
       "description": "Placement of `magnetizing_shunt` on the two sides of the circuit arc.",

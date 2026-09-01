@@ -28,7 +28,8 @@
       "description": "The annual growth rate of the demand requirement, used to scale present-day loads into future projections. Should only be used for conforming loads. Units: 1.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "new_demand_mw": {
       "description": "The value of the peak demand to be used for new DemandRequirements. Units: MW.",

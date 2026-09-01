@@ -18,7 +18,8 @@
       "description": "Normalized tap changer position for voltage control, varying between 0 and 2, with 1 centered at the nominal voltage. Units: 1.",
       "default": 1.0,
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Dimensionless"
     },
     "alpha": {
       "description": "Initial condition of phase shift across this circuit. Units: rad.",
@@ -39,7 +40,8 @@
       "x-units": {
         "NATURAL_UNITS": "ohm",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Resistance"
     },
     "x": {
       "description": "Circuit reactance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
@@ -49,7 +51,8 @@
       "x-units": {
         "NATURAL_UNITS": "ohm",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Reactance"
     },
     "control_objective": {
       "description": "Tap-changer / phase-shifter control objective (PSS/E COD). `UNDEFINED` means this circuit has no control block.",
@@ -82,7 +85,8 @@
         "ACTIVE_POWER_FLOW": "rad",
         "CONTROL_OF_DC_LINE": "1",
         "ASYMMETRIC_ACTIVE_POWER_FLOW": "rad"
-      }
+      },
+      "x-quantity": "Dimensionless"
     },
     "controlled_quantity_limits": {
       "description": "Controlled-quantity band (PSS/E VMA/VMI), per `control_objective`. Units: per control_objective — UNDEFINED: pu, VOLTAGE_DISABLED: pu, REACTIVE_POWER_FLOW_DISABLED: MVAr, ACTIVE_POWER_FLOW_DISABLED: MW, CONTROL_OF_DC_LINE_DISABLED: MW, ASYMMETRIC_ACTIVE_POWER_FLOW_DISABLED: MW, FIXED: pu, VOLTAGE: pu, REACTIVE_POWER_FLOW: MVAr, ACTIVE_POWER_FLOW: MW, CONTROL_OF_DC_LINE: MW, ASYMMETRIC_ACTIVE_POWER_FLOW: MW .",
@@ -105,7 +109,8 @@
         "ACTIVE_POWER_FLOW": "MW",
         "CONTROL_OF_DC_LINE": "MW",
         "ASYMMETRIC_ACTIVE_POWER_FLOW": "MW"
-      }
+      },
+      "x-quantity": "Voltage"
     },
     "number_of_tap_positions": {
       "description": "Number of tap positions (PSS/E NTP).",
@@ -119,7 +124,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVA",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ApparentPower"
     },
     "rating_b": {
       "description": "Second current rating. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
@@ -128,7 +134,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVA",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ApparentPower"
     },
     "rating_c": {
       "description": "Third current rating. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
@@ -137,7 +144,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVA",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ApparentPower"
     },
     "active_power_flow": {
       "description": "Initial condition of active power flow through this circuit. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
@@ -147,7 +155,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "reactive_power_flow": {
       "description": "Initial condition of reactive power flow through this circuit. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
@@ -157,7 +166,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVAr",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ReactivePower"
     },
     "base_power": {
       "description": "Base power for per unitization of this circuit. Units: MVA.",

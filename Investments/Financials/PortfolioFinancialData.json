@@ -10,19 +10,22 @@
       "description": "Discount rate for financial calculations. Units: 1.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "inflation_rate": {
       "description": "Inflation rate for cost adjustments. Units: 1.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "interest_rate": {
       "description": "Interest rate for financing calculations. Units: 1.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "base_year": {
       "description": "Base economic year. All costs will be converted to a net present value in this year.",

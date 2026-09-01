@@ -47,7 +47,8 @@
     "initial_storage_capacity_level": {
       "description": "Initial storage capacity level as a ratio [0, 1.0] of `storage_capacity`. Units: 1.",
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "rating": {
       "description": "Maximum AC side output power rating of the unit. Not to be confused with base_power. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
@@ -56,7 +57,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVA",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ApparentPower"
     },
     "active_power": {
       "description": "Initial active power set point of the unit. For power flow, this is the steady state operating point of the system. For production cost modeling, this may or may not be used as the initial starting point for the solver, depending on the solver used. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
@@ -65,7 +67,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "input_active_power_limits": {
       "description": "Minimum and maximum limits on the input active power (i.e., charging). Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
@@ -74,7 +77,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "output_active_power_limits": {
       "description": "Minimum and maximum limits on the output active power (i.e., discharging). Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
@@ -83,7 +87,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "efficiency": {
       "description": "Average efficiency [0, 1] `in` (charging/filling) and `out` (discharging/consuming) of the storage system.",
@@ -96,7 +101,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVAr",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ReactivePower"
     },
     "reactive_power_limits": {
       "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
@@ -105,7 +111,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVAr",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ReactivePower"
     },
     "base_power": {
       "description": "Base power of the unit for per unitization. Units: MVA.",
@@ -146,19 +153,22 @@
       "description": "Conversion factor of `storage_capacity` to MWh, if different than 1.0. For example, X MWh/liter hydrogen. Units: 1.",
       "default": 1.0,
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Dimensionless"
     },
     "storage_target": {
       "description": "Storage target at the end of simulation as ratio of storage capacity. Units: 1.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "cycle_limits": {
       "description": "Storage Maximum number of cycles per year. Units: 1.",
       "default": 10000,
       "type": "integer",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Dimensionless"
     },
     "ramp_limits": {
       "description": "Ramp up and ramp down limits. Units: per power_units — NATURAL_UNITS: MW/min, COMPONENT_BASE: pu/min .",
@@ -183,7 +193,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection device, if any.",

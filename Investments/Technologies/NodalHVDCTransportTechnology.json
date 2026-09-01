@@ -39,7 +39,8 @@
     "line_loss": {
       "description": "Loss model coefficients. Accepts a linear model with a constant loss and a proportional loss rate, or a Piecewise loss with N segments for different proportional losses. All terms are defined as fraction of installed nameplate capacity. Units: 1.",
       "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "unit_size": {
       "description": "Used for integer investment decisions. Represents the rating capacity of individual new lines. Units: MW.",

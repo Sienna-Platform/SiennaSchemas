@@ -38,7 +38,8 @@
       "x-units": {
         "NATURAL_UNITS": "ohm",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Resistance"
     },
     "x_12": {
       "description": "Measured reactance, referenced to the primary winding's base voltage, from primary to secondary windings (X1-2 in PSS/E). Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
@@ -47,7 +48,8 @@
       "x-units": {
         "NATURAL_UNITS": "ohm",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Reactance"
     },
     "r_23": {
       "description": "Measured resistance, referenced to the secondary winding's base voltage, from secondary to tertiary windings (R2-3 in PSS/E). Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
@@ -56,7 +58,8 @@
       "x-units": {
         "NATURAL_UNITS": "ohm",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Resistance"
     },
     "x_23": {
       "description": "Measured reactance, referenced to the secondary winding's base voltage, from secondary to tertiary windings (X2-3 in PSS/E). Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
@@ -65,7 +68,8 @@
       "x-units": {
         "NATURAL_UNITS": "ohm",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Reactance"
     },
     "r_31": {
       "description": "Measured resistance, referenced to the tertiary winding's base voltage, from tertiary to primary windings (R3-1 in PSS/E). Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
@@ -74,7 +78,8 @@
       "x-units": {
         "NATURAL_UNITS": "ohm",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Resistance"
     },
     "x_31": {
       "description": "Measured reactance, referenced to the tertiary winding's base voltage, from tertiary to primary windings (X3-1 in PSS/E). Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
@@ -83,7 +88,8 @@
       "x-units": {
         "NATURAL_UNITS": "ohm",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Reactance"
     },
     "base_power_12": {
       "description": "Base power for per unitization for primary-secondary windings. Units: MVA.",
@@ -117,7 +123,8 @@
         "NATURAL_UNITS": "S",
         "COMPONENT_MVAR": "MVAr",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Susceptance"
     },
     "shunt_location": {
       "description": "Placement of `magnetizing_shunt` in the equivalent star model.",

@@ -21,7 +21,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "violation_penalty": {
       "description": "Penalty cost for violating the flow limits in the interface.",

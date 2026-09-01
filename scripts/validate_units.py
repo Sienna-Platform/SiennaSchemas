@@ -17,6 +17,11 @@ enforces:
   5. No "descriptor" keys anywhere; no "type": null anywhere.
   6. Any property literally named "unit" or "units" typed "string" must have a
      description mentioning units.json or the unit vocabulary.
+  7. A property whose unit names more than one quantity type ("pu" names
+     eight, "1" names three) declares which one via x-quantity -- a quantity
+     string, or a unit -> quantity object where the branches disagree. It is
+     required only where sibling inference cannot resolve the unit, and is
+     rejected on a property whose units are already unambiguous.
 
 Description channel (extra modes):
   --fix-descriptions    Rewrite every annotated property's description so it
@@ -129,6 +134,154 @@ def load_quantity_units():
     for a in units["allowed_units"]:
         q2u.setdefault(a["quantity_type"], set()).add(a["unit"])
     return q2u
+
+
+def load_unit_quantities():
+    """Map unit -> sorted quantity types registered for it in units.json.
+
+    A unit naming more than one quantity does not say what the number *is*:
+    'pu' names eight, '1' names three, and 'ohm', 'S' and 'm' are ambiguous
+    too. Rule 7 is what makes that intent explicit here rather than in a
+    downstream generator's lookup table.
+    """
+    units = load_json(UNITS_JSON)
+    by_unit = {}
+    for a in units["allowed_units"]:
+        by_unit.setdefault(a["unit"], set()).add(a["quantity_type"])
+    return {u: sorted(q) for u, q in by_unit.items()}
+
+
+def annotated_units(spec, unit_quantities):
+    """Every leaf unit an annotated property declares, x-units nesting included."""
+    def leaves(xunits):
+        for value in xunits.values():
+            if isinstance(value, dict) and "x-units" in value:
+                yield from leaves(value["x-units"])
+            elif isinstance(value, str):
+                yield value
+
+    if isinstance(spec.get("x-units"), dict):
+        return sorted(set(leaves(spec["x-units"])))
+    if isinstance(spec.get("x-unit"), str):
+        return [spec["x-unit"]]
+    return []
+
+
+def infer_quantity(xunits, unit_quantities):
+    """Resolve ambiguous leaves from unambiguous siblings in the SAME x-units map.
+
+    Conservative on purpose. The pin taken from the unambiguous leaves must also
+    be a candidate for every ambiguous leaf in that map, or nothing is inferred.
+    Without that guard the COMPONENT_MVAR shunt bases mislead it: a magnetizing
+    shunt's {S, MVAr, pu} map pins ReactivePower off the MVAr leaf, but the
+    property is a Susceptance.
+
+    Returns {unit: quantity} for what it could resolve.
+    """
+    leaves = [v for v in xunits.values() if isinstance(v, str)]
+    pins = {unit_quantities[v][0] for v in leaves
+            if v in unit_quantities and len(unit_quantities[v]) == 1}
+    ambiguous = [v for v in leaves if len(unit_quantities.get(v, [])) > 1]
+    resolved = {}
+    usable = len(pins) == 1 and all(
+        next(iter(pins)) in unit_quantities[v] for v in ambiguous)
+    for value in xunits.values():
+        if isinstance(value, dict) and "x-units" in value:
+            resolved.update(infer_quantity(value["x-units"], unit_quantities))
+        elif isinstance(value, str) and len(unit_quantities.get(value, [])) > 1 and usable:
+            resolved[value] = next(iter(pins))
+    return resolved
+
+
+def check_x_quantity(spec, path, source_file, failures, unit_quantities, prop_name):
+    """Rule 7: ambiguous units declare their quantity type.
+
+    7a  x-quantity only on a property that actually has an ambiguous unit.
+    7b  every declared quantity is registered for the unit it is declared against.
+    7c  the mapping form's keys are exactly the property's ambiguous units.
+    7d  x-quantity is required whenever inference cannot resolve an ambiguous unit.
+    """
+    units = annotated_units(spec, unit_quantities)
+    ambiguous = [u for u in units if len(unit_quantities.get(u, [])) > 1]
+    declared = spec.get("x-quantity")
+    inferred = {}
+    if isinstance(spec.get("x-units"), dict):
+        inferred = infer_quantity(spec["x-units"], unit_quantities)
+
+    def check_against_inference(unit, quantity):
+        """A declaration may resolve what inference cannot; it may not contradict it.
+
+        'pu' legally names Voltage, so vocabulary alone accepts
+        x-quantity: Voltage on an active_power whose sibling branch is MW.
+        The sibling is what makes it wrong.
+        """
+        if unit in inferred and inferred[unit] != quantity:
+            failures.append(
+                Failure(source_file, path + "/x-quantity", "x-quantity-contradicts-siblings",
+                        f"{quantity} for unit '{unit}'",
+                        f"{inferred[unit]}, which the unambiguous sibling branches imply")
+            )
+
+    if declared is not None and not ambiguous:
+        failures.append(
+            Failure(source_file, path + "/x-quantity", "x-quantity-unnecessary",
+                    repr(declared),
+                    f"no x-quantity: {', '.join(units) or 'this property'} "
+                    f"names exactly one quantity type")
+        )
+        return
+    if not ambiguous:
+        return
+
+    if isinstance(declared, str):
+        for unit in ambiguous:
+            if declared not in unit_quantities[unit]:
+                failures.append(
+                    Failure(source_file, path + "/x-quantity", "x-quantity-vocabulary",
+                            declared,
+                            f"a quantity registered for unit '{unit}': "
+                            f"{', '.join(unit_quantities[unit])}")
+                )
+            else:
+                check_against_inference(unit, declared)
+        return
+
+    if isinstance(declared, dict):
+        if sorted(declared) != ambiguous:
+            failures.append(
+                Failure(source_file, path + "/x-quantity", "x-quantity-keys",
+                        sorted(declared), ambiguous)
+            )
+        for unit, quantity in declared.items():
+            if unit in unit_quantities and quantity not in unit_quantities[unit]:
+                failures.append(
+                    Failure(source_file, path + "/x-quantity", "x-quantity-vocabulary",
+                            quantity,
+                            f"a quantity registered for unit '{unit}': "
+                            f"{', '.join(unit_quantities[unit])}")
+                )
+            else:
+                check_against_inference(unit, quantity)
+        return
+
+    if declared is not None:
+        failures.append(
+            Failure(source_file, path + "/x-quantity", "x-quantity-shape",
+                    type(declared).__name__,
+                    "a quantity-type string, or a unit -> quantity-type object")
+        )
+        return
+
+    # Absent. Acceptable only where inference resolves every ambiguous unit.
+    unresolved = [u for u in ambiguous if u not in inferred]
+    if unresolved:
+        unit = unresolved[0]
+        failures.append(
+            Failure(source_file, path + "/x-quantity", "x-quantity-required",
+                    f"absent; unit '{unit}' names "
+                    f"{len(unit_quantities[unit])} quantities",
+                    f'"x-quantity": one of {", ".join(unit_quantities[unit])}')
+        )
 
 
 def load_column_allowed_units(griddb_path=None):
@@ -451,7 +604,8 @@ def validate_x_units_map(x_units, path, enclosing_props, source_path,
 
 
 def check_annotations(node, path, source_file, source_path, properties_stack,
-                      failures, allowed_units, col_allowed=None, prop_name=None):
+                      failures, allowed_units, col_allowed=None, prop_name=None,
+                      unit_quantities=None):
     """Walk the schema recursively enforcing rules 2, 3, 4, 5, 6."""
     if col_allowed is None:
         col_allowed = {}
@@ -541,6 +695,13 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
                                 sorted(enum))
                     )
 
+        # Rule 7: ambiguous units declare their quantity type. Runs on the
+        # property node itself, so only where an annotation actually lives.
+        if unit_quantities is not None and ("x-unit" in node or "x-units" in node
+                                            or "x-quantity" in node):
+            check_x_quantity(node, path, source_file, failures,
+                             unit_quantities, prop_name)
+
         # Rule 6: property literally named "unit"/"units" typed string.
         if sibling_props is not None:
             for pname, pschema in sibling_props.items():
@@ -565,17 +726,18 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
                 for pname, pschema in v.items():
                     check_annotations(pschema, f"{child_path}/{pname}", source_file,
                                       source_path, properties_stack + [v], failures,
-                                      allowed_units, col_allowed, pname)
+                                      allowed_units, col_allowed, pname,
+                                      unit_quantities)
             else:
                 check_annotations(v, child_path, source_file, source_path,
                                   properties_stack, failures, allowed_units,
-                                  col_allowed, prop_name)
+                                  col_allowed, prop_name, unit_quantities)
 
     elif isinstance(node, list):
         for i, item in enumerate(node):
             check_annotations(item, f"{path}/{i}", source_file, source_path,
                               properties_stack, failures, allowed_units,
-                              col_allowed, prop_name)
+                              col_allowed, prop_name, unit_quantities)
 
 
 def check_metaschema(doc, source_file, failures):
@@ -770,6 +932,7 @@ def main():
 def run_validation(files, griddb_path=None):
     allowed_units = load_allowed_units()
     col_allowed = load_column_allowed_units(griddb_path)
+    unit_quantities = load_unit_quantities()
     variant_titles = collect_polymorphic_variant_titles(files)
     failures = []
 
@@ -784,11 +947,14 @@ def run_validation(files, griddb_path=None):
             continue
         check_metaschema(doc, str(rel), failures)
         check_annotations(doc, "", str(rel), path, [], failures, allowed_units,
-                          col_allowed)
+                          col_allowed, None, unit_quantities)
         find_composite_defaults(doc, "", path, str(rel), failures, variant_titles)
 
     print(f"Scanned {len(files)} schema file(s) under {', '.join(SCAN_DIRS)}.")
     print(f"Vocabulary: {len(allowed_units) - 1} allowed units + 'pu' from Core/units.json.")
+    ambiguous = sum(1 for q in unit_quantities.values() if len(q) > 1)
+    print(f"Quantity declarations: {ambiguous} ambiguous unit(s) in the vocabulary "
+          "require x-quantity where inference cannot resolve them.")
     if col_allowed:
         print(f"Quantity pairing: {len(col_allowed)} DB columns from "
               "SiennaGridDB/schema/column_conventions.json.")

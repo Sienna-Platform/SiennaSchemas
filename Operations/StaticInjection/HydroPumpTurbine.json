@@ -25,7 +25,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "reactive_power": {
       "description": "Initial reactive power set point of the unit. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
@@ -34,7 +35,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVAr",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ReactivePower"
     },
     "rating": {
       "description": "Maximum AC side output power rating of the unit. Not to be confused with base_power. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
@@ -43,7 +45,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVA",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ApparentPower"
     },
     "active_power_limits": {
       "description": "Minimum and maximum stable active power levels for the turbine. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
@@ -52,7 +55,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "reactive_power_limits": {
       "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
@@ -61,7 +65,8 @@
       "x-units": {
         "NATURAL_UNITS": "MVAr",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ReactivePower"
     },
     "active_power_limits_pump": {
       "description": "Minimum and maximum stable active power levels for the pump. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
@@ -70,7 +75,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "outflow_limits": {
       "description": "Turbine/Pump outflow limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing Units: m3/s.",
@@ -80,7 +86,8 @@
     "powerhouse_elevation": {
       "description": "Height level above the sea level of the powerhouse on which the turbine is installed. Units: m.",
       "type": "number",
-      "x-unit": "m"
+      "x-unit": "m",
+      "x-quantity": "Elevation"
     },
     "ramp_limits": {
       "description": "Ramp up and ramp down limits. in psy5 a required param with an option to be nothing Units: per power_units — NATURAL_UNITS: MW/min, COMPONENT_BASE: pu/min .",
@@ -155,7 +162,8 @@
       "x-units": {
         "NATURAL_UNITS": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "ActivePower"
     },
     "efficiency": {
       "description": "Turbine/Pump efficiency [0, 1.0].",
@@ -196,7 +204,8 @@
       "description": "Conversion factor from flow/volume to energy: m^3 -> p.u-hr. Units: 1.",
       "default": 1.0,
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Dimensionless"
     },
     "must_run": {
       "description": "Whether the unit must run (i.e., cannot be curtailed).",

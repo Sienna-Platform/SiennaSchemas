@@ -19,7 +19,8 @@
     "retrofit_fraction": {
       "description": "Fraction of existing capacity that is eligible for retrofits. Alternative to retrofit_potential. Units: 1.",
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     }
   },
   "required": [

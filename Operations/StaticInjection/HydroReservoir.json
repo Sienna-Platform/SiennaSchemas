@@ -20,6 +20,7 @@
         "HEAD": "m",
         "ENERGY": "MWh"
       },
+      "x-quantity": "Elevation",
       "description": "Units: per level_data_type — USABLE_VOLUME: m3, TOTAL_VOLUME: m3, HEAD: m, ENERGY: MWh ."
     },
     "initial_level": {
@@ -31,6 +32,7 @@
         "HEAD": "m",
         "ENERGY": "MWh"
       },
+      "x-quantity": "Elevation",
       "description": "Units: per level_data_type — USABLE_VOLUME: m3, TOTAL_VOLUME: m3, HEAD: m, ENERGY: MWh ."
     },
     "spillage_limits": {
@@ -75,11 +77,13 @@
         "TOTAL_VOLUME": "m3",
         "HEAD": "m",
         "ENERGY": "MWh"
-      }
+      },
+      "x-quantity": "Elevation"
     },
     "intake_elevation": {
       "type": "number",
       "x-unit": "m",
+      "x-quantity": "Elevation",
       "description": "Units: m."
     },
     "head_to_volume_factor": {
@@ -129,7 +133,8 @@
       "description": "Standing loss from evaporation as a fraction of the reservoir's stored volume/energy lost per hour. Units: 1.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "level_data_type": {
       "default": "USABLE_VOLUME",

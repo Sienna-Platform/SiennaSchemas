@@ -22,7 +22,8 @@
       "description": "Fraction of total annual demand across all eligible zones that needs to be met by eligible resources. Units: 1.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     }
   },
   "required": [

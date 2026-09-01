@@ -107,13 +107,15 @@
     "efficiency_storage": {
       "description": "Efficiency of charging storage, fraction of total charge (in) and discharge (out) capacity. Units: 1.",
       "$ref": "../../Core/common.json#/$defs/InOut",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "losses_storage": {
       "description": "Self-discharge of storage (fraction of stored energy per hour). Units: 1.",
       "type": "number",
       "default": 1.0,
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "lifetime_storage": {
       "description": "Maximum number of years the storage component can be active once installed. Units: yr.",
@@ -144,12 +146,14 @@
     "inverter_efficiency": {
       "description": "Efficiency of AC to DC conversion of inverter. Units: 1.",
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "inverter_supply_ratio": {
       "description": "Ratio of generation capacity to grid connection capacity. Units: 1.",
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Dimensionless"
     },
     "requirements": {
       "description": "List of requirement IDs associated with the component.",

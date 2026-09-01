@@ -40,7 +40,8 @@
       "description": "Technology resistance in Ohms. Units: ohm.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "ohm"
+      "x-unit": "ohm",
+      "x-quantity": "Resistance"
     },
     "voltage": {
       "description": "Voltage rating of transmission line. Units: kV.",
@@ -58,7 +59,8 @@
       "description": "Series reactance for a line. Units: ohm.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "ohm"
+      "x-unit": "ohm",
+      "x-quantity": "Reactance"
     },
     "requirements": {
       "description": "List of requirement IDs associated with the component.",

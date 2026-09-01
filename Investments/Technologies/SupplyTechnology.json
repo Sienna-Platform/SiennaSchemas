@@ -51,7 +51,8 @@
       "additionalProperties": {
         "$ref": "../../Core/common.json#/$defs/MinMax"
       },
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "cofire_level_limits": {
       "description": "Minimum and maximum blending level of each fuel during normal generation process for multi-fuel generator. Units: 1.",
@@ -59,7 +60,8 @@
       "additionalProperties": {
         "$ref": "../../Core/common.json#/$defs/MinMax"
       },
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "capital_costs": {
       "description": "Capital costs for investing in a technology. Units: USD/MW.",
@@ -86,13 +88,15 @@
       "description": "Derating factor to account for planned or forced outages of a technology. Fraction of hours in a year where technology is unavailable. Units: 1.",
       "type": "number",
       "default": 1.0,
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "min_generation_fraction": {
       "description": "Minimum generation as a fraction of total capacity. Units: 1.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "ramp_limits": {
       "description": "Maximum decrease and increase in output between operation periods. Units: MW/min.",

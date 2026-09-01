@@ -30,7 +30,8 @@
       "x-units": {
         "NATURAL_UNITS": "S",
         "COMPONENT_MVAR": "MVAr"
-      }
+      },
+      "x-quantity": "Susceptance"
     },
     "initial_status": {
       "description": "Vector of initial switched shunt status, one for in-service and zero for out-of-service for block i (1 through 8).",
@@ -56,7 +57,8 @@
       "x-units": {
         "NATURAL_UNITS": "S",
         "COMPONENT_MVAR": "MVAr"
-      }
+      },
+      "x-quantity": "Susceptance"
     },
     "admittance_limits": {
       "description": "Shunt admittance limits for switched shunt model. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
@@ -69,7 +71,8 @@
       "x-units": {
         "NATURAL_UNITS": "S",
         "COMPONENT_MVAR": "MVAr"
-      }
+      },
+      "x-quantity": "Susceptance"
     },
     "control_mode": {
       "description": "Switched-shunt control mode (PSS/E MODSW).",
@@ -89,7 +92,8 @@
       "description": "Bus number whose voltage/quantity this shunt regulates; 0 means local bus (PSS/E SWREM/NREG). Units: 1.",
       "default": 0,
       "type": "integer",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Dimensionless"
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection model for admittance, if any.",

@@ -14,22 +14,26 @@
     "debt_fraction": {
       "description": "Fraction of capital costs financed through debt. Units: 1.",
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "debt_rate": {
       "description": "Interest rate on debt financing. Units: 1.",
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "return_on_equity": {
       "description": "Required rate of return on equity financing. Units: 1.",
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "tax_rate": {
       "description": "Tax rate applied to equity returns. Units: 1.",
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     }
   },
   "required": [

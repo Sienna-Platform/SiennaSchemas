@@ -22,7 +22,8 @@
       "description": "Capacity reserve requirements, represented as a fraction of peak demand in a region. Units: 1.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     }
   },
   "required": [

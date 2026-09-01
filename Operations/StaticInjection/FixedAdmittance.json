@@ -30,7 +30,8 @@
       "x-units": {
         "NATURAL_UNITS": "S",
         "COMPONENT_MVAR": "MVAr"
-      }
+      },
+      "x-quantity": "Susceptance"
     },
     "base_power": {
       "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",
