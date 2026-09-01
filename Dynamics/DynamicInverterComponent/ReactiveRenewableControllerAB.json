@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Parameters of Reactive Power Controller including REPCA1 and REECB1.",
   "properties": {
     "bus_control": {
@@ -75,15 +75,15 @@
     },
     "e_lim": {
       "description": "Upper/Lower limit on Voltage or Q-power deadband output `(e_min, e_max)`.",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "dbd_pnts": {
       "description": "Voltage or Q-power error dead band thresholds `(dbd1, dbd2)`.",
-      "$ref": "../../Core/common.json#/definitions/DbdPnts"
+      "$ref": "../../Core/common.json#/$defs/DbdPnts"
     },
     "Q_lim": {
       "description": "Upper/Lower limit on reactive power V/Q control in REPCA `(Q_min, Q_max)`.",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "T_p": {
       "description": "Active power lag time constant in REECB. Used only when PF_Flag = 1. Units: s.",
@@ -92,11 +92,11 @@
     },
     "Q_lim_inner": {
       "description": "Upper/Lower limit on reactive power input in REECB `(Q_min_inner, Q_max_inner)`. Only used when V_Flag = 1.",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "V_lim": {
       "description": "Upper/Lower limit on reactive power PI controller in REECB `(V_min, V_max)`. Only used when V_Flag = 1.",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "K_qp": {
       "description": "Reactive power regulator proportional gain (used when V_Flag = 1).",

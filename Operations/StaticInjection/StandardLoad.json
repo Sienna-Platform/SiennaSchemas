@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A voltage-dependent ZIP load, most commonly used for dynamics modeling.\n\nA `StandardLoad` breaks the ZIP into three pieces: Z (constant impedance), I (constant current), and P (constant power), according to `P = P_P * V^0 + P_I * V^1 + P_Z * V^2` for active power and `Q = Q_P * V^0 + Q_I * V^1 + Q_Z * V^2` for reactive power. (Voltage V is in per unit.)\n\nFor an alternative exponential formulation of the ZIP model, see `ExponentialLoad`. For a simpler load model with no voltage dependency, see `PowerLoad`.",
   "properties": {
     "id": {
@@ -23,82 +23,134 @@
       "type": "number",
       "x-unit": "MVA"
     },
+    "power_units": {
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "$ref": "../../Core/common.json#/$defs/UnitSystem"
+    },
     "constant_active_power": {
-      "description": "Constant active power demand (P_P). Units: MW.",
+      "description": "Constant active power demand (P_P). Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "constant_reactive_power": {
-      "description": "Constant reactive power demand (Q_P). Units: MVAr.",
+      "description": "Constant reactive power demand (Q_P). Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "impedance_active_power": {
-      "description": "Active power coefficient for constant impedance load (P_Z). Units: MW.",
+      "description": "Active power coefficient for constant impedance load (P_Z). Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "impedance_reactive_power": {
-      "description": "Reactive power coefficient for constant impedance load (Q_Z). Units: MVAr.",
+      "description": "Reactive power coefficient for constant impedance load (Q_Z). Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "current_active_power": {
-      "description": "Active power coefficient for constant current load (P_I). Units: MW.",
+      "description": "Active power coefficient for constant current load (P_I). Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "current_reactive_power": {
-      "description": "Reactive power coefficient for constant current load (Q_I). Units: MVAr.",
+      "description": "Reactive power coefficient for constant current load (Q_I). Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "max_constant_active_power": {
-      "description": "Maximum active power drawn by constant power load. Units: MW.",
+      "description": "Maximum active power drawn by constant power load. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "max_constant_reactive_power": {
-      "description": "Maximum reactive power drawn by constant power load. Units: MVAr.",
+      "description": "Maximum reactive power drawn by constant power load. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "max_impedance_active_power": {
-      "description": "Maximum active power drawn by constant impedance load. Units: MW.",
+      "description": "Maximum active power drawn by constant impedance load. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "max_impedance_reactive_power": {
-      "description": "Maximum reactive power drawn by constant impedance load. Units: MVAr.",
+      "description": "Maximum reactive power drawn by constant impedance load. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "max_current_active_power": {
-      "description": "Maximum active power drawn by constant current load. Units: MW.",
+      "description": "Maximum active power drawn by constant current load. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "max_current_reactive_power": {
-      "description": "Maximum reactive power drawn by constant current load. Units: MVAr.",
+      "description": "Maximum reactive power drawn by constant current load. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "conformity": {
       "description": "Indicates whether the specified load is conforming or non-conforming.",
       "default": "UNDEFINED",
-      "$ref": "../../Operations/common.json#/definitions/LoadConformity"
+      "$ref": "../../Operations/common.json#/$defs/LoadConformity"
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection device, if any.",
@@ -113,7 +165,8 @@
     "name",
     "available",
     "bus",
-    "base_power"
+    "base_power",
+    "power_units"
   ],
   "title": "StandardLoad",
   "type": "object"

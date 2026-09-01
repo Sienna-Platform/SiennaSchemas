@@ -16,8 +16,15 @@ documents exactly that, and is expected to validate. Closing it would mean
 import json
 import pathlib
 import sys
+import warnings
 
-from jsonschema import Draft7Validator, RefResolver
+# `RefResolver` is deprecated in favor of the `referencing` library, but that
+# library resolves relative (un-$id'd) refs per-document rather than against a
+# directory base URI the way this script needs, so replacing it here would be
+# a large rewrite for a test script. Kept deliberately, warning silenced.
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", DeprecationWarning)
+    from jsonschema import Draft202012Validator, RefResolver
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 TS_DIR = REPO_ROOT / "TimeSeries"
@@ -49,7 +56,7 @@ def load(path):
 
 
 def validator_for(schema):
-    return Draft7Validator(schema, resolver=RefResolver(BASE_URI, schema))
+    return Draft202012Validator(schema, resolver=RefResolver(BASE_URI, schema))
 
 
 def main():

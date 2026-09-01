@@ -1,7 +1,7 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Shared enum definitions used only by Operations-domain components (never Investments or Dynamics). Domain-agnostic shared types remain in Core/common.json.",
-  "definitions": {
+  "$defs": {
     "VSCACControlModes": {
       "description": "AC-side control mode of a voltage-source-converter (VSC) terminal. AC_REACTIVE_POWER: converter controls reactive power / fixed power factor. AC_VOLTAGE: converter controls the AC-side voltage magnitude.",
       "enum": [
@@ -22,6 +22,7 @@
       "type": "string"
     },
     "CombinedCycleConfiguration": {
+      "description": "Shaft and turbine arrangement of a combined cycle plant: a single shaft carrying one combustion and one steam turbine, separate shafts for the two, two or three combustion turbines feeding one steam turbine, or `Other` for any arrangement outside these.",
       "enum": [
         "SingleShaftCombustionSteam",
         "SeparateShaftCombustionSteam",
@@ -33,6 +34,7 @@
       "type": "string"
     },
     "ReserveDirection": {
+      "description": "Direction a reserve product is procured in. `UP` increases generation or reduces load when demand exceeds its expected level; `DOWN` decreases generation or increases load when demand falls below it; `SYMMETRIC` procures the same quantity in both directions. Upstream this distinction is a type parameter on the reserve; here it is flattened into a property.",
       "enum": [
         "UP",
         "DOWN",
@@ -42,6 +44,7 @@
       "type": "string"
     },
     "TransformerControlObjective": {
+      "description": "Control objective of a transformer tap changer or phase shifter: a fixed tap position with no automatic adjustment (`FIXED`), or regulation of voltage magnitude at the controlled bus, reactive power flow, active power flow, asymmetric active power flow, or a DC line. Each regulating objective has a paired `_DISABLED` value naming the same control block while it is out of service, and `UNDEFINED` means no control objective is stated.",
       "enum": [
         "UNDEFINED",
         "VOLTAGE_DISABLED",
@@ -80,17 +83,53 @@
     },
     "VoltageUnitBasis": {
       "description": "Unit basis a voltage setpoint is stored in. NATURAL_UNITS: kilovolts. COMPONENT_BASE: per-unit on the component's own base voltage (the connected bus's base voltage for AC setpoints — PSS/E RAW native for FACTS VSET — and the device voltage base PSS/E supplies for DC-line converters and CZ=2 transformer windings). There is no separate system-base option: bus-base per-unit is the device base for voltage.",
-      "enum": ["NATURAL_UNITS", "COMPONENT_BASE"],
+      "enum": [
+        "NATURAL_UNITS",
+        "COMPONENT_BASE"
+      ],
       "title": "VoltageUnitBasis",
       "type": "string"
     },
     "LoadConformity": {
+      "description": "WECC classification of how a load tracks voltage and frequency variation, used in dynamic studies to decide how it is modeled during a disturbance. `CONFORMING` responds predictably and follows standard load modeling practice; `NON_CONFORMING` does not, as with a constant power load or one behind a complex control system; `UNDEFINED` leaves the classification unstated.",
       "enum": [
         "NON_CONFORMING",
         "CONFORMING",
         "UNDEFINED"
       ],
       "title": "LoadConformity",
+      "type": "string"
+    },
+    "BilateralProduct": {
+      "description": "Traded product of a bilateral transaction. ENERGY: energy. CAPACITY: capacity. ANCILLARY_SERVICE: an ancillary service. LOAD_OBLIGATION: a load obligation transfer.",
+      "enum": [
+        "ENERGY",
+        "CAPACITY",
+        "ANCILLARY_SERVICE",
+        "LOAD_OBLIGATION"
+      ],
+      "title": "BilateralProduct",
+      "type": "string"
+    },
+    "MarketStage": {
+      "description": "Market stage a bilateral transaction was reported against. DAY_AHEAD: day-ahead. REAL_TIME: real-time.",
+      "enum": [
+        "DAY_AHEAD",
+        "REAL_TIME"
+      ],
+      "title": "MarketStage",
+      "type": "string"
+    },
+    "BilateralConfirmation": {
+      "description": "Confirmation status a bilateral transaction settled under. DUAL_CONFIRM: both counterparties confirmed. UNILATERAL_BUYER: only the buyer confirmed. UNILATERAL_SELLER: only the seller confirmed. FIRST_REPORTER_DEEMED: the first-reported side is deemed confirmed. EXACT_MATCH_OR_REJECT: accepted only on an exact match between counterparties, otherwise rejected.",
+      "enum": [
+        "DUAL_CONFIRM",
+        "UNILATERAL_BUYER",
+        "UNILATERAL_SELLER",
+        "FIRST_REPORTER_DEEMED",
+        "EXACT_MATCH_OR_REJECT"
+      ],
+      "title": "BilateralConfirmation",
       "type": "string"
     }
   }

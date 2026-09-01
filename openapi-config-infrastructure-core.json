@@ -1,0 +1,26 @@
+{
+    "inputSpec": "openapi-infrastructure-core.json",
+    "inlineSchemaNameMappings": {
+        "ComplexNumber_1": "ComplexNumber",
+        "ComplexNumber_2": "ComplexNumber",
+        "ComplexNumber_3": "ComplexNumber",
+        "ComplexNumber_4": "ComplexNumber",
+        "FromTo_1": "FromTo",
+        "FromTo_ToFrom_1": "FromTo_ToFrom",
+        "FunctionData_1": "FunctionData",
+        "FunctionData_2": "FunctionData",
+        "InOut_1": "InOut",
+        "LinearFunctionData_1": "LinearFunctionData",
+        "MinMax_1": "MinMax",
+        "MinMax_2": "MinMax",
+        "PiecewiseLinearData_1": "PiecewiseLinearData",
+        "PiecewiseStepData_1": "PiecewiseStepData",
+        "QuadraticFunctionData_1": "QuadraticFunctionData",
+        "TimeSeriesLinearFunctionData_1": "TimeSeriesLinearFunctionData",
+        "TimeSeriesPiecewiseLinearData_1": "TimeSeriesPiecewiseLinearData",
+        "TimeSeriesPiecewiseStepData_1": "TimeSeriesPiecewiseStepData",
+        "TimeSeriesQuadraticFunctionData_1": "TimeSeriesQuadraticFunctionData",
+        "UpDown_1": "UpDown",
+        "XY_Coords_1": "XY_Coords"
+    }
+}

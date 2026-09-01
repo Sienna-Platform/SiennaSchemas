@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Supplemental attribute defining a total amount of a supply technology's capacity that can be retrofit, given either as an absolute quantity or as a fraction of existing capacity. `retrofit_id` groups retrofittable source technologies with the retrofit options available to them inside the same zone.",
   "properties": {
     "id": {
       "description": "ID for individual component.",

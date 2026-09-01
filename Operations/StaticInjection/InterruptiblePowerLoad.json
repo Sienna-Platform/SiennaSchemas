@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A static power load that can be compensated for temporary or continuous interruptions to its requested demand.\n\nThese loads are most commonly used for operational optimizations and can be used to model, for example, large commercial and industrial customers enrolled in demand response programs. This load has a target demand profile (set by a `max_active_power` time series for an operational simulation) that can be reduced to satisfy other system needs. For simpler loads without an operating cost for demand response, see `PowerLoad`.",
   "properties": {
     "id": {
@@ -19,29 +19,49 @@
       "type": "integer"
     },
     "active_power": {
-      "description": "Initial steady state active power demand. Units: MW.",
+      "description": "Initial steady state active power demand. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "reactive_power": {
-      "description": "Initial steady state reactive power demand. Units: MVAr.",
+      "description": "Initial steady state reactive power demand. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "max_active_power": {
-      "description": "Maximum active power that this load can demand. Units: MW.",
+      "description": "Maximum active power that this load can demand. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "max_reactive_power": {
-      "description": "Maximum reactive power that this load can demand. Units: MVAr.",
+      "description": "Maximum reactive power that this load can demand. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "base_power": {
       "description": "Base power of the unit for per unitization. Units: MVA.",
       "type": "number",
       "x-unit": "MVA"
+    },
+    "power_units": {
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "$ref": "../../Core/common.json#/$defs/UnitSystem"
     },
     "operation_cost": {
       "description": "Operational cost of interrupting load. or MarketBidCost",
@@ -56,23 +76,23 @@
       },
       "oneOf": [
         {
-          "$ref": "../../Core/common.json#/definitions/LoadCost"
+          "$ref": "../../Core/common.json#/$defs/LoadCost"
         },
         {
-          "$ref": "../../Core/common.json#/definitions/MarketBidCost"
+          "$ref": "../../Core/common.json#/$defs/MarketBidCost"
         },
         {
-          "$ref": "../../Core/common.json#/definitions/MarketBidTimeSeriesCost"
+          "$ref": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost"
         },
         {
-          "$ref": "../../Core/common.json#/definitions/ImportExportTimeSeriesCost"
+          "$ref": "../../Core/common.json#/$defs/ImportExportTimeSeriesCost"
         }
       ]
     },
     "conformity": {
       "description": "Indicates whether the specified load is conforming or non-conforming.",
       "default": "UNDEFINED",
-      "$ref": "../../Operations/common.json#/definitions/LoadConformity"
+      "$ref": "../../Operations/common.json#/$defs/LoadConformity"
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection device, if any.",
@@ -92,6 +112,7 @@
     "max_active_power",
     "max_reactive_power",
     "base_power",
+    "power_units",
     "operation_cost"
   ],
   "title": "InterruptiblePowerLoad",

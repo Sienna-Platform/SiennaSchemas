@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "An AC bus.",
   "properties": {
     "id": {
@@ -20,7 +20,7 @@
     },
     "bustype": {
       "description": "Used to describe the connectivity and behavior of this bus. in psy5 a required param with an option to be nothing",
-      "$ref": "../../Core/common.json#/definitions/ACBusType"
+      "$ref": "../../Core/common.json#/$defs/ACBusType"
     },
     "angle": {
       "description": "Angle of the bus. Units: rad.",
@@ -35,7 +35,7 @@
     },
     "voltage_limits": {
       "description": "Limits on the voltage variation as multiples of `base_voltage`. Units: pu.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "pu",
       "x-unit-base": "base_voltage"
     },

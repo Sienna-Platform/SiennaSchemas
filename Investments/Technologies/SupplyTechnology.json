@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Candidate generation technology for a region, representing either a thermal or a renewable generation technology. It carries the capital and operating cost of new capacity together with the operating characteristics the added units take on — capacity limits, ramp and time limits, outage derating, fuel and its carbon intensity, and start-up fuel use.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -27,13 +28,13 @@
     "prime_mover_type": {
       "description": "Prime mover for generator.",
       "default": "OT",
-      "$ref": "../../Core/common.json#/definitions/PrimeMovers"
+      "$ref": "../../Core/common.json#/$defs/PrimeMovers"
     },
     "fuel": {
       "description": "Fuel type according to IEA.",
       "type": "array",
       "items": {
-        "$ref": "../../Core/common.json#/definitions/ThermalFuels"
+        "$ref": "../../Core/common.json#/$defs/ThermalFuels"
       }
     },
     "co2": {
@@ -48,7 +49,7 @@
       "description": "Minimum and maximum blending level of each fuel during start-up process for multi-fuel generator. Units: 1.",
       "type": "object",
       "additionalProperties": {
-        "$ref": "../../Core/common.json#/definitions/MinMax"
+        "$ref": "../../Core/common.json#/$defs/MinMax"
       },
       "x-unit": "1"
     },
@@ -56,18 +57,18 @@
       "description": "Minimum and maximum blending level of each fuel during normal generation process for multi-fuel generator. Units: 1.",
       "type": "object",
       "additionalProperties": {
-        "$ref": "../../Core/common.json#/definitions/MinMax"
+        "$ref": "../../Core/common.json#/$defs/MinMax"
       },
       "x-unit": "1"
     },
     "capital_costs": {
       "description": "Capital costs for investing in a technology. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
       "x-unit": "USD/MW"
     },
     "operation_costs": {
       "description": "Fixed and variable O&M costs for a technology. Units: USD/MWh.",
-      "$ref": "../../Core/common.json#/definitions/GenericOperationCost",
+      "$ref": "../../Core/common.json#/$defs/GenericOperationCost",
       "x-unit": "USD/MWh"
     },
     "unit_size": {
@@ -78,7 +79,7 @@
     },
     "capacity_limits": {
       "description": "Minimum and maximum allowable installed capacity for a technology. Units: MW.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "MW"
     },
     "outage_factor": {
@@ -95,12 +96,12 @@
     },
     "ramp_limits": {
       "description": "Maximum decrease and increase in output between operation periods. Units: MW/min.",
-      "$ref": "../../Core/common.json#/definitions/UpDown",
+      "$ref": "../../Core/common.json#/$defs/UpDown",
       "x-unit": "MW/min"
     },
     "time_limits": {
       "description": "Minimum amount of time a resource has to stay in the committed or shutdown state (minutes). Units: min.",
-      "$ref": "../../Core/common.json#/definitions/UpDown",
+      "$ref": "../../Core/common.json#/$defs/UpDown",
       "x-unit": "min"
     },
     "start_fuel_mmbtu_per_mw": {
@@ -125,7 +126,7 @@
     },
     "financial_data": {
       "description": "Struct containing relevant financial information for a technology.",
-      "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
+      "$ref": "../Financials/TechnologyFinancialData.json"
     }
   },
   "required": [

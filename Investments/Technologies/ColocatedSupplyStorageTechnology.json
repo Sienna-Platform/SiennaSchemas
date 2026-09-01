@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Supply technology that supports storage co-located with wind and solar generation. Capital costs, operating costs, capacity limits, and lifetimes are carried separately for the solar, wind, storage, and inverter portions, which share one grid connection.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -26,21 +27,21 @@
     },
     "financial_data": {
       "description": "Struct containing relevant financial information for a technology.",
-      "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
+      "$ref": "../Financials/TechnologyFinancialData.json"
     },
     "capital_costs_solar": {
       "description": "Capital costs for investing in a solar technology. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
       "x-unit": "USD/MW"
     },
     "operation_costs_solar": {
       "description": "Fixed and variable O&M costs for the solar component. Units: USD/MWh.",
-      "$ref": "../../Core/common.json#/definitions/RenewableGenerationCost",
+      "$ref": "../../Core/common.json#/$defs/RenewableGenerationCost",
       "x-unit": "USD/MWh"
     },
     "capacity_limits_solar": {
       "description": "Maximum allowable installed capacity for the solar component. Units: MW.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "MW"
     },
     "lifetime_solar": {
@@ -50,17 +51,17 @@
     },
     "capital_costs_wind": {
       "description": "Capital costs for investing in a wind technology. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
       "x-unit": "USD/MW"
     },
     "operation_costs_wind": {
       "description": "Fixed and variable O&M costs for the wind component. Units: USD/MWh.",
-      "$ref": "../../Core/common.json#/definitions/RenewableGenerationCost",
+      "$ref": "../../Core/common.json#/$defs/RenewableGenerationCost",
       "x-unit": "USD/MWh"
     },
     "capacity_limits_wind": {
       "description": "Maximum allowable installed capacity for the wind component. Units: MW.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "MW"
     },
     "lifetime_wind": {
@@ -70,42 +71,42 @@
     },
     "capital_costs_energy": {
       "description": "Capital costs for investing in the storage technology's energy capacity. Units: USD/MWh.",
-      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
       "x-unit": "USD/MWh"
     },
     "capital_costs_power": {
       "description": "Capital costs for investing in the storage technology's charge/discharge capacity. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
       "x-unit": "USD/MW"
     },
     "operation_costs_energy": {
       "description": "Fixed and variable O&M costs for the storage energy component. Units: USD/MWh.",
-      "$ref": "../../Core/common.json#/definitions/StorageCost",
+      "$ref": "../../Core/common.json#/$defs/StorageCost",
       "x-unit": "USD/MWh"
     },
     "operation_costs_power": {
       "description": "Fixed and variable O&M costs for the storage power component. Units: USD/MWh.",
-      "$ref": "../../Core/common.json#/definitions/StorageCost",
+      "$ref": "../../Core/common.json#/$defs/StorageCost",
       "x-unit": "USD/MWh"
     },
     "capacity_power_limits": {
       "description": "Allowable installed power capacity for the storage component. Units: MW.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "MW"
     },
     "capacity_energy_limits": {
       "description": "Allowable installed energy capacity for the storage component. Units: MWh.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "MWh"
     },
     "duration_limits": {
       "description": "Minimum and maximum duration limits for the storage component (minutes). Units: min.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "min"
     },
     "efficiency_storage": {
       "description": "Efficiency of charging storage, fraction of total charge (in) and discharge (out) capacity. Units: 1.",
-      "$ref": "../../Core/common.json#/definitions/InOut",
+      "$ref": "../../Core/common.json#/$defs/InOut",
       "x-unit": "1"
     },
     "losses_storage": {
@@ -132,12 +133,12 @@
     },
     "capital_costs_inverter": {
       "description": "Capital costs for investing in inverter capacity. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
       "x-unit": "USD/MW"
     },
     "operation_costs_inverter": {
       "description": "Operational costs for using inverter in co-located systems. Units: USD/MWh.",
-      "$ref": "../../Core/common.json#/definitions/ProductionVariableCostCurve",
+      "$ref": "../../Core/common.json#/$defs/ProductionVariableCostCurve",
       "x-unit": "USD/MWh"
     },
     "inverter_efficiency": {

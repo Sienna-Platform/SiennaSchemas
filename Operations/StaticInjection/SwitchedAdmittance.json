@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A switched admittance, with discrete steps to adjust the admittance.\n\nMost often used in power flow studies, iterating over the steps to see impacts of admittance on the results. Total admittance is calculated as: `Y` + `number_of_steps` * `Y_increase`.",
   "properties": {
     "id": {
@@ -21,11 +21,11 @@
     "admittance_units": {
       "description": "Unit basis for the shunt admittance Y. COMPONENT_MVAR is PSS/E RAW native (Mvar/MW at unity voltage).",
       "default": "COMPONENT_MVAR",
-      "$ref": "../../Core/common.json#/definitions/ShuntAdmittanceUnitBasis"
+      "$ref": "../../Core/common.json#/$defs/ShuntAdmittanceUnitBasis"
     },
     "Y": {
       "description": "Initial admittance at N = 0. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
-      "$ref": "../../Core/common.json#/definitions/ComplexNumber",
+      "$ref": "../../Core/common.json#/$defs/ComplexNumber",
       "x-unit-discriminator": "admittance_units",
       "x-units": {
         "NATURAL_UNITS": "S",
@@ -50,7 +50,7 @@
       "description": "Vector with admittance increment step for each adjustable shunt block. For example, `Y_increase[2]` is the complex admittance increment for each step at block 2. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
       "type": "array",
       "items": {
-        "$ref": "../../Core/common.json#/definitions/ComplexNumber"
+        "$ref": "../../Core/common.json#/$defs/ComplexNumber"
       },
       "x-unit-discriminator": "admittance_units",
       "x-units": {
@@ -64,7 +64,7 @@
         "min": 1.0,
         "max": 1.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit-discriminator": "admittance_units",
       "x-units": {
         "NATURAL_UNITS": "S",

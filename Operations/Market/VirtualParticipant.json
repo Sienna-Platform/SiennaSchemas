@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "VirtualParticipant",
+  "description": "A virtual (convergence) market participant. Supply offers map to the operating cost's incremental offer curves; demand bids map to decremental offer curves. Settles either at a settlement point or at associated trading hubs — the two are mutually exclusive; hub membership is carried as TradingHubAssociation rows rather than a list on this record, matching the trading hub's own membership convention.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the participant is available for market clearing (`true`) or not (`false`).",
+      "type": "boolean"
+    },
+    "settlement_point_id": {
+      "description": "ID of the location this participant settles at — a bus, area, or load zone. `null` when the participant settles at trading hubs instead.",
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "max_supply": {
+      "description": "Maximum envelope for the incremental (supply) side. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
+    },
+    "max_demand": {
+      "description": "Maximum envelope for the decremental (demand) side. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
+    },
+    "operation_cost": {
+      "description": "Bid curves as an offer-curve operating cost.",
+      "discriminator": {
+        "mapping": {
+          "MARKET_BID": "#/components/schemas/MarketBidCost",
+          "MARKET_BID_TIME_SERIES": "#/components/schemas/MarketBidTimeSeriesCost"
+        },
+        "propertyName": "cost_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "../../Core/common.json#/$defs/MarketBidCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "available",
+    "max_supply",
+    "max_demand",
+    "operation_cost"
+  ]
+}

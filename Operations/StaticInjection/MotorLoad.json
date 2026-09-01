@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "An induction-motor static load, representing the steady-state power draw of motor-driven demand.\n\nThis load models the aggregate real and reactive power consumed by induction motors, along with the motor technology parameters that characterize their electrical behavior. For a simple constant-power load with no motor characteristics, see `PowerLoad`. For voltage-dependent ZIP loads used in dynamics modeling, see `StandardLoad`.",
   "properties": {
     "id": {
@@ -19,34 +19,58 @@
       "type": "integer"
     },
     "active_power": {
-      "description": "Initial steady-state active power demand. A positive value indicates power consumption. Units: MW.",
+      "description": "Initial steady-state active power demand. A positive value indicates power consumption. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "reactive_power": {
-      "description": "Initial steady-state reactive power demand. A positive value indicates reactive power consumption. Units: MVAr.",
+      "description": "Initial steady-state reactive power demand. A positive value indicates reactive power consumption. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "base_power": {
       "description": "Base power of the unit for per unitization. Units: MVA.",
       "type": "number",
       "x-unit": "MVA"
     },
+    "power_units": {
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "$ref": "../../Core/common.json#/$defs/UnitSystem"
+    },
     "rating": {
-      "description": "Maximum AC side output power rating of the unit. Not to be confused with base_power. Units: MVA.",
+      "description": "Maximum AC side output power rating of the unit. Not to be confused with base_power. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVA"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "max_active_power": {
-      "description": "Maximum active power that this load can demand. Units: MW.",
+      "description": "Maximum active power that this load can demand. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "reactive_power_limits": {
-      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. Units: MVAr.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MVAr"
+      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "motor_technology": {
       "description": "AC Motor type.",
@@ -74,6 +98,7 @@
     "active_power",
     "reactive_power",
     "base_power",
+    "power_units",
     "rating",
     "max_active_power"
   ],

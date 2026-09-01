@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Steam Turbine-Governor. This model considers both TGOV1 or TGOV1DU in PSS/E.",
   "properties": {
     "id": {
@@ -17,7 +17,7 @@
     },
     "valve_position_limits": {
       "description": "Valve position limits.",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "T2": {
       "description": "Lead Lag Lead Time constant. Units: s.",

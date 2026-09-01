@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Used to represent switches and breakers connecting AC Buses.",
   "properties": {
     "id": {
@@ -15,14 +15,22 @@
       "type": "boolean"
     },
     "active_power_flow": {
-      "description": "Initial condition of active power flow on the line. Units: MW.",
+      "description": "Initial condition of active power flow on the line. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "reactive_power_flow": {
-      "description": "Initial condition of reactive power flow on the line. Units: MVAr.",
+      "description": "Initial condition of reactive power flow on the line. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "arc": {
       "description": "An `Arc` defining this line `from` a bus `to` another bus.",
@@ -32,6 +40,10 @@
       "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",
       "type": "number",
       "x-unit": "MVA"
+    },
+    "power_units": {
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "$ref": "../../Core/common.json#/$defs/UnitSystem"
     },
     "r": {
       "description": "Resistance. Per-unit on `base_power`, which records the system base. Units: pu.",
@@ -44,9 +56,13 @@
       "x-unit": "pu"
     },
     "rating": {
-      "description": "Thermal rating. Flow on the branch must be between -`rating` and `rating`. Units: MVA.",
+      "description": "Thermal rating. Flow on the branch must be between -`rating` and `rating`. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVA"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "discrete_branch_type": {
       "description": "Type of discrete control.",
@@ -87,6 +103,7 @@
     "r",
     "x",
     "base_power",
+    "power_units",
     "rating"
   ],
   "title": "DiscreteControlledACBranch",

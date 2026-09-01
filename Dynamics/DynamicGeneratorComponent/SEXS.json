@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Parameters of Simplified Excitation System Model - SEXS in PSSE.",
   "properties": {
     "id": {
@@ -26,7 +26,7 @@
     },
     "V_lim": {
       "description": "Field voltage limits.",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "V_ref": {
       "description": "Reference Voltage Set-point.",

@@ -8,7 +8,7 @@ Two passes, because the two artifact shapes resolve differently:
    fragment with no file part, and an unbundled component file has no
    namespace to resolve it against (Operations/StaticInjection/
    ThermalStandard.json carries a discriminator but has neither a
-   `definitions` nor a `components` key), so only its tail name is checked --
+   `$defs` nor a `components` key), so only its tail name is checked --
    against every Core/common.json definition and every aggregate's
    `components.schemas` key. Which prefix an unbundled file should spell is
    the bundler's call, not this script's.
@@ -73,7 +73,7 @@ def build_name_registry():
     """Every name a discriminator.mapping value may legitimately point at."""
     names = set()
     for rel in COMMON_FILES:
-        names |= set(load_json((REPO_ROOT / rel).resolve()).get("definitions", {}).keys())
+        names |= set(load_json((REPO_ROOT / rel).resolve()).get("$defs", {}).keys())
     for domain in DOMAINS:
         spec = load_json(REPO_ROOT / f"openapi-{domain}.json")
         names |= set(spec.get("components", {}).get("schemas", {}).keys())

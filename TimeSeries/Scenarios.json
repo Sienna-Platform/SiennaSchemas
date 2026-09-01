@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Scenarios",
   "type": "object",
   "description": "A scenarios forecast: per-scenario, per-window horizon arrays. Adds a scenario axis in front of the deterministic layout.",
@@ -18,7 +18,7 @@
       "description": "Type name of the owning entity. Descriptive, not part of the series' identity."
     },
     "owner_category": {
-      "$ref": "common.json#/definitions/OwnerCategory",
+      "$ref": "common.json#/$defs/OwnerCategory",
       "description": "Whether the owner is a component or a supplemental attribute."
     },
     "time_series_type": {
@@ -32,7 +32,7 @@
       "description": "Time series name (e.g. max_active_power). Part of the series' identity, and often carrying a disambiguating suffix; `component_field` records what the values are for."
     },
     "features": {
-      "$ref": "common.json#/definitions/TimeSeriesFeatures",
+      "$ref": "common.json#/$defs/TimeSeriesFeatures",
       "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
     },
     "uri": {
@@ -44,7 +44,7 @@
       "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
     },
     "element_type": {
-      "$ref": "common.json#/definitions/ElementType",
+      "$ref": "common.json#/$defs/ElementType",
       "description": "What one timestep's values mean and how they are laid out. The physical dtype of the stored bytes derives from this and is not recorded separately. Unlike `units` and `quantity_kind` this is not a user-facing label — the writing package derives it from the array."
     },
     "element_shape": {
@@ -73,11 +73,11 @@
       "description": "Kind of physical quantity the values measure (e.g. ActivePower, ReactivePower, ElectricalEnergy). Coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity kind can. It is also the only record of what the values measure when `unit_system` is a per-unit basis."
     },
     "unit_system": {
-      "$ref": "../Core/common.json#/definitions/UnitSystem",
+      "$ref": "../Core/common.json#/$defs/UnitSystem",
       "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a COMPONENT_BASE series back to natural units needs the owning component's base_power. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS."
     },
     "time_reference": {
-      "$ref": "common.json#/definitions/TimeReference",
+      "$ref": "common.json#/$defs/TimeReference",
       "description": "How this series' timestamps were spelled, so a read hands back what the write declared instead of relabelling everything UTC. Absent means unspecified, which is not a claim the timestamps were written as UTC."
     },
     "component_field": {
@@ -94,15 +94,15 @@
       "description": "Start of the first forecast window."
     },
     "resolution": {
-      "$ref": "common.json#/definitions/Period",
+      "$ref": "common.json#/$defs/Period",
       "description": "Cadence within a forecast window. Always present for a forecast, and part of the series' identity."
     },
     "horizon": {
-      "$ref": "common.json#/definitions/Period",
+      "$ref": "common.json#/$defs/Period",
       "description": "Length of one forecast window. Descriptive, not part of the series' identity."
     },
     "interval": {
-      "$ref": "common.json#/definitions/Period",
+      "$ref": "common.json#/$defs/Period",
       "description": "Step between the start of consecutive forecast windows. Part of the series' identity: two forecasts of one variable at the same resolution but different intervals — a day-ahead and a real-time forecast — are distinct series. `PT0S` is the canonical interval of a single-window forecast, which has no second window to step to."
     },
     "count": {

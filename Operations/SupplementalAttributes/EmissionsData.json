@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "EmissionsData",
   "description": "Supplemental attribute describing the emission of a single pollutant from a host component. Combines pollutant identity (CO2, NOx, etc.) with an emission rate expressed as a ValueCurve (supporting constant, linear, or piecewise relationships between fuel consumption / power output and emissions). One EmissionsData instance can be attached to one or many components.",
   "type": "object",
@@ -12,15 +12,15 @@
       "description": "Identifier for this emissions attribute"
     },
     "pollutant": {
-      "$ref": "../../Core/common.json#/definitions/PollutantType",
+      "$ref": "../../Core/common.json#/$defs/PollutantType",
       "description": "Pollutant identity (CO2, CO2E, CH4, N2O, NOX, SO2, PM25, PM10, HG, HAP, CUSTOM)"
     },
     "emission_rate": {
-      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
       "description": "Emission rate as a ValueCurve, typically an IncrementalCurve with LinearFunctionData (constant or linearly varying rate) or PiecewiseStepData (piecewise step rates). Rates must be non-negative and finite."
     },
     "basis": {
-      "$ref": "../../Core/common.json#/definitions/EmissionBasis",
+      "$ref": "../../Core/common.json#/$defs/EmissionBasis",
       "description": "FUEL_INPUT (mass per unit of heat input) or POWER_OUTPUT (mass per unit of electrical output)"
     },
     "start_up_adder": {
@@ -36,12 +36,12 @@
       }
     },
     "mass_unit": {
-      "$ref": "../../Core/common.json#/definitions/MassUnit",
+      "$ref": "../../Core/common.json#/$defs/MassUnit",
       "description": "Mass unit of the emission rate numerator",
       "default": "KG"
     },
     "energy_unit": {
-      "$ref": "../../Core/common.json#/definitions/EnergyUnit",
+      "$ref": "../../Core/common.json#/$defs/EnergyUnit",
       "description": "Energy unit for the rate denominator. Must be MMBTU or GJ when basis is FUEL_INPUT, and MWH when basis is POWER_OUTPUT."
     },
     "gwp": {

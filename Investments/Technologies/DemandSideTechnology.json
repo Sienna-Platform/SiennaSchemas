@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Demand-side technology such as an electric vehicle fleet or a hydrogen electrolyzer. Its flexibility is described by how far demand may be delayed or advanced, how much of it may be curtailed, and the cost and energy losses of doing either.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -32,7 +33,7 @@
     },
     "price_per_unit": {
       "description": "Price or value per unit of output. Ex: USD per ton of hydrogen for electrolyzers. Units: USD/t.",
-      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
       "x-unit": "USD/t"
     },
     "min_power": {
@@ -64,12 +65,12 @@
     },
     "shift_variable_cost": {
       "description": "Variable operation and maintenance costs associated with flexible demand deferral/advancement. Units: USD/MWh.",
-      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
       "x-unit": "USD/MWh"
     },
     "curtailment_cost": {
       "description": "Energy cost of curtailed demand, USD per MWh. Units: USD/MWh.",
-      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
       "x-unit": "USD/MWh"
     },
     "max_demand_curtailment": {

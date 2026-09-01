@@ -38,17 +38,18 @@ SiennaSchemas (this repo — hand-written source)
 
 ## Generated package membership
 
-Five packages (each generated in both Julia and Python):
+Six packages (each generated in both Julia and Python):
 
 | Package | Contents | Dependencies |
 |---|---|---|
-| **PowerCoreOpenAPIModels** | Shared types: curves, enums, helpers (MinMax, UpDown, CostCurve, FunctionData, …) | None |
-| **PowerOperationsOpenAPIModels** | Topology, Branch, StaticInjection, Service | Core |
-| **PowerInvestmentsOpenAPIModels** | Technologies, Financials, Requirements, Attributes, Regions, Portfolio | Core |
-| **PowerDynamicsOpenAPIModels** | DynamicGeneratorComponent, DynamicInverterComponent | Core |
-| **PowerTimeSeriesOpenAPIModels** | The six time series types (SingleTimeSeries, NonSequentialTimeSeries, Deterministic, DeterministicSingleTimeSeries, Probabilistic, Scenarios) and their shared value types | Core (`UnitSystem` only) |
+| **InfrastructureCoreOpenAPIModels** | Domain-neutral: `UnitSystem`, the function-data family, value shapes (`MinMax`, `UpDown`, `InOut`, `FromTo`, `FromTo_ToFrom`, `ComplexNumber`, `XY_Coords`), and the supplemental attributes (`GeographicInfo`, `DataSource`, `SupplementalAttributeAssociation`) | None |
+| **PowerCoreOpenAPIModels** | Shared types: curves, enums, helpers (CostCurve, ValueCurve, ThermalFuels, TurbinePump, …) | InfrastructureCore |
+| **PowerOperationsOpenAPIModels** | Topology, Branch, StaticInjection, Service | PowerCore |
+| **PowerInvestmentsOpenAPIModels** | Technologies, Financials, Requirements, Attributes, Regions, Portfolio | PowerCore |
+| **PowerDynamicsOpenAPIModels** | DynamicGeneratorComponent, DynamicInverterComponent | PowerCore |
+| **InfrastructureTimeSeriesOpenAPIModels** | The six time series types (SingleTimeSeries, NonSequentialTimeSeries, Deterministic, DeterministicSingleTimeSeries, Probabilistic, Scenarios) and their shared value types | InfrastructureCore (`UnitSystem` only) |
 
-Investments depends only on Core (not Operations); integer ID cross-references are semantic, not formal type dependencies.
+Investments depends only on PowerCore (not Operations); integer ID cross-references are semantic, not formal type dependencies.
 
 ## Directory structure
 
@@ -59,9 +60,9 @@ Operations/              # Topology/, Branch/, StaticInjection/, Service/, Suppl
 Investments/             # Technologies/, Financials/, Requirements/, Attributes/, Regions/, Portfolio/
 Dynamics/                # DynamicGeneratorComponent/, DynamicInverterComponent/
 TimeSeries/              # common.json, the six per-type schemas, TimeSeriesAssociation.json (oneOf wrapper)
-openapi-{core,operations,investments,dynamics,timeseries}.json     # $ref wrappers selecting package membership
+openapi-infrastructure-core.json, openapi-{core,operations,investments,dynamics,timeseries}.json     # $ref wrappers selecting package membership
 openapi-config-*.json    # generator configs (inlineSchemaNameMappings)
-scripts/                 # validate_units.py, bundle_specs.py,
+scripts/                 # validate_units.py, bundle_specs.py, check_layering.py,
                          # check_psy_parity.py, check_psip_parity.py
 dist/                    # bundled specs for codegen consumers (gitignored)
 docs/                    # PIPELINE.md (gates), UNIT_ANNOTATIONS.md (annotation spec)
@@ -115,8 +116,8 @@ Config files are language-agnostic; pick `-g python` or `-g julia-server` on the
 ## Creating a release
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+git tag v0.1.0
+git push origin v0.1.0
 ```
 
 The tag push triggers the GH Actions release workflow (schema tarball → GitHub Release). Downstream repos poll for releases and record the consumed tag in their `.schema-version` — check a downstream repo to see whether the loop has fired for a given tag.

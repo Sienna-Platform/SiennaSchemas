@@ -7,6 +7,7 @@
         "Probabilistic_1": "Probabilistic",
         "Scenarios_1": "Scenarios",
         "SingleTimeSeries_1": "SingleTimeSeries",
-        "TimeSeriesFeatureValue_1": "TimeSeriesFeatureValue"
+        "TimeSeriesFeatureValue_1": "TimeSeriesFeatureValue",
+        "UnitSystem_1": "UnitSystem"
     }
 }

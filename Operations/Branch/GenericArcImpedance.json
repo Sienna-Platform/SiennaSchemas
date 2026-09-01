@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A generic branch defined by a series impedance on an `Arc` between two buses.",
   "properties": {
     "id": {
@@ -15,19 +15,31 @@
       "type": "boolean"
     },
     "active_power_flow": {
-      "description": "Initial condition of active power flow on the line. Units: MW.",
+      "description": "Initial condition of active power flow on the line. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "reactive_power_flow": {
-      "description": "Initial condition of reactive power flow on the line. Units: MVAr.",
+      "description": "Initial condition of reactive power flow on the line. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "max_flow": {
-      "description": "Maximum allowable flow on the generic impedance. Units: MW.",
+      "description": "Maximum allowable flow on the generic impedance. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "arc": {
       "description": "An `Arc` defining this line `from` a bus `to` another bus.",
@@ -38,10 +50,14 @@
       "type": "number",
       "x-unit": "MVA"
     },
+    "power_units": {
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "$ref": "../../Core/common.json#/$defs/UnitSystem"
+    },
     "parameter_units": {
       "description": "Unit basis for r and x. COMPONENT_BASE is per-unit on this component's base_power, which records the system base.",
       "default": "COMPONENT_BASE",
-      "$ref": "../../Core/common.json#/definitions/ImpedanceUnitBasis"
+      "$ref": "../../Core/common.json#/$defs/ImpedanceUnitBasis"
     },
     "r": {
       "description": "Resistance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
@@ -71,6 +87,7 @@
     "max_flow",
     "arc",
     "base_power",
+    "power_units",
     "r",
     "x"
   ],

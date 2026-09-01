@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Demand requirements for a region. New demand enters at a stated peak in its construction year and scales forward by a growth rate; `value_of_lost_load` and `unserved_demand_curve` price whatever portion goes unserved.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -54,7 +55,7 @@
     },
     "unserved_demand_curve": {
       "description": "Piecewise curve to scale the cost of unserved load based on the value of lost load. Units: USD/MWh.",
-      "$ref": "../../Core/common.json#/definitions/ValueCurve",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
       "x-unit": "USD/MWh"
     },
     "requirements": {
@@ -67,9 +68,9 @@
     }
   },
   "required": [
-    "id", 
-    "name", 
-    "power_systems_type", 
+    "id",
+    "name",
+    "power_systems_type",
     "value_of_lost_load"
   ],
   "title": "DemandRequirement",

@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Supplemental attribute recording a component's forced outage status directly, rather than as a probability. `outage_status` is 1 when the component is outaged and 0 when it is available, and it can be backed by a time series drawn from a stochastic simulation or from historical records.",
   "title": "FixedForcedOutage",
   "type": "object",
   "properties": {
@@ -19,5 +20,8 @@
       "description": "IDs of devices whose post-contingency state should be modeled when this outage occurs. Empty by default; semantics of an empty list are decided by the downstream consumer."
     }
   },
-  "required": ["id", "outage_status"]
+  "required": [
+    "id",
+    "outage_status"
+  ]
 }

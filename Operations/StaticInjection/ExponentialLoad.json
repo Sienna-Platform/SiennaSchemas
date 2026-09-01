@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A voltage-dependent ZIP load, most commonly used for dynamics modeling.\n\nAn `ExponentialLoad` models active power as P = P0 * V^α and reactive power as Q = Q0 * V^β, where the exponents α and β select govern the voltage dependency. For an alternative three-part formulation of the ZIP model, see `StandardLoad`. For a simpler load model with no voltage dependency, see `PowerLoad`.",
   "properties": {
     "id": {
@@ -19,14 +19,22 @@
       "type": "integer"
     },
     "active_power": {
-      "description": "Active power coefficient, P0. Units: MW.",
+      "description": "Active power coefficient, P0. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "reactive_power": {
-      "description": "Reactive power coefficient, Q0. Units: MVAr.",
+      "description": "Reactive power coefficient, Q0. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "alpha": {
       "description": "Exponent relating voltage dependency for active power. 0 = constant power only, 1 = constant current only, and 2 = constant impedance only.",
@@ -41,20 +49,32 @@
       "type": "number",
       "x-unit": "MVA"
     },
+    "power_units": {
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "$ref": "../../Core/common.json#/$defs/UnitSystem"
+    },
     "max_active_power": {
-      "description": "Maximum active power that this load can demand. Units: MW.",
+      "description": "Maximum active power that this load can demand. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "max_reactive_power": {
-      "description": "Maximum reactive power that this load can demand. Units: MVAr.",
+      "description": "Maximum reactive power that this load can demand. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "conformity": {
       "description": "Indicates whether the specified load is conforming or non-conforming.",
       "default": "UNDEFINED",
-      "$ref": "../../Operations/common.json#/definitions/LoadConformity"
+      "$ref": "../../Operations/common.json#/$defs/LoadConformity"
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection device, if any.",
@@ -74,6 +94,7 @@
     "alpha",
     "beta",
     "base_power",
+    "power_units",
     "max_active_power",
     "max_reactive_power"
   ],

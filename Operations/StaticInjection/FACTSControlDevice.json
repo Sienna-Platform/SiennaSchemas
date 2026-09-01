@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Facts control devices.\n\nMost often used in AC power flow studies as a control of voltage and, active and reactive power.",
   "properties": {
     "name": {
@@ -30,7 +30,7 @@
     "voltage_setpoint_units": {
       "description": "Unit basis for voltage_setpoint. COMPONENT_BASE (pu on the bus base voltage) is PSS/E RAW native (VSET).",
       "default": "COMPONENT_BASE",
-      "$ref": "../../Operations/common.json#/definitions/VoltageUnitBasis"
+      "$ref": "../../Operations/common.json#/$defs/VoltageUnitBasis"
     },
     "voltage_setpoint": {
       "description": "Voltage setpoint at the sending end bus in kV, it has to be a `PV` bus. Units: kV. Units: per voltage_setpoint_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
@@ -42,9 +42,13 @@
       }
     },
     "max_shunt_current": {
-      "description": "Maximum shunt current at the sending end bus; entered at unity voltage. Units: MVA.",
+      "description": "Maximum shunt current at the sending end bus; entered at unity voltage. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVA"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "reactive_power_required": {
       "description": "Total reactive power required to hold voltage at sending bus, as a fraction in the range 0-1. Units: 1.",
@@ -52,9 +56,14 @@
       "x-unit": "1"
     },
     "max_reactive_power": {
-      "description": "Independent maximum reactive power ceiling; the device reactive limit is min(the current/susceptance law on max_shunt_current, this value). Non-binding at the 9999.0 default.",
+      "description": "Independent maximum reactive power ceiling; the device reactive limit is min(the current/susceptance law on max_shunt_current, this value). Non-binding at the 9999.0 default. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": 9999.0,
-      "type": "number"
+      "type": "number",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "shunt_control_type": {
       "description": "Device class selecting the reactive-limit law (SVC vs STATCOM).",
@@ -76,6 +85,10 @@
       "type": "number",
       "x-unit": "MVA"
     },
+    "power_units": {
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "$ref": "../../Core/common.json#/$defs/UnitSystem"
+    },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection model for FACTS control device, if any.",
       "type": [
@@ -92,7 +105,8 @@
     "max_shunt_current",
     "reactive_power_required",
     "voltage_setpoint",
-    "base_power"
+    "base_power",
+    "power_units"
   ],
   "title": "FACTSControlDevice",
   "type": "object"

@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Policy requirement defining an additional cost penalty per ton of CO2 produced in the eligible regions during the target year.",
   "properties": {
     "id": {
       "description": "ID for individual component.",

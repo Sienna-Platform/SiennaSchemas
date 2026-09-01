@@ -28,15 +28,31 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # dist/ is gitignored and absent on a fresh checkout; the generator reads it.
+      - name: Build bundled specs
+        run: python scripts/bundle_specs.py
+      # The reference pages are the entire site content and are generated here,
+      # never committed.
+      - name: Build the schema reference
+        run: python scripts/generate_schema_docs.py --clean
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      # just-the-docs is not in the GitHub Pages gem set this action builds
+      # with, so it is loaded as a remote theme instead -- jekyll-remote-theme
+      # is allowlisted for Pages builds.
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: ./
-          destination: ./_site
+          source: ./docs
+          destination: ./docs/_site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs/_site
 
   # Deployment job
   deploy:

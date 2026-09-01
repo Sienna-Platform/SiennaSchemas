@@ -44,6 +44,27 @@ jobs:
       - name: Check $ref and discriminator.mapping resolution
         run: python scripts/check_refs.py
 
+      # Layering gate: the InfrastructureCore package must carry no power
+      # semantics, so the data layer and the time series store never inherit
+      # ACBusType, ThermalFuels, or a cost curve. Membership is pinned in the
+      # script, so widening the generic layer is an explicit edit.
+      - name: Check package layering
+        run: python scripts/check_layering.py
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      # The docs are generated at deploy time and never committed, so they cannot go
+      # stale. What CAN break is the generator itself, when a schema grows a shape it
+      # does not handle. Building here surfaces that on the PR rather than at release.
+      - name: Build the schema reference
+        run: |
+          python scripts/generate_schema_docs.py --clean
+          bundle exec jekyll build --source docs --destination docs/_site --config docs/_config.yml
+
       # Instance-level gate: the checks above validate annotations and $ref
       # structure, not whether a real association row validates. This catches a
       # oneOf matching two branches and a wrong `required` list.
