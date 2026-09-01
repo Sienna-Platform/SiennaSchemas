@@ -15,8 +15,13 @@
       "type": "boolean"
     },
     "status": {
-      "description": "Initial commitment condition at the start of a simulation (`true` = on or `false` = off).",
-      "type": "boolean"
+      "description": "Operating state of the unit at the start of a simulation.",
+      "$ref": "../../Operations/common.json#/$defs/OperationalStates"
+    },
+    "commitment_mode": {
+      "description": "Why the unit is committed.",
+      "$ref": "../../Operations/common.json#/$defs/CommitmentModes",
+      "default": "MARKET"
     },
     "bus": {
       "description": "ID of the bus that this component is connected to.",
@@ -149,7 +154,7 @@
       "$ref": "../../Core/common.json#/$defs/UnitSystem"
     },
     "time_at_status": {
-      "description": "Time the generator has been on or off, as indicated by `status`. Units: min.",
+      "description": "Time the generator has been in its current status. Units: min.",
       "default": 600000.0,
       "type": "number",
       "x-unit": "min"
