@@ -19,9 +19,9 @@
       "$ref": "../../Operations/common.json#/$defs/OperationalStates"
     },
     "commitment_mode": {
-      "description": "Why the unit is committed.",
+      "description": "Commitment mode of the unit.",
       "$ref": "../../Operations/common.json#/$defs/CommitmentModes",
-      "default": "MARKET"
+      "default": "COMMITTED"
     },
     "bus": {
       "description": "ID of the bus that this component is connected to.",
@@ -158,11 +158,6 @@
       "default": 600000.0,
       "type": "number",
       "x-unit": "min"
-    },
-    "must_run": {
-      "description": "Set to `true` if the unit is must run.",
-      "default": false,
-      "type": "boolean"
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection device, if any.",

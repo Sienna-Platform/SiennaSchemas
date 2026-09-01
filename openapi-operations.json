@@ -227,6 +227,12 @@
       "LoadConformity": {
         "$ref": "Operations/common.json#/$defs/LoadConformity"
       },
+      "OperationalStates": {
+        "$ref": "Operations/common.json#/$defs/OperationalStates"
+      },
+      "CommitmentModes": {
+        "$ref": "Operations/common.json#/$defs/CommitmentModes"
+      },
       "BilateralProduct": {
         "$ref": "Operations/common.json#/$defs/BilateralProduct"
       },

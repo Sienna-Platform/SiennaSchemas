@@ -101,7 +101,7 @@
       "type": "string"
     },
     "OperationalStates": {
-      "description": "The running on/off lifecycle of an in-service committable unit, mutually exclusive. OFFLINE: shut down and not synchronized. STARTUP: in its start-up sequence. ONLINE: synchronized and able to produce. SHUTDOWN: in its shut-down sequence. Availability is not one of these values: a unit on outage is `available = false`; an OFFLINE unit with `available = true` is in service and eligible for re-commitment and off-line ancillary services. Names are market-neutral; each market's own status codes map onto this enum in the parser for that market.",
+      "description": "The running on/off lifecycle of an in-service committable unit, mutually exclusive. OFFLINE: shut down and not synchronized. STARTUP: in its start-up sequence. ONLINE: synchronized and able to produce. SHUTDOWN: in its shut-down sequence. Availability is not one of these values: a unit on outage is `available = false`; an OFFLINE unit with `available = true` is in service and eligible for re-commitment and off-line ancillary services.",
       "enum": [
         "OFFLINE",
         "STARTUP",
@@ -112,15 +112,13 @@
       "type": "string"
     },
     "CommitmentModes": {
-      "description": "Why a committable unit is (or would be) committed, orthogonal to its operational state. UNCOMMITTED: no commitment applies (on outage or mid-transition). MARKET: economically committed by the market clearing. SELF: self-scheduled by its owner. RELIABILITY: committed by the operator's reliability process (RUC, RAC, SRE, exceptional dispatch). MUST_RUN: committed under a reliability-must-run or equivalent contract. EMERGENCY: available only for emergency dispatch. TESTING: running a test and blocked from economic dispatch. MUST_RUN is the commitment reason; the `must_run` property remains the modeling constraint that forces the unit on.",
+      "description": "Why a committable unit is (or would be) committed, orthogonal to its operational state. UNCOMMITTED: not committed, offline but available. COMMITTED: committed by the scheduling process (a planning model's commitment decision or a cleared schedule). SELF_SCHEDULED: scheduled by its owner rather than by the scheduling process. RELIABILITY: committed by the system operator for reliability rather than by the scheduling process. MUST_RUN: required to run by contract or operating constraint.",
       "enum": [
         "UNCOMMITTED",
-        "MARKET",
-        "SELF",
+        "COMMITTED",
+        "SELF_SCHEDULED",
         "RELIABILITY",
-        "MUST_RUN",
-        "EMERGENCY",
-        "TESTING"
+        "MUST_RUN"
       ],
       "title": "CommitmentModes",
       "type": "string"
