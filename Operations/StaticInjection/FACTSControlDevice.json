@@ -56,9 +56,14 @@
       "x-unit": "1"
     },
     "max_reactive_power": {
-      "description": "Independent maximum reactive power ceiling; the device reactive limit is min(the current/susceptance law on max_shunt_current, this value). Non-binding at the 9999.0 default.",
+      "description": "Independent maximum reactive power ceiling; the device reactive limit is min(the current/susceptance law on max_shunt_current, this value). Non-binding at the 9999.0 default. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": 9999.0,
-      "type": "number"
+      "type": "number",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      }
     },
     "shunt_control_type": {
       "description": "Device class selecting the reactive-limit law (SVC vs STATCOM).",

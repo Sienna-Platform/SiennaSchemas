@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A High Voltage DC transmission line for modeling DC transmission networks.\n\nThis line must be connected to a `DCBus` on each end. It uses a T-Model of the line impedance. This is suitable for operational simulations with a multi-terminal DC network.",
+  "description": "A High Voltage DC transmission line for modeling DC transmission networks.\n\nThis line must be connected to a `DCBus` on each end. It uses a T-Model of the line impedance. This is suitable for operational simulations with a multi-terminal DC network. This line has no independent per-component power base, so its power fields are always natural units.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
