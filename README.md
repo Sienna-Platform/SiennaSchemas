@@ -1,6 +1,6 @@
 # SiennaSchemas
 
-[![Deploy Documentation](https://github.com/Sienna-Platform/SiennaSchemas/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://github.com/Sienna-Platform/SiennaSchemas/actions/workflows/jekyll-gh-pages.yml)
+[![Deploy Documentation](https://github.com/Sienna-Platform/SiennaSchemas/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://sienna-platform.github.io/SiennaSchemas/)
 [![Validate Schemas](https://github.com/Sienna-Platform/SiennaSchemas/actions/workflows/validate-schemas.yml/badge.svg)](https://github.com/Sienna-Platform/SiennaSchemas/actions/workflows/validate-schemas.yml)
 
 Machine-readable definitions of the things in an electric power system — buses, generators,
