@@ -78,11 +78,13 @@ jobs:
         run: python scripts/check_infrastore_parity.py
 
       # TODO after psy6 merges to PowerSystems main: drop `ref`
-      - name: Checkout PowerSystems (psy6) for parity gate
+      # CO-DEV PIN (temporary): LossCurve on the loss fields lands with the PowerSystems
+      # PR. Revert to `psy6` once it merges.
+      - name: Checkout PowerSystems (lk/loss-curve-type) for parity gate
         uses: actions/checkout@v4
         with:
           repository: Sienna-Platform/PowerSystems.jl
-          ref: psy6
+          ref: lk/loss-curve-type
           path: PowerSystems.jl
           fetch-depth: 1
 

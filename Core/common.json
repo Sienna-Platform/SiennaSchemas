@@ -65,6 +65,24 @@
       "title": "ComplexNumber",
       "type": "object"
     },
+    "ConverterLossCurve": {
+      "description": "Converter losses as a function of flow, in the form InfrastructureSystems calls a `LossCurve`. Wraps an `InputOutputCurve` -- linear or quadratic -- with `power_units` declaring the basis of BOTH axes: unlike a cost curve, the y axis of a loss curve is power in the same base as the x axis, so a change of base rescales both.",
+      "properties": {
+        "power_units": {
+          "default": "NATURAL_UNITS",
+          "$ref": "#/$defs/UnitSystem"
+        },
+        "value_curve": {
+          "$ref": "#/$defs/InputOutputCurve"
+        }
+      },
+      "required": [
+        "value_curve",
+        "power_units"
+      ],
+      "title": "ConverterLossCurve",
+      "type": "object"
+    },
     "CostCurve": {
       "description": "Variable operation cost of a device expressed directly in currency. Wraps a `ValueCurve` that may be in input-output, incremental, or average-rate form, with `power_units` declaring the basis of the x axis and `vom_cost` adding a proportional variable operation and maintenance term.",
       "properties": {
@@ -1413,6 +1431,24 @@
           "proportional_term": 0
         }
       },
+      "type": "object"
+    },
+    "TwoTerminalLossCurve": {
+      "description": "Loss model of a two-terminal HVDC line as a function of flow, in the form InfrastructureSystems calls a `LossCurve`. Wraps a `TwoTerminalLoss` with `power_units` declaring the basis of BOTH axes: unlike a cost curve, the y axis of a loss curve is power in the same base as the x axis, so a change of base rescales both.",
+      "properties": {
+        "power_units": {
+          "default": "NATURAL_UNITS",
+          "$ref": "#/$defs/UnitSystem"
+        },
+        "value_curve": {
+          "$ref": "#/$defs/TwoTerminalLoss"
+        }
+      },
+      "required": [
+        "value_curve",
+        "power_units"
+      ],
+      "title": "TwoTerminalLossCurve",
       "type": "object"
     },
     "UnitSystem": {

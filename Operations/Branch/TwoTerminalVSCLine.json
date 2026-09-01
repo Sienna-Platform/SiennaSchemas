@@ -163,14 +163,17 @@
     "converter_loss_from": {
       "description": "Loss model coefficients in the `from` bus converter. It accepts a linear model or quadratic. Same converter data is used in both ends.",
       "default": {
-        "curve_type": "INPUT_OUTPUT",
-        "function_data": {
-          "function_type": "LINEAR",
-          "constant_term": 0,
-          "proportional_term": 0
+        "power_units": "NATURAL_UNITS",
+        "value_curve": {
+          "curve_type": "INPUT_OUTPUT",
+          "function_data": {
+            "function_type": "LINEAR",
+            "constant_term": 0,
+            "proportional_term": 0
+          }
         }
       },
-      "$ref": "../../Core/common.json#/$defs/InputOutputCurve"
+      "$ref": "../../Core/common.json#/$defs/ConverterLossCurve"
     },
     "max_dc_current_from": {
       "description": "Maximum stable dc current limits. Units: A.",
@@ -313,14 +316,17 @@
     "converter_loss_to": {
       "description": "Loss model coefficients in the `to` bus converter. It accepts a linear model or quadratic. Same converter data is used in both ends.",
       "default": {
-        "curve_type": "INPUT_OUTPUT",
-        "function_data": {
-          "function_type": "LINEAR",
-          "constant_term": 0,
-          "proportional_term": 0
+        "power_units": "NATURAL_UNITS",
+        "value_curve": {
+          "curve_type": "INPUT_OUTPUT",
+          "function_data": {
+            "function_type": "LINEAR",
+            "constant_term": 0,
+            "proportional_term": 0
+          }
         }
       },
-      "$ref": "../../Core/common.json#/$defs/InputOutputCurve"
+      "$ref": "../../Core/common.json#/$defs/ConverterLossCurve"
     },
     "max_dc_current_to": {
       "description": "Maximum stable dc current limits. Units: A.",
