@@ -71,9 +71,19 @@
       "x-unit": "MW"
     },
     "capacity_limits": {
-      "description": "Minimum and maximum allowable installed capacity for a technology. Units: MW.",
-      "$ref": "../../Core/common.json#/$defs/MinMax",
-      "x-unit": "MW"
+      "description": "Minimum and maximum allowable installed capacity for a technology, given either as a single bound applied to all capacity or as a mapping from a float key (stringified) to the bound that applies at that key. Units: MW.",
+      "x-unit": "MW",
+      "anyOf": [
+        {
+          "$ref": "../../Core/common.json#/$defs/MinMax"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "../../Core/common.json#/$defs/MinMax"
+          }
+        }
+      ]
     },
     "outage_factor": {
       "description": "Planned and forced outage factors for a technology, each a fraction of total availability (the fraction of hours in a year the technology is unavailable).",

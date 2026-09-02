@@ -68,19 +68,49 @@
       "x-unit": "MWh"
     },
     "capacity_limits_charge": {
-      "description": "Allowable installed power capacity for charging of a storage technology. Units: MW.",
-      "$ref": "../../Core/common.json#/$defs/MinMax",
-      "x-unit": "MW"
+      "description": "Allowable installed power capacity for charging of a storage technology, given either as a single bound applied to all capacity or as a mapping from a float key (stringified) to the bound that applies at that key. Units: MW.",
+      "x-unit": "MW",
+      "anyOf": [
+        {
+          "$ref": "../../Core/common.json#/$defs/MinMax"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "../../Core/common.json#/$defs/MinMax"
+          }
+        }
+      ]
     },
     "capacity_limits_discharge": {
-      "description": "Allowable installed power capacity for discharging of a storage technology. Units: MW.",
-      "$ref": "../../Core/common.json#/$defs/MinMax",
-      "x-unit": "MW"
+      "description": "Allowable installed power capacity for discharging of a storage technology, given either as a single bound applied to all capacity or as a mapping from a float key (stringified) to the bound that applies at that key. Units: MW.",
+      "x-unit": "MW",
+      "anyOf": [
+        {
+          "$ref": "../../Core/common.json#/$defs/MinMax"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "../../Core/common.json#/$defs/MinMax"
+          }
+        }
+      ]
     },
     "capacity_limits_energy": {
-      "description": "Allowable installed energy capacity for a storage technology. Units: MWh.",
-      "$ref": "../../Core/common.json#/$defs/MinMax",
-      "x-unit": "MWh"
+      "description": "Allowable installed energy capacity for a storage technology, given either as a single bound applied to all capacity or as a mapping from a float key (stringified) to the bound that applies at that key. Units: MWh.",
+      "x-unit": "MWh",
+      "anyOf": [
+        {
+          "$ref": "../../Core/common.json#/$defs/MinMax"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "../../Core/common.json#/$defs/MinMax"
+          }
+        }
+      ]
     },
     "duration_limits": {
       "description": "Minimum and maximum duration limits (energy to discharge capacity ratio) for a storage technology (minutes). Units: min.",
