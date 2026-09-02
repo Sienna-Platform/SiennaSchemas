@@ -40,7 +40,7 @@
     },
     "voltage_limits": {
       "description": "Limits on the voltage variation as multiples of `base_voltage`. in psy5 a required param with an option to be nothing Units: pu.",
-      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "$ref": "../common.json#/$defs/MinMax",
       "x-unit": "pu",
       "x-quantity": "Voltage",
       "x-unit-base": "base_voltage"
