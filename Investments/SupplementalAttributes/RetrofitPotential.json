@@ -12,10 +12,24 @@
       "items": {
         "type": "string"
       }
+    },
+    "retrofit_fraction": {
+      "description": "Fraction of existing capacity that is eligible for retrofits. Units: 1.",
+      "type": "number",
+      "default": 1.0,
+      "x-unit": "1",
+      "x-quantity": "Fraction"
+    },
+    "retrofit_cost": {
+      "description": "Cost associated with retrofitting the eligible generators. Units: USD/MW.",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
+      "x-unit": "USD/MW"
     }
   },
   "required": [
-    "id"
+    "id",
+    "eligible_generators",
+    "retrofit_cost"
   ],
   "title": "RetrofitPotential",
   "type": "object"

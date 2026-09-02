@@ -8,12 +8,6 @@
   "paths": {},
   "components": {
     "schemas": {
-      "AggregateRetirementPotential": {
-        "$ref": "Investments/SupplementalAttributes/AggregateRetirementPotential.json"
-      },
-      "AggregateRetrofitPotential": {
-        "$ref": "Investments/SupplementalAttributes/AggregateRetrofitPotential.json"
-      },
       "AggregateTransportTechnology": {
         "$ref": "Investments/Technologies/AggregateTransportTechnology.json"
       },
