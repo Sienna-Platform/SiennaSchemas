@@ -14,6 +14,9 @@
       "ACBusType": {
         "$ref": "Core/common.json#/$defs/ACBusType"
       },
+      "EmissionsData": {
+        "$ref": "Core/SupplementalAttributes/EmissionsData.json"
+      },
       "Area": {
         "$ref": "Core/Topology/Area.json"
       },

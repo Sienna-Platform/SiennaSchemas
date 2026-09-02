@@ -37,14 +37,6 @@
         "$ref": "../../Core/common.json#/$defs/ThermalFuels"
       }
     },
-    "co2": {
-      "description": "Carbon intensity of fuel. Units: t/MMBtu.",
-      "type": "object",
-      "additionalProperties": {
-        "type": "number"
-      },
-      "x-unit": "t/MMBtu"
-    },
     "cofire_start_limits": {
       "description": "Minimum and maximum blending level of each fuel during start-up process for multi-fuel generator. Units: 1.",
       "type": "object",

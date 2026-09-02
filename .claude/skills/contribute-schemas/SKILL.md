@@ -63,7 +63,7 @@ inline. Do not factor them out into a shared base and `$ref` it — that is the
 change this repo has consistently declined to make.
 
 - `allOf` is not composition here. The one use in the tree
-  (`Operations/SupplementalAttributes/EmissionsData.json`) is an `if`/`then`
+  (`Core/SupplementalAttributes/EmissionsData.json`) is an `if`/`then`
   conditional constraint, not a supertype.
 - `oneOf` + `discriminator` is for **value** unions — cost curves, function
   data, the time series wrapper. It never gives components a common parent.
