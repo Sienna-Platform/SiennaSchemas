@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Supply technology that supports storage co-located with wind and solar generation. Capital costs, operating costs, capacity limits, and lifetimes are carried separately for the solar, wind, storage, and inverter portions, which share one grid connection.",
+  "description": "Supply technology co-located with storage behind a shared grid connection. The generation and storage portions are referenced by id (`supply_technology` and `storage_technology`); the inverter that couples them to the grid carries its own capacity limits, capital and operating costs, and efficiency.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -80,7 +80,9 @@
     "inverter_supply_ratio",
     "name",
     "operation_costs_inverter",
-    "power_systems_type"
+    "power_systems_type",
+    "storage_technology",
+    "supply_technology"
   ],
   "title": "ColocatedSupplyStorageTechnology",
   "type": "object"
