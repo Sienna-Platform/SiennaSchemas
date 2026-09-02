@@ -3,16 +3,16 @@
   "info": {
     "title": "PowerInvestmentsOpenAPIModels",
     "version": "1.0.0",
-    "description": "Power system investments models: Technologies, Financials, Requirements, Attributes, Regions, and Portfolio components"
+    "description": "Power system investments models: Technologies, Financials, Requirements, SupplementalAttributes, and Portfolio components"
   },
   "paths": {},
   "components": {
     "schemas": {
       "AggregateRetirementPotential": {
-        "$ref": "Investments/Attributes/AggregateRetirementPotential.json"
+        "$ref": "Investments/SupplementalAttributes/AggregateRetirementPotential.json"
       },
       "AggregateRetrofitPotential": {
-        "$ref": "Investments/Attributes/AggregateRetrofitPotential.json"
+        "$ref": "Investments/SupplementalAttributes/AggregateRetrofitPotential.json"
       },
       "AggregateTransportTechnology": {
         "$ref": "Investments/Technologies/AggregateTransportTechnology.json"
@@ -39,7 +39,7 @@
         "$ref": "Investments/Requirements/EnergyShareRequirements.json"
       },
       "ExistingDevices": {
-        "$ref": "Investments/Attributes/ExistingDevices.json"
+        "$ref": "Investments/SupplementalAttributes/ExistingDevices.json"
       },
       "HourlyMatching": {
         "$ref": "Investments/Requirements/HourlyMatching.json"
@@ -56,17 +56,14 @@
       "NodalHVDCTransportTechnology": {
         "$ref": "Investments/Technologies/NodalHVDCTransportTechnology.json"
       },
-      "Node": {
-        "$ref": "Investments/Regions/Node.json"
-      },
       "PortfolioFinancialData": {
         "$ref": "Investments/Financials/PortfolioFinancialData.json"
       },
       "RetirementPotential": {
-        "$ref": "Investments/Attributes/RetirementPotential.json"
+        "$ref": "Investments/SupplementalAttributes/RetirementPotential.json"
       },
       "RetrofitPotential": {
-        "$ref": "Investments/Attributes/RetrofitPotential.json"
+        "$ref": "Investments/SupplementalAttributes/RetrofitPotential.json"
       },
       "StorageTechnology": {
         "$ref": "Investments/Technologies/StorageTechnology.json"
@@ -78,10 +75,7 @@
         "$ref": "Investments/Financials/TechnologyFinancialData.json"
       },
       "TopologyMapping": {
-        "$ref": "Investments/Attributes/TopologyMapping.json"
-      },
-      "Zone": {
-        "$ref": "Investments/Regions/Zone.json"
+        "$ref": "Investments/SupplementalAttributes/TopologyMapping.json"
       }
     }
   }
