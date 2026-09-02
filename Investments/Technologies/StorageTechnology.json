@@ -41,20 +41,9 @@
       "description": "Storage Technology Type.",
       "$ref": "../../Core/common.json#/$defs/StorageTech"
     },
-    "capital_costs_energy": {
-      "description": "Capital costs for investing in a storage technology's energy capacity. Units: USD/MWh.",
-      "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "x-unit": "USD/MWh"
-    },
-    "capital_costs_charge": {
-      "description": "Capital costs for investing in a storage technology's charge capacity. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "x-unit": "USD/MW"
-    },
-    "capital_costs_discharge": {
-      "description": "Capital costs for investing in a storage technology's discharge capacity. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "x-unit": "USD/MW"
+    "capital_costs": {
+      "description": "Capital and interconnection cost for investing in a storage technology's charge, discharge, and energy capacity (charge and discharge in USD/MW, energy in USD/MWh).",
+      "$ref": "../../Core/common.json#/$defs/StorageCapitalCost"
     },
     "operation_costs": {
       "description": "Fixed and variable O&M costs for a storage technology. Units: USD/MWh.",

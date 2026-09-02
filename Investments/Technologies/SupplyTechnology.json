@@ -56,9 +56,8 @@
       "x-quantity": "Fraction"
     },
     "capital_costs": {
-      "description": "Capital costs for investing in a technology. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "x-unit": "USD/MW"
+      "description": "Capital and interconnection cost for investing in a technology (capital cost in USD/MW).",
+      "$ref": "../../Core/common.json#/$defs/CapitalCost"
     },
     "operation_costs": {
       "description": "Fixed and variable O&M costs for a technology. Units: USD/MWh.",
@@ -77,11 +76,8 @@
       "x-unit": "MW"
     },
     "outage_factor": {
-      "description": "Derating factor to account for planned or forced outages of a technology. Fraction of hours in a year where technology is unavailable. Units: 1.",
-      "type": "number",
-      "default": 1.0,
-      "x-unit": "1",
-      "x-quantity": "Fraction"
+      "description": "Planned and forced outage factors for a technology, each a fraction of total availability (the fraction of hours in a year the technology is unavailable).",
+      "$ref": "../../Core/common.json#/$defs/OutageFactors"
     },
     "min_generation_fraction": {
       "description": "Minimum generation as a fraction of total capacity. Units: 1.",

@@ -30,9 +30,8 @@
       "$ref": "../Financials/TechnologyFinancialData.json"
     },
     "capital_costs_solar": {
-      "description": "Capital costs for investing in a solar technology. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "x-unit": "USD/MW"
+      "description": "Capital and interconnection cost for investing in a solar technology (capital cost in USD/MW).",
+      "$ref": "../../Core/common.json#/$defs/CapitalCost"
     },
     "operation_costs_solar": {
       "description": "Fixed and variable O&M costs for the solar component. Units: USD/MWh.",
@@ -50,9 +49,8 @@
       "x-unit": "yr"
     },
     "capital_costs_wind": {
-      "description": "Capital costs for investing in a wind technology. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "x-unit": "USD/MW"
+      "description": "Capital and interconnection cost for investing in a wind technology (capital cost in USD/MW).",
+      "$ref": "../../Core/common.json#/$defs/CapitalCost"
     },
     "operation_costs_wind": {
       "description": "Fixed and variable O&M costs for the wind component. Units: USD/MWh.",
@@ -134,9 +132,8 @@
       "x-unit": "MW"
     },
     "capital_costs_inverter": {
-      "description": "Capital costs for investing in inverter capacity. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "x-unit": "USD/MW"
+      "description": "Capital and interconnection cost for investing in inverter capacity (capital cost in USD/MW).",
+      "$ref": "../../Core/common.json#/$defs/CapitalCost"
     },
     "operation_costs_inverter": {
       "description": "Operational costs for using inverter in co-located systems. Units: USD/MWh.",

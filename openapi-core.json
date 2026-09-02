@@ -14,8 +14,14 @@
       "ACBusType": {
         "$ref": "Core/common.json#/$defs/ACBusType"
       },
-      "EmissionsData": {
-        "$ref": "Core/SupplementalAttributes/EmissionsData.json"
+      "CapitalCost": {
+        "$ref": "Core/common.json#/$defs/CapitalCost"
+      },
+      "StorageCapitalCost": {
+        "$ref": "Core/common.json#/$defs/StorageCapitalCost"
+      },
+      "OutageFactors": {
+        "$ref": "Core/common.json#/$defs/OutageFactors"
       },
       "Area": {
         "$ref": "Core/Topology/Area.json"
@@ -37,6 +43,9 @@
       },
       "DCBus": {
         "$ref": "Core/Topology/DCBus.json"
+      },
+      "EmissionsData": {
+        "$ref": "Core/SupplementalAttributes/EmissionsData.json"
       },
       "EnergyUnitBasis": {
         "$ref": "Core/common.json#/$defs/EnergyUnitBasis"
