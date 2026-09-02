@@ -24,11 +24,24 @@ Resolution rules
   are merged onto a copy of the resolved referent. **Sibling keys win over
   referent keys on conflict** (so a property's own ``description`` and ``x-unit``
   override the shared definition's).
-* ``Core/common.json#/$defs/<Name>`` targets are hoisted once into a
-  top-level ``$defs`` block of the bundle. A ref to such a definition that
+* ``<common file>#/$defs/<Name>`` targets (``COMMON_FILES`` below) are hoisted once
+  into a top-level ``$defs`` block of the bundle. A ref to such a definition that
   has **no** siblings is rewritten to the internal ``#/$defs/<Name>``.
   A ref that **does** carry siblings is inlined in place (a merged copy) because
   the merged object is unique to that use site.
+* A whole-file ``$ref`` (no fragment) that resolves to a file this same domain's
+  own ``components.schemas`` already names, and carries **no** siblings, is
+  rewritten to ``#/components/schemas/<Name>`` instead of inlining a second copy.
+  Without this a ``oneOf`` branch that ``$ref``s another named model file -- the
+  six ``TimeSeriesAssociation`` variants are exactly this -- gets a fresh
+  anonymous inline copy of that model on every use, one per branch, instead of
+  pointing at the model already generated for it. openapi-generator hits the
+  same duplication and needs an ``inlineSchemaNameMappings`` entry per copy to
+  rename it back; OpenAPI.jl 1.0's native generator has no equivalent
+  post-processing hook, so the duplication has to be resolved here instead. A
+  ref that *does* carry siblings (a field-local ``description``/``default``
+  overriding the shared definition's) is deliberately exempt -- it is not
+  actually the same content, so redirecting it would silently drop the override.
 * Refs already internal to the spec (``#/...``) are left untouched -- draft-07
   tooling handles those.
 
@@ -67,7 +80,7 @@ DOMAINS = [
 # Files whose top-level `$defs` block is addressed by other schemas via
 # a two-token `<file>#/$defs/<Name>` external ref, and so is hoisted
 # into a bundle's own `$defs` rather than left as a dangling pointer.
-COMMON_FILES = ["Core/common.json", "TimeSeries/common.json"]
+COMMON_FILES = ["Core/common.json", "TimeSeries/common.json", "Operations/common.json"]
 
 # Shared across all five domain bundles: common.json (and any multiply-$ref'd
 # file) is parsed from disk once. Keyed by resolved absolute path.
@@ -123,6 +136,18 @@ class Bundler:
     """
 
     def __init__(self):
+        # Resolved path -> name, for every components.schemas entry that is a bare
+        # external-file $ref (no fragment, no siblings) -- i.e. this domain's own named
+        # top-level models. Populated per-spec in bundle(), before walk() runs, so any
+        # OTHER $ref elsewhere in the same spec that resolves to one of these files can be
+        # redirected to '#/components/schemas/<Name>' instead of inlining a duplicate
+        # anonymous copy. Without this, a oneOf branch that $refs e.g. SingleTimeSeries.json
+        # (TimeSeriesAssociation's six variants are exactly this) gets a fresh anonymous
+        # inline copy instead of pointing at the SingleTimeSeries the file already names --
+        # openapi-generator hit the same duplication and needed
+        # inlineSchemaNameMappings to rename the copies back; OpenAPI.jl 1.0's native
+        # generator has no equivalent config layer, so the duplication has to be fixed here.
+        self._component_by_path = {}
         # Names of common-file definitions pulled into the bundle's
         # `$defs`, mapped to their rewritten body.
         self.hoisted = {}
@@ -252,13 +277,18 @@ class Bundler:
                 }
             if "$ref" in node and is_external(node["$ref"]):
                 siblings = {k: v for k, v in node.items() if k != "$ref"}
-                content, target, _, common_name = self._resolve_external(
+                content, target, fragment, common_name = self._resolve_external(
                     node["$ref"], base_path
                 )
                 if common_name is not None and not siblings:
                     # No siblings: hoist and point to internal definition.
                     self._hoist_common_definition(common_name, target)
                     return {"$ref": f"#/$defs/{common_name}"}
+                component_name = self._component_by_path.get(target)
+                if fragment == "" and component_name is not None and not siblings:
+                    # Whole-file ref to a file this same spec already names in
+                    # components.schemas: point there instead of inlining a duplicate.
+                    return {"$ref": f"#/components/schemas/{component_name}"}
                 # Inline the resolved content (deep-resolved in its own file
                 # context), then merge siblings on top (siblings win).
                 resolved = self.walk(content, target)
@@ -289,7 +319,26 @@ class Bundler:
 
     def bundle(self, spec_path):
         spec = load_json(spec_path)
+        schemas = spec.get("components", {}).get("schemas", {})
+        # name -> resolved target path, for every components.schemas entry that is a bare
+        # whole-file external $ref (no fragment, no siblings): this spec's own named
+        # top-level models. Populated before walk() runs so a $ref anywhere else in the
+        # spec targeting one of these same files gets redirected instead of re-inlined
+        # (see walk()'s external-ref branch).
+        bare_refs = {}
+        for name, node in schemas.items():
+            if isinstance(node, dict) and set(node) == {"$ref"} and is_external(node["$ref"]):
+                filepart, fragment = split_ref(node["$ref"])
+                if fragment == "":
+                    target = (spec_path.parent / filepart).resolve()
+                    self._component_by_path[target] = name
+                    bare_refs[name] = target
+
         bundled = self.walk(spec, spec_path)
+        for name, target in bare_refs.items():
+            # walk() would apply the same redirect to this entry's own $ref, pointing it
+            # at itself -- re-inline the real content directly instead.
+            bundled["components"]["schemas"][name] = self.walk(load_json(target), target)
         if self.hoisted:
             defs = {name: self.hoisted[name] for name in sorted(self.hoisted)}
             bundled["$defs"] = defs
