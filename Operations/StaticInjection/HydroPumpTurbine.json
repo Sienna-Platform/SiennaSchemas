@@ -207,10 +207,10 @@
       "x-unit": "1",
       "x-quantity": "Dimensionless"
     },
-    "must_run": {
-      "description": "Whether the unit must run (i.e., cannot be curtailed).",
-      "default": false,
-      "type": "boolean"
+    "commitment_mode": {
+      "description": "Commitment mode of the unit.",
+      "$ref": "../../Operations/common.json#/$defs/CommitmentModes",
+      "default": "COMMITTED"
     },
     "prime_mover_type": {
       "description": "Prime mover technology according to EIA 923.",

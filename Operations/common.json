@@ -100,6 +100,29 @@
       "title": "LoadConformity",
       "type": "string"
     },
+    "OperationalStates": {
+      "description": "The running on/off lifecycle of an in-service committable unit, mutually exclusive. OFFLINE: shut down and not synchronized. STARTUP: in its start-up sequence. ONLINE: synchronized and able to produce. SHUTDOWN: in its shut-down sequence. Availability is not one of these values: a unit on outage is `available = false`; an OFFLINE unit with `available = true` is in service and eligible for re-commitment and off-line ancillary services.",
+      "enum": [
+        "OFFLINE",
+        "STARTUP",
+        "ONLINE",
+        "SHUTDOWN"
+      ],
+      "title": "OperationalStates",
+      "type": "string"
+    },
+    "CommitmentModes": {
+      "description": "Why a committable unit is (or would be) committed, orthogonal to its operational state. UNCOMMITTED: not committed, offline but available. COMMITTED: committed by the scheduling process (a planning model's commitment decision or a cleared schedule). SELF_SCHEDULED: scheduled by its owner rather than by the scheduling process. RELIABILITY: committed by the system operator for reliability rather than by the scheduling process. MUST_RUN: required to run by contract or operating constraint.",
+      "enum": [
+        "UNCOMMITTED",
+        "COMMITTED",
+        "SELF_SCHEDULED",
+        "RELIABILITY",
+        "MUST_RUN"
+      ],
+      "title": "CommitmentModes",
+      "type": "string"
+    },
     "BilateralProduct": {
       "description": "Traded product of a bilateral transaction. ENERGY: energy. CAPACITY: capacity. ANCILLARY_SERVICE: an ancillary service. LOAD_OBLIGATION: a load obligation transfer.",
       "enum": [
