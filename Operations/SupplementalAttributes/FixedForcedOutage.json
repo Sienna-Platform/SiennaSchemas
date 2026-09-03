@@ -18,6 +18,14 @@
       "uniqueItems": true,
       "default": [],
       "description": "IDs of devices whose post-contingency state should be modeled when this outage occurs. Empty by default; semantics of an empty list are decided by the downstream consumer."
+    },
+    "identifier": {
+      "description": "Optional user-supplied identifier for the outage, such as a name or a block id. Null when not set.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null
     }
   },
   "required": [
