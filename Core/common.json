@@ -694,6 +694,15 @@
             2
           ],
           "default": 0
+        },
+        "curve_multihour": {
+          "description": "Multi-hour block indicator for the bid: 0 = SINGLE_HOUR (default; each hour of the bid clears independently); 1 = MULTI_HOUR (the bid must be awarded as one block across every hour it covers). Corresponds to ERCOT's DAM PriceCurve multiHourBlock field (false/true). Independent of curve_style: curve_style is the quantity structure, curve_multihour is the time structure, and they compose.",
+          "type": "integer",
+          "enum": [
+            0,
+            1
+          ],
+          "default": 0
         }
       },
       "required": [
@@ -759,6 +768,15 @@
             0,
             1,
             2
+          ],
+          "default": 0
+        },
+        "curve_multihour": {
+          "description": "Multi-hour block indicator for the bid: 0 = SINGLE_HOUR (default; each hour of the bid clears independently); 1 = MULTI_HOUR (the bid must be awarded as one block across every hour it covers). Corresponds to ERCOT's DAM PriceCurve multiHourBlock field (false/true). Independent of curve_style: curve_style is the quantity structure, curve_multihour is the time structure, and they compose.",
+          "type": "integer",
+          "enum": [
+            0,
+            1
           ],
           "default": 0
         }
