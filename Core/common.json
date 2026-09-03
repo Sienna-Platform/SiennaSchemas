@@ -686,7 +686,7 @@
           "default": false
         },
         "curve_style": {
-          "description": "Curve-clearing style for the bid: 0 = CURVE (ordinary divisible price-setting curve, default); 1 = FIXED (clears as one indivisible all-or-nothing package over its period); 2 = VARIABLE (divisible quantity, block-priced, cannot set the settlement-point price). Corresponds to ERCOT's DAM PriceCurve curveStyle field (CURVE/FIXED/VARIABLE). A non-zero value is mutually exclusive with incremental_slope/decremental_slope.",
+          "description": "Curve-clearing style for the bid: 0 = CURVE (ordinary divisible price-setting curve, default); 1 = FIXED (clears as one indivisible all-or-nothing package over its period); 2 = VARIABLE (divisible quantity, block-priced, cannot set the settlement-point price). A non-zero value is mutually exclusive with incremental_slope/decremental_slope.",
           "type": "integer",
           "enum": [
             0,
@@ -696,7 +696,7 @@
           "default": 0
         },
         "curve_multihour": {
-          "description": "Multi-hour block indicator for the bid: 0 = SINGLE_HOUR (default; each hour of the bid clears independently); 1 = MULTI_HOUR (the bid must be awarded as one block across every hour it covers). Corresponds to ERCOT's DAM PriceCurve multiHourBlock field (false/true). Independent of curve_style: curve_style is the quantity structure, curve_multihour is the time structure, and they compose.",
+          "description": "Multi-hour block indicator for the bid: 0 = SINGLE_HOUR (default; each hour of the bid clears independently); 1 = MULTI_HOUR (the bid must be awarded as one block across every hour it covers). Independent of curve_style: curve_style is the quantity structure, curve_multihour is the time structure, and they compose.",
           "type": "integer",
           "enum": [
             0,
@@ -762,7 +762,7 @@
           "default": false
         },
         "curve_style": {
-          "description": "Curve-clearing style for the bid: 0 = CURVE (ordinary divisible price-setting curve, default); 1 = FIXED (clears as one indivisible all-or-nothing package over its period); 2 = VARIABLE (divisible quantity, block-priced, cannot set the settlement-point price). Corresponds to ERCOT's DAM PriceCurve curveStyle field (CURVE/FIXED/VARIABLE). A non-zero value is mutually exclusive with incremental_slope/decremental_slope.",
+          "description": "Curve-clearing style for the bid: 0 = CURVE (ordinary divisible price-setting curve, default); 1 = FIXED (clears as one indivisible all-or-nothing package over its period); 2 = VARIABLE (divisible quantity, block-priced, cannot set the settlement-point price). A non-zero value is mutually exclusive with incremental_slope/decremental_slope.",
           "type": "integer",
           "enum": [
             0,
@@ -772,7 +772,7 @@
           "default": 0
         },
         "curve_multihour": {
-          "description": "Multi-hour block indicator for the bid: 0 = SINGLE_HOUR (default; each hour of the bid clears independently); 1 = MULTI_HOUR (the bid must be awarded as one block across every hour it covers). Corresponds to ERCOT's DAM PriceCurve multiHourBlock field (false/true). Independent of curve_style: curve_style is the quantity structure, curve_multihour is the time structure, and they compose.",
+          "description": "Multi-hour block indicator for the bid: 0 = SINGLE_HOUR (default; each hour of the bid clears independently); 1 = MULTI_HOUR (the bid must be awarded as one block across every hour it covers). Independent of curve_style: curve_style is the quantity structure, curve_multihour is the time structure, and they compose.",
           "type": "integer",
           "enum": [
             0,
