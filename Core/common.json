@@ -790,6 +790,21 @@
       "title": "MinMax",
       "type": "object"
     },
+    "OutageFactors": {
+      "description": "A pair of values representing planned and forced outage factors as fractions of total availability.",
+      "properties": {
+        "max": {
+          "title": "Planned",
+          "type": "number"
+        },
+        "min": {
+          "title": "Forced",
+          "type": "number"
+        }
+      },
+      "title": "OutageFactors",
+      "type": "object"
+    },
     "PiecewiseLinearData": {
       "description": "Data for a piecewise linear function defined by (x, y) points and interpolated linearly between consecutive ones. The y values are absolute values at each x, not per-segment slopes; use `PiecewiseStepData` when the data gives per-segment rates. Points run in ascending x order, and two of them define one segment.",
       "properties": {
@@ -1107,6 +1122,49 @@
       ],
       "title": "StorageTech",
       "type": "string"
+    },
+    "CapitalCost": {
+      "description": "Investment cost for candidate generation and transmission technologies which includes overnight capital costs and last-mile interconnection costs.",
+      "properties": {
+        "capital_cost": {
+          "$ref": "#/$defs/ValueCurve"
+        },
+        "interconnection_cost": {
+          "type": "number",
+          "default": 0.0
+        }
+      },
+      "required": [
+        "capital_cost"
+      ],
+      "title": "CapitalCost",
+      "type": "object"
+    },
+    "StorageCapitalCost": {
+      "description": "Investment cost for candidate generation and transmission technologies which includes overnight capital costs and last-mile interconnection costs.",
+      "properties": {
+        "charge_capital_cost": {
+          "$ref": "#/$defs/ValueCurve"
+        },
+        "discharge_capital_cost": {
+          "$ref": "#/$defs/ValueCurve"
+        },
+        "energy_capital_cost": {
+          "$ref": "#/$defs/ValueCurve"
+        },
+        "interconnection_cost": {
+          "type": "number",
+          "default": 0.0
+        }
+      },
+      "required": [
+        "charge_capital_cost",
+        "discharge_capital_cost",
+        "energy_capital_cost",
+        "interconnection_cost"
+      ],
+      "title": "StorageCapitalCost",
+      "type": "object"
     },
     "ThermalFuels": {
       "description": "Thermal fuels that reflect options in the EIA annual energy review.",

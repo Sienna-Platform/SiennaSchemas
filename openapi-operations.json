@@ -3,22 +3,13 @@
   "info": {
     "title": "PowerOperationsOpenAPIModels",
     "version": "1.0.0",
-    "description": "Power system operations models: Topology, Branch, StaticInjection, and Service components"
+    "description": "Power system operations models: Branch, StaticInjection, and Service components"
   },
   "paths": {},
   "components": {
     "schemas": {
-      "ACBus": {
-        "$ref": "Operations/Topology/ACBus.json"
-      },
       "AGC": {
         "$ref": "Operations/Service/AGC.json"
-      },
-      "Arc": {
-        "$ref": "Operations/Topology/Arc.json"
-      },
-      "Area": {
-        "$ref": "Operations/Topology/Area.json"
       },
       "AreaInterchange": {
         "$ref": "Operations/Branch/AreaInterchange.json"
@@ -35,14 +26,8 @@
       "CombinedCycleFractional": {
         "$ref": "Operations/SupplementalAttributes/CombinedCycleFractional.json"
       },
-      "DCBus": {
-        "$ref": "Operations/Topology/DCBus.json"
-      },
       "DiscreteControlledACBranch": {
         "$ref": "Operations/Branch/DiscreteControlledACBranch.json"
-      },
-      "EmissionsData": {
-        "$ref": "Operations/SupplementalAttributes/EmissionsData.json"
       },
       "EnergyReservoirStorage": {
         "$ref": "Operations/StaticInjection/EnergyReservoirStorage.json"
@@ -100,9 +85,6 @@
       },
       "Line": {
         "$ref": "Operations/Branch/Line.json"
-      },
-      "LoadZone": {
-        "$ref": "Operations/Topology/LoadZone.json"
       },
       "MonitoredLine": {
         "$ref": "Operations/Branch/MonitoredLine.json"

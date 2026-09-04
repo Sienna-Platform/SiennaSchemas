@@ -32,9 +32,8 @@
       "x-unit": "MW"
     },
     "capital_costs": {
-      "description": "Cost of adding new capacity to the nodal transmission line. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "x-unit": "USD/MW"
+      "description": "Capital and interconnection cost of adding new capacity to the transmission line (capital cost in USD/MW).",
+      "$ref": "../../Core/common.json#/$defs/CapitalCost"
     },
     "line_loss": {
       "description": "Transmission loss for each transport technology. Units: 1.",

@@ -20,7 +20,7 @@
     },
     "bustype": {
       "description": "Used to describe the connectivity and behavior of this bus. in psy5 a required param with an option to be nothing",
-      "$ref": "../../Core/common.json#/$defs/ACBusType"
+      "$ref": "../common.json#/$defs/ACBusType"
     },
     "angle": {
       "description": "Angle of the bus. Units: rad.",
@@ -36,7 +36,7 @@
     },
     "voltage_limits": {
       "description": "Limits on the voltage variation as multiples of `base_voltage`. Units: pu.",
-      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "$ref": "../common.json#/$defs/MinMax",
       "x-unit": "pu",
       "x-quantity": "Voltage",
       "x-unit-base": "base_voltage"

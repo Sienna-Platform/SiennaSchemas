@@ -8,8 +8,26 @@
   "paths": {},
   "components": {
     "schemas": {
+      "ACBus": {
+        "$ref": "Core/Topology/ACBus.json"
+      },
       "ACBusType": {
         "$ref": "Core/common.json#/$defs/ACBusType"
+      },
+      "CapitalCost": {
+        "$ref": "Core/common.json#/$defs/CapitalCost"
+      },
+      "StorageCapitalCost": {
+        "$ref": "Core/common.json#/$defs/StorageCapitalCost"
+      },
+      "OutageFactors": {
+        "$ref": "Core/common.json#/$defs/OutageFactors"
+      },
+      "Area": {
+        "$ref": "Core/Topology/Area.json"
+      },
+      "Arc": {
+        "$ref": "Core/Topology/Arc.json"
       },
       "MarketBidCost": {
         "$ref": "Core/common.json#/$defs/MarketBidCost"
@@ -22,6 +40,12 @@
       },
       "DbdPnts": {
         "$ref": "Core/common.json#/$defs/DbdPnts"
+      },
+      "DCBus": {
+        "$ref": "Core/Topology/DCBus.json"
+      },
+      "EmissionsData": {
+        "$ref": "Core/SupplementalAttributes/EmissionsData.json"
       },
       "EnergyUnitBasis": {
         "$ref": "Core/common.json#/$defs/EnergyUnitBasis"
@@ -67,6 +91,9 @@
       },
       "LoadCost": {
         "$ref": "Core/common.json#/$defs/LoadCost"
+      },
+      "LoadZone": {
+        "$ref": "Core/Topology/LoadZone.json"
       },
       "MarketBidTimeSeriesCost": {
         "$ref": "Core/common.json#/$defs/MarketBidTimeSeriesCost"
