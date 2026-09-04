@@ -85,7 +85,7 @@
     },
     "loss_function": {
       "description": "Linear or quadratic loss function with respect to the converter current.",
-      "$ref": "../../Core/common.json#/$defs/InputOutputCurve"
+      "$ref": "../../Core/common.json#/$defs/ConverterLossCurve"
     },
     "dc_control": {
       "description": "DC-side control mode of the converter.",
