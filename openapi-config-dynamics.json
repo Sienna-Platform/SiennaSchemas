@@ -19,6 +19,7 @@
         "InputOutputCurve_1": "InputOutputCurve",
         "InputOutputCurve_1_function_data": "InputOutputCurveFunctionData",
         "LinearFunctionData_1": "LinearFunctionData",
+        "LossValueCurve_1": "LossValueCurve",
         "MinMax_1": "MinMax",
         "MinMax_2": "MinMax",
         "PiecewiseLinearData_1": "PiecewiseLinearData",
@@ -33,7 +34,6 @@
         "ThermalGenerationCost_1": "ThermalGenerationCost",
         "ThermalGenerationCost_1_start_up": "ThermalGenerationCostStartUp",
         "TurbinePump_1": "TurbinePump",
-        "TwoTerminalLoss_1": "TwoTerminalLoss",
         "UpDown_1": "UpDown",
         "ValueCurve_1": "ValueCurve",
         "XY_Coords_1": "XY_Coords"
