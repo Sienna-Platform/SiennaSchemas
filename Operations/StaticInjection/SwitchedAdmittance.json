@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A switched admittance, with discrete steps to adjust the admittance.\n\nMost often used in power flow studies, iterating over the steps to see impacts of admittance on the results. Total admittance is calculated as: `Y` + `number_of_steps` * `Y_increase`.",
+  "description": "A switched admittance, with discrete steps to adjust the admittance.\n\nMost often used in power flow studies, iterating over the steps to see impacts of admittance on the results. Total admittance is calculated as: `Y` + `number_engaged` * `Y_increase`, unless `solved_admittance` is set, in which case that value is the effective admittance.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -33,8 +33,8 @@
       },
       "x-quantity": "Susceptance"
     },
-    "initial_status": {
-      "description": "Vector of initial switched shunt status, one for in-service and zero for out-of-service for block i (1 through 8).",
+    "number_engaged": {
+      "description": "Vector with the number of steps currently engaged (switched in) for each adjustable shunt block. For example, `number_engaged[2]` is the number of steps in service at block 2, and cannot exceed `number_of_steps[2]` (PSS/E Si).",
       "type": "array",
       "items": {
         "type": "integer"
@@ -53,6 +53,19 @@
       "items": {
         "$ref": "../../Core/common.json#/$defs/ComplexNumber"
       },
+      "x-unit-discriminator": "admittance_units",
+      "x-units": {
+        "NATURAL_UNITS": "S",
+        "COMPONENT_MVAR": "MVAr"
+      },
+      "x-quantity": "Susceptance"
+    },
+    "solved_admittance": {
+      "description": "Solved-case switched shunt admittance (PSS/E BINIT); when present it is the shunt's effective admittance, used in place of `Y` + `number_engaged` * `Y_increase`. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
+      "type": [
+        "number",
+        "null"
+      ],
       "x-unit-discriminator": "admittance_units",
       "x-units": {
         "NATURAL_UNITS": "S",
