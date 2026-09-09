@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "In these excitation systems, voltage (and also current in compounded systems) is transformed to an appropriate level. Rectifiers, either controlled or non-controlled, provide the necessary direct current for the generator field. Parameters of IEEE Std 421.5 Type ST6B Excitacion System. ST6B in PSSE and PSLF",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "OEL_Flag": {
+      "description": "OEL Flag for ST6B: 1: before HV gate, 2: after HV gate",
+      "type": "integer"
+    },
+    "Tr": {
+      "description": "Regulator input filter time constant",
+      "type": "number"
+    },
+    "K_pa": {
+      "description": "Regulator proportional gain",
+      "type": "number"
+    },
+    "K_ia": {
+      "description": "Regulator integral gain",
+      "type": "number"
+    },
+    "K_da": {
+      "description": "Regulator derivative gain",
+      "type": "number"
+    },
+    "T_da": {
+      "description": "Voltage regulator derivative channel time constant",
+      "type": "number"
+    },
+    "Va_lim": {
+      "description": "Regulator output limits",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "K_ff": {
+      "description": "Pre-control gain of the inner loop field regulator",
+      "type": "number"
+    },
+    "K_m": {
+      "description": "Forward gain of the inner loop field regulator",
+      "type": "number"
+    },
+    "K_ci": {
+      "description": "Exciter output current limit adjustment gain",
+      "type": "number"
+    },
+    "K_lr": {
+      "description": "Exciter output current limiter gain",
+      "type": "number"
+    },
+    "I_lr": {
+      "description": "Exciter current limiter reference",
+      "type": "number"
+    },
+    "Vr_lim": {
+      "description": "Voltage regulator limits",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "Kg": {
+      "description": "Feedback gain constant of the inner loop field regulator",
+      "type": "number"
+    },
+    "Tg": {
+      "description": "Feedback time constant of the inner loop field voltage regulator",
+      "type": "number"
+    },
+    "V_ref": {
+      "description": "Reference voltage set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "OEL_Flag",
+    "Tr",
+    "K_pa",
+    "K_ia",
+    "K_da",
+    "T_da",
+    "Va_lim",
+    "K_ff",
+    "K_m",
+    "K_ci",
+    "K_lr",
+    "I_lr",
+    "Vr_lim",
+    "Kg",
+    "Tg"
+  ],
+  "title": "ST6B",
+  "type": "object"
+}

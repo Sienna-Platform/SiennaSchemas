@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "IEEE Type ST1 Excitation System (PTI version)",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "Tr": {
+      "description": "Voltage measurement time constant",
+      "type": "number"
+    },
+    "Vi_lim": {
+      "description": "Voltage input limits",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "Tc": {
+      "description": "Numerator lead-lag (lead) time constant",
+      "type": "number"
+    },
+    "Tb": {
+      "description": "Denominator lead-lag (lag) time constant",
+      "type": "number"
+    },
+    "Ka": {
+      "description": "Amplifier gain",
+      "type": "number"
+    },
+    "Ta": {
+      "description": "Amplifier time constant",
+      "type": "number"
+    },
+    "Vr_lim": {
+      "description": "Voltage regulator limits (regulator output)",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "Kc": {
+      "description": "Current field constant limiter multiplier",
+      "type": "number"
+    },
+    "Kf": {
+      "description": "Excitation control system stabilizer gain",
+      "type": "number"
+    },
+    "Tf": {
+      "description": "Excitation control system stabilizer time constant",
+      "type": "number"
+    },
+    "V_ref": {
+      "description": "Reference voltage set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "Tr",
+    "Vi_lim",
+    "Tc",
+    "Tb",
+    "Ka",
+    "Ta",
+    "Vr_lim",
+    "Kc",
+    "Kf",
+    "Tf"
+  ],
+  "title": "EXST1",
+  "type": "object"
+}

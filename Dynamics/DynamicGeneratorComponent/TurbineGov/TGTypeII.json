@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameters of a turbine governor type II",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "R": {
+      "description": "Droop parameter",
+      "type": "number"
+    },
+    "T1": {
+      "description": "Transient gain time constant",
+      "type": "number"
+    },
+    "T2": {
+      "description": "Power fraction time constant",
+      "type": "number"
+    },
+    "tau_limits": {
+      "description": "Power limits into the governor",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "P_ref": {
+      "description": "Reference power set-point",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "R",
+    "T1",
+    "T2",
+    "tau_limits"
+  ],
+  "title": "TGTypeII",
+  "type": "object"
+}

@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Modified ESAC1A. This excitation systems consists of an alternator main exciter feeding its output via non-controlled rectifiers. The exciter does not employ self-excitation, and the voltage regulator power is taken from a source that is not affected by external transients. Parameters of IEEE Std 421.5 Type AC1A Excitacion System. EXAC1A in PSSE and PSLF",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "Tr": {
+      "description": "Regulator input filter time constant",
+      "type": "number"
+    },
+    "Tb": {
+      "description": "Regulator denominator (lag) time constant",
+      "type": "number"
+    },
+    "Tc": {
+      "description": "Regulator numerator (lead) time constant",
+      "type": "number"
+    },
+    "Ka": {
+      "description": "Regulator output gain",
+      "type": "number"
+    },
+    "Ta": {
+      "description": "Regulator output time constant",
+      "type": "number"
+    },
+    "Va_lim": {
+      "description": "Limits for regulator output",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "Te": {
+      "description": "Exciter field time constant",
+      "type": "number"
+    },
+    "Kf": {
+      "description": "Rate feedback excitation system stabilizer gain",
+      "type": "number"
+    },
+    "Tf": {
+      "description": "Rate feedback time constant",
+      "type": "number"
+    },
+    "Kc": {
+      "description": "Rectifier loading factor proportional to commutating reactance",
+      "type": "number"
+    },
+    "Kd": {
+      "description": "Demagnetizing factor, function of exciter alternator reactances",
+      "type": "number"
+    },
+    "Ke": {
+      "description": "Exciter field proportional constant",
+      "type": "number"
+    },
+    "E_sat": {
+      "type": "array",
+      "description": "Exciter output voltage for saturation factor",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "Se": {
+      "type": "array",
+      "description": "Exciter saturation factor at exciter output voltage",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "Vr_lim": {
+      "description": "Limits for exciter field voltage",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+
+    "V_ref": {
+      "description": "Reference voltage set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "Tr",
+    "Tb",
+    "Tc",
+    "Ka",
+    "Ta",
+    "Va_lim",
+    "Te",
+    "Kf",
+    "Tf",
+    "Kc",
+    "Kd",
+    "Ke",
+    "E_sat",
+    "Se",
+    "Vr_lim"
+  ],
+  "title": "EXAC1A",
+  "type": "object"
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "This exciter is based on an IEEE type SCRX solid state exciter. The output field voltage is varied by a control system to maintain the system voltage at Vref. Please note that this exciter model has no initialization capabilities - this means that it will respond to whatever inputs it receives regardless of the state of the machine model",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "Ta_Tb": {
+      "description": "Lead input constant ratio",
+      "type": "number"
+    },
+    "Tb": {
+      "description": "Lag input constant",
+      "type": "number"
+    },
+    "K": {
+      "description": "Regulator gain",
+      "type": "number"
+    },
+    "Te": {
+      "description": "Regulator time constant",
+      "type": "number"
+    },
+    "Efd_lim": {
+      "description": "Field voltage regulator limits (regulator output)",
+      "$ref": "../../Core/common.json#/definitions/MinMax"
+    },
+    "switch": {
+      "description": "Switch",
+      "type": "integer"
+    },
+    "rc_rfd": {
+      "description": "Field current capability. Set = 0 for negative current capability. Typical value 10",
+      "type": "number"
+    },
+    "V_ref": {
+      "description": "Reference voltage set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "Ta_Tb",
+    "Tb",
+    "K",
+    "Te",
+    "Efd_lim",
+    "switch",
+    "rc_rfd"
+  ],
+  "title": "SCRX",
+  "type": "object"
+}

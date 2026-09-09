@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameters of a Simple one-state Turbine Governor",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "d_t": {
+      "description": "Inverse droop parameter",
+      "type": "number"
+    },
+    "Tm": {
+      "description": "Turbine governor low-pass time constant",
+      "type": "number"
+    },
+    "P_ref": {
+      "description": "Reference power set-point",
+      "default": "1.0",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "d_t",
+    "Tm"
+  ],
+  "title": "TGSimple",
+  "type": "object"
+}

@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "In these excitation systems, voltage (and also current in compounded systems) is transformed to an appropriate level. Rectifiers, either controlled or non-controlled, provide the necessary direct current for the generator field. Parameters of IEEE Std 421.5 Type ST4B Excitacion System. ESST4B in PSSE and PSLF",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "K_pr": {
+      "description": "Regulator proportional gain",
+      "type": "number"
+    },
+    "K_ir": {
+      "description": "Regulator integral gain",
+      "type": "number"
+    },
+    "Vr_lim": {
+      "description": "Voltage regulator limits",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "Ta": {
+      "description": "Voltage regulator time constant",
+      "type": "number"
+    },
+    "K_pm": {
+      "description": "Voltage regulator proportional gain output",
+      "type": "number"
+    },
+    "K_im": {
+      "description": "Voltage regulator integral gain output",
+      "type": "number"
+    },
+    "Vm_lim": {
+      "description": "Limits for inner loop output",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "Kg": {
+      "description": "Feedback gain constant of the inner loop field regulator",
+      "type": "number"
+    },
+    "Kp": {
+      "description": "Potential circuit (voltage) gain coefficient",
+      "type": "number"
+    },
+    "Ki": {
+      "description": "Compound circuit (current) gain coefficient",
+      "type": "number"
+    },
+    "VB_max": {
+      "description": "Maximum available exciter voltage",
+      "type": "number"
+    },
+    "Kc": {
+      "description": "Rectifier loading factor proportional to commutating reactance",
+      "type": "number"
+    },
+    "Xl": {
+      "description": "Reactance associated with potential source",
+      "type": "number"
+    },
+    "thetap": {
+      "description": "Potential circuit phase angle (degrees)",
+      "type": "number"
+    },
+    "V_ref": {
+      "description": "Reference voltage set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "Tr",
+    "K_pr",
+    "K_ir",
+    "Vr_lim",
+    "Ta",
+    "K_pm",
+    "K_im",
+    "Vm_lim",
+    "Kg",
+    "Kp",
+    "Ki",
+    "VB_max",
+    "Kc",
+    "Xl",
+    "thetap"
+  ],
+  "title": "ESST4B",
+  "type": "object"
+}

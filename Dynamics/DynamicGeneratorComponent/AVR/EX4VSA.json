@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "IEEE Excitation System for Voltage Security Assesment",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "Iflim": {
+      "description": "OEL field current limit",
+      "type": "number"
+    },
+    "d": {
+      "description": "OEL parameter d",
+      "type": "number"
+    },
+    "f": {
+      "description": "OEL parameter f",
+      "type": "number"
+    },
+    "Spar": {
+      "description": "OEL parameter Spar",
+      "type": "number"
+    },
+    "K1": {
+      "description": "OEL delay time constant",
+      "type": "number"
+    },
+    "K2": {
+      "description": "OEL parameter K2",
+      "type": "number"
+    },
+    "Oel_lim": {
+      "description": "OEL integrator limits",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "G": {
+      "description": "AVR exciter gain",
+      "type": "number"
+    },
+    "Ta": {
+      "description": "Numerator lead-lag (lead) time constant",
+      "type": "number"
+    },
+    "Tb": {
+      "description": "Denominator lead-lag (lag) time constant",
+      "type": "number"
+    },
+    "Te": {
+      "description": "Exciter time constant",
+      "type": "number"
+    },
+    "E_lim": {
+      "description": "Voltage regulator limits (regulator output)",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "V_ref": {
+      "description": "Reference voltage set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "Iflim",
+    "d",
+    "f",
+    "Spar",
+    "K1",
+    "K2",
+    "Oel_lim",
+    "G",
+    "Ta",
+    "Tb",
+    "Te",
+    "E_lim"
+  ],
+  "title": "EX4VSA",
+  "type": "object"
+}

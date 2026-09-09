@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Hydro Turbine-Governor with PID controller",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "feedback_flag": {
+      "description": "Feedback signal for governor droop: 0 for electrical power, and 1 for gate position",
+      "type": "integer"
+    },
+    "Rperm": {
+      "description": "Speed permanent droop parameter",
+      "type": "number"
+    },
+    "T_reg": {
+      "description": "Speed detector time constant",
+      "type": "number"
+    },
+    "Kp": {
+      "description": "Governor proportional gain",
+      "type": "number"
+    },
+    "Ki": {
+      "description": "Governor integral gain",
+      "type": "number"
+    },
+    "Kd": {
+      "description": "Governor derivative gain",
+      "type": "number"
+    },
+    "Ta": {
+      "description": "Governor derivative time constant",
+      "type": "number"
+    },
+    "Tb": {
+      "description": "Gate-servo time constant",
+      "type": "number"
+    },
+    "D_turb": {
+      "description": "Turbine damping factor",
+      "type": "number"
+    },
+    "gate_openings": {
+      "type": "array",
+      "description": "Gate opening speed at different loads",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "power_gate_openings": {
+      "type": "array",
+      "description": "Power at gate_openings",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "G_lim": {
+      "description": "Minimum and maximum gate openings",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "A_tw": {
+      "description": "Factor multiplying Tw",
+      "type": "number"
+    },
+    "Tw": {
+      "description": "Water inertia time constant",
+      "type": "number"
+    },
+    "G_lim": {
+      "description": "Gate opening velocity limits",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "P_ref": {
+      "description": "Reference load set-point",
+      "default": "1.0",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "feedback_flag",
+    "Rperm",
+    "T_reg",
+    "Kp",
+    "Ki",
+    "Kd",
+    "Ta",
+    "Tb",
+    "D_turb",
+    "gate_openings",
+    "power_gate_openings",
+    "G_lim",
+    "A_tw",
+    "Tw",
+    "V_lim"
+  ],
+  "title": "PIDGOV",
+  "type": "object"
+}

@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Used to represent field-controlled dc commutator exciters with continuously acting voltage regulators having power supplies derived from the generator or auxiliaries bus. Parameters of IEEE Std 421.5 Type DC2A Excitacion System. This model corresponds to ESDC2A in PSSE and PSLF",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "Tr": {
+      "description": "Voltage measurement time constant",
+      "type": "number"
+    },
+    "Ka": {
+      "description": "Amplifier gain",
+      "type": "number"
+    },
+    "Ta": {
+      "description": "Amplifier time constant",
+      "type": "number"
+    },
+    "Tb": {
+      "description": "Regulator input time constant",
+      "type": "number"
+    },
+    "Tc": {
+      "description": "Regulator input time constant",
+      "type": "number"
+    },
+    "Vr_lim": {
+      "description": "Voltage regulator limits (regulator output)",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "Ke": {
+      "description": "Exciter constant related to self-excited field",
+      "type": "number"
+    },
+    "Te": {
+      "description": "Exciter time constant, integration rate associated with exciter control",
+      "type": "number"
+    },
+    "Kf": {
+      "description": "Excitation control system stabilizer gain",
+      "type": "number"
+    },
+    "Tf": {
+      "description": "Excitation control system stabilizer time constant",
+      "type": "number"
+    },
+    "switch": {
+      "description": "switch",
+      "type": "integer"
+    },
+    "E_sat": {
+      "type": "array",
+      "description": "Exciter output voltage for saturation factor",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "Se": {
+      "type": "array",
+      "description": "Exciter saturation factor at exciter output voltage",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "V_ref": {
+      "description": "Reference voltage set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "Tr",
+    "Ka",
+    "Ta",
+    "Tb",
+    "Tc",
+    "Vr_lim",
+    "Ke",
+    "Te",
+    "Kf",
+    "Tf",
+    "switch",
+    "E_sat",
+    "Se"
+  ],
+  "title": "ESDC2A",
+  "type": "object"
+}

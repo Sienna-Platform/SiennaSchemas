@@ -1,53 +1,53 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Steam Turbine-Governor. This model considers both TGOV1 or TGOV1DU in PSS/E.",
+  "description": "Steam Turbine-Governor. This model considers both TGOV1 or TGOV1DU in PSS/E",
   "properties": {
     "id": {
-      "description": "Unique integer identifier for this component.",
+      "description": "Unique integer identifier for this component",
       "type": "integer"
     },
     "R": {
-      "description": "Droop parameter.",
+      "description": "Droop parameter",
       "type": "number"
     },
     "T1": {
-      "description": "Governor time constant. Units: s.",
+      "description": "Governor time constant. Units: s",
       "type": "number",
       "x-unit": "s"
     },
     "valve_position_limits": {
-      "description": "Valve position limits.",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "description": "Valve position limits",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
     },
     "T2": {
-      "description": "Lead Lag Lead Time constant. Units: s.",
+      "description": "Lead-lag lead time constant. Units: s",
       "type": "number",
       "x-unit": "s"
     },
     "T3": {
-      "description": "Lead Lag Lag Time constant. Units: s.",
+      "description": "Lead-lag lag time constant. Units: s",
       "type": "number",
       "x-unit": "s"
     },
     "D_T": {
-      "description": "Turbine Damping.",
+      "description": "Turbine damping",
       "type": "number"
     },
     "DB_h": {
-      "description": "Deadband for overspeed.",
+      "description": "Deadband for overspeed",
       "type": "number"
     },
     "DB_l": {
-      "description": "Deadband for underspeed.",
+      "description": "Deadband for underspeed",
       "type": "number"
     },
     "T_rate": {
-      "description": "Turbine Rate. If zero, generator base is used. Units: MW.",
+      "description": "Turbine Rate. If zero, generator base is used. Units: MW",
       "type": "number",
       "x-unit": "MW"
     },
     "P_ref": {
-      "description": "Reference Power Set-point.",
+      "description": "Reference power set-point",
       "type": "number"
     }
   },

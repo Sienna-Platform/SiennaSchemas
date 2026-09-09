@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "This excitation systems consists of an alternator main exciter feeding its output via non-controlled rectifiers. The exciter does not employ self-excitation, and the voltage regulator power is taken from a source that is not affected by external transients. Parameters of IEEE Std 421.5 Type AC6A Excitacion System. ESAC6A in PSSE and PSLF",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "Tr": {
+      "description": "Regulator input filter time constant",
+      "type": "number"
+    },
+    "Ka": {
+      "description": "Regulator output gain",
+      "type": "number"
+    },
+    "Ta": {
+      "description": "Regulator output lag time constant",
+      "type": "number"
+    },
+    "Tk": {
+      "description": "Voltage regulator lead time constant",
+      "type": "number"
+    },
+    "Tb": {
+      "description": "Regulator denominator (lag) time constant",
+      "type": "number"
+    },
+    "Tc": {
+      "description": "Regulator numerator (lead) time constant",
+      "type": "number"
+    },
+    "Va_lim": {
+      "description": "Limits for regulator output",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "Vr_lim": {
+      "description": "Limits for excitor field voltage",
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
+    },
+    "Te": {
+      "description": "Exciter field time constant",
+      "type": "number"
+    },
+    "VFE_lim": {
+      "description": "Exciter field current limiter reference",
+      "type": "number"
+    },
+    "Kh": {
+      "description": "Exciter field current regulator feedback gain",
+      "type": "number"
+    },
+    "VH_max": {
+      "description": "Exciter field current limiter maximum output",
+      "type": "number"
+    },
+    "Th": {
+      "description": "Exciter field current limiter denominator (lag) time constant",
+      "type": "number"
+    },
+    "Tj": {
+      "description": "Exciter field current limiter (lead) time constant",
+      "type": "number"
+    },
+    "Kc": {
+      "description": "Rectifier loading factor proportional to commutating reactance",
+      "type": "number"
+    },
+    "Kd": {
+      "description": "Demagnetizing factor, function of exciter alternator reactances",
+      "type": "number"
+    },
+    "Ke": {
+      "description": "Exciter field proportional constant",
+      "type": "number"
+    },
+    "E_sat": {
+      "type": "array",
+      "description": "Exciter output voltage for saturation factor",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "Se": {
+      "type": "array",
+      "description": "Exciter saturation factor at exciter output voltage",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "V_ref": {
+      "description": "Reference voltage set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "Tr",
+    "Ka",
+    "Ta",
+    "Tk",
+    "Tb",
+    "Tc",
+    "Va_lim",
+    "Vr_lim",
+    "Te",
+    "VFE_lim",
+    "Kh",
+    "VH_max",
+    "Th",
+    "Tj",
+    "Kc",
+    "Kd",
+    "Ke",
+    "E_sat",
+    "Se"
+  ],
+  "title": "ESAC6A",
+  "type": "object"
+}
