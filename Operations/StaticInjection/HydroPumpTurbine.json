@@ -112,8 +112,8 @@
       "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
       "$ref": "../../Core/common.json#/$defs/UnitSystem"
     },
-    "status": {
-      "description": "Initial Operating status of a pumped-storage hydro unit. See `HydroPumpTurbineStatus` for reference.",
+    "operating_mode": {
+      "description": "Which mode the pumped-storage unit is operating in at the start of a simulation: pumping, generating, or idle.",
       "default": "OFF",
       "type": "string",
       "enum": [
@@ -122,8 +122,13 @@
         "OFF"
       ]
     },
+    "status": {
+      "description": "Operating state of the unit at the start of a simulation.",
+      "$ref": "../../Operations/common.json#/$defs/OperationalStates",
+      "default": "OFFLINE"
+    },
     "time_at_status": {
-      "description": "Time the generator has been on or off, as indicated by `status`. default is the INFINITE_TIME sentinel (1e4 hours, 600000 minutes). Units: min.",
+      "description": "Time the generator has been in its current `status`. default is the INFINITE_TIME sentinel (1e4 hours, 600000 minutes). Units: min.",
       "default": 600000.0,
       "type": "number",
       "x-unit": "min"
@@ -207,10 +212,10 @@
       "x-unit": "1",
       "x-quantity": "Dimensionless"
     },
-    "must_run": {
-      "description": "Whether the unit must run (i.e., cannot be curtailed).",
-      "default": false,
-      "type": "boolean"
+    "commitment_mode": {
+      "description": "Commitment mode of the unit.",
+      "$ref": "../../Operations/common.json#/$defs/CommitmentModes",
+      "default": "COMMITTED"
     },
     "prime_mover_type": {
       "description": "Prime mover technology according to EIA 923.",
