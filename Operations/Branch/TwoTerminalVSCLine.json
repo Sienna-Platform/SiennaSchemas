@@ -173,7 +173,7 @@
           }
         }
       },
-      "$ref": "../../Core/common.json#/$defs/ConverterLossCurve"
+      "$ref": "../../Core/common.json#/$defs/LossCurve"
     },
     "max_dc_current_from": {
       "description": "Maximum stable dc current limits. Units: A.",
@@ -326,7 +326,7 @@
           }
         }
       },
-      "$ref": "../../Core/common.json#/$defs/ConverterLossCurve"
+      "$ref": "../../Core/common.json#/$defs/LossCurve"
     },
     "max_dc_current_to": {
       "description": "Maximum stable dc current limits. Units: A.",

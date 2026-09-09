@@ -68,6 +68,12 @@
       "LoadCost": {
         "$ref": "Core/common.json#/$defs/LoadCost"
       },
+      "LossCurve": {
+        "$ref": "Core/common.json#/$defs/LossCurve"
+      },
+      "LossValueCurve": {
+        "$ref": "Core/common.json#/$defs/LossValueCurve"
+      },
       "MarketBidTimeSeriesCost": {
         "$ref": "Core/common.json#/$defs/MarketBidTimeSeriesCost"
       },
@@ -103,9 +109,6 @@
       },
       "TurbinePump": {
         "$ref": "Core/common.json#/$defs/TurbinePump"
-      },
-      "TwoTerminalLoss": {
-        "$ref": "Core/common.json#/$defs/TwoTerminalLoss"
       },
       "ValueCurve": {
         "$ref": "Core/common.json#/$defs/ValueCurve"

@@ -65,24 +65,6 @@
       "title": "ComplexNumber",
       "type": "object"
     },
-    "ConverterLossCurve": {
-      "description": "Converter losses as a function of flow, in the form InfrastructureSystems calls a `LossCurve`. Wraps an `InputOutputCurve` -- linear or quadratic -- with `power_units` declaring the basis of BOTH axes: unlike a cost curve, the y axis of a loss curve is power in the same base as the x axis, so a change of base rescales both.",
-      "properties": {
-        "power_units": {
-          "default": "NATURAL_UNITS",
-          "$ref": "#/$defs/UnitSystem"
-        },
-        "value_curve": {
-          "$ref": "#/$defs/InputOutputCurve"
-        }
-      },
-      "required": [
-        "value_curve",
-        "power_units"
-      ],
-      "title": "ConverterLossCurve",
-      "type": "object"
-    },
     "CostCurve": {
       "description": "Variable operation cost of a device expressed directly in currency. Wraps a `ValueCurve` that may be in input-output, incremental, or average-rate form, with `power_units` declaring the basis of the x axis and `vom_cost` adding a proportional variable operation and maintenance term.",
       "properties": {
@@ -629,6 +611,52 @@
         "variable_operation_cost"
       ],
       "title": "LoadCost",
+      "type": "object"
+    },
+    "LossCurve": {
+      "description": "Losses of a device as a function of the flow through it, together with the power basis the curve is expressed in. `power_units` governs BOTH axes: a loss curve's y values are power in the same base as its x values, so a change of base rescales both. This is what separates it from a cost curve, whose y axis is currency and so rides through a change of base untouched.",
+      "properties": {
+        "power_units": {
+          "default": "NATURAL_UNITS",
+          "$ref": "#/$defs/UnitSystem"
+        },
+        "value_curve": {
+          "$ref": "#/$defs/LossValueCurve"
+        }
+      },
+      "required": [
+        "value_curve",
+        "power_units"
+      ],
+      "title": "LossCurve",
+      "type": "object"
+    },
+    "LossValueCurve": {
+      "description": "The shape of a loss curve, selected by `curve_type`. `INPUT_OUTPUT` gives the total loss at each flow level -- a constant loss plus a proportional loss rate, in MW of loss per MW of flow. `INCREMENTAL` gives the marginal loss rate instead, the form a piecewise model uses to give different proportional losses on different flow segments. Individual loss fields accept narrower sets of shapes than this union admits; the consuming data layer enforces that, not this schema.",
+      "title": "LossValueCurve",
+      "discriminator": {
+        "mapping": {
+          "INCREMENTAL": "#/components/schemas/IncrementalCurve",
+          "INPUT_OUTPUT": "#/components/schemas/InputOutputCurve"
+        },
+        "propertyName": "curve_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/InputOutputCurve"
+        },
+        {
+          "$ref": "#/$defs/IncrementalCurve"
+        }
+      ],
+      "default": {
+        "curve_type": "INPUT_OUTPUT",
+        "function_data": {
+          "function_type": "LINEAR",
+          "constant_term": 0,
+          "proportional_term": 0
+        }
+      },
       "type": "object"
     },
     "MassUnit": {
@@ -1403,52 +1431,6 @@
         "pump"
       ],
       "title": "TurbinePump",
-      "type": "object"
-    },
-    "TwoTerminalLoss": {
-      "description": "Loss model of a two-terminal HVDC line as a function of flow, selected by `curve_type`. It accepts a linear model with a constant loss and a proportional loss rate (MW of loss per MW of flow), or a piecewise model giving different proportional losses on different flow segments.",
-      "title": "TwoTerminalLoss",
-      "discriminator": {
-        "mapping": {
-          "INCREMENTAL": "#/components/schemas/IncrementalCurve",
-          "INPUT_OUTPUT": "#/components/schemas/InputOutputCurve"
-        },
-        "propertyName": "curve_type"
-      },
-      "oneOf": [
-        {
-          "$ref": "#/$defs/InputOutputCurve"
-        },
-        {
-          "$ref": "#/$defs/IncrementalCurve"
-        }
-      ],
-      "default": {
-        "curve_type": "INPUT_OUTPUT",
-        "function_data": {
-          "function_type": "LINEAR",
-          "constant_term": 0,
-          "proportional_term": 0
-        }
-      },
-      "type": "object"
-    },
-    "TwoTerminalLossCurve": {
-      "description": "Loss model of a two-terminal HVDC line as a function of flow, in the form InfrastructureSystems calls a `LossCurve`. Wraps a `TwoTerminalLoss` with `power_units` declaring the basis of BOTH axes: unlike a cost curve, the y axis of a loss curve is power in the same base as the x axis, so a change of base rescales both.",
-      "properties": {
-        "power_units": {
-          "default": "NATURAL_UNITS",
-          "$ref": "#/$defs/UnitSystem"
-        },
-        "value_curve": {
-          "$ref": "#/$defs/TwoTerminalLoss"
-        }
-      },
-      "required": [
-        "value_curve",
-        "power_units"
-      ],
-      "title": "TwoTerminalLossCurve",
       "type": "object"
     },
     "UnitSystem": {
