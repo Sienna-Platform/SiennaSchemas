@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A switched admittance, with discrete steps to adjust the admittance.\n\nMost often used in power flow studies, iterating over the steps to see impacts of admittance on the results. Total admittance is calculated as: `Y` + `number_engaged` * `Y_increase`, unless `solved_admittance` is set, in which case that value is the effective admittance.",
+  "description": "A switched admittance, with discrete steps to adjust the admittance.\n\nMost often used in power flow studies, iterating over the steps to see impacts of admittance on the results. Total admittance is `number_engaged` * `Y_increase`, unless `solved_admittance` is set, in which case that value is the effective admittance. There is no fixed base admittance: a PSS/E SWITCHED SHUNT record carries only BINIT and the per-block increments.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -19,19 +19,9 @@
       "type": "integer"
     },
     "admittance_units": {
-      "description": "Unit basis for the shunt admittance Y. COMPONENT_MVAR is PSS/E RAW native (Mvar/MW at unity voltage).",
+      "description": "Unit basis for the shunt admittance fields. COMPONENT_MVAR is PSS/E RAW native (Mvar/MW at unity voltage).",
       "default": "COMPONENT_MVAR",
       "$ref": "../../Core/common.json#/$defs/ShuntAdmittanceUnitBasis"
-    },
-    "Y": {
-      "description": "Initial admittance at N = 0. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
-      "$ref": "../../Core/common.json#/$defs/ComplexNumber",
-      "x-unit-discriminator": "admittance_units",
-      "x-units": {
-        "NATURAL_UNITS": "S",
-        "COMPONENT_MVAR": "MVAr"
-      },
-      "x-quantity": "Susceptance"
     },
     "number_engaged": {
       "description": "Vector with the number of steps currently engaged (switched in) for each adjustable shunt block. For example, `number_engaged[2]` is the number of steps in service at block 2, and cannot exceed `number_of_steps[2]`.",
@@ -61,7 +51,7 @@
       "x-quantity": "Susceptance"
     },
     "solved_admittance": {
-      "description": "Solved-case switched shunt admittance (PSS/E BINIT); when present it is the shunt's effective admittance, used in place of `Y` + `number_engaged` * `Y_increase`. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
+      "description": "Solved-case switched shunt admittance (PSS/E BINIT); when present it is the shunt's effective admittance, used in place of `number_engaged` * `Y_increase`. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
       "type": [
         "number",
         "null"
@@ -120,8 +110,7 @@
     "id",
     "name",
     "available",
-    "bus",
-    "Y"
+    "bus"
   ],
   "title": "SwitchedAdmittance",
   "type": "object"
