@@ -793,11 +793,11 @@
     "OutageFactors": {
       "description": "A pair of values representing planned and forced outage factors as fractions of total availability.",
       "properties": {
-        "max": {
+        "planned": {
           "title": "Planned",
           "type": "number"
         },
-        "min": {
+        "forced": {
           "title": "Forced",
           "type": "number"
         }
