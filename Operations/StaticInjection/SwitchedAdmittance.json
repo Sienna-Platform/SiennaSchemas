@@ -34,7 +34,7 @@
       "x-quantity": "Susceptance"
     },
     "number_engaged": {
-      "description": "Vector with the number of steps currently engaged (switched in) for each adjustable shunt block. For example, `number_engaged[2]` is the number of steps in service at block 2, and cannot exceed `number_of_steps[2]` (PSS/E Si).",
+      "description": "Vector with the number of steps currently engaged (switched in) for each adjustable shunt block. For example, `number_engaged[2]` is the number of steps in service at block 2, and cannot exceed `number_of_steps[2]`.",
       "type": "array",
       "items": {
         "type": "integer"
