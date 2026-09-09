@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A collection of buses for control purposes. The `Area` can be specified when defining each `ACBus` or `DCBus` in the area.",
+  "description": "A load zone for electricity price analysis. The load zone can be specified when defining each `ACBus` or `DCBus` in the zone.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -11,8 +11,7 @@
       "type": "string"
     },
     "peak_active_power": {
-      "description": "Peak active power in the area. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
-      "default": 0.0,
+      "description": "Peak active power in the zone. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -22,8 +21,7 @@
       "x-quantity": "ActivePower"
     },
     "peak_reactive_power": {
-      "description": "Peak reactive power in the area. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
-      "default": 0.0,
+      "description": "Peak reactive power in the zone. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -32,12 +30,6 @@
       },
       "x-quantity": "ReactivePower"
     },
-    "load_response": {
-      "description": "Load-frequency damping parameter modeling how much the load in the area changes due to changes in frequency. Units: MW/Hz.",
-      "default": 0.0,
-      "type": "number",
-      "x-unit": "MW/Hz"
-    },
     "base_power": {
       "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",
       "type": "number",
@@ -45,15 +37,17 @@
     },
     "power_units": {
       "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
-      "$ref": "../../Core/common.json#/$defs/UnitSystem"
+      "$ref": "../common.json#/$defs/UnitSystem"
     }
   },
   "required": [
     "id",
     "name",
+    "peak_active_power",
+    "peak_reactive_power",
     "base_power",
     "power_units"
   ],
-  "title": "Area",
+  "title": "LoadZone",
   "type": "object"
 }

@@ -67,6 +67,7 @@
             "time_reference",
             "time_series_type",
             "timestamps",
+            "timestamps_uri",
             "unit_system",
             "units",
             "uri"

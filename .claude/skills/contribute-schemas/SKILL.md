@@ -46,9 +46,9 @@ Reading the table:
   type so it can point at its owner, you want an attribute, not a component.
 - **Association** is for many-to-many only. A one-to-many relation is an integer
   `_id` / `_ids` property on the owning component — no association type.
-- Groups that exist today: `Operations/{Topology,Branch,StaticInjection,Service,Market,SupplementalAttributes,Associations}`,
-  `Investments/{Technologies,Financials,Requirements,Attributes,Regions}`,
-  `Core/{SupplementalAttributes,Associations}`,
+- Groups that exist today: `Operations/{Branch,StaticInjection,Service,Market,SupplementalAttributes,Associations}`,
+  `Investments/{Technologies,Financials,Requirements,SupplementalAttributes}`,
+  `Core/{Topology,SupplementalAttributes,Associations}`,
   `Dynamics/{DynamicGeneratorComponent,DynamicInverterComponent}`.
 - Putting a shared `$def` in **infrastructure-core** (the domain-neutral layer)
   is a layering decision, not a drive-by: `scripts/check_layering.py` pins that
@@ -63,7 +63,7 @@ inline. Do not factor them out into a shared base and `$ref` it — that is the
 change this repo has consistently declined to make.
 
 - `allOf` is not composition here. The one use in the tree
-  (`Operations/SupplementalAttributes/EmissionsData.json`) is an `if`/`then`
+  (`Core/SupplementalAttributes/EmissionsData.json`) is an `if`/`then`
   conditional constraint, not a supertype.
 - `oneOf` + `discriminator` is for **value** unions — cost curves, function
   data, the time series wrapper. It never gives components a common parent.
@@ -155,7 +155,7 @@ branch is too:
 `validate_units.py` (gate 1) tells you exactly when a declaration is required:
 
 ```
-FAIL [x-quantity-required] Operations/Topology/ACBus.json
+FAIL [x-quantity-required] Core/Topology/ACBus.json
      path:     /properties/magnitude/x-quantity
      got:      absent; unit 'pu' names 8 quantities
      expected: "x-quantity": one of ActivePower, ApparentPower, ...

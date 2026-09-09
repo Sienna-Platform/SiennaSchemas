@@ -77,6 +77,22 @@
       "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
       "$ref": "../../Core/common.json#/$defs/UnitSystem"
     },
+    "status": {
+      "description": "Operating state of the unit at the start of a simulation.",
+      "$ref": "../../Operations/common.json#/$defs/OperationalStates",
+      "default": "OFFLINE"
+    },
+    "time_at_status": {
+      "description": "Time the generator has been in its current `status`. default is the INFINITE_TIME sentinel (1e4 hours, 600000 minutes). Units: min.",
+      "default": 600000.0,
+      "type": "number",
+      "x-unit": "min"
+    },
+    "commitment_mode": {
+      "description": "Commitment mode of the unit.",
+      "$ref": "../../Operations/common.json#/$defs/CommitmentModes",
+      "default": "COMMITTED"
+    },
     "operation_cost": {
       "description": "Operating cost of generation. or MarketBidCost; default PSY.HydroGenerationCost(nothing)",
       "discriminator": {

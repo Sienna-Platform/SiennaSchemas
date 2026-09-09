@@ -71,8 +71,7 @@
   "required": [
     "id",
     "name",
-    "power_systems_type",
-    "value_of_lost_load"
+    "power_systems_type"
   ],
   "title": "DemandRequirement",
   "type": "object"

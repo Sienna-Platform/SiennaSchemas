@@ -43,9 +43,9 @@ Six packages (each generated in both Julia and Python):
 | Package | Contents | Dependencies |
 |---|---|---|
 | **InfrastructureCoreOpenAPIModels** | Domain-neutral: `UnitSystem`, the function-data family, value shapes (`MinMax`, `UpDown`, `InOut`, `FromTo`, `FromTo_ToFrom`, `ComplexNumber`, `XY_Coords`), and the supplemental attributes (`GeographicInfo`, `DataSource`, `SupplementalAttributeAssociation`) | None |
-| **PowerCoreOpenAPIModels** | Shared types: curves, enums, helpers (CostCurve, ValueCurve, ThermalFuels, TurbinePump, …) | InfrastructureCore |
-| **PowerOperationsOpenAPIModels** | Topology, Branch, StaticInjection, Service | PowerCore |
-| **PowerInvestmentsOpenAPIModels** | Technologies, Financials, Requirements, Attributes, Regions, Portfolio | PowerCore |
+| **PowerCoreOpenAPIModels** | Topology; shared types: curves, enums, helpers (CostCurve, ValueCurve, ThermalFuels, TurbinePump, …) | InfrastructureCore |
+| **PowerOperationsOpenAPIModels** | Branch, StaticInjection, Service | PowerCore |
+| **PowerInvestmentsOpenAPIModels** | Technologies, Financials, Requirements, SupplementalAttributes, Portfolio | PowerCore |
 | **PowerDynamicsOpenAPIModels** | DynamicGeneratorComponent, DynamicInverterComponent | PowerCore |
 | **InfrastructureTimeSeriesOpenAPIModels** | The six time series types (SingleTimeSeries, NonSequentialTimeSeries, Deterministic, DeterministicSingleTimeSeries, Probabilistic, Scenarios) and their shared value types | InfrastructureCore (`UnitSystem` only) |
 
@@ -55,9 +55,9 @@ Investments depends only on PowerCore (not Operations); integer ID cross-referen
 
 ```
 Core/                    # common.json (shared types), units.json (unit vocabulary),
-                         # SupplementalAttributes/
-Operations/              # Topology/, Branch/, StaticInjection/, Service/, SupplementalAttributes/
-Investments/             # Technologies/, Financials/, Requirements/, Attributes/, Regions/, Portfolio/
+                         # Topology/, SupplementalAttributes/
+Operations/              # Branch/, StaticInjection/, Service/, SupplementalAttributes/
+Investments/             # Technologies/, Financials/, Requirements/, SupplementalAttributes/, Portfolio/
 Dynamics/                # DynamicGeneratorComponent/, DynamicInverterComponent/
 TimeSeries/              # common.json, the six per-type schemas, TimeSeriesAssociation.json (oneOf wrapper)
 openapi-infrastructure-core.json, openapi-{core,operations,investments,dynamics,timeseries}.json     # $ref wrappers selecting package membership

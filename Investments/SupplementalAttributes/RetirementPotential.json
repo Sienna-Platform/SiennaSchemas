@@ -26,10 +26,17 @@
       "additionalProperties": {
         "type": "integer"
       }
+    },
+    "retirement_cost": {
+      "description": "Cost associated with retiring the eligible generators. Units: USD/MW.",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
+      "x-unit": "USD/MW"
     }
   },
   "required": [
-    "id"
+    "id",
+    "eligible_generators",
+    "retirement_cost"
   ],
   "title": "RetirementPotential",
   "type": "object"

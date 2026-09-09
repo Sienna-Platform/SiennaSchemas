@@ -34,6 +34,12 @@ ALLOWED_SCHEMA_ONLY = {
     # infrastore IS the store, so it never needs to locate itself in its own
     # catalog; it fills uri with its own content hash instead.
     "uri",
+    # `uri`'s counterpart for a NonSequentialTimeSeries' time axis, and
+    # schema-only for the same reason. The catalog addresses the axis directly
+    # as `timestamps_hash` (see ALLOWED_INFRASTORE_ONLY); a document names it
+    # with a locator instead, which is what lets a row be restored from the
+    # document rather than from the catalog.
+    "timestamps_uri",
     # On infrastore's Scenarios struct but in no catalog column: it reads the
     # count off the stored array's leading dim, and JSON carries no array.
     "scenario_count",

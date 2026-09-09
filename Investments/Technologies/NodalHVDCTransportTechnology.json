@@ -32,9 +32,8 @@
       "x-unit": "MW"
     },
     "capital_costs": {
-      "description": "Cost of adding new capacity to the nodal transmission line. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "x-unit": "USD/MW"
+      "description": "Capital and interconnection cost of adding new capacity to the nodal transmission line (capital cost in USD/MW).",
+      "$ref": "../../Core/common.json#/$defs/CapitalCost"
     },
     "line_loss": {
       "description": "Loss model coefficients. Accepts a linear model with a constant loss and a proportional loss rate, or a Piecewise loss with N segments for different proportional losses. All terms are defined as fraction of installed nameplate capacity. Units: 1.",

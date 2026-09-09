@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Candidate generation technology for a region, representing either a thermal or a renewable generation technology. It carries the capital and operating cost of new capacity together with the operating characteristics the added units take on — capacity limits, ramp and time limits, outage derating, fuel and its carbon intensity, and start-up fuel use.",
+  "description": "Candidate generation technology for a region, representing either a thermal or a renewable generation technology. It carries the capital and operating cost of new capacity together with the operating characteristics the added units take on — capacity limits, ramp and time limits, outage derating, fuel, and start-up fuel use.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -37,14 +37,6 @@
         "$ref": "../../Core/common.json#/$defs/ThermalFuels"
       }
     },
-    "co2": {
-      "description": "Carbon intensity of fuel. Units: t/MMBtu.",
-      "type": "object",
-      "additionalProperties": {
-        "type": "number"
-      },
-      "x-unit": "t/MMBtu"
-    },
     "cofire_start_limits": {
       "description": "Minimum and maximum blending level of each fuel during start-up process for multi-fuel generator. Units: 1.",
       "type": "object",
@@ -64,9 +56,8 @@
       "x-quantity": "Fraction"
     },
     "capital_costs": {
-      "description": "Capital costs for investing in a technology. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "x-unit": "USD/MW"
+      "description": "Capital and interconnection cost for investing in a technology (capital cost in USD/MW).",
+      "$ref": "../../Core/common.json#/$defs/CapitalCost"
     },
     "operation_costs": {
       "description": "Fixed and variable O&M costs for a technology. Units: USD/MWh.",
@@ -80,16 +71,23 @@
       "x-unit": "MW"
     },
     "capacity_limits": {
-      "description": "Minimum and maximum allowable installed capacity for a technology. Units: MW.",
-      "$ref": "../../Core/common.json#/$defs/MinMax",
-      "x-unit": "MW"
+      "description": "Minimum and maximum allowable installed capacity for a technology, given either as a single bound applied to all capacity or as a mapping from a float key (stringified) to the bound that applies at that key. Units: MW.",
+      "x-unit": "MW",
+      "anyOf": [
+        {
+          "$ref": "../../Core/common.json#/$defs/MinMax"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "../../Core/common.json#/$defs/MinMax"
+          }
+        }
+      ]
     },
     "outage_factor": {
-      "description": "Derating factor to account for planned or forced outages of a technology. Fraction of hours in a year where technology is unavailable. Units: 1.",
-      "type": "number",
-      "default": 1.0,
-      "x-unit": "1",
-      "x-quantity": "Fraction"
+      "description": "Planned and forced outage factors for a technology, each a fraction of total availability (the fraction of hours in a year the technology is unavailable).",
+      "$ref": "../../Core/common.json#/$defs/OutageFactors"
     },
     "min_generation_fraction": {
       "description": "Minimum generation as a fraction of total capacity. Units: 1.",

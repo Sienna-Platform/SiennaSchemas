@@ -3,6 +3,9 @@
     "inlineSchemaNameMappings": {
         "AverageRateCurve_1": "AverageRateCurve",
         "AverageRateCurve_1_function_data": "AverageRateCurveFunctionData",
+        "CapitalCost_1": "CapitalCost",
+        "CapitalCost_2": "CapitalCost",
+        "CapitalCost_3": "CapitalCost",
         "ComplexNumber_1": "ComplexNumber",
         "ComplexNumber_2": "ComplexNumber",
         "ComplexNumber_3": "ComplexNumber",
