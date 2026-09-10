@@ -78,18 +78,9 @@
       "x-quantity": "Susceptance"
     },
     "control_mode": {
-      "description": "Switched-shunt control mode (PSS/E MODSW).",
+      "description": "Switched-shunt control mode.",
       "default": "FIXED",
-      "type": "string",
-      "enum": [
-        "UNDEFINED",
-        "FIXED",
-        "DISCRETE_VOLTAGE",
-        "CONTINUOUS_VOLTAGE",
-        "DISCRETE_REACTIVE_PLANT",
-        "DISCRETE_REACTIVE_VSC",
-        "DISCRETE_ADMITTANCE_REMOTE"
-      ]
+      "$ref": "../../Operations/common.json#/$defs/SwitchedAdmittanceControlMode"
     },
     "regulated_bus_number": {
       "description": "Bus number whose voltage/quantity this shunt regulates; 0 means local bus (PSS/E SWREM/NREG). Units: 1.",

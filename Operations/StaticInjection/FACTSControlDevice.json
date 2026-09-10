@@ -19,13 +19,8 @@
       "type": "integer"
     },
     "control_mode": {
-      "description": "Control mode. Used to describe the behavior of the control device. in psy5 a required param with an option to be nothing",
-      "type": "string",
-      "enum": [
-        "OOS",
-        "NML",
-        "BYP"
-      ]
+      "description": "Control mode. Used to describe the behavior of the control device.",
+      "$ref": "../../Operations/common.json#/$defs/FACTSControlDeviceControlMode"
     },
     "voltage_setpoint_units": {
       "description": "Unit basis for voltage_setpoint. COMPONENT_BASE (pu on the bus base voltage) is PSS/E RAW native (VSET).",

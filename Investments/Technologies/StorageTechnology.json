@@ -75,10 +75,7 @@
           "$ref": "../../Core/common.json#/$defs/MinMax"
         },
         {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "../../Core/common.json#/$defs/MinMax"
-          }
+          "$ref": "../../Core/common.json#/$defs/MinMaxByKey"
         }
       ]
     },
@@ -90,10 +87,7 @@
           "$ref": "../../Core/common.json#/$defs/MinMax"
         },
         {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "../../Core/common.json#/$defs/MinMax"
-          }
+          "$ref": "../../Core/common.json#/$defs/MinMaxByKey"
         }
       ]
     },
@@ -105,10 +99,7 @@
           "$ref": "../../Core/common.json#/$defs/MinMax"
         },
         {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "../../Core/common.json#/$defs/MinMax"
-          }
+          "$ref": "../../Core/common.json#/$defs/MinMaxByKey"
         }
       ]
     },

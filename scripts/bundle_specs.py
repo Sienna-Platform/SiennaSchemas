@@ -67,7 +67,21 @@ DOMAINS = [
 # Files whose top-level `$defs` block is addressed by other schemas via
 # a two-token `<file>#/$defs/<Name>` external ref, and so is hoisted
 # into a bundle's own `$defs` rather than left as a dangling pointer.
-COMMON_FILES = ["Core/common.json", "TimeSeries/common.json"]
+#
+# `Operations/common.json` belongs here for the same reason the other two do: all 14 of its
+# `$defs` are published as `components.schemas` members by openapi-operations.json and are
+# `$ref`'d from the component files. Leaving it off meant every reference into it was inlined
+# instead of hoisted, so the generator minted an anonymous copy per reference site --
+# `VoltageUnitBasis` became `<Owner>VoltageSetpointUnits`/`<Owner>DcVoltageUnits`, and
+# `TwoWindingTransformerShuntLocation` gained a `...ShuntLocation2` twin.
+#
+# The three files' `$defs` names are disjoint (62 + 14 + 6, no overlap), which matters because
+# `hoisted` is keyed by name alone: two common files defining one name would collide.
+COMMON_FILES = [
+    "Core/common.json",
+    "Operations/common.json",
+    "TimeSeries/common.json",
+]
 
 # Shared across all five domain bundles: common.json (and any multiply-$ref'd
 # file) is parsed from disk once. Keyed by resolved absolute path.
@@ -94,6 +108,30 @@ def split_ref(ref):
 def is_external(ref):
     filepart, _ = split_ref(ref)
     return filepart != ""
+
+
+# Keywords that may sit beside a `$ref` without changing what validates: pure annotations
+# plus this repo's `x-` unit extensions. Anything else is a real constraint, and a `$ref`
+# carrying one describes a schema genuinely narrower than its target -- see walk().
+ANNOTATION_SIBLINGS = frozenset(
+    {
+        "default",
+        "deprecated",
+        "description",
+        "example",
+        "examples",
+        "readOnly",
+        "title",
+        "writeOnly",
+    }
+)
+
+
+def _annotation_only(siblings):
+    """Whether every sibling of a `$ref` is an annotation or an `x-` extension."""
+    return all(
+        key in ANNOTATION_SIBLINGS or key.startswith("x-") for key in siblings
+    )
 
 
 def resolve_fragment(doc, fragment):
@@ -141,6 +179,13 @@ class Bundler:
             doc = load_json(common_path)
             for name in doc.get("$defs", {}):
                 self._common_owner[name] = common_path
+        # resolved schema-file path -> the name the selector gives it in
+        # components.schemas, for every member spelled as a bare whole-file
+        # `$ref`. Populated per-spec by bundle(). A `$ref` reaching one of these
+        # files from anywhere else in the tree becomes an internal
+        # `#/components/schemas/<Name>` reference instead of an inlined copy of
+        # the body -- see walk().
+        self._selector_members = {}
 
     def _hoist_common_definition(self, name, source_path):
         """Ensure a common-file definition is inlined into the bundle $defs.
@@ -252,13 +297,55 @@ class Bundler:
                 }
             if "$ref" in node and is_external(node["$ref"]):
                 siblings = {k: v for k, v in node.items() if k != "$ref"}
-                content, target, _, common_name = self._resolve_external(
+                content, target, fragment, common_name = self._resolve_external(
                     node["$ref"], base_path
                 )
-                if common_name is not None and not siblings:
-                    # No siblings: hoist and point to internal definition.
+                if common_name is not None and _annotation_only(siblings):
+                    # Hoist and point at the internal definition, carrying the siblings
+                    # alongside the `$ref`.
+                    #
+                    # Inlining here instead used to mint one anonymous copy of the target
+                    # per reference site -- 27 copies of `UnitSystem` (`<Owner>PowerUnits`,
+                    # `<Owner>VoltageSetpointUnits`, ...), 80 of `MinMax`, 10 of
+                    # `PrimeMovers` -- because a property that `$ref`s a shared definition
+                    # and adds a `description` or a `default` took the inline path. The old
+                    # Java toolchain papered over that with a few hundred
+                    # `inlineSchemaNameMappings` entries; nothing does downstream now.
+                    #
+                    # Safe because every sibling keyword used in this repo is an annotation
+                    # or an `x-` extension (`_annotation_only` enforces exactly that), never
+                    # a validation constraint: the target is always the complete validation
+                    # schema, so referencing it cannot change what validates. A sibling that
+                    # *did* constrain would make the property genuinely different from the
+                    # shared definition, and falls through to inlining below.
+                    #
+                    # `$ref` with siblings is legal in OpenAPI 3.1 / JSON Schema 2020-12,
+                    # and this is already how `_rewrite_common_internal` treats a
+                    # common file's own internal refs.
                     self._hoist_common_definition(common_name, target)
-                    return {"$ref": f"#/$defs/{common_name}"}
+                    out = {"$ref": f"#/$defs/{common_name}"}
+                    for k, v in siblings.items():
+                        out[k] = self.walk(v, base_path)
+                    return out
+                # A whole-file `$ref` at a file the selector already publishes as
+                # `components.schemas.<Name>`. Inlining the body here would make the
+                # generator see an anonymous second copy of a named schema and mint a
+                # numbered alias for it -- `TimeSeriesAssociation`'s six `oneOf`
+                # branches became `TimeSeriesAssociation1..6` alongside the six real
+                # types. Point at the published name instead; the effective document is
+                # the same, and both toolchains resolve an internal reference.
+                # Gated on `base_path` not being the selector itself: the selector's
+                # own `components.schemas.<Name>` entry is the one place that whole-file
+                # `$ref` must still expand, or the member would point at itself.
+                if (
+                    not siblings
+                    and fragment in ("", "/")
+                    and base_path != self._spec_path
+                    and target in self._selector_members
+                ):
+                    return {
+                        "$ref": f"#/components/schemas/{self._selector_members[target]}"
+                    }
                 # Inline the resolved content (deep-resolved in its own file
                 # context), then merge siblings on top (siblings win).
                 resolved = self.walk(content, target)
@@ -287,8 +374,25 @@ class Bundler:
             return [self.walk(v, base_path) for v in node]
         return node
 
+    def _index_selector_members(self, spec, spec_path):
+        """Map each whole-file selector member to the name it is published under."""
+        schemas = spec.get("components", {}).get("schemas", {})
+        for name, member in schemas.items():
+            if not isinstance(member, dict) or set(member) != {"$ref"}:
+                continue
+            ref = member["$ref"]
+            if not is_external(ref):
+                continue
+            filepart, fragment = split_ref(ref)
+            if fragment not in ("", "/"):
+                continue
+            self._selector_members[(spec_path.parent / filepart).resolve()] = name
+
     def bundle(self, spec_path):
         spec = load_json(spec_path)
+        self._spec_path = spec_path
+        self._selector_members = {}
+        self._index_selector_members(spec, spec_path)
         bundled = self.walk(spec, spec_path)
         if self.hoisted:
             defs = {name: self.hoisted[name] for name in sorted(self.hoisted)}
