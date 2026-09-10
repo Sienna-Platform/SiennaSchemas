@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A non-spinning reserve product from devices not currently synchronized with the system but able to come online quickly after an unexpected contingency. Upward only, so unlike `OnlineReserve` there is no reserve direction. The procurement requirement is static unless a `requirement` time series is attached, in which case `requirement` is the scaling factor.",
   "properties": {
     "id": {
@@ -27,7 +27,7 @@
     },
     "variable": {
       "description": "Operating reserve demand curve, either static or time-series-backed. Time series values are carried via `time_series_associations` in the sidecar, never inline. Omit when the reserve has no demand curve.",
-      "$ref": "../../Core/common.json#/definitions/CostCurve"
+      "$ref": "../../Core/common.json#/$defs/CostCurve"
     },
     "sustained_time": {
       "description": "The time reserve contribution must be sustained at a specified level. Units: min.",

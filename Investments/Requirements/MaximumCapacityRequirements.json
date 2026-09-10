@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Policy requirement that the total capacity of all eligible technologies in the target year be less than the specified limit in MW.",
   "properties": {
     "id": {
       "description": "ID for individual component.",

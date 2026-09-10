@@ -1,0 +1,73 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "InfrastructureCoreOpenAPIModels",
+    "version": "1.0.0",
+    "description": "Domain-neutral shared types: the unit convention, the function-data family, and the value shapes and supplemental attributes that carry no power semantics. Consumed by the data layer and the time series store, neither of which should inherit power-specific definitions."
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "UnitSystem": {
+        "$ref": "Core/common.json#/$defs/UnitSystem"
+      },
+      "ComplexNumber": {
+        "$ref": "Core/common.json#/$defs/ComplexNumber"
+      },
+      "XY_Coords": {
+        "$ref": "Core/common.json#/$defs/XY_Coords"
+      },
+      "MinMax": {
+        "$ref": "Core/common.json#/$defs/MinMax"
+      },
+      "UpDown": {
+        "$ref": "Core/common.json#/$defs/UpDown"
+      },
+      "InOut": {
+        "$ref": "Core/common.json#/$defs/InOut"
+      },
+      "FromTo": {
+        "$ref": "Core/common.json#/$defs/FromTo"
+      },
+      "FromTo_ToFrom": {
+        "$ref": "Core/common.json#/$defs/FromTo_ToFrom"
+      },
+      "FunctionData": {
+        "$ref": "Core/common.json#/$defs/FunctionData"
+      },
+      "LinearFunctionData": {
+        "$ref": "Core/common.json#/$defs/LinearFunctionData"
+      },
+      "QuadraticFunctionData": {
+        "$ref": "Core/common.json#/$defs/QuadraticFunctionData"
+      },
+      "PiecewiseLinearData": {
+        "$ref": "Core/common.json#/$defs/PiecewiseLinearData"
+      },
+      "PiecewiseStepData": {
+        "$ref": "Core/common.json#/$defs/PiecewiseStepData"
+      },
+      "TimeSeriesLinearFunctionData": {
+        "$ref": "Core/common.json#/$defs/TimeSeriesLinearFunctionData"
+      },
+      "TimeSeriesQuadraticFunctionData": {
+        "$ref": "Core/common.json#/$defs/TimeSeriesQuadraticFunctionData"
+      },
+      "TimeSeriesPiecewiseLinearData": {
+        "$ref": "Core/common.json#/$defs/TimeSeriesPiecewiseLinearData"
+      },
+      "TimeSeriesPiecewiseStepData": {
+        "$ref": "Core/common.json#/$defs/TimeSeriesPiecewiseStepData"
+      },
+      "GeographicInfo": {
+        "$ref": "Core/SupplementalAttributes/GeographicInfo.json"
+      },
+      "DataSource": {
+        "$ref": "Core/SupplementalAttributes/DataSource.json"
+      },
+      "SupplementalAttributeAssociation": {
+        "$ref": "Core/Associations/SupplementalAttributeAssociation.json"
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Parameters of the Inner Control part of the REECB model in PSS/E.",
   "properties": {
     "Q_Flag": {
@@ -12,7 +12,7 @@
     },
     "Vdip_lim": {
       "description": "Limits for Voltage Dip Logic `(Vdip, Vup)`.",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "T_rv": {
       "description": "Voltage Filter Time Constant. Units: s.",
@@ -21,7 +21,7 @@
     },
     "dbd_pnts": {
       "description": "Voltage error deadband thresholds `(dbd1, dbd2)`.",
-      "$ref": "../../Core/common.json#/definitions/DbdPnts"
+      "$ref": "../../Core/common.json#/$defs/DbdPnts"
     },
     "K_qv": {
       "description": "Reactive current injection gain during over and undervoltage conditions.",
@@ -29,7 +29,7 @@
     },
     "Iqinj_lim": {
       "description": "Limits for Iqinj `(I_qh1, I_ql1)`.",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "V_ref0": {
       "description": "User defined reference. If 0, `PowerSimulationsDynamics.jl` initializes to initial terminal voltage.",

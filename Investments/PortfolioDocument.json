@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PortfolioDocument",
+  "description": "The serialized form of a whole investment portfolio: the candidate technologies, regional aggregations, and policy requirements that make up an expansion problem, the supplemental attributes that describe them, the association tables that link them, and the names of the sidecar files holding the base power system and the time series values. This is the interchange format between producers of portfolio data and the consumers that expand or solve it, so the shape is defined here rather than by convention in each producer.\n\nThere is no document-level unit system or base power. A portfolio records every value in natural units and, unlike a power system, carries no per-unit basis of its own: there is no `power_units`/`base_power` resolution to perform at the document level. The only unit marker that ever appears is an embedded cost payload's own `power_units` (on a CostCurve or FuelCurve), which is intrinsic to that curve and interpreted from the curve alone.\n\nDeliberately excluded from openapi-generator: `components` is a map from type name to an array of heterogeneous component objects, which the generated client cannot express as typed buckets. The hand-written container in the generated investments model package (`src/openapi/document.jl`) is the single representation of that type ordering, and its fields are checked against this file. This schema remains authoritative for every other language binding.\n\nThe base power system the portfolio expands is not embedded: `base_system_file` names a sidecar holding it as its own system document, so a portfolio and its base system can be written, moved, and read together. Time series *values* likewise never appear here — `time_series_associations` carries the metadata rows and `time_series_storage_file` names the sidecar; reading or writing that file is the consumer's job.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "Optional portfolio name.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "description": {
+      "description": "Optional free-text description of the portfolio.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "data_source": {
+      "description": "Optional identifier of the source the portfolio data was drawn from.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "aggregation": {
+      "description": "Qualified type name of the regional aggregation the portfolio groups its regions by. A type identifier resolved by the consumer, not a component in the document.",
+      "type": "string"
+    },
+    "financial_data": {
+      "description": "Portfolio-wide financial parameters: the base economic year every cost is discounted to a net present value in, and the discount, inflation, and interest rates used in that conversion. Absent when the portfolio carries no financial data.",
+      "$ref": "Financials/PortfolioFinancialData.json"
+    },
+    "components": {
+      "description": "Components grouped by type name, e.g. `{\"SupplyTechnology\": [...], \"StorageTechnology\": [...]}`. The key is the referenced schema's `title` and spans the portfolio's regional aggregations, policy requirements, and candidate technologies. Keys are emitted in sorted order so output is deterministic. Every type present must be one the consumer can convert: a consumer encountering an unknown type name must fail rather than skip it.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "supplemental_attributes": {
+      "description": "Supplemental attributes in one flat array rather than bucketed by type: nothing iterates them per type, and `supplemental_attribute_associations` carries both the link and the `attribute_type` discriminator a consumer needs to pick a converter. Examples: RetirementPotential, RetrofitPotential, ExistingDevices, TopologyMapping.",
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "supplemental_attribute_associations": {
+      "description": "Links each supplemental attribute (e.g. RetirementPotential, TopologyMapping) to the entity it describes. One row per (attribute, entity) pair.",
+      "type": "array",
+      "items": {
+        "$ref": "../Core/Associations/SupplementalAttributeAssociation.json"
+      }
+    },
+    "investment_schedule": {
+      "description": "Optional investment decisions container: the schedule of capacity installations produced by solving the portfolio. This is a model output rather than an input, is absent from an inputs-only portfolio, and its internal shape is not further constrained here.",
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "time_series_associations": {
+      "description": "Time series metadata rows, one per (series, owner) association. Each row names the store holding its values in its own `address`; `time_series_storage_file` remains the document-level sidecar name.",
+      "type": "array",
+      "items": {
+        "$ref": "../TimeSeries/TimeSeriesAssociation.json"
+      }
+    },
+    "ext": {
+      "description": "Source data that no schema field claims, keyed by the stringified component id it belongs to. Only values genuinely unclaimed by any schema field may appear here; a producer must never mirror a value that also landed in a schema field. An absent or empty `ext` means the producer mapped everything. A consumer must consume keys via a declared ignore list: a listed key is skipped, an unlisted key is an error naming the key and the component id — never a silent drop.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object"
+      }
+    },
+    "base_system_file": {
+      "description": "Basename of the sidecar holding the base power system this portfolio expands, serialized as its own system document, or null when the portfolio has no base system. A name, not a path: the file is resolved relative to this document, so a portfolio and its base system can be moved together.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "time_series_storage_file": {
+      "description": "Basename of the HDF5 sidecar holding time series values, or null when the portfolio has no time series. A name, not a path: the file is resolved relative to the document, so a document and its sidecar can be moved together.",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "aggregation",
+    "components",
+    "supplemental_attributes",
+    "supplemental_attribute_associations",
+    "time_series_associations",
+    "base_system_file",
+    "time_series_storage_file"
+  ]
+}

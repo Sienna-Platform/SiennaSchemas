@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "PowerTimeSeriesOpenAPIModels",
+    "title": "InfrastructureTimeSeriesOpenAPIModels",
     "version": "1.0.0",
     "description": "Time series associations: the six canonical time series types defined by the upstream data layer and their metadata, without the dense values"
   },
@@ -30,22 +30,22 @@
         "$ref": "TimeSeries/Scenarios.json"
       },
       "OwnerCategory": {
-        "$ref": "TimeSeries/common.json#/definitions/OwnerCategory"
+        "$ref": "TimeSeries/common.json#/$defs/OwnerCategory"
       },
       "TimeSeriesFeatures": {
-        "$ref": "TimeSeries/common.json#/definitions/TimeSeriesFeatures"
+        "$ref": "TimeSeries/common.json#/$defs/TimeSeriesFeatures"
       },
       "TimeSeriesFeatureValue": {
-        "$ref": "TimeSeries/common.json#/definitions/TimeSeriesFeatureValue"
+        "$ref": "TimeSeries/common.json#/$defs/TimeSeriesFeatureValue"
       },
       "ElementType": {
-        "$ref": "TimeSeries/common.json#/definitions/ElementType"
+        "$ref": "TimeSeries/common.json#/$defs/ElementType"
       },
       "Period": {
-        "$ref": "TimeSeries/common.json#/definitions/Period"
+        "$ref": "TimeSeries/common.json#/$defs/Period"
       },
       "UnitSystem": {
-        "$ref": "Core/common.json#/definitions/UnitSystem"
+        "$ref": "Core/common.json#/$defs/UnitSystem"
       }
     }
   }

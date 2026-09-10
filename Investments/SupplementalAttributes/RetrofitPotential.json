@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Supplemental attribute defining which existing generators mapped to a supply technology are eligible for retrofit.",
+  "properties": {
+    "id": {
+      "description": "ID for individual component.",
+      "type": "integer"
+    },
+    "eligible_generators": {
+      "description": "Names of individual generation units mapped to this technology that can be retrofitted.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "retrofit_fraction": {
+      "description": "Fraction of existing capacity that is eligible for retrofits. Units: 1.",
+      "type": "number",
+      "default": 1.0,
+      "x-unit": "1",
+      "x-quantity": "Fraction"
+    },
+    "retrofit_cost": {
+      "description": "Cost associated with retrofitting the eligible generators. Units: USD/MW.",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
+      "x-unit": "USD/MW"
+    }
+  },
+  "required": [
+    "id",
+    "eligible_generators",
+    "retrofit_cost"
+  ],
+  "title": "RetrofitPotential",
+  "type": "object"
+}

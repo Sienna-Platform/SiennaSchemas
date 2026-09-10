@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A reserve product provided by devices already synchronized with the system. The procurement requirement is static unless a `requirement` time series is attached, in which case `requirement` is the scaling factor. Attach an Operating Reserve Demand Curve through `variable` to price the requirement rather than enforce it; omit `variable` when the reserve has no demand curve.",
   "properties": {
     "id": {
@@ -27,7 +27,7 @@
     },
     "variable": {
       "description": "Operating reserve demand curve, either static or time-series-backed. Time series values are carried via `time_series_associations` in the sidecar, never inline. Omit when the reserve has no demand curve.",
-      "$ref": "../../Core/common.json#/definitions/CostCurve"
+      "$ref": "../../Core/common.json#/$defs/CostCurve"
     },
     "sustained_time": {
       "description": "The time reserve contribution must be sustained at a specified level. Units: min.",
@@ -52,7 +52,7 @@
     },
     "reserve_direction": {
       "description": "Whether the reserve is an upward, downward, or symmetric reserve product.",
-      "$ref": "../../Operations/common.json#/definitions/ReserveDirection"
+      "$ref": "../../Operations/common.json#/$defs/ReserveDirection"
     }
   },
   "required": [

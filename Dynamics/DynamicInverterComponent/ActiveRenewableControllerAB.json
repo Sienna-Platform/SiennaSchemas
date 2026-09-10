@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Parameters of Active Power Controller including REPCA1 and REECB1.",
   "properties": {
     "bus_control": {
@@ -37,15 +37,15 @@
     },
     "fdbd_pnts": {
       "description": "Frequency error dead band thresholds `(fdbd1, fdbd2)`.",
-      "$ref": "../../Core/common.json#/definitions/FdbdPnts"
+      "$ref": "../../Core/common.json#/$defs/FdbdPnts"
     },
     "fe_lim": {
       "description": "Upper/Lower limit on frequency error `(fe_min, fe_max)`.",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "P_lim": {
       "description": "Upper/Lower limit on power reference `(P_min, P_max)`.",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "T_g": {
       "description": "Power Controller lag time constant. Units: s.",
@@ -62,11 +62,11 @@
     },
     "dP_lim": {
       "description": "Upper/Lower limit on power reference ramp rates `(dP_min, dP_max)`.",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "P_lim_inner": {
       "description": "Upper/Lower limit on power reference for REECB `(P_min_inner, P_max_inner)`.",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "T_pord": {
       "description": "Power filter time constant REECB time constant. Units: s.",

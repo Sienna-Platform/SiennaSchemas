@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A topological directed edge connecting two buses. Arcs are used to define the `from_id` and `to_id` endpoints when defining a line or transformer.",
   "properties": {
     "id": {

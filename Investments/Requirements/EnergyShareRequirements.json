@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Policy requirement that the total generation of the eligible technologies be at least a pre-determined fraction of the total annual demand across the eligible zones in the target year.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -21,7 +22,8 @@
       "description": "Fraction of total annual demand across all eligible zones that needs to be met by eligible resources. Units: 1.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     }
   },
   "required": [

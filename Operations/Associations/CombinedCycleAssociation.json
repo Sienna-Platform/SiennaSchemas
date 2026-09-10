@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "CombinedCycleAssociation",
   "description": "Association between a CombinedCycleBlock plant and a CT or CA unit, identifying which HRSG the unit feeds into or receives from. Supports n-to-m relationships: a single CT or CA can participate in multiple HRSGs by appearing in multiple rows.",
   "type": "object",

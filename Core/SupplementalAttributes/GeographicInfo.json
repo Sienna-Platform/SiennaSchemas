@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Supplemental attribute carrying geographic information about a component as a GeoJSON object. An empty object is permitted and means no geographic information is recorded.",
   "title": "GeographicInfo",
   "type": "object",
   "properties": {

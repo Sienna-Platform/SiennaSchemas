@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Supplemental attribute describing forced outages whose transitions follow geometric distributions, parameterized by the probability of entering an outage and the mean time to recovery. Both the outage and recovery probabilities can be backed by time series.",
   "title": "GeometricDistributionForcedOutage",
   "type": "object",
   "properties": {
@@ -7,9 +8,9 @@
       "type": "integer"
     },
     "mean_time_to_recovery": {
-      "description": "Mean time elapsed between a failure and the return to service, as a whole number of minutes. Units: min.",
-      "type": "integer",
-      "default": 0,
+      "description": "Mean time elapsed between a failure and the return to service, in minutes. Units: min.",
+      "type": "number",
+      "default": 0.0,
       "x-unit": "min"
     },
     "outage_transition_probability": {
@@ -25,6 +26,14 @@
       "uniqueItems": true,
       "default": [],
       "description": "IDs of devices whose post-contingency state should be modeled when this outage occurs. Empty by default; semantics of an empty list are decided by the downstream consumer."
+    },
+    "identifier": {
+      "description": "Optional user-supplied identifier for the outage, such as a name or a block id. Null when not set.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null
     }
   },
   "required": [

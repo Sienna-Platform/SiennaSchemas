@@ -31,12 +31,15 @@ A bare `"pu"` with no `x-unit-base` means the value is per-unit on the component
 own recorded base (`base_power`, or `base_current` for `TModelHVDCLine`); there is no
 system-base option — components whose per-unit data was historically on the system base
 record that base in `base_power`. For the four branch-impedance quantities (Resistance,
-Reactance, Susceptance, Conductance), `pu` **is a registered vocabulary unit**
-(`to_default: null`, since the pu→natural conversion depends on the recorded base rather
-than a fixed factor). It is one of two discriminated storage options in the downstream
-registry: GridDB stores each branch parameter in either per-unit or natural units and
-records which per row via `transmission_lines.parameter_units` (`COMPONENT_BASE` → `pu`;
-`NATURAL_UNITS` → `ohm`/`S`).
+Reactance, Susceptance, Conductance) and for the power-family quantities (ActivePower,
+ReactivePower, ApparentPower, and `pu/min` for ActivePowerChangeRate), `pu` **is a
+registered vocabulary unit** (`to_default: null`, since the pu→natural conversion depends
+on the recorded base rather than a fixed factor). Branch impedance is one of two
+discriminated storage options in the downstream registry: GridDB stores each branch
+parameter in either per-unit or natural units and records which per row via
+`transmission_lines.parameter_units` (`COMPONENT_BASE` → `pu`; `NATURAL_UNITS` → `ohm`/`S`).
+The power-family quantities are discriminated the same way at the schema layer, via each
+component's own `power_units`.
 Elsewhere, `"pu"` remains purely an annotation channel; no other quantity registers `pu`.
 
 ```json
@@ -62,6 +65,15 @@ The named property must exist in the same object's `properties`.
 For a property whose unit depends on the value of another (sibling)
 property, `x-unit-discriminator` names that sibling and `x-units` maps each
 discriminator value to its unit.
+
+The most common discriminator is `power_units`: every component with a power-family field
+(active/reactive/apparent power, ratings, limits, ramp rates) carries a `power_units`
+property of type `UnitSystem`, and every such field is annotated against it. Unlike
+`parameter_units` and the other per-family discriminators, which typically default to
+`COMPONENT_BASE` or `NATURAL_UNITS`, **`power_units` carries no default** — a producer must
+always set it explicitly. A new component with power-family fields needs both: the
+`power_units` property itself, and an `x-unit-discriminator`/`x-units` pair on every field it
+governs.
 
 ```json
 "level_data_type": { "$ref": "../../Core/common.json#/definitions/ReservoirDataType" },
@@ -128,6 +140,70 @@ Rules (applied recursively to every nesting level):
   property, and its `x-units` key set must exactly equal that sibling's enum.
 - Leaf values must be vocabulary units (or `"pu"`).
 
+### `x-quantity`
+
+A unit does not always say what the number *is*. Five units in the vocabulary
+name more than one quantity type:
+
+| Unit | Quantity types |
+|---|---|
+| `pu` | ActivePower, ApparentPower, Conductance, Reactance, ReactivePower, Resistance, Susceptance, Voltage |
+| `1` | Dimensionless, Fraction, PowerFactor |
+| `ohm` | Impedance, Reactance, Resistance |
+| `S` | Conductance, Susceptance |
+| `m` | Elevation, Length |
+
+`x-quantity` names the intended one. It is either a **quantity-type string** —
+every ambiguous unit on the property means that quantity — or a **unit ->
+quantity object**, for a property whose branches genuinely disagree:
+
+```json
+"magnitude":   { "type": "number", "x-unit": "pu", "x-quantity": "Voltage" },
+
+"active_power": {
+  "type": "number",
+  "x-unit-discriminator": "power_units",
+  "x-units": { "NATURAL_UNITS": "MW", "COMPONENT_BASE": "pu" },
+  "x-quantity": "ActivePower"
+},
+
+"ac_setpoint": {
+  "x-unit-discriminator": "ac_control",
+  "x-units": { "AC_POWER_FACTOR": "1", "AC_VOLTAGE": "pu" },
+  "x-quantity": { "1": "PowerFactor", "pu": "Voltage" }
+}
+```
+
+#### When it is required
+
+Only where **sibling inference** cannot settle the unit. Within a single
+`x-units` map, a branch whose unit names exactly one quantity pins that quantity
+for the map, and an ambiguous branch beside it means the same thing. So
+`{ NATURAL_UNITS: MW, COMPONENT_BASE: pu }` needs no declaration — `MW` is
+unambiguously ActivePower, therefore so is the `pu` branch. That covers the
+power-family pattern every component with power fields uses.
+
+Inference is deliberately conservative: the pin must also be a candidate for
+every ambiguous branch in the same map, or nothing is inferred. This is what
+keeps the `COMPONENT_MVAR` shunt bases honest. A magnetizing shunt's
+`{ NATURAL_UNITS: S, COMPONENT_MVAR: MVAr, COMPONENT_BASE: pu }` would otherwise
+pin ReactivePower off the `MVAr` branch, but the property is a **Susceptance** —
+`COMPONENT_MVAR` stores a power at unity voltage, not the property's own
+quantity. `S` is not a ReactivePower unit, so inference refuses and the schema
+declares `"x-quantity": "Susceptance"`.
+
+Declaration therefore beats inference; inference beats failure. A declaration
+may resolve what inference cannot, but it may not **contradict** it — `pu`
+legally names Voltage, so nothing but the sibling `MW` branch makes
+`"x-quantity": "Voltage"` wrong on an `active_power`, and rule 7 rejects it.
+
+`x-quantity` is rejected on a property whose units are already unambiguous:
+`MVA` names ApparentPower and nothing else, so declaring it there is noise.
+
+Consumers read this instead of maintaining their own lookup table. The Julia
+model generator's `declared_quantity` accessors come from `x-quantity` plus
+inference; it carries no quantity table of its own.
+
 ## Placement warning: annotations as `$ref` siblings are invisible until bundling
 
 Under JSON Schema draft-07 and OpenAPI 3.0, any keyword placed **as a sibling
@@ -193,12 +269,19 @@ annotated property's description is not exactly the canonical form.
 
 ## Conventions this vocabulary encodes
 
-- **DB / interchange carry natural units**, with one
-  deliberate exception: branch electrical parameters (`r`/`x`/`b`/`g`) may be
-  stored in per-unit *or* natural units, and the storage layer records which
-  per row (GridDB `transmission_lines.parameter_units`: `COMPONENT_BASE` → `pu`,
-  `NATURAL_UNITS` → `ohm`/`S`). For every other quantity the DB stores natural
-  units only and `"pu"` is a model-layer annotation, not a stored unit.
+- **Interchange carries natural units by default, with two deliberate per-unit
+  exceptions.** Branch electrical parameters (`r`/`x`/`b`/`g`) may be stored in
+  per-unit *or* natural units, and the storage layer records which per row
+  (GridDB `transmission_lines.parameter_units`: `COMPONENT_BASE` → `pu`,
+  `NATURAL_UNITS` → `ohm`/`S`). Every component's power-family fields
+  (active/reactive/apparent power, ratings, limits, ramp rates) carry the same
+  option: the component's own `power_units` — required, no default — selects
+  `pu` (`COMPONENT_BASE`, against that component's `base_power`) or the
+  physical unit (`NATURAL_UNITS`) for every power-family field it has.
+  `Core/units.json` carries the `pu` rows for `ActivePower`, `ReactivePower`,
+  `ApparentPower`, and `pu/min` for `ActivePowerChangeRate` that back this. For
+  every other quantity, natural units only, and `"pu"` is a model-layer
+  annotation, not a stored unit.
 - **Percent is banned.** Fractions and dimensionless quantities use the unit
   `"1"` and are stored as fractions (`0.95`, not `95`). There is no `"%"` unit.
 - **`unit` / `units` string properties.** Any property literally named `unit`
@@ -240,6 +323,10 @@ schema JSON under `Core/`, `Operations/`, `Investments/`, `Dynamics/`
 5. No `"descriptor"` keys and no `"type": null` anywhere.
 6. Every `unit` / `units` string property has a description mentioning
    `Core/units.json` or the vocabulary.
+7. Every property whose unit is ambiguous resolves to one quantity type:
+   `x-quantity` is present where sibling inference cannot settle it, names a
+   quantity registered for that unit, does not contradict what the sibling
+   branches imply, and is absent where the units are already unambiguous.
 
 It runs in CI (`.github/workflows/validate-schemas.yml`) on every push and pull
 request and exits non-zero on any failure.

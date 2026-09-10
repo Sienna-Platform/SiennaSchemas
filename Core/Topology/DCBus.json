@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A DC bus.",
   "properties": {
     "area": {
@@ -27,6 +27,7 @@
       "description": "Voltage as a multiple of `base_voltage`. in psy5 a required param with an option to be nothing Units: pu.",
       "type": "number",
       "x-unit": "pu",
+      "x-quantity": "Voltage",
       "x-unit-base": "base_voltage"
     },
     "name": {
@@ -39,8 +40,9 @@
     },
     "voltage_limits": {
       "description": "Limits on the voltage variation as multiples of `base_voltage`. in psy5 a required param with an option to be nothing Units: pu.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../common.json#/$defs/MinMax",
       "x-unit": "pu",
+      "x-quantity": "Voltage",
       "x-unit-base": "base_voltage"
     }
   },

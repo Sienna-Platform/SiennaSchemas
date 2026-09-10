@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Policy requirement that the qualified demand-side technologies have their demand met by an equal amount of generation from qualified supply in every hour, such that `sum(P)_qualified_supply >= sum(D)_qualified_demand`.",
   "properties": {
     "id": {
       "description": "ID for individual component.",

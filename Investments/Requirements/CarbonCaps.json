@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Policy requirement limiting the amount of carbon produced in the target year. The limit can be given either as a total mass of CO2 or as the carbon intensity of the portfolio, in mass of CO2 per MWh of electricity.",
   "properties": {
     "id": {
       "description": "ID for individual component.",

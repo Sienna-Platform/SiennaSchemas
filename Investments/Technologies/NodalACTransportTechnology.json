@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Nodal representation of candidate AC transmission lines between two regions. Alongside capacity limits and a capital cost curve it carries the electrical characteristics of the line — resistance, series reactance, and voltage rating — and is added in discrete units of `unit_size`.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -27,19 +28,19 @@
     },
     "capacity_limits": {
       "description": "Allowable capacity for a transmission line. Units: MW.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "MW"
     },
     "capital_costs": {
-      "description": "Cost of adding new capacity to the nodal transmission line. Units: USD/MW.",
-      "$ref": "../../Core/common.json#/definitions/ValueCurve",
-      "x-unit": "USD/MW"
+      "description": "Capital and interconnection cost of adding new capacity to the nodal transmission line (capital cost in USD/MW).",
+      "$ref": "../../Core/common.json#/$defs/CapitalCost"
     },
     "resistance": {
       "description": "Technology resistance in Ohms. Units: ohm.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "ohm"
+      "x-unit": "ohm",
+      "x-quantity": "Resistance"
     },
     "voltage": {
       "description": "Voltage rating of transmission line. Units: kV.",
@@ -57,7 +58,8 @@
       "description": "Series reactance for a line. Units: ohm.",
       "type": "number",
       "default": 0.0,
-      "x-unit": "ohm"
+      "x-unit": "ohm",
+      "x-quantity": "Reactance"
     },
     "requirements": {
       "description": "List of requirement IDs associated with the component.",
@@ -69,7 +71,7 @@
     },
     "financial_data": {
       "description": "Struct containing relevant financial information for a technology.",
-      "$ref": "../../Core/common.json#/definitions/TechnologyFinancialData"
+      "$ref": "../Financials/TechnologyFinancialData.json"
     }
   },
   "required": [

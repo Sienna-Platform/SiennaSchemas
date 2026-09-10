@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Supplemental attribute defining which existing generators mapped to a supply technology are eligible for retirement, optionally with the year each was built and the year each is already scheduled to retire.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -25,10 +26,17 @@
       "additionalProperties": {
         "type": "integer"
       }
+    },
+    "retirement_cost": {
+      "description": "Cost associated with retiring the eligible generators. Units: USD/MW.",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
+      "x-unit": "USD/MW"
     }
   },
   "required": [
-    "id"
+    "id",
+    "eligible_generators",
+    "retirement_cost"
   ],
   "title": "RetirementPotential",
   "type": "object"

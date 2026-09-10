@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A High Voltage Voltage-Source Converter DC line, which must be connected to an ACBus on each end. This model is appropriate for operational simulations with a linearized DC power flow approximation with losses using a voltage-current model. For modeling a DC network, see TModelHVDCLine.",
   "properties": {
     "id": {
@@ -19,29 +19,49 @@
       "type": "integer"
     },
     "active_power_flow": {
-      "description": "Initial condition of active power flowing from the from-bus to the to-bus in DC. Units: MW.",
+      "description": "Initial condition of active power flowing from the from-bus to the to-bus in DC. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MW"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ActivePower"
     },
     "rating": {
-      "description": "Maximum output power rating of the converter. Units: MVA.",
+      "description": "Maximum output power rating of the converter. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
-      "x-unit": "MVA"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ApparentPower"
     },
     "active_power_limits_from": {
-      "description": "Minimum and maximum active power flows to the FROM node. Units: MW.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MW"
+      "description": "Minimum and maximum active power flows to the FROM node. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ActivePower"
     },
     "active_power_limits_to": {
-      "description": "Minimum and maximum active power flows to the TO node. Units: MW.",
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MW"
+      "description": "Minimum and maximum active power flows to the TO node. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ActivePower"
     },
     "admittance_units": {
       "description": "Unit basis for the series conductance g.",
       "default": "NATURAL_UNITS",
-      "$ref": "../../Core/common.json#/definitions/AdmittanceUnitBasis"
+      "$ref": "../../Core/common.json#/$defs/AdmittanceUnitBasis"
     },
     "g": {
       "description": "Series conductance of the DC line. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MW, COMPONENT_BASE: pu .",
@@ -52,7 +72,8 @@
         "NATURAL_UNITS": "S",
         "COMPONENT_MVAR": "MW",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Conductance"
     },
     "dc_current": {
       "description": "DC current on the converter flowing in the DC line, from `from` bus to `to` bus. Units: A.",
@@ -61,25 +82,30 @@
       "x-unit": "A"
     },
     "reactive_power_from": {
-      "description": "Initial condition of reactive power flowing into the from-bus. Units: MVAr.",
+      "description": "Initial condition of reactive power flowing into the from-bus. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ReactivePower"
     },
     "dc_control_from": {
       "description": "DC-side control mode of the `from` converter.",
       "default": "DC_VOLTAGE",
-      "$ref": "../../Operations/common.json#/definitions/VSCDCControlModes"
+      "$ref": "../../Operations/common.json#/$defs/VSCDCControlModes"
     },
     "ac_control_from": {
       "description": "AC-side control mode of the `from` converter.",
       "default": "AC_VOLTAGE",
-      "$ref": "../../Operations/common.json#/definitions/VSCACControlModes"
+      "$ref": "../../Operations/common.json#/$defs/VSCACControlModes"
     },
     "setpoint_voltage_units": {
       "description": "Unit basis for the DC_VOLTAGE/DC_VOLTAGE_DROOP/AC_VOLTAGE branches of dc_setpoint_from/to and ac_setpoint_from/to. Independent of voltage_units, which covers voltage_limits_from/to only.",
       "default": "NATURAL_UNITS",
-      "$ref": "../../Operations/common.json#/definitions/VoltageUnitBasis"
+      "$ref": "../../Operations/common.json#/$defs/VoltageUnitBasis"
     },
     "dc_setpoint_from": {
       "description": "Converter DC setpoint in the `from` bus converter. When `dc_control_from` regulates DC voltage this number is the DC voltage on the DC side of the converter; when it controls DC power this value is the power demand in MW, if positive the converter is supplying power to the AC network at the `from` bus; if negative, the converter is withdrawing power from the AC network at the `from` bus. Units: per dc_control_from — DC_POWER: MW, DC_VOLTAGE: (per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu), DC_VOLTAGE_DROOP: (per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu) .",
@@ -104,7 +130,8 @@
           },
           "description": "Units: per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu ."
         }
-      }
+      },
+      "x-quantity": "Voltage"
     },
     "ac_setpoint_from": {
       "description": "Converter AC setpoint in the `from` bus converter. When `ac_control_from` regulates AC voltage this number is the AC voltage on the AC side of the converter; when it controls reactive power this value is the power factor setpoint. Units: per ac_control_from — AC_REACTIVE_POWER: 1, AC_VOLTAGE: (per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu) .",
@@ -121,6 +148,10 @@
           },
           "description": "Units: per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu ."
         }
+      },
+      "x-quantity": {
+        "1": "PowerFactor",
+        "pu": "Voltage"
       }
     },
     "rated_ac_voltage_from": {
@@ -132,14 +163,17 @@
     "converter_loss_from": {
       "description": "Loss model coefficients in the `from` bus converter. It accepts a linear model or quadratic. Same converter data is used in both ends.",
       "default": {
-        "curve_type": "INPUT_OUTPUT",
-        "function_data": {
-          "function_type": "LINEAR",
-          "constant_term": 0,
-          "proportional_term": 0
+        "power_units": "NATURAL_UNITS",
+        "value_curve": {
+          "curve_type": "INPUT_OUTPUT",
+          "function_data": {
+            "function_type": "LINEAR",
+            "constant_term": 0,
+            "proportional_term": 0
+          }
         }
       },
-      "$ref": "../../Core/common.json#/definitions/InputOutputCurve"
+      "$ref": "../../Core/common.json#/$defs/LossCurve"
     },
     "max_dc_current_from": {
       "description": "Maximum stable dc current limits. Units: A.",
@@ -148,30 +182,41 @@
       "x-unit": "A"
     },
     "rating_from": {
-      "description": "Converter rating in the `from` bus. Units: MVA.",
+      "description": "Converter rating in the `from` bus. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "default": 100000000.0,
       "type": "number",
-      "x-unit": "MVA"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ApparentPower"
     },
     "reactive_power_limits_from": {
-      "description": "Limits on the Reactive Power at the `from` side. Units: MVAr.",
+      "description": "Limits on the Reactive Power at the `from` side. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": {
         "min": 0.0,
         "max": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MVAr"
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ReactivePower"
     },
     "power_factor_weighting_fraction_from": {
       "description": "Power weighting factor fraction used in reducing the active power order and either the reactive power order when the converter rating is violated. When is 0.0, only the active power is reduced; when is 1.0, only the reactive power is reduced; otherwise, a weighted reduction of both active and reactive power is applied. Units: 1.",
       "default": 1.0,
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "voltage_units": {
       "description": "Unit basis for the DC bus voltage limits (voltage_limits_from/to only). Independent of setpoint_voltage_units, which covers dc_setpoint_from/to and ac_setpoint_from/to.",
       "default": "NATURAL_UNITS",
-      "$ref": "../../Operations/common.json#/definitions/VoltageUnitBasis"
+      "$ref": "../../Operations/common.json#/$defs/VoltageUnitBasis"
     },
     "voltage_limits_from": {
       "description": "Limits on the Voltage at the DC `from` Bus in kV. The DC base voltage is the `dc_setpoint` of the converter with `dc_voltage_control` enabled; exactly one converter must control the DC voltage. Units: kV. Units: per voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
@@ -179,34 +224,41 @@
         "min": 0.0,
         "max": 999.9
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit-discriminator": "voltage_units",
       "x-units": {
         "NATURAL_UNITS": "kV",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Voltage"
     },
     "dc_voltage_droop_from": {
       "description": "DC-voltage droop gain on the `from` converter, used when `dc_control_from` is `DC_VOLTAGE_DROOP`: `V_dc = dc_setpoint_from - dc_voltage_droop_from * P_c`. Units: pu.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "pu"
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
     },
     "reactive_power_to": {
-      "description": "Initial condition of reactive power flowing into the to-bus. Units: MVAr.",
+      "description": "Initial condition of reactive power flowing into the to-bus. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
-      "x-unit": "MVAr"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ReactivePower"
     },
     "dc_control_to": {
       "description": "DC-side control mode of the `to` converter.",
       "default": "DC_VOLTAGE",
-      "$ref": "../../Operations/common.json#/definitions/VSCDCControlModes"
+      "$ref": "../../Operations/common.json#/$defs/VSCDCControlModes"
     },
     "ac_control_to": {
       "description": "AC-side control mode of the `to` converter.",
       "default": "AC_VOLTAGE",
-      "$ref": "../../Operations/common.json#/definitions/VSCACControlModes"
+      "$ref": "../../Operations/common.json#/$defs/VSCACControlModes"
     },
     "dc_setpoint_to": {
       "description": "Converter DC setpoint in the `to` bus converter. When `dc_control_to` regulates DC voltage this number is the DC voltage on the DC side of the converter; when it controls DC power this value is the power demand in MW, if positive the converter is supplying power to the AC network at the `to` bus; if negative, the converter is withdrawing power from the AC network at the `to` bus. Units: per dc_control_to — DC_POWER: MW, DC_VOLTAGE: (per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu), DC_VOLTAGE_DROOP: (per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu) .",
@@ -231,7 +283,8 @@
           },
           "description": "Units: per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu ."
         }
-      }
+      },
+      "x-quantity": "Voltage"
     },
     "ac_setpoint_to": {
       "description": "Converter AC setpoint in the `to` bus converter. When `ac_control_to` regulates AC voltage this number is the AC voltage on the AC side of the converter; when it controls reactive power this value is the power factor setpoint. Units: per ac_control_to — AC_REACTIVE_POWER: 1, AC_VOLTAGE: (per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu) .",
@@ -248,6 +301,10 @@
           },
           "description": "Units: per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu ."
         }
+      },
+      "x-quantity": {
+        "1": "PowerFactor",
+        "pu": "Voltage"
       }
     },
     "rated_ac_voltage_to": {
@@ -259,14 +316,17 @@
     "converter_loss_to": {
       "description": "Loss model coefficients in the `to` bus converter. It accepts a linear model or quadratic. Same converter data is used in both ends.",
       "default": {
-        "curve_type": "INPUT_OUTPUT",
-        "function_data": {
-          "function_type": "LINEAR",
-          "constant_term": 0,
-          "proportional_term": 0
+        "power_units": "NATURAL_UNITS",
+        "value_curve": {
+          "curve_type": "INPUT_OUTPUT",
+          "function_data": {
+            "function_type": "LINEAR",
+            "constant_term": 0,
+            "proportional_term": 0
+          }
         }
       },
-      "$ref": "../../Core/common.json#/definitions/InputOutputCurve"
+      "$ref": "../../Core/common.json#/$defs/LossCurve"
     },
     "max_dc_current_to": {
       "description": "Maximum stable dc current limits. Units: A.",
@@ -275,25 +335,36 @@
       "x-unit": "A"
     },
     "rating_to": {
-      "description": "Converter rating in the `to` bus. Units: MVA.",
+      "description": "Converter rating in the `to` bus. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "default": 100000000.0,
       "type": "number",
-      "x-unit": "MVA"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ApparentPower"
     },
     "reactive_power_limits_to": {
-      "description": "Limits on the Reactive Power at the `to` side. Units: MVAr.",
+      "description": "Limits on the Reactive Power at the `to` side. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "default": {
         "min": 0.0,
         "max": 0.0
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
-      "x-unit": "MVAr"
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ReactivePower"
     },
     "power_factor_weighting_fraction_to": {
       "description": "Power weighting factor fraction used in reducing the active power order and either the reactive power order when the converter rating is violated. When is 0.0, only the active power is reduced; when is 1.0, only the reactive power is reduced; otherwise, a weighted reduction of both active and reactive power is applied. Units: 1.",
       "default": 1.0,
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "voltage_limits_to": {
       "description": "Limits on the Voltage at the DC `to` Bus in kV. The DC base voltage is the `dc_setpoint` of the converter with `dc_voltage_control` enabled; exactly one converter must control the DC voltage. Units: kV. Units: per voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
@@ -301,18 +372,20 @@
         "min": 0.0,
         "max": 999.9
       },
-      "$ref": "../../Core/common.json#/definitions/MinMax",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit-discriminator": "voltage_units",
       "x-units": {
         "NATURAL_UNITS": "kV",
         "COMPONENT_BASE": "pu"
-      }
+      },
+      "x-quantity": "Voltage"
     },
     "dc_voltage_droop_to": {
       "description": "DC-voltage droop gain on the `to` converter, used when `dc_control_to` is `DC_VOLTAGE_DROOP`: `V_dc = dc_setpoint_to - dc_voltage_droop_to * P_c`. Units: pu.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "pu"
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
     },
     "rated_dc_voltage": {
       "description": "Rated (base) DC voltage of the link in kV. Used as the DC voltage base for interpreting DC-voltage setpoints; 0.0 means unspecified (DC-voltage setpoints are taken as per-unit directly). Units: kV.",
@@ -340,18 +413,24 @@
       "description": "Percent of the total Mvar required to hold the voltage at the bus regulated by the `from` converter that is contributed by this converter. Units: 1.",
       "default": 100.0,
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "rmpct_to": {
       "description": "Percent of the total Mvar required to hold the voltage at the bus regulated by the `to` converter that is contributed by this converter. Units: 1.",
       "default": 100.0,
       "type": "number",
-      "x-unit": "1"
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "base_power": {
       "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",
       "type": "number",
       "x-unit": "MVA"
+    },
+    "power_units": {
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "$ref": "../../Core/common.json#/$defs/UnitSystem"
     }
   },
   "required": [
@@ -363,7 +442,8 @@
     "rating",
     "active_power_limits_from",
     "active_power_limits_to",
-    "base_power"
+    "base_power",
+    "power_units"
   ],
   "title": "TwoTerminalVSCLine",
   "type": "object"

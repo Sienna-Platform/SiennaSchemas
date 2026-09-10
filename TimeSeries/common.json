@@ -1,8 +1,8 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "TimeSeriesCommon",
   "description": "Shared value types for the time series association schemas. Field names, shapes, and wire forms mirror the backing time-series store's types exactly; only the Features/FeatureValue/Descriptors names carry a TimeSeries prefix, because the bare names are too generic for a shared schema namespace.",
-  "definitions": {
+  "$defs": {
     "OwnerCategory": {
       "title": "OwnerCategory",
       "type": "string",
@@ -34,12 +34,14 @@
       "title": "TimeSeriesFeatures",
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/TimeSeriesFeatureValue"
+        "$ref": "#/$defs/TimeSeriesFeatureValue"
       },
       "propertyNames": {
         "not": {
           "enum": [
             "application_data",
+            "array_shape",
+            "association_id",
             "component_field",
             "count",
             "data",
@@ -50,6 +52,7 @@
             "ext",
             "features",
             "horizon",
+            "id",
             "initial_timestamp",
             "interval",
             "length",
@@ -61,8 +64,10 @@
             "quantity_kind",
             "resolution",
             "scenario_count",
+            "time_reference",
             "time_series_type",
             "timestamps",
+            "timestamps_uri",
             "unit_system",
             "units",
             "uri"
@@ -75,6 +80,11 @@
       "title": "ElementType",
       "type": "string",
       "description": "Canonical element type of the stored array: a dtype spelling (`f64`, `f32`, `i64`, `i32`, `u64`, `u32`, `u16`, `u8`, `i16`, `i8`, `bool`) for plain scalars, else `tuple(N,dtype)` or a function-data kind (`linear_function`, `quadratic_function`, `piecewise_linear`, `piecewise_step`). It says what one timestep's value means and how it is laid out; the physical dtype of the bytes derives from it rather than being recorded separately. `linear_function` occupies 2 slots, `quadratic_function` 3; the two piecewise kinds are ragged, with the used count in the row's leading element."
+    },
+    "TimeReference": {
+      "title": "TimeReference",
+      "type": "string",
+      "description": "How a series' timestamps were spelled, recorded so a read hands back what the write declared instead of relabelling every series UTC. Four forms share one string, and are unambiguous because a zone name that would read as either literal or as an offset is rejected: `utc`; `zoneless` for a wall clock, which names no instant; a fixed UTC offset (`-07:00`, `+0530`, `+05`); or an IANA zone name (`America/Denver`). Only the name's shape is checked here — whether a zone exists is a tz-database question, and the store records the name either way. A spelling, not a grid: it does not change what a calendar `resolution` steps on, and a series on a local-clock grid is a NonSequentialTimeSeries. Descriptive, so two series differing only in it are duplicates rather than distinct series, but not inert — a query's bounds must match the series' spelling, and the zoneless series form their own group."
     },
     "Period": {
       "title": "Period",

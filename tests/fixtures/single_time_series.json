@@ -1,4 +1,5 @@
 {
+  "association_id": 1,
   "owner_id": 42,
   "owner_type": "ThermalStandard",
   "owner_category": "Component",
@@ -10,9 +11,11 @@
   "uri": "infrastore://systems/base.h5",
   "element_type": "f64",
   "element_shape": [],
+  "array_shape": [8760],
   "units": "MW",
   "quantity_kind": "ActivePower",
   "unit_system": "NATURAL_UNITS",
+  "time_reference": "America/Denver",
   "component_field": "max_active_power",
   "initial_timestamp": "2030-01-01T00:00:00Z",
   "resolution": "PT1H",
