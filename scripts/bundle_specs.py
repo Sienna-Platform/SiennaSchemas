@@ -68,15 +68,9 @@ DOMAINS = [
 # a two-token `<file>#/$defs/<Name>` external ref, and so is hoisted
 # into a bundle's own `$defs` rather than left as a dangling pointer.
 #
-# `Operations/common.json` belongs here for the same reason the other two do: all 14 of its
-# `$defs` are published as `components.schemas` members by openapi-operations.json and are
-# `$ref`'d from the component files. Leaving it off meant every reference into it was inlined
-# instead of hoisted, so the generator minted an anonymous copy per reference site --
-# `VoltageUnitBasis` became `<Owner>VoltageSetpointUnits`/`<Owner>DcVoltageUnits`, and
-# `TwoWindingTransformerShuntLocation` gained a `...ShuntLocation2` twin.
-#
-# The three files' `$defs` names are disjoint (62 + 14 + 6, no overlap), which matters because
-# `hoisted` is keyed by name alone: two common files defining one name would collide.
+# `Operations/common.json` belongs here too: its `$defs` are published as
+# `components.schemas` and `$ref`'d elsewhere, so they must be hoisted, not
+# inlined. Names across the three files must stay disjoint -- `hoisted` keys by name alone.
 COMMON_FILES = [
     "Core/common.json",
     "Operations/common.json",
@@ -110,9 +104,9 @@ def is_external(ref):
     return filepart != ""
 
 
-# Keywords that may sit beside a `$ref` without changing what validates: pure annotations
-# plus this repo's `x-` unit extensions. Anything else is a real constraint, and a `$ref`
-# carrying one describes a schema genuinely narrower than its target -- see walk().
+# Keywords that may sit beside a `$ref` without changing what validates: pure
+# annotations plus this repo's `x-` unit extensions. Anything else is a real
+# constraint, so a `$ref` carrying it is genuinely narrower than its target.
 ANNOTATION_SIBLINGS = frozenset(
     {
         "default",
@@ -179,12 +173,9 @@ class Bundler:
             doc = load_json(common_path)
             for name in doc.get("$defs", {}):
                 self._common_owner[name] = common_path
-        # resolved schema-file path -> the name the selector gives it in
-        # components.schemas, for every member spelled as a bare whole-file
-        # `$ref`. Populated per-spec by bundle(). A `$ref` reaching one of these
-        # files from anywhere else in the tree becomes an internal
-        # `#/components/schemas/<Name>` reference instead of an inlined copy of
-        # the body -- see walk().
+        # resolved file path -> name the selector publishes it under in
+        # components.schemas, for whole-file `$ref` members. A `$ref` reaching
+        # one of these files elsewhere becomes an internal reference, not an inlined copy.
         self._selector_members = {}
 
     def _hoist_common_definition(self, name, source_path):
@@ -301,42 +292,18 @@ class Bundler:
                     node["$ref"], base_path
                 )
                 if common_name is not None and _annotation_only(siblings):
-                    # Hoist and point at the internal definition, carrying the siblings
-                    # alongside the `$ref`.
-                    #
-                    # Inlining here instead used to mint one anonymous copy of the target
-                    # per reference site -- 27 copies of `UnitSystem` (`<Owner>PowerUnits`,
-                    # `<Owner>VoltageSetpointUnits`, ...), 80 of `MinMax`, 10 of
-                    # `PrimeMovers` -- because a property that `$ref`s a shared definition
-                    # and adds a `description` or a `default` took the inline path. The old
-                    # Java toolchain papered over that with a few hundred
-                    # `inlineSchemaNameMappings` entries; nothing does downstream now.
-                    #
-                    # Safe because every sibling keyword used in this repo is an annotation
-                    # or an `x-` extension (`_annotation_only` enforces exactly that), never
-                    # a validation constraint: the target is always the complete validation
-                    # schema, so referencing it cannot change what validates. A sibling that
-                    # *did* constrain would make the property genuinely different from the
-                    # shared definition, and falls through to inlining below.
-                    #
-                    # `$ref` with siblings is legal in OpenAPI 3.1 / JSON Schema 2020-12,
-                    # and this is already how `_rewrite_common_internal` treats a
-                    # common file's own internal refs.
+                    # Hoist even with annotation siblings present, so a `description`
+                    # or `default` doesn't force an inline copy. Safe: `_annotation_only`
+                    # guarantees no sibling constrains validation.
                     self._hoist_common_definition(common_name, target)
                     out = {"$ref": f"#/$defs/{common_name}"}
                     for k, v in siblings.items():
                         out[k] = self.walk(v, base_path)
                     return out
-                # A whole-file `$ref` at a file the selector already publishes as
-                # `components.schemas.<Name>`. Inlining the body here would make the
-                # generator see an anonymous second copy of a named schema and mint a
-                # numbered alias for it -- `TimeSeriesAssociation`'s six `oneOf`
-                # branches became `TimeSeriesAssociation1..6` alongside the six real
-                # types. Point at the published name instead; the effective document is
-                # the same, and both toolchains resolve an internal reference.
-                # Gated on `base_path` not being the selector itself: the selector's
-                # own `components.schemas.<Name>` entry is the one place that whole-file
-                # `$ref` must still expand, or the member would point at itself.
+                # A whole-file `$ref` to a file the selector already publishes as
+                # components.schemas.<Name>: point at that name instead of inlining, so
+                # the generator doesn't see a second copy and alias it. Excludes the
+                # selector's own entry, which must still expand or it would self-reference.
                 if (
                     not siblings
                     and fragment in ("", "/")

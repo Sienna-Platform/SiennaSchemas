@@ -226,13 +226,14 @@ reports how many files each leg changed.
   packages into whatever env is active, so point it at a scratch one:
   `julia --project=$SCRATCH -e 'using Pkg; Pkg.add(["TimeZones","Test","Dates"])'`
   then `julia --project=$SCRATCH test/validate.jl`.
-- **Adding a component that `$ref`s a shared type can silently duplicate it.**
-  openapi-generator names inline aliases by occurrence count, so a new use of
-  `MinMax` may emit `MinMax_3`, which needs an `inlineSchemaNameMappings` entry
-  in `openapi-config-<domain>.json`. The count is empirical — nothing here can
-  derive it. The `No unmapped inline schema aliases` testset in
-  `PowerOpenAPIModels/test/validate.jl` is the only thing that catches it, which
-  is why the Julia validate is not optional.
+- **Adding a component that `$ref`s a shared type without naming it in `$defs`
+  can silently duplicate it.** An inline object or enum left anonymous at the
+  reference site gets minted as a fresh copy — `MinMax_3`, say — by OpenAPI.jl's
+  native generator; name it as a `$defs` entry instead, so the bundler points
+  every reference at the one definition. The `No unmapped inline schema
+  aliases` testset in `PowerOpenAPIModels/test/validate.jl` is the downstream
+  backstop that catches anything that slips through, which is why the Julia
+  validate is not optional.
 - **`validate_units.py` walks the directory tree, not the selector.** A schema
   file passes the unit gates before you have registered it anywhere. `check_refs`
   and the codegen legs are what notice it is missing from the selector.
