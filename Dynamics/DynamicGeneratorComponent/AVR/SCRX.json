@@ -24,7 +24,7 @@
     },
     "Efd_lim": {
       "description": "Field voltage regulator limits (regulator output)",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
     },
     "switch": {
       "description": "Switch",

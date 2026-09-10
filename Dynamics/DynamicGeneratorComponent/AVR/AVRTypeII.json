@@ -36,7 +36,7 @@
     },
     "Va_lim": {
       "description": "Limits for pi controller",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
     },
     "Ae": {
       "description": "1st ceiling coefficient",

@@ -20,7 +20,7 @@
     },
     "Vr_lim": {
       "description": "Voltage regulator limits (regulator output)",
-      "$ref": "../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/definitions/MinMax"
     },
     "Ke": {
       "description": "Exciter constant related to self-excited field",
