@@ -62,14 +62,6 @@
       "type": "number",
       "x-unit": "1",
       "x-quantity": "Dimensionless"
-    },
-    "requirements": {
-      "description": "List of requirement IDs associated with the component.",
-      "type": "array",
-      "default": [],
-      "items": {
-        "type": "integer"
-      }
     }
   },
   "required": [
