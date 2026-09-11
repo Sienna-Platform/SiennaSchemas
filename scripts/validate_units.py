@@ -109,7 +109,7 @@ def _check_fraction_per_time_basis(units):
     """FractionPerTime multiplies the simulation step, so its time basis must be
     the one OperationalDuration uses — re-basing either alone silently corrupts
     every stored decay rate by the ratio of the two."""
-    defaults = {q["name"]: q["default_unit"] for q in units["quantity_types"]}
+    defaults = {q["name"]: q["default_unit"] for q in units["quantity_kinds"]}
     fpt = defaults.get("FractionPerTime")
     opd = defaults.get("OperationalDuration")
     if fpt is not None and opd is not None and fpt != f"1/{opd}":
@@ -120,19 +120,19 @@ def _check_fraction_per_time_basis(units):
 
 
 # Optional sibling SiennaGridDB checkout carrying the DB-owned
-# column -> (quantity_type, unit) conventions. When present, it lets rule 2
-# tighten the flat vocabulary check into a (quantity_type, unit) pairing check
+# column -> (quantity_kind, unit) conventions. When present, it lets rule 2
+# tighten the flat vocabulary check into a (quantity_kind, unit) pairing check
 # for any schema property whose name matches a registered DB column.
 DEFAULT_GRIDDB_PATH = REPO_ROOT / ".." / "SiennaGridDB"
 COLUMN_CONVENTIONS_RELATIVE = Path("schema") / "column_conventions.json"
 
 
 def load_quantity_units():
-    """Map quantity_type -> set of units allowed for it (from units.json)."""
+    """Map quantity_kind -> set of units allowed for it (from units.json)."""
     units = load_json(UNITS_JSON)
     q2u = {}
     for a in units["allowed_units"]:
-        q2u.setdefault(a["quantity_type"], set()).add(a["unit"])
+        q2u.setdefault(a["quantity_kind"], set()).add(a["unit"])
     return q2u
 
 
@@ -147,7 +147,7 @@ def load_unit_quantities():
     units = load_json(UNITS_JSON)
     by_unit = {}
     for a in units["allowed_units"]:
-        by_unit.setdefault(a["unit"], set()).add(a["quantity_type"])
+        by_unit.setdefault(a["unit"], set()).add(a["quantity_kind"])
     return {u: sorted(q) for u, q in by_unit.items()}
 
 
@@ -286,7 +286,7 @@ def check_x_quantity(spec, path, source_file, failures, unit_quantities, prop_na
 
 def load_column_allowed_units(griddb_path=None):
     """Map DB column name -> set of units the registry allows for that column's
-    quantity_type(s), sourced from SiennaGridDB's column_conventions.json
+    quantity kind(s), sourced from SiennaGridDB's column_conventions.json
     crossed with units.json. Returns {} when the checkout is absent (the tighter
     pairing check is then simply skipped), so pass --griddb-path in CI if the
     rule is meant to run — a missing path makes this check silently vacuous."""
@@ -299,6 +299,8 @@ def load_column_allowed_units(griddb_path=None):
     col_quantities = {}
     for entry in conventions:
         column = entry.get("column")
+        # SiennaGridDB's column_conventions.json still spells this key
+        # quantity_type; it renames in its own follow-up PR.
         quantity = entry.get("quantity_type")
         if column is None or quantity is None:
             continue
@@ -636,10 +638,10 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
                     Failure(source_file, path + "/x-unit", "x-unit-vocabulary",
                             val, "a unit in Core/units.json allowed_units or 'pu'")
                 )
-            # Rule 2b: (quantity_type, unit) pairing. When the property name
+            # Rule 2b: (quantity_kind, unit) pairing. When the property name
             # matches a DB column registered in SiennaGridDB's
             # column_conventions.json, the unit must be one the registry allows
-            # for that column's quantity_type — catches e.g. a reactive-power
+            # for that column's quantity kind — catches e.g. a reactive-power
             # field annotated 'MW' that the flat vocabulary check waves through.
             elif prop_name in col_allowed and val not in col_allowed[prop_name]:
                 failures.append(
@@ -917,7 +919,7 @@ def main():
     parser.add_argument("--griddb-path", default=None,
                         help="Path to the SiennaGridDB checkout supplying "
                              "schema/column_conventions.json for the "
-                             "(quantity_type, unit) pairing rule. Defaults to "
+                             "(quantity_kind, unit) pairing rule. Defaults to "
                              "../SiennaGridDB; the rule is skipped when absent.")
     args = parser.parse_args()
 

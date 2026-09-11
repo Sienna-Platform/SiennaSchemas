@@ -346,11 +346,11 @@ def load_conversion_unit_families():
     with open(units_path, encoding="utf-8") as f:
         vocab = json.load(f)
     families = {}
-    for conversion_unit, quantity_types in CONVERSION_UNIT_QUANTITY_TYPES.items():
+    for conversion_unit, quantity_kinds in CONVERSION_UNIT_QUANTITY_TYPES.items():
         families[conversion_unit] = {
             entry["unit"]
             for entry in vocab["allowed_units"]
-            if entry["quantity_type"] in quantity_types and entry["unit"] != "pu"
+            if entry["quantity_kind"] in quantity_kinds and entry["unit"] != "pu"
         }
     return families
 
