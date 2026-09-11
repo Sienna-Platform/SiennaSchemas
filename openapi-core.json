@@ -17,6 +17,12 @@
       "CapitalCost": {
         "$ref": "Core/common.json#/$defs/CapitalCost"
       },
+      "ChargeDischarge": {
+        "$ref": "Core/common.json#/$defs/ChargeDischarge"
+      },
+      "MinMaxByKey": {
+        "$ref": "Core/common.json#/$defs/MinMaxByKey"
+      },
       "StorageCapitalCost": {
         "$ref": "Core/common.json#/$defs/StorageCapitalCost"
       },
@@ -37,6 +43,12 @@
       },
       "CostCurve": {
         "$ref": "Core/common.json#/$defs/CostCurve"
+      },
+      "CurveStyles": {
+        "$ref": "Core/common.json#/$defs/CurveStyles"
+      },
+      "CurveMultiStep": {
+        "$ref": "Core/common.json#/$defs/CurveMultiStep"
       },
       "DbdPnts": {
         "$ref": "Core/common.json#/$defs/DbdPnts"
@@ -95,6 +107,12 @@
       "LoadZone": {
         "$ref": "Core/Topology/LoadZone.json"
       },
+      "LossCurve": {
+        "$ref": "Core/common.json#/$defs/LossCurve"
+      },
+      "LossValueCurve": {
+        "$ref": "Core/common.json#/$defs/LossValueCurve"
+      },
       "MarketBidTimeSeriesCost": {
         "$ref": "Core/common.json#/$defs/MarketBidTimeSeriesCost"
       },
@@ -130,9 +148,6 @@
       },
       "TurbinePump": {
         "$ref": "Core/common.json#/$defs/TurbinePump"
-      },
-      "TwoTerminalLoss": {
-        "$ref": "Core/common.json#/$defs/TwoTerminalLoss"
       },
       "ValueCurve": {
         "$ref": "Core/common.json#/$defs/ValueCurve"

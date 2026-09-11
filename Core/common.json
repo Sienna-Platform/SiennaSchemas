@@ -507,6 +507,23 @@
       "title": "IncrementalCurve",
       "type": "object"
     },
+    "ChargeDischarge": {
+      "description": "A pair of values, one for the charging (`charge`) and one for the discharging (`discharge`) direction of a quantity.",
+      "properties": {
+        "charge": {
+          "type": "number"
+        },
+        "discharge": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "charge",
+        "discharge"
+      ],
+      "title": "ChargeDischarge",
+      "type": "object"
+    },
     "InOut": {
       "description": "A pair of values, one for the inbound (`in`) and one for the outbound (`out`) direction of a quantity.",
       "properties": {
@@ -613,6 +630,52 @@
       "title": "LoadCost",
       "type": "object"
     },
+    "LossCurve": {
+      "description": "Losses of a device as a function of the flow through it, together with the power basis the curve is expressed in. `power_units` governs BOTH axes: a loss curve's y values are power in the same base as its x values, so a change of base rescales both. This is what separates it from a cost curve, whose y axis is currency and so rides through a change of base untouched.",
+      "properties": {
+        "power_units": {
+          "default": "NATURAL_UNITS",
+          "$ref": "#/$defs/UnitSystem"
+        },
+        "value_curve": {
+          "$ref": "#/$defs/LossValueCurve"
+        }
+      },
+      "required": [
+        "value_curve",
+        "power_units"
+      ],
+      "title": "LossCurve",
+      "type": "object"
+    },
+    "LossValueCurve": {
+      "description": "The shape of a loss curve, selected by `curve_type`. `INPUT_OUTPUT` gives the total loss at each flow level -- a constant loss plus a proportional loss rate, in MW of loss per MW of flow. `INCREMENTAL` gives the marginal loss rate instead, the form a piecewise model uses to give different proportional losses on different flow segments. Individual loss fields accept narrower sets of shapes than this union admits; the consuming data layer enforces that, not this schema.",
+      "title": "LossValueCurve",
+      "discriminator": {
+        "mapping": {
+          "INCREMENTAL": "#/components/schemas/IncrementalCurve",
+          "INPUT_OUTPUT": "#/components/schemas/InputOutputCurve"
+        },
+        "propertyName": "curve_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/InputOutputCurve"
+        },
+        {
+          "$ref": "#/$defs/IncrementalCurve"
+        }
+      ],
+      "default": {
+        "curve_type": "INPUT_OUTPUT",
+        "function_data": {
+          "function_type": "LINEAR",
+          "constant_term": 0,
+          "proportional_term": 0
+        }
+      },
+      "type": "object"
+    },
     "MassUnit": {
       "description": "Mass unit an emission quantity is reported in: kilograms, pounds, short tons (2000 lb), or metric tons (1000 kg).",
       "enum": [
@@ -623,6 +686,26 @@
       ],
       "title": "MassUnit",
       "type": "string"
+    },
+    "CurveStyles": {
+      "description": "Curve-clearing style for a bid: 0 = VARIABLE (default; continuous quantity with one or more segments); 1 = FIXED (all-or-nothing block with a single segment). FIXED is mutually exclusive with incremental_slope/decremental_slope and requires a single-segment offer curve.",
+      "type": "integer",
+      "enum": [
+        0,
+        1
+      ],
+      "default": 0,
+      "title": "CurveStyles"
+    },
+    "CurveMultiStep": {
+      "description": "Multi-step block indicator for a bid: 0 = SINGLE_STEP (default; each step of the bid clears independently); 1 = MULTI_STEP (the bid must be awarded as one block across every step it covers). Counted in model steps so it applies at any resolution. Independent of curve style: curve style is the quantity structure, this is the time structure, and they compose.",
+      "type": "integer",
+      "enum": [
+        0,
+        1
+      ],
+      "default": 0,
+      "title": "CurveMultiStep"
     },
     "MarketBidCost": {
       "description": "Cost representation for static (non-time-varying) market bids of energy and ancillary services.",
@@ -686,14 +769,14 @@
           "default": false
         },
         "curve_style": {
-          "description": "Curve-clearing style for the bid: 0 = CURVE (ordinary divisible price-setting curve, default); 1 = FIXED (clears as one indivisible all-or-nothing package over its period); 2 = VARIABLE (divisible quantity, block-priced, cannot set the settlement-point price). Corresponds to ERCOT's DAM PriceCurve curveStyle field (CURVE/FIXED/VARIABLE). A non-zero value is mutually exclusive with incremental_slope/decremental_slope.",
-          "type": "integer",
-          "enum": [
-            0,
-            1,
-            2
-          ],
-          "default": 0
+          "description": "Curve-clearing style for the bid: 0 = VARIABLE (default; continuous quantity with one or more segments); 1 = FIXED (all-or-nothing block with a single segment). FIXED is mutually exclusive with incremental_slope/decremental_slope and requires a single-segment offer curve.",
+          "default": 0,
+          "$ref": "#/$defs/CurveStyles"
+        },
+        "curve_multistep": {
+          "description": "Multi-step block indicator for the bid: 0 = SINGLE_STEP (default; each step of the bid clears independently); 1 = MULTI_STEP (the bid must be awarded as one block across every step it covers). Counted in model steps so it applies at any resolution. Independent of curve_style: curve_style is the quantity structure, curve_multistep is the time structure, and they compose.",
+          "default": 0,
+          "$ref": "#/$defs/CurveMultiStep"
         }
       },
       "required": [
@@ -753,14 +836,14 @@
           "default": false
         },
         "curve_style": {
-          "description": "Curve-clearing style for the bid: 0 = CURVE (ordinary divisible price-setting curve, default); 1 = FIXED (clears as one indivisible all-or-nothing package over its period); 2 = VARIABLE (divisible quantity, block-priced, cannot set the settlement-point price). Corresponds to ERCOT's DAM PriceCurve curveStyle field (CURVE/FIXED/VARIABLE). A non-zero value is mutually exclusive with incremental_slope/decremental_slope.",
-          "type": "integer",
-          "enum": [
-            0,
-            1,
-            2
-          ],
-          "default": 0
+          "description": "Curve-clearing style for the bid: 0 = VARIABLE (default; continuous quantity with one or more segments); 1 = FIXED (all-or-nothing block with a single segment). FIXED is mutually exclusive with incremental_slope/decremental_slope and requires a single-segment offer curve.",
+          "default": 0,
+          "$ref": "#/$defs/CurveStyles"
+        },
+        "curve_multistep": {
+          "description": "Multi-step block indicator for the bid: 0 = SINGLE_STEP (default; each step of the bid clears independently); 1 = MULTI_STEP (the bid must be awarded as one block across every step it covers). Counted in model steps so it applies at any resolution. Independent of curve_style: curve_style is the quantity structure, curve_multistep is the time structure, and they compose.",
+          "default": 0,
+          "$ref": "#/$defs/CurveMultiStep"
         }
       },
       "required": [
@@ -788,6 +871,14 @@
         }
       },
       "title": "MinMax",
+      "type": "object"
+    },
+    "MinMaxByKey": {
+      "description": "A mapping from a stringified float key to the `MinMax` bound that applies at that key.",
+      "additionalProperties": {
+        "$ref": "#/$defs/MinMax"
+      },
+      "title": "MinMaxByKey",
       "type": "object"
     },
     "OutageFactors": {
@@ -1076,15 +1167,7 @@
               "type": "number"
             },
             {
-              "properties": {
-                "charge": {
-                  "type": "number"
-                },
-                "discharge": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
+              "$ref": "#/$defs/ChargeDischarge"
             }
           ]
         },
@@ -1443,34 +1526,6 @@
         "pump"
       ],
       "title": "TurbinePump",
-      "type": "object"
-    },
-    "TwoTerminalLoss": {
-      "description": "Loss model of a two-terminal HVDC line as a function of flow, selected by `curve_type`. It accepts a linear model with a constant loss and a proportional loss rate (MW of loss per MW of flow), or a piecewise model giving different proportional losses on different flow segments.",
-      "title": "TwoTerminalLoss",
-      "discriminator": {
-        "mapping": {
-          "INCREMENTAL": "#/components/schemas/IncrementalCurve",
-          "INPUT_OUTPUT": "#/components/schemas/InputOutputCurve"
-        },
-        "propertyName": "curve_type"
-      },
-      "oneOf": [
-        {
-          "$ref": "#/$defs/InputOutputCurve"
-        },
-        {
-          "$ref": "#/$defs/IncrementalCurve"
-        }
-      ],
-      "default": {
-        "curve_type": "INPUT_OUTPUT",
-        "function_data": {
-          "function_type": "LINEAR",
-          "constant_term": 0,
-          "proportional_term": 0
-        }
-      },
       "type": "object"
     },
     "UnitSystem": {

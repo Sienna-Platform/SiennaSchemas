@@ -21,6 +21,30 @@
       "title": "VSCDCControlModes",
       "type": "string"
     },
+    "FACTSControlDeviceControlMode": {
+      "description": "Operating mode of a FACTS control device. `OOS` (out-of-service): both series and shunt links are open. `NML` (normal): both series and shunt links are operating. `BYP` (bypass): the series link is bypassed (acts as a zero-impedance line) and the shunt link operates as a STATCOM (reactive-only).",
+      "enum": [
+        "OOS",
+        "NML",
+        "BYP"
+      ],
+      "title": "FACTSControlDeviceControlMode",
+      "type": "string"
+    },
+    "SwitchedAdmittanceControlMode": {
+      "description": "Control mode of a switched shunt admittance. `UNDEFINED` leaves the mode unspecified; `FIXED` holds the admittance at a constant value; `CONTINUOUS_VOLTAGE` adjusts it continuously to control voltage. The `DISCRETE_*` modes switch blocks in discrete steps to control voltage, a plant's reactive power, a voltage-source-converter terminal's reactive power, or a remote bus's admittance, respectively.",
+      "enum": [
+        "UNDEFINED",
+        "FIXED",
+        "DISCRETE_VOLTAGE",
+        "CONTINUOUS_VOLTAGE",
+        "DISCRETE_REACTIVE_PLANT",
+        "DISCRETE_REACTIVE_VSC",
+        "DISCRETE_ADMITTANCE_REMOTE"
+      ],
+      "title": "SwitchedAdmittanceControlMode",
+      "type": "string"
+    },
     "CombinedCycleConfiguration": {
       "description": "Shaft and turbine arrangement of a combined cycle plant: a single shaft carrying one combustion and one steam turbine, separate shafts for the two, two or three combustion turbines feeding one steam turbine, or `Other` for any arrangement outside these.",
       "enum": [
@@ -98,6 +122,29 @@
         "UNDEFINED"
       ],
       "title": "LoadConformity",
+      "type": "string"
+    },
+    "OperationalStates": {
+      "description": "The running on/off lifecycle of an in-service committable unit, mutually exclusive. OFFLINE: shut down and not synchronized. ONLINE: synchronized and able to produce. STARTUP: in its start-up sequence. SHUTDOWN: in its shut-down sequence. Availability is not one of these values: a unit on outage is `available = false`; an OFFLINE unit with `available = true` is in service and eligible for re-commitment and off-line ancillary services.",
+      "enum": [
+        "OFFLINE",
+        "ONLINE",
+        "STARTUP",
+        "SHUTDOWN"
+      ],
+      "title": "OperationalStates",
+      "type": "string"
+    },
+    "CommitmentModes": {
+      "description": "Why a committable unit is (or would be) committed, orthogonal to its operational state. UNCOMMITTED: not committed, offline but available. COMMITTED: committed by the scheduling process (a planning model's commitment decision or a cleared schedule). SELF_SCHEDULED: scheduled by its owner rather than by the scheduling process. RELIABILITY: committed by the system operator for reliability rather than by the scheduling process. MUST_RUN: required to run by contract or operating constraint.",
+      "enum": [
+        "UNCOMMITTED",
+        "COMMITTED",
+        "SELF_SCHEDULED",
+        "RELIABILITY",
+        "MUST_RUN"
+      ],
+      "title": "CommitmentModes",
       "type": "string"
     },
     "BilateralProduct": {

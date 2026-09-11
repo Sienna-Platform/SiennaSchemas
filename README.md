@@ -106,27 +106,21 @@ ambient interpreter fails with an import error.
 
 ### Local codegen, for testing a schema change
 
-Use `openapi-generator` with the provided config files:
+Each downstream repo generates straight from these schemas:
 
 ```bash
-# Julia
-openapi-generator generate -c openapi-config-core.json \
-  -g julia-server \
-  -o ./PowerCoreOpenAPIModels.jl
+# Julia, from a PowerOpenAPIModels checkout — OpenAPI.jl's native generator
+make generate SCHEMA_DIR=../SiennaSchemas
 
-# Python
-openapi-generator generate -c openapi-config-core.json \
-  -g python \
-  -o ./power_core_openapi_models
+# Python, from a power-openapi-models checkout — datamodel-codegen
+make generate SCHEMA_DIR=../SiennaSchemas
 ```
 
-Replace `core` with `infrastructure-core`, `operations`, `investments`, `dynamics`, or
-`timeseries` for other packages. This is for testing a schema change locally; it is not how
-the downstream packages are produced in production — each downstream repo has its own
-codegen container and environment, documented in that repo. SiennaGridDB's own generation —
-SQLite DDL and the sealed unit registry, both projected from these schemas — works the same
-way: see SiennaGridDB's [Code generation](https://github.com/NREL-Sienna/SiennaGridDB#code-generation)
-section.
+This is for testing a schema change locally; it is not how the downstream packages are
+produced in production — each downstream repo has its own codegen environment, documented
+in that repo. SiennaGridDB's own generation — SQLite DDL and the sealed unit registry, both
+projected from these schemas — works the same way: see SiennaGridDB's
+[Code generation](https://github.com/NREL-Sienna/SiennaGridDB#code-generation) section.
 
 ### What a release contains
 

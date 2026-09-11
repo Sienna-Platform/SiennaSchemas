@@ -27,7 +27,7 @@ Branch and repo state change constantly — read them, don't trust them written 
 ```
 SiennaSchemas (this repo — hand-written source)
   ├─ openapi-*.json ──datamodel-codegen──▶ power-openapi-models   (Python / pydantic v2)
-  ├─ openapi-*.json ──openapi-generator──▶ PowerOpenAPIModels     (Julia packages)
+  ├─ openapi-*.json ──OpenAPI.jl native generator──▶ PowerOpenAPIModels     (Julia packages)
   └─ Core/units.json ──SiennaGridDB/scripts/generate_unit_registry.py──▶ GridDB sealed unit registry
 ```
 
@@ -61,7 +61,6 @@ Investments/             # Technologies/, Financials/, Requirements/, Supplement
 Dynamics/                # DynamicGeneratorComponent/, DynamicInverterComponent/
 TimeSeries/              # common.json, the six per-type schemas, TimeSeriesAssociation.json (oneOf wrapper)
 openapi-infrastructure-core.json, openapi-{core,operations,investments,dynamics,timeseries}.json     # $ref wrappers selecting package membership
-openapi-config-*.json    # generator configs (inlineSchemaNameMappings)
 scripts/                 # validate_units.py, bundle_specs.py, check_layering.py,
                          # check_psy_parity.py, check_psip_parity.py
 dist/                    # bundled specs for codegen consumers (gitignored)
@@ -94,15 +93,15 @@ Cross-references are relative paths (`"$ref": "../../Core/common.json#/definitio
 - `ext`, supplemental attributes, and many-to-many relations are stored *separately*; one-to-many relations become integer id references, named with an `_id` / `_ids` suffix.
 - Avoid read-only and derived fields — PSY has them, this layer does not.
 - Property ordering follows Sienna conventions: id, name, bus, …
-- Path-aliasing collisions are resolved via `inlineSchemaNameMappings` in `openapi-config-*.json` (workaround for [openapi-generator #18948](https://github.com/OpenAPITools/openapi-generator/issues/18948)). The alias count is empirical — confirm it by running codegen, not by reasoning about consumer counts.
+- Name inline objects and enums in `$defs` rather than leaving them anonymous at the reference site, so the bundler can point repeated references at one definition instead of inlining a copy each time.
 
 ## Generator configs & local codegen check
 
 ```bash
-openapi-generator generate -c openapi-config-core.json -g julia-server -o ./PowerCoreOpenAPIModels.jl
+make generate SCHEMA_DIR=../SiennaSchemas
 ```
 
-Config files are language-agnostic; pick `-g python` or `-g julia-server` on the command line. Production Julia generation happens in the PowerOpenAPIModels repo via `julia-client` plus its `reorganize.jl` and needs Docker with a codegen image; the Python side uses datamodel-codegen. The two toolchains fail in different ways, so a change that generates cleanly in one is **not** proven in the other — regenerate both. Each downstream repo documents its own environment setup.
+Julia packages regenerate with OpenAPI.jl 1.1's native generator (`scripts/generate_native.jl` in the PowerOpenAPIModels repo, with dedup, prettify, and supertype post-passes), run with the command above from that repo; the Python package regenerates with datamodel-codegen. The two toolchains fail in different ways, so a change that generates cleanly in one is **not** proven in the other — regenerate both. Each downstream repo documents its own environment setup.
 
 ## Recipe: change a schema (end-to-end)
 

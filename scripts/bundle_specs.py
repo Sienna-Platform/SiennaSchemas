@@ -67,7 +67,15 @@ DOMAINS = [
 # Files whose top-level `$defs` block is addressed by other schemas via
 # a two-token `<file>#/$defs/<Name>` external ref, and so is hoisted
 # into a bundle's own `$defs` rather than left as a dangling pointer.
-COMMON_FILES = ["Core/common.json", "TimeSeries/common.json"]
+#
+# `Operations/common.json` belongs here too: its `$defs` are published as
+# `components.schemas` and `$ref`'d elsewhere, so they must be hoisted, not
+# inlined. Names across the three files must stay disjoint -- `hoisted` keys by name alone.
+COMMON_FILES = [
+    "Core/common.json",
+    "Operations/common.json",
+    "TimeSeries/common.json",
+]
 
 # Shared across all five domain bundles: common.json (and any multiply-$ref'd
 # file) is parsed from disk once. Keyed by resolved absolute path.
@@ -94,6 +102,30 @@ def split_ref(ref):
 def is_external(ref):
     filepart, _ = split_ref(ref)
     return filepart != ""
+
+
+# Keywords that may sit beside a `$ref` without changing what validates: pure
+# annotations plus this repo's `x-` unit extensions. Anything else is a real
+# constraint, so a `$ref` carrying it is genuinely narrower than its target.
+ANNOTATION_SIBLINGS = frozenset(
+    {
+        "default",
+        "deprecated",
+        "description",
+        "example",
+        "examples",
+        "readOnly",
+        "title",
+        "writeOnly",
+    }
+)
+
+
+def _annotation_only(siblings):
+    """Whether every sibling of a `$ref` is an annotation or an `x-` extension."""
+    return all(
+        key in ANNOTATION_SIBLINGS or key.startswith("x-") for key in siblings
+    )
 
 
 def resolve_fragment(doc, fragment):
@@ -141,6 +173,10 @@ class Bundler:
             doc = load_json(common_path)
             for name in doc.get("$defs", {}):
                 self._common_owner[name] = common_path
+        # resolved file path -> name the selector publishes it under in
+        # components.schemas, for whole-file `$ref` members. A `$ref` reaching
+        # one of these files elsewhere becomes an internal reference, not an inlined copy.
+        self._selector_members = {}
 
     def _hoist_common_definition(self, name, source_path):
         """Ensure a common-file definition is inlined into the bundle $defs.
@@ -252,13 +288,31 @@ class Bundler:
                 }
             if "$ref" in node and is_external(node["$ref"]):
                 siblings = {k: v for k, v in node.items() if k != "$ref"}
-                content, target, _, common_name = self._resolve_external(
+                content, target, fragment, common_name = self._resolve_external(
                     node["$ref"], base_path
                 )
-                if common_name is not None and not siblings:
-                    # No siblings: hoist and point to internal definition.
+                if common_name is not None and _annotation_only(siblings):
+                    # Hoist even with annotation siblings present, so a `description`
+                    # or `default` doesn't force an inline copy. Safe: `_annotation_only`
+                    # guarantees no sibling constrains validation.
                     self._hoist_common_definition(common_name, target)
-                    return {"$ref": f"#/$defs/{common_name}"}
+                    out = {"$ref": f"#/$defs/{common_name}"}
+                    for k, v in siblings.items():
+                        out[k] = self.walk(v, base_path)
+                    return out
+                # A whole-file `$ref` to a file the selector already publishes as
+                # components.schemas.<Name>: point at that name instead of inlining, so
+                # the generator doesn't see a second copy and alias it. Excludes the
+                # selector's own entry, which must still expand or it would self-reference.
+                if (
+                    not siblings
+                    and fragment in ("", "/")
+                    and base_path != self._spec_path
+                    and target in self._selector_members
+                ):
+                    return {
+                        "$ref": f"#/components/schemas/{self._selector_members[target]}"
+                    }
                 # Inline the resolved content (deep-resolved in its own file
                 # context), then merge siblings on top (siblings win).
                 resolved = self.walk(content, target)
@@ -287,8 +341,25 @@ class Bundler:
             return [self.walk(v, base_path) for v in node]
         return node
 
+    def _index_selector_members(self, spec, spec_path):
+        """Map each whole-file selector member to the name it is published under."""
+        schemas = spec.get("components", {}).get("schemas", {})
+        for name, member in schemas.items():
+            if not isinstance(member, dict) or set(member) != {"$ref"}:
+                continue
+            ref = member["$ref"]
+            if not is_external(ref):
+                continue
+            filepart, fragment = split_ref(ref)
+            if fragment not in ("", "/"):
+                continue
+            self._selector_members[(spec_path.parent / filepart).resolve()] = name
+
     def bundle(self, spec_path):
         spec = load_json(spec_path)
+        self._spec_path = spec_path
+        self._selector_members = {}
+        self._index_selector_members(spec, spec_path)
         bundled = self.walk(spec, spec_path)
         if self.hoisted:
             defs = {name: self.hoisted[name] for name in sorted(self.hoisted)}

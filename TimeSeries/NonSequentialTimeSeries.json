@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "NonSequentialTimeSeries",
   "type": "object",
-  "description": "An irregular static time series, sampled at explicit timestamps rather than on a grid. Deliberately carries neither `initial_timestamp` nor `resolution`: an irregular series has no fixed cadence and its key holds no timestamp. The timestamp vector itself lives in the store, content-addressed, and is not carried here.",
+  "description": "An irregular static time series, sampled at explicit timestamps rather than on a grid. Deliberately carries neither `initial_timestamp` nor `resolution`: an irregular series has no fixed cadence and its key holds no timestamp. The timestamp vector itself lives in the store rather than here, content-addressed so that many irregular series sharing one time axis store it once; `timestamps_uri` names which axis this series sits on, so a document plus the store's arrays describe the series completely.",
   "properties": {
     "association_id": {
       "type": "integer",
@@ -38,6 +38,10 @@
     "uri": {
       "type": "string",
       "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+    },
+    "timestamps_uri": {
+      "type": "string",
+      "description": "Locator for this series' explicit timestamp vector, unique within one store — `uri`'s counterpart for the time axis, with the same contract: no required format, never parsed or interpreted here, and resolved by the backing store (infrastore uses the axis's content hash, the same value it keys the shared vector under). A locator rather than the vector itself because the axis is shared: a cohort of irregular series on one axis names it once each, where inlining the timestamps would repeat the whole vector per row. Optional, so a producer that predates it is still valid, and absent from the other five types, which have no explicit axis. Without it a document cannot say which of the store's axes a row sits on, and the row cannot be reconstructed from the document — the store cannot infer it either, since arrays are content-addressed and two irregular series with identical values on different axes share one stored array. A consumer restoring rows from a document therefore requires it."
     },
     "data_hash": {
       "type": "string",
