@@ -57,6 +57,13 @@
         "$ref": "../Core/Associations/SupplementalAttributeAssociation.json"
       }
     },
+    "requirements_associations": {
+      "description": "Links each policy requirement to one member subject to it: `requirement_id` names the requirement and `entity_id` names the member. One row per (requirement, member) pair.",
+      "type": "array",
+      "items": {
+        "$ref": "Associations/RequirementAssociation.json"
+      }
+    },
     "investment_schedule": {
       "description": "Optional investment decisions container: the schedule of capacity installations produced by solving the portfolio. This is a model output rather than an input, is absent from an inputs-only portfolio, and its internal shape is not further constrained here.",
       "type": [
@@ -98,6 +105,7 @@
     "components",
     "supplemental_attributes",
     "supplemental_attribute_associations",
+    "requirements_associations",
     "time_series_associations",
     "base_system_file",
     "time_series_storage_file"

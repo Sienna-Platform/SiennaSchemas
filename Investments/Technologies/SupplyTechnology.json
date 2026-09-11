@@ -115,14 +115,6 @@
       "default": 100,
       "x-unit": "yr"
     },
-    "requirements": {
-      "description": "List of requirement IDs associated with the component.",
-      "type": "array",
-      "default": [],
-      "items": {
-        "type": "integer"
-      }
-    },
     "financial_data": {
       "description": "Struct containing relevant financial information for a technology.",
       "$ref": "../Financials/TechnologyFinancialData.json"

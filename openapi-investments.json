@@ -53,6 +53,9 @@
       "PortfolioFinancialData": {
         "$ref": "Investments/Financials/PortfolioFinancialData.json"
       },
+      "RequirementAssociation": {
+        "$ref": "Investments/Associations/RequirementAssociation.json"
+      },
       "RetirementPotential": {
         "$ref": "Investments/SupplementalAttributes/RetirementPotential.json"
       },
