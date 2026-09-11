@@ -6,12 +6,12 @@
   "discriminator": {
     "propertyName": "time_series_type",
     "mapping": {
-      "SingleTimeSeries": "#/components/schemas/SingleTimeSeries",
-      "NonSequentialTimeSeries": "#/components/schemas/NonSequentialTimeSeries",
-      "Deterministic": "#/components/schemas/Deterministic",
-      "DeterministicSingleTimeSeries": "#/components/schemas/DeterministicSingleTimeSeries",
-      "Probabilistic": "#/components/schemas/Probabilistic",
-      "Scenarios": "#/components/schemas/Scenarios"
+      "SingleTimeSeries": "SingleTimeSeries.json#",
+      "NonSequentialTimeSeries": "NonSequentialTimeSeries.json#",
+      "Deterministic": "Deterministic.json#",
+      "DeterministicSingleTimeSeries": "DeterministicSingleTimeSeries.json#",
+      "Probabilistic": "Probabilistic.json#",
+      "Scenarios": "Scenarios.json#"
     }
   },
   "oneOf": [

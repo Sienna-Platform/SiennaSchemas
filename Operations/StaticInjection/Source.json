@@ -128,9 +128,9 @@
       "description": "Cost of importing and exporting power at the source. or MarketBidCost",
       "discriminator": {
         "mapping": {
-          "IMPORTEXPORT": "#/components/schemas/ImportExportCost",
-          "MARKET_BID_TIME_SERIES": "#/components/schemas/MarketBidTimeSeriesCost",
-          "IMPORT_EXPORT_TIME_SERIES": "#/components/schemas/ImportExportTimeSeriesCost"
+          "IMPORTEXPORT": "../../Core/common.json#/$defs/ImportExportCost",
+          "MARKET_BID_TIME_SERIES": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost",
+          "IMPORT_EXPORT_TIME_SERIES": "../../Core/common.json#/$defs/ImportExportTimeSeriesCost"
         },
         "propertyName": "cost_type"
       },

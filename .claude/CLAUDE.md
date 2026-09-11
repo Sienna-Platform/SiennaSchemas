@@ -93,7 +93,7 @@ Cross-references are relative paths (`"$ref": "../../Core/common.json#/definitio
 - `ext`, supplemental attributes, and many-to-many relations are stored *separately*; one-to-many relations become integer id references, named with an `_id` / `_ids` suffix.
 - Avoid read-only and derived fields — PSY has them, this layer does not.
 - Property ordering follows Sienna conventions: id, name, bus, …
-- Name inline objects and enums in `$defs` rather than leaving them anonymous at the reference site, so the bundler can point repeated references at one definition instead of inlining a copy each time.
+- Name inline objects and enums in `$defs` rather than leaving them anonymous at the reference site, so every reference resolves to one named component instead of a fresh copy at each site.
 
 ## Generator configs & local codegen check
 

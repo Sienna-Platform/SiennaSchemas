@@ -111,9 +111,9 @@
     "operation_cost": {
       "discriminator": {
         "mapping": {
-          "HYDRO_RES": "#/components/schemas/HydroReservoirCost",
-          "MARKET_BID_TIME_SERIES": "#/components/schemas/MarketBidTimeSeriesCost",
-          "IMPORT_EXPORT_TIME_SERIES": "#/components/schemas/ImportExportTimeSeriesCost"
+          "HYDRO_RES": "../../Core/common.json#/$defs/HydroReservoirCost",
+          "MARKET_BID_TIME_SERIES": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost",
+          "IMPORT_EXPORT_TIME_SERIES": "../../Core/common.json#/$defs/ImportExportTimeSeriesCost"
         },
         "propertyName": "cost_type"
       },

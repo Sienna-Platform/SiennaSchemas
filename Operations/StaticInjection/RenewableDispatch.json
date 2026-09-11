@@ -72,10 +72,10 @@
       "description": "Operating cost of generation. or MarketBidCost",
       "discriminator": {
         "mapping": {
-          "RENEWABLE": "#/components/schemas/RenewableGenerationCost",
-          "MARKET_BID": "#/components/schemas/MarketBidCost",
-          "MARKET_BID_TIME_SERIES": "#/components/schemas/MarketBidTimeSeriesCost",
-          "IMPORT_EXPORT_TIME_SERIES": "#/components/schemas/ImportExportTimeSeriesCost"
+          "RENEWABLE": "../../Core/common.json#/$defs/RenewableGenerationCost",
+          "MARKET_BID": "../../Core/common.json#/$defs/MarketBidCost",
+          "MARKET_BID_TIME_SERIES": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost",
+          "IMPORT_EXPORT_TIME_SERIES": "../../Core/common.json#/$defs/ImportExportTimeSeriesCost"
         },
         "propertyName": "cost_type"
       },

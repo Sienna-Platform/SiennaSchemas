@@ -4,18 +4,18 @@
 Two passes, because the two artifact shapes resolve differently:
 
 1. Source schemas. A `$ref` is chased across files, or within its own file,
-   and its target must exist. A `discriminator.mapping` value is a bare
-   fragment with no file part, and an unbundled component file has no
-   namespace to resolve it against (Operations/StaticInjection/
-   ThermalStandard.json carries a discriminator but has neither a
-   `$defs` nor a `components` key), so only its tail name is checked --
-   against every Core/common.json definition and every aggregate's
-   `components.schemas` key. Which prefix an unbundled file should spell is
-   the bundler's call, not this script's.
+   and its target must exist. A `discriminator.mapping` (or `defaultMapping`)
+   value is a reference too, resolved relative to the file that contains it
+   exactly like `$ref`, so a mapping inside `Core/common.json` reads
+   `#/$defs/X`, one inside a component file reads
+   `../../Core/common.json#/$defs/X`, and one naming a whole sibling file
+   reads `SingleTimeSeries.json#`. This is what lets every schema file
+   stand on its own, and what the bundler relies on to rewrite them.
 
 2. Bundled specs, built in-process (dist/ is gitignored and may not exist).
    A bundle is self-contained, so both `$ref` and `discriminator.mapping`
-   must resolve as literal JSON pointers into it.
+   must resolve as literal JSON pointers into it, and it must carry no root
+   `$defs` block, which the Julia generator's document validator rejects.
 
 Exit 1 and print one line per unresolved target.
 """
@@ -26,7 +26,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from bundle_specs import COMMON_FILES, DOMAINS, bundle_spec, is_external, split_ref  # noqa: E402
+from bundle_specs import (  # noqa: E402
+    DOMAINS,
+    BundleError,
+    bundle_spec,
+    is_external,
+    resolve_ref_path,
+    split_ref,
+)
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SCAN_DIRS = ["Core", "Operations", "Investments", "Dynamics", "TimeSeries"]
@@ -69,17 +76,6 @@ def collect_source_files():
     return files
 
 
-def build_name_registry():
-    """Every name a discriminator.mapping value may legitimately point at."""
-    names = set()
-    for rel in COMMON_FILES:
-        names |= set(load_json((REPO_ROOT / rel).resolve()).get("$defs", {}).keys())
-    for domain in DOMAINS:
-        spec = load_json(REPO_ROOT / f"openapi-{domain}.json")
-        names |= set(spec.get("components", {}).get("schemas", {}).keys())
-    return names
-
-
 def find_nodes(doc, path=""):
     """Yield (path, dict) for every dict node in doc, depth-first."""
     if isinstance(doc, dict):
@@ -92,92 +88,85 @@ def find_nodes(doc, path=""):
 
 
 def mapping_targets(node):
-    """Yield (key, target) for each discriminator.mapping entry on `node`."""
+    """Yield (label, target) for each discriminator reference on `node`."""
     disc = node.get("discriminator")
     if not isinstance(disc, dict):
         return
     mapping = disc.get("mapping")
     if isinstance(mapping, dict):
-        yield from mapping.items()
+        for key, target in mapping.items():
+            yield f"mapping/{key}", target
+    default = disc.get("defaultMapping")
+    if isinstance(default, str):
+        yield "defaultMapping", default
 
 
-def check_source_refs(file_path, doc, errors):
+def check_source_target(file_path, ref, label, errors):
+    """Resolve one reference the way a JSON Schema tool would, through the same
+    helper the bundler uses, so the gate and the bundler cannot drift."""
+    try:
+        target, fragment = resolve_ref_path(file_path, ref)
+    except BundleError as exc:
+        errors.append(f"{file_path}:{label} -> {exc}")
+        return
+    try:
+        resolve_fragment(load_json(target), fragment)
+    except KeyError as exc:
+        errors.append(f"{file_path}:{label} -> {target.name}#{fragment} ({exc})")
+
+
+def check_source(file_path, doc, errors):
     for path, node in find_nodes(doc):
         ref = node.get("$ref")
         if isinstance(ref, str):
-            filepart, fragment = split_ref(ref)
-            if filepart:
-                target = (file_path.parent / filepart).resolve()
-                if not target.exists():
-                    errors.append(f"{file_path}:{path} $ref -> missing file {filepart}")
-                    continue
-                target_doc = load_json(target)
-            else:
-                target_doc = doc
-            try:
-                resolve_fragment(target_doc, fragment)
-            except KeyError as exc:
-                dest = filepart or file_path.name
-                errors.append(f"{file_path}:{path} $ref -> {dest}#{fragment} ({exc})")
-
-
-def check_source_discriminators(file_path, doc, names, errors):
-    for path, node in find_nodes(doc):
-        for key, target in mapping_targets(node):
-            _, fragment = split_ref(target)
-            name = fragment.rsplit("/", 1)[-1]
-            if name not in names:
-                errors.append(
-                    f"{file_path}:{path}/discriminator/mapping/{key} -> "
-                    f"'{name}' names no known schema or Core/common.json definition"
-                )
+            check_source_target(file_path, ref, f"{path} $ref", errors)
+        for label, target in mapping_targets(node):
+            if not isinstance(target, str):
+                errors.append(f"{file_path}:{path}/discriminator/{label} is not a string")
+                continue
+            check_source_target(
+                file_path, target, f"{path}/discriminator/{label}", errors
+            )
 
 
 def check_bundle(domain, errors):
-    bundled = bundle_spec(domain)
+    try:
+        bundled = bundle_spec(domain)
+    except BundleError as exc:
+        errors.append(f"bundle:{domain} cannot be built: {exc}")
+        return
+    if "$defs" in bundled:
+        errors.append(f"bundle:{domain} carries a root $defs block")
     for path, node in find_nodes(bundled):
         ref = node.get("$ref")
+        targets = []
         if isinstance(ref, str):
-            if is_external(ref):
-                errors.append(f"bundle:{domain}{path} $ref is still external: {ref}")
-                continue
-            _, fragment = split_ref(ref)
-            try:
-                resolve_fragment(bundled, fragment)
-            except KeyError as exc:
-                errors.append(f"bundle:{domain}{path} $ref -> {ref} ({exc})")
-        for key, target in mapping_targets(node):
+            targets.append((f"{path} $ref", ref))
+        for label, target in mapping_targets(node):
+            targets.append((f"{path}/discriminator/{label}", target))
+        for label, target in targets:
             if is_external(target):
-                errors.append(
-                    f"bundle:{domain}{path}/discriminator/mapping/{key} "
-                    f"is still external: {target}"
-                )
+                errors.append(f"bundle:{domain}{label} is still external: {target}")
                 continue
             _, fragment = split_ref(target)
             try:
                 resolve_fragment(bundled, fragment)
             except KeyError as exc:
-                errors.append(
-                    f"bundle:{domain}{path}/discriminator/mapping/{key} -> "
-                    f"{target} ({exc})"
-                )
+                errors.append(f"bundle:{domain}{label} -> {target} ({exc})")
 
 
 def main():
     errors = []
 
-    names = build_name_registry()
     source_files = collect_source_files()
     for f in source_files:
-        doc = load_json(f)
-        check_source_refs(f, doc, errors)
-        check_source_discriminators(f, doc, names, errors)
+        check_source(f, load_json(f), errors)
 
     for domain in DOMAINS:
         check_bundle(domain, errors)
 
     if errors:
-        print(f"{len(errors)} unresolved $ref/discriminator.mapping target(s):")
+        print(f"{len(errors)} unresolved $ref/discriminator target(s):")
         for e in errors:
             print(f"  {e}")
         return 1

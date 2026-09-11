@@ -130,12 +130,13 @@ The tarball for a tagged release ships:
 - `Core/units.json`, the unit vocabulary
 - the built `dist/openapi-*-bundled.json` specs
 
-Codegen consumes the **bundled** specs, not the raw `openapi-*.json` selector files.
-Bundling inlines every `$ref`, including the sibling `x-unit`/`x-units` annotations that live
-next to a `$ref` rather than inside the referenced definition — openapi-generator does not
-resolve those siblings on an unbundled spec, so consuming the raw files silently drops unit
-information. The bundled specs also carry a matching `Units:` sentence in every property
-description, because openapi-generator does not render the `x-unit` vendor extension at all;
+The Julia codegen consumes the **bundled** specs, not the raw `openapi-*.json` selector files.
+OpenAPI.jl's native generator resolves cross-file `$ref`s on its own, but it resolves
+`discriminator.mapping` values only inside a single document, so the bundler gathers every
+schema a selector reaches into that document's `components.schemas` and rewrites each
+reference to point there. It moves schemas and rewrites references; it inlines and merges
+nothing. The Python codegen reads the raw selectors directly. Every property description also
+carries a `Units:` sentence, because neither generator renders the `x-unit` vendor extension;
 the description is the one channel every generator target preserves.
 
 ### Creating a release

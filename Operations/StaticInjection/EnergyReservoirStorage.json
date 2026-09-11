@@ -127,10 +127,10 @@
       "description": "Operating cost of storage. or MarketBidCost",
       "discriminator": {
         "mapping": {
-          "STORAGE": "#/components/schemas/StorageCost",
-          "MARKET_BID": "#/components/schemas/MarketBidCost",
-          "MARKET_BID_TIME_SERIES": "#/components/schemas/MarketBidTimeSeriesCost",
-          "IMPORT_EXPORT_TIME_SERIES": "#/components/schemas/ImportExportTimeSeriesCost"
+          "STORAGE": "../../Core/common.json#/$defs/StorageCost",
+          "MARKET_BID": "../../Core/common.json#/$defs/MarketBidCost",
+          "MARKET_BID_TIME_SERIES": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost",
+          "IMPORT_EXPORT_TIME_SERIES": "../../Core/common.json#/$defs/ImportExportTimeSeriesCost"
         },
         "propertyName": "cost_type"
       },
