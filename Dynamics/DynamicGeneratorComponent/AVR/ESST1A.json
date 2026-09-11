@@ -53,11 +53,11 @@
     },
     "Va_lim": {
       "description": "Limits for regulator output",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Vr_lim": {
       "description": "Limits for excitor output",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Kc": {
       "description": "Rectifier loading factor proportional to commutating reactance",

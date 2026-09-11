@@ -36,7 +36,7 @@
     },
     "Vpi_lim": {
       "description": "Regulator input limits",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "K_pa": {
       "description": "Field current regulator proportional gain",
@@ -48,7 +48,7 @@
     },
     "Va_lim": {
       "description": "Field current regulator output limits",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "K_a": {
       "description": "Field current regulator proportional gain",
@@ -60,7 +60,7 @@
     },
     "Vr_lim": {
       "description": "Voltage regulator limits",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "K_f": {
       "description": "Exciter field current feedback gain",

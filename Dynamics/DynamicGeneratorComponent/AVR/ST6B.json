@@ -32,7 +32,7 @@
     },
     "Va_lim": {
       "description": "Regulator output limits",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "K_ff": {
       "description": "Pre-control gain of the inner loop field regulator",
@@ -56,7 +56,7 @@
     },
     "Vr_lim": {
       "description": "Voltage regulator limits",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Kg": {
       "description": "Feedback gain constant of the inner loop field regulator",

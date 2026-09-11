@@ -16,7 +16,7 @@
     },
     "Vr_lim": {
       "description": "Voltage regulator limits",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Ta": {
       "description": "Voltage regulator time constant",
@@ -32,7 +32,7 @@
     },
     "Vm_lim": {
       "description": "Limits for inner loop output",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Kg": {
       "description": "Feedback gain constant of the inner loop field regulator",

@@ -28,7 +28,7 @@
     },
     "Va_lim": {
       "description": "Limits for regulator output",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Te": {
       "description": "Exciter field time constant",
@@ -74,7 +74,7 @@
     },
     "Vr_lim": {
       "description": "Limits for excitor field voltage",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "V_ref": {
       "description": "Reference voltage set-point",
