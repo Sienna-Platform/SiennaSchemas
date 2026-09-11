@@ -287,24 +287,33 @@ def check_x_quantity(spec, path, source_file, failures, unit_quantities, prop_na
 def load_column_allowed_units(griddb_path=None):
     """Map DB column name -> set of units the registry allows for that column's
     quantity kind(s), sourced from SiennaGridDB's column_conventions.json
-    crossed with units.json. Returns {} when the checkout is absent (the tighter
-    pairing check is then simply skipped), so pass --griddb-path in CI if the
-    rule is meant to run — a missing path makes this check silently vacuous."""
+    crossed with units.json.
+
+    Returns None when the checkout is genuinely absent, so the caller can say
+    so rather than reporting a vacuous pass. A checkout that IS present but
+    yields nothing is an error, not a skip: that means the file moved, emptied,
+    or renamed its keys, and reporting it as "absent" would turn this rule into
+    a gate-shaped no-op."""
     root = Path(griddb_path) if griddb_path else DEFAULT_GRIDDB_PATH
     path = (root / COLUMN_CONVENTIONS_RELATIVE).resolve()
     if not path.exists():
-        return {}
+        return None
     q2u = load_quantity_units()
     conventions = load_json(path).get("conventions", [])
     col_quantities = {}
     for entry in conventions:
         column = entry.get("column")
-        # SiennaGridDB's column_conventions.json still spells this key
-        # quantity_type; it renames in its own follow-up PR.
-        quantity = entry.get("quantity_type")
+        quantity = entry.get("quantity_kind")
         if column is None or quantity is None:
             continue
         col_quantities.setdefault(column, set()).add(quantity)
+    if not col_quantities:
+        raise SystemExit(
+            f"{path} is present but yielded no (column, quantity_kind) pairs from "
+            f"{len(conventions)} convention(s). Expected each entry to carry "
+            "'column' and 'quantity_kind'. Refusing to report this as a skipped "
+            "check -- fix the path or the key spelling."
+        )
     col_allowed = {}
     for column, quantities in col_quantities.items():
         allowed = set()
@@ -957,11 +966,11 @@ def run_validation(files, griddb_path=None):
     ambiguous = sum(1 for q in unit_quantities.values() if len(q) > 1)
     print(f"Quantity declarations: {ambiguous} ambiguous unit(s) in the vocabulary "
           "require x-quantity where inference cannot resolve them.")
-    if col_allowed:
+    if col_allowed is None:
+        print("Quantity pairing: SiennaGridDB checkout absent -- flat check only.")
+    else:
         print(f"Quantity pairing: {len(col_allowed)} DB columns from "
               "SiennaGridDB/schema/column_conventions.json.")
-    else:
-        print("Quantity pairing: SiennaGridDB checkout absent -- flat check only.")
 
     if failures:
         print(f"\n{len(failures)} failure(s):\n")
