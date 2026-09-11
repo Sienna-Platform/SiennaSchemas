@@ -231,7 +231,9 @@ The Julia generator resolves cross-file `$ref`s itself, but it resolves
 - `discriminator.mapping` values are references resolved relative to the file
   that contains them, exactly like `$ref`, and are rewritten the same way. A
   mapping inside `Core/common.json` reads `#/$defs/X`; one inside a component
-  file reads `../../Core/common.json#/$defs/X`.
+  file reads `../../Core/common.json#/$defs/X`; one naming a whole sibling file
+  reads `SingleTimeSeries.json#`. Every mapping value carries a `#`, so it reads
+  as a reference rather than a bare schema name.
 - Nothing is inlined or merged, and there is no root `$defs` block.
 - Output is deterministic (selector order, then pulled-in names sorted), so
   `--check` compares bytes against a fresh in-memory bundle and fails CI on

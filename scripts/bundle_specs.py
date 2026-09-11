@@ -102,6 +102,21 @@ class BundleError(ValueError):
     """A selector or schema shape the bundler refuses to guess about."""
 
 
+def resolve_ref_path(base_path, ref):
+    """Split a reference into (file, fragment), the file part resolved relative to
+    the document carrying it. `$ref` and discriminator mapping values resolve the
+    same way, so both go through here -- and so does check_refs.py's gate."""
+    filepart, fragment = split_ref(ref)
+    path = (base_path.parent / filepart).resolve() if filepart else base_path
+    if fragment == "/":
+        fragment = ""
+    if fragment and not fragment.startswith("/"):
+        raise BundleError(f"{base_path.name}: unsupported reference {ref!r}")
+    if not path.is_file():
+        raise BundleError(f"{base_path.name}: {ref!r} names a missing file")
+    return (path, fragment)
+
+
 class Bundler:
     """Bundles one selector. A *target* is ``(resolved file path, fragment)``; the
     fragment is ``''`` for a whole file or ``/$defs/<Name>`` for a definition."""
@@ -127,7 +142,7 @@ class Bundler:
                     f"{self.spec_path.name}: components.schemas.{name} must be a bare "
                     "external $ref; the selector only selects, it does not define"
                 )
-            self._assign(self._target(self.spec_path, entry["$ref"]), name)
+            self._assign(resolve_ref_path(self.spec_path, entry["$ref"]), name)
             order.append(name)
         while self.pending:
             name = self.pending.pop(0)
@@ -143,17 +158,6 @@ class Bundler:
             key: (components if key == "components" else value)
             for key, value in self.spec.items()
         }
-
-    def _target(self, base_path, ref):
-        filepart, fragment = split_ref(ref)
-        path = (base_path.parent / filepart).resolve() if filepart else base_path
-        if fragment == "/":
-            fragment = ""
-        if fragment and not fragment.startswith("/"):
-            raise BundleError(f"{base_path.name}: unsupported reference {ref!r}")
-        if not path.is_file():
-            raise BundleError(f"{base_path.name}: {ref!r} names a missing file")
-        return (path, fragment)
 
     def _default_name(self, target):
         path, fragment = target
@@ -191,7 +195,7 @@ class Bundler:
         return name
 
     def _component_ref(self, base_path, ref):
-        return "#/components/schemas/" + self._assign(self._target(base_path, ref))
+        return "#/components/schemas/" + self._assign(resolve_ref_path(base_path, ref))
 
     def _rewrite(self, node, base_path):
         """Copy `node`, repointing every reference at the bundle's components."""

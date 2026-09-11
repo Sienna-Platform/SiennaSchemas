@@ -7,8 +7,9 @@ Two passes, because the two artifact shapes resolve differently:
    and its target must exist. A `discriminator.mapping` (or `defaultMapping`)
    value is a reference too, resolved relative to the file that contains it
    exactly like `$ref`, so a mapping inside `Core/common.json` reads
-   `#/$defs/X` and one inside a component file reads
-   `../../Core/common.json#/$defs/X`. This is what lets every schema file
+   `#/$defs/X`, one inside a component file reads
+   `../../Core/common.json#/$defs/X`, and one naming a whole sibling file
+   reads `SingleTimeSeries.json#`. This is what lets every schema file
    stand on its own, and what the bundler relies on to rewrite them.
 
 2. Bundled specs, built in-process (dist/ is gitignored and may not exist).
@@ -30,6 +31,7 @@ from bundle_specs import (  # noqa: E402
     BundleError,
     bundle_spec,
     is_external,
+    resolve_ref_path,
     split_ref,
 )
 
@@ -99,36 +101,31 @@ def mapping_targets(node):
         yield "defaultMapping", default
 
 
-def check_source_target(file_path, doc, ref, label, errors):
-    """Resolve one reference the way a JSON Schema tool would: file part
-    relative to the containing file, fragment as a pointer into the target."""
-    filepart, fragment = split_ref(ref)
-    if filepart:
-        target = (file_path.parent / filepart).resolve()
-        if not target.exists():
-            errors.append(f"{file_path}:{label} -> missing file {filepart}")
-            return
-        target_doc = load_json(target)
-    else:
-        target_doc = doc
+def check_source_target(file_path, ref, label, errors):
+    """Resolve one reference the way a JSON Schema tool would, through the same
+    helper the bundler uses, so the gate and the bundler cannot drift."""
     try:
-        resolve_fragment(target_doc, fragment)
+        target, fragment = resolve_ref_path(file_path, ref)
+    except BundleError as exc:
+        errors.append(f"{file_path}:{label} -> {exc}")
+        return
+    try:
+        resolve_fragment(load_json(target), fragment)
     except KeyError as exc:
-        dest = filepart or file_path.name
-        errors.append(f"{file_path}:{label} -> {dest}#{fragment} ({exc})")
+        errors.append(f"{file_path}:{label} -> {target.name}#{fragment} ({exc})")
 
 
 def check_source(file_path, doc, errors):
     for path, node in find_nodes(doc):
         ref = node.get("$ref")
         if isinstance(ref, str):
-            check_source_target(file_path, doc, ref, f"{path} $ref", errors)
+            check_source_target(file_path, ref, f"{path} $ref", errors)
         for label, target in mapping_targets(node):
             if not isinstance(target, str):
                 errors.append(f"{file_path}:{path}/discriminator/{label} is not a string")
                 continue
             check_source_target(
-                file_path, doc, target, f"{path}/discriminator/{label}", errors
+                file_path, target, f"{path}/discriminator/{label}", errors
             )
 
 
