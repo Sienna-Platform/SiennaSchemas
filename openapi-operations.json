@@ -191,6 +191,12 @@
       "CombinedCycleConfiguration": {
         "$ref": "Operations/common.json#/$defs/CombinedCycleConfiguration"
       },
+      "FACTSControlDeviceControlMode": {
+        "$ref": "Operations/common.json#/$defs/FACTSControlDeviceControlMode"
+      },
+      "SwitchedAdmittanceControlMode": {
+        "$ref": "Operations/common.json#/$defs/SwitchedAdmittanceControlMode"
+      },
       "ReserveDirection": {
         "$ref": "Operations/common.json#/$defs/ReserveDirection"
       },

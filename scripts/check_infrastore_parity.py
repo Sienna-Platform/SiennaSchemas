@@ -17,7 +17,7 @@ import sys
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 TS_DIR = REPO_ROOT / "TimeSeries"
-DEFAULT_INFRASTORE = REPO_ROOT.parent / "time-series-store"
+DEFAULT_INFRASTORE = REPO_ROOT.parent / "infrastore"
 DDL_REL = pathlib.Path("crates/infrastore-core/src/metadata/schema.rs")
 
 SCHEMAS = [

@@ -58,14 +58,6 @@
       "description": "Piecewise curve to scale the cost of unserved load based on the value of lost load. Units: USD/MWh.",
       "$ref": "../../Core/common.json#/$defs/ValueCurve",
       "x-unit": "USD/MWh"
-    },
-    "requirements": {
-      "description": "List of requirement IDs associated with the component.",
-      "type": "array",
-      "default": [],
-      "items": {
-        "type": "integer"
-      }
     }
   },
   "required": [

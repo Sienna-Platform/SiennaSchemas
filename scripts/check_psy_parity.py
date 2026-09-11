@@ -140,7 +140,9 @@ PLANT_SA_STRUCTS = {
 # Fields intentionally present only in the schema, with no PowerSystems.jl
 # counterpart. Unit-basis discriminators (any property whose $ref ends in
 # "UnitBasis") are exempted structurally in explained_schema_only, so they
-# never need an entry here.
+# never need an entry here. `power_units` is exempted the same way, also in
+# explained_schema_only, since every power-bearing component carries it (see
+# SCHEMA_ONLY_ALWAYS below).
 #
 # base_power on Line/MonitoredLine/GenericArcImpedance/DiscreteControlledACBranch
 # records the SYSTEM base per component, in lieu of a system-level table/JSON
@@ -165,6 +167,13 @@ SCHEMA_AHEAD = {
     "GenericArcImpedance": {"base_power"},
     "DiscreteControlledACBranch": {"base_power"},
 }
+
+# Schema-only fields allowed on EVERY component, not just a specific struct
+# (unlike SCHEMA_AHEAD above). `power_units` is the wire-level UnitSystem
+# discriminator every power-bearing component carries (see docs/UNIT_ANNOTATIONS.md);
+# PSY has no matching field, since it tracks the unit system as a global
+# per-System marker rather than storing it per component.
+SCHEMA_ONLY_ALWAYS = {"power_units"}
 
 # PSY fields that are constructor-managed runtime state, never serialized, so
 # schemas never represent them. TransformerCircuit.base_value is repopulated by
@@ -314,12 +323,16 @@ def derive_openapi_annotated_types(descriptor):
     }
 
 
-# The three quantity families (POWER/IMPEDANCE/ADMITTANCE), named by the
-# descriptor's `conversion_unit` value. `Voltage`/`Angle` fields use a
-# different (V_base-anchored) mechanism, not `needs_conversion`+
-# `conversion_unit`, so they are not part of this table.
+# The quantity families, named by the descriptor's `conversion_unit` value.
+# `Voltage`/`Angle` fields use a different (V_base-anchored) mechanism, not
+# `needs_conversion`+`conversion_unit`, so they are not part of this table.
+# `:mw` covers both ActivePower (MW) and ActivePowerChangeRate (MW/min) --
+# PSY tags ramp/flow-rate fields with the same `:mw` conversion_unit as plain
+# power fields, so both quantity types must be accepted for it.
 CONVERSION_UNIT_QUANTITY_TYPES = {
-    ":mva": {"ActivePower", "ReactivePower", "ApparentPower", "ActivePowerChangeRate"},
+    ":mw": {"ActivePower", "ActivePowerChangeRate"},
+    ":mvar": {"ReactivePower"},
+    ":mva": {"ApparentPower"},
     ":ohm": {"Resistance", "Reactance", "Impedance"},
     ":siemens": {"Conductance", "Susceptance"},
 }
@@ -484,6 +497,8 @@ def explained_schema_only(name, prop, node):
         return True
     if prop in SCHEMA_AHEAD.get(name, set()):
         return True
+    if prop in SCHEMA_ONLY_ALWAYS:
+        return True
     # Unit-basis discriminators are schema-only by design: PSY stores each value
     # in a single basis, the interchange layer records the storage basis per row.
     if node.get("$ref", "").endswith("UnitBasis"):
@@ -517,16 +532,36 @@ def check_converter_coverage(psy_path, annotated_types):
     return drifts
 
 
+def resolve_natural_unit(node):
+    """For a property with no plain x-unit, resolve the natural (non-per-unit)
+    unit from a discriminated x-units map: the leaf recorded under the
+    UnitSystem "NATURAL_UNITS" key, mirroring how validate_units.py reads
+    x-units leaves. docs/UNIT_ANNOTATIONS.md's power_units convention is the
+    only discriminator this resolves against -- a map with no NATURAL_UNITS
+    leaf (a different discriminator, or a nested multi-dimensional unit)
+    returns None, so the caller reports drift rather than guessing."""
+    x_units = node.get("x-units")
+    if not isinstance(x_units, dict):
+        return None
+    value = x_units.get("NATURAL_UNITS")
+    if isinstance(value, str):
+        return value
+    return None
+
+
 def check_unit_consistency(conversions, components, families):
     """For every openapi_type-annotated PSY struct, every field with
-    needs_conversion+conversion_unit must have a schema x-unit consistent
-    with it — "pu" when the descriptor's `openapi_unit` key says so,
+    needs_conversion+conversion_unit must have a schema unit consistent with
+    it — either a plain x-unit, or a discriminated x-units map whose
+    NATURAL_UNITS branch (resolve_natural_unit) serves the same role. That
+    unit must be "pu" when the descriptor's `openapi_unit` key says so,
     otherwise a natural unit in the conversion_unit's quantity family. The
     reverse direction (a schema x-unit of "pu" with no matching openapi_unit
     key) is caught structurally: "pu" is never a member of a natural-unit
     family, so it fails the same branch.
-    Returns the drift count; a missing plain x-unit (absent, or only a
-    discriminated x-units) is its own drift rather than silently skipped."""
+    Returns the drift count; a property with neither a plain x-unit nor a
+    resolvable discriminated NATURAL_UNITS branch is its own drift rather
+    than silently skipped."""
     drifts = 0
     for struct_name, fields in sorted(conversions.items()):
         props = components.get(struct_name)
@@ -538,6 +573,8 @@ def check_unit_consistency(conversions, components, families):
             if node is None:
                 continue  # FIELD DRIFT already reported for this psy_only field
             x_unit = node.get("x-unit")
+            if x_unit is None:
+                x_unit = resolve_natural_unit(node)
             if x_unit is None:
                 print(
                     f"UNIT DRIFT {struct_name}.{prop}: conversion_unit="

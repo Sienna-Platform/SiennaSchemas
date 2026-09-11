@@ -17,6 +17,12 @@
       "CapitalCost": {
         "$ref": "Core/common.json#/$defs/CapitalCost"
       },
+      "ChargeDischarge": {
+        "$ref": "Core/common.json#/$defs/ChargeDischarge"
+      },
+      "MinMaxByKey": {
+        "$ref": "Core/common.json#/$defs/MinMaxByKey"
+      },
       "StorageCapitalCost": {
         "$ref": "Core/common.json#/$defs/StorageCapitalCost"
       },
@@ -37,6 +43,12 @@
       },
       "CostCurve": {
         "$ref": "Core/common.json#/$defs/CostCurve"
+      },
+      "CurveStyles": {
+        "$ref": "Core/common.json#/$defs/CurveStyles"
+      },
+      "CurveMultiStep": {
+        "$ref": "Core/common.json#/$defs/CurveMultiStep"
       },
       "DbdPnts": {
         "$ref": "Core/common.json#/$defs/DbdPnts"

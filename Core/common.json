@@ -507,6 +507,23 @@
       "title": "IncrementalCurve",
       "type": "object"
     },
+    "ChargeDischarge": {
+      "description": "A pair of values, one for the charging (`charge`) and one for the discharging (`discharge`) direction of a quantity.",
+      "properties": {
+        "charge": {
+          "type": "number"
+        },
+        "discharge": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "charge",
+        "discharge"
+      ],
+      "title": "ChargeDischarge",
+      "type": "object"
+    },
     "InOut": {
       "description": "A pair of values, one for the inbound (`in`) and one for the outbound (`out`) direction of a quantity.",
       "properties": {
@@ -670,6 +687,26 @@
       "title": "MassUnit",
       "type": "string"
     },
+    "CurveStyles": {
+      "description": "Curve-clearing style for a bid: 0 = VARIABLE (default; continuous quantity with one or more segments); 1 = FIXED (all-or-nothing block with a single segment). FIXED is mutually exclusive with incremental_slope/decremental_slope and requires a single-segment offer curve.",
+      "type": "integer",
+      "enum": [
+        0,
+        1
+      ],
+      "default": 0,
+      "title": "CurveStyles"
+    },
+    "CurveMultiStep": {
+      "description": "Multi-step block indicator for a bid: 0 = SINGLE_STEP (default; each step of the bid clears independently); 1 = MULTI_STEP (the bid must be awarded as one block across every step it covers). Counted in model steps so it applies at any resolution. Independent of curve style: curve style is the quantity structure, this is the time structure, and they compose.",
+      "type": "integer",
+      "enum": [
+        0,
+        1
+      ],
+      "default": 0,
+      "title": "CurveMultiStep"
+    },
     "MarketBidCost": {
       "description": "Cost representation for static (non-time-varying) market bids of energy and ancillary services.",
       "properties": {
@@ -733,21 +770,13 @@
         },
         "curve_style": {
           "description": "Curve-clearing style for the bid: 0 = VARIABLE (default; continuous quantity with one or more segments); 1 = FIXED (all-or-nothing block with a single segment). FIXED is mutually exclusive with incremental_slope/decremental_slope and requires a single-segment offer curve.",
-          "type": "integer",
-          "enum": [
-            0,
-            1
-          ],
-          "default": 0
+          "default": 0,
+          "$ref": "#/$defs/CurveStyles"
         },
         "curve_multistep": {
           "description": "Multi-step block indicator for the bid: 0 = SINGLE_STEP (default; each step of the bid clears independently); 1 = MULTI_STEP (the bid must be awarded as one block across every step it covers). Counted in model steps so it applies at any resolution. Independent of curve_style: curve_style is the quantity structure, curve_multistep is the time structure, and they compose.",
-          "type": "integer",
-          "enum": [
-            0,
-            1
-          ],
-          "default": 0
+          "default": 0,
+          "$ref": "#/$defs/CurveMultiStep"
         }
       },
       "required": [
@@ -808,21 +837,13 @@
         },
         "curve_style": {
           "description": "Curve-clearing style for the bid: 0 = VARIABLE (default; continuous quantity with one or more segments); 1 = FIXED (all-or-nothing block with a single segment). FIXED is mutually exclusive with incremental_slope/decremental_slope and requires a single-segment offer curve.",
-          "type": "integer",
-          "enum": [
-            0,
-            1
-          ],
-          "default": 0
+          "default": 0,
+          "$ref": "#/$defs/CurveStyles"
         },
         "curve_multistep": {
           "description": "Multi-step block indicator for the bid: 0 = SINGLE_STEP (default; each step of the bid clears independently); 1 = MULTI_STEP (the bid must be awarded as one block across every step it covers). Counted in model steps so it applies at any resolution. Independent of curve_style: curve_style is the quantity structure, curve_multistep is the time structure, and they compose.",
-          "type": "integer",
-          "enum": [
-            0,
-            1
-          ],
-          "default": 0
+          "default": 0,
+          "$ref": "#/$defs/CurveMultiStep"
         }
       },
       "required": [
@@ -850,6 +871,14 @@
         }
       },
       "title": "MinMax",
+      "type": "object"
+    },
+    "MinMaxByKey": {
+      "description": "A mapping from a stringified float key to the `MinMax` bound that applies at that key.",
+      "additionalProperties": {
+        "$ref": "#/$defs/MinMax"
+      },
+      "title": "MinMaxByKey",
       "type": "object"
     },
     "OutageFactors": {
@@ -1138,15 +1167,7 @@
               "type": "number"
             },
             {
-              "properties": {
-                "charge": {
-                  "type": "number"
-                },
-                "discharge": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
+              "$ref": "#/$defs/ChargeDischarge"
             }
           ]
         },

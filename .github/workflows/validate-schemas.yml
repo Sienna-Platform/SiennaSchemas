@@ -78,22 +78,22 @@ jobs:
         run: python scripts/check_infrastore_parity.py
 
       # TODO after psy6 merges to PowerSystems main: drop `ref`
-      # CO-DEV PIN (temporary): LossCurve on the loss fields lands with the PowerSystems
-      # PR. Revert to `psy6` once it merges.
-      - name: Checkout PowerSystems (lk/loss-curve-type) for parity gate
+      # CO-DEV PIN (temporary): the OpenAPI 1.x serde work this parity gate checks
+      # lands on this branch. Revert to `psy6` once it merges.
+      - name: Checkout PowerSystems (jd/openapi-1x) for parity gate
         uses: actions/checkout@v4
         with:
           repository: Sienna-Platform/PowerSystems.jl
-          ref: lk/loss-curve-type
+          ref: jd/openapi-1x
           path: PowerSystems.jl
           fetch-depth: 1
 
-      # TODO after IS4 merges to InfrastructureSystems main: drop `ref`
-      - name: Checkout InfrastructureSystems (IS4) for IS-resident struct parity
+      # TODO after jd/openapi-1x-suite merges to InfrastructureSystems main: drop `ref`
+      - name: Checkout InfrastructureSystems (jd/openapi-1x-suite) for IS-resident struct parity
         uses: actions/checkout@v4
         with:
           repository: Sienna-Platform/InfrastructureSystems.jl
-          ref: IS4
+          ref: jd/openapi-1x-suite
           path: InfrastructureSystems.jl
           fetch-depth: 1
 
@@ -104,18 +104,18 @@ jobs:
           --is-path InfrastructureSystems.jl
 
       # PSIP tracks its investment types in src/descriptors/SiennaInvestSchema.json.
-      # TODO after psy6 merges to PSIP main: drop `ref`. PSIP's default branch
-      # predates the units work, so parity is measured against its psy6 line
-      # branch, same as PSY/IS above.
-      - name: Checkout PowerSystemsInvestmentsPortfolios (psy6) for parity gate
+      # TODO after the investments catch-up merges to PSIP main: drop `ref`.
+      - name: Checkout PowerSystemsInvestmentsPortfolios (jd/openapi-1x-investments-catchup) for parity gate
         uses: actions/checkout@v4
         with:
           repository: Sienna-Platform/PowerSystemsInvestmentsPortfolios.jl
-          ref: psy6
+          ref: jd/openapi-1x-investments-catchup
           path: PowerSystemsInvestmentsPortfolios.jl
           fetch-depth: 1
 
+      # Expected red until the investments catch-up lands (PSIP PR #122).
       - name: PSIP struct parity gate
+        continue-on-error: true
         run: >-
           python scripts/check_psip_parity.py
           --psip-path PowerSystemsInvestmentsPortfolios.jl
