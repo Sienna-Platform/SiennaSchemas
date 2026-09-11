@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameters Woodward Diesel Governor Model. DEGOV1 in PSSE",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "droop_flag": {
+      "description": "Droop control Flag. 0 for throttle feedback and 1 for electric power feedback",
+      "type": "integer"
+    },
+    "T1": {
+      "description": "Governor mechanism time constant",
+      "type": "number"
+    },
+    "T2": {
+      "description": "Turbine power time constant",
+      "type": "number"
+    },
+    "T3": {
+      "description": "Turbine exhaust temperature time constant",
+      "type": "number"
+    },
+    "K": {
+      "description": "Governor gain for actuator",
+      "type": "number"
+    },
+    "T4": {
+      "description": "Governor lead time constant",
+      "type": "number"
+    },
+    "T5": {
+      "description": "Governor lag time constant",
+      "type": "number"
+    },
+    "T6": {
+      "description": "Actuator time constant",
+      "type": "number"
+    },
+    "Td": {
+      "description": "Engine time delay",
+      "type": "number"
+    },
+    "T_lim": {
+      "type": "array",
+      "description": "Operational control limits on actuator (Tmin, Tmax)",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "R": {
+      "description": "Steady state droop parameter",
+      "type": "number"
+    },
+    "Te": {
+      "description": "Power transducer time constant",
+      "type": "number"
+    },
+    "P_ref": {
+      "description": "Reference power set-point",
+      "default": "1.0",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "T1",
+    "T2",
+    "T3",
+    "K",
+    "T4",
+    "T5",
+    "T6",
+    "Td",
+    "T_lim",
+    "R",
+    "Te"
+  ],
+  "title": "DEGOV1",
+  "type": "object"
+}

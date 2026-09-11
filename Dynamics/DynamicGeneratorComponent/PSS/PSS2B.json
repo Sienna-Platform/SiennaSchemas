@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "IEEE 421.5 2005 PSS2B IEEE Dual-Input Stabilizer Model",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "input_code_1": {
+      "description": "First input code for stabilizer",
+      "type": "integer"
+    },
+    "remote_bus_control_1": {
+      "description": "First input remote bus identification number for control. 0 identifies the local bus connected to this component",
+      "type": "integer"
+    },
+    "input_code_2": {
+      "description": "Second input code for stabilizer",
+      "type": "integer"
+    },
+    "remote_bus_control_2": {
+      "description": "Second input remote bus identification number for control. 0 identifies the local bus connected to this component",
+      "type": "integer"
+    },
+    "M_rtf": {
+      "description": "M parameter for ramp tracking filter",
+      "type": "integer"
+    },
+    "N_rtf": {
+      "description": "N parameter for ramp tracking filter",
+      "type": "integer"
+    },
+    "Tw1": {
+      "description": "Time constant for first washout filter for first input",
+      "type": "number"
+    },
+    "Tw2": {
+      "description": "Time constant for second washout filter for first input",
+      "type": "number"
+    },
+    "T6": {
+      "description": "Time constant for low-pass filter for first input",
+      "type": "number"
+    },
+    "Tw3": {
+      "description": "Time constant for first washout filter for second input",
+      "type": "number"
+    },
+    "Tw4": {
+      "description": "Time constant for second washout filter for second input",
+      "type": "number"
+    },
+    "T7": {
+      "description": "Time constant for low-pass filter for second input",
+      "type": "number"
+    },
+    "Ks2": {
+      "description": "Gain for low-pass filter for second input",
+      "type": "number"
+    },
+    "Ks3": {
+      "description": "Gain for second input",
+      "type": "number"
+    },
+    "T8": {
+      "description": "Time constant for ramp tracking filter",
+      "type": "number"
+    },
+    "T9": {
+      "description": "Time constant for ramp tracking filter",
+      "type": "number"
+    },
+    "Ks1": {
+      "description": "Gain before lead-lag blocks",
+      "type": "number"
+    },
+    "T1": {
+      "description": "Time constant for first lead-lag block",
+      "type": "number"
+    },
+    "T2": {
+      "description": "Time constant for first lead-lag block",
+      "type": "number"
+    },
+    "T3": {
+      "description": "Time constant for second lead-lag block",
+      "type": "number"
+    },
+    "T4": {
+      "description": "Time constant for second lead-lag block",
+      "type": "number"
+    },
+    "T10": {
+      "description": "Time constant for third lead-lag block",
+      "type": "number"
+    },
+    "T11": {
+      "description": "Time constant for third lead-lag block",
+      "type": "number"
+    },
+    "Vs1_lim": {
+      "type": "array",
+      "description": "First input limits (Vs1_min, Vs1_max)",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "Vs2_lim": {
+      "type": "array",
+      "description": "Second input limits (Vs2_min, Vs2_max)",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "Vst_lim": {
+      "type": "array",
+      "description": "PSS output limits (Vst_min, Vst_max)",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    }
+  },
+  "required": [
+    "id",
+    "input_code_1",
+    "remote_bus_control_1",
+    "input_code_2",
+    "remote_bus_control_2",
+    "M_rtf",
+    "N_rtf",
+    "Tw1",
+    "Tw2",
+    "T6",
+    "Tw3",
+    "Tw4",
+    "T7",
+    "Ks2",
+    "Ks3",
+    "T8",
+    "T9",
+    "Ks1",
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T10",
+    "T11",
+    "Vs1_lim",
+    "Vs2_lim",
+    "Vst_lim"
+  ],
+  "title": "PSS2B",
+  "type": "object"
+}

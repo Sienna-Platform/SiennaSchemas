@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameters of a fixed Turbine Governor that returns a fixed mechanical torque given by the product of P_ref*efficiency",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "efficiency": {
+      "description": "Efficiency factor that multiplies P_ref",
+      "type": "number"
+    },
+    "P_ref": {
+      "description": "Reference power set-point",
+      "default": "1.0",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "efficiency"
+  ],
+  "title": "TGFixed",
+  "type": "object"
+}

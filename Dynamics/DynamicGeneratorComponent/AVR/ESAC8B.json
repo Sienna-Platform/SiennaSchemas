@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Excitation System AC8B. Used to represent the Basler Digital Excitation Control System (DECS) with PID controller in PSSE",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "Tr": {
+      "description": "Regulator input filter time constant",
+      "type": "number"
+    },
+    "Kp": {
+      "description": "Regulator proportional PID gain",
+      "type": "number"
+    },
+    "Ki": {
+      "description": "Regulator integral PID gain",
+      "type": "number"
+    },
+    "Kd": {
+      "description": "Regulator derivative PID gain",
+      "type": "number"
+    },
+    "Td": {
+      "description": "Regulator derivative PID time constant",
+      "type": "number"
+    },
+    "Ka": {
+      "description": "Regulator output gain",
+      "type": "number"
+    },
+    "Ta": {
+      "description": "Regulator output lag time constant",
+      "type": "number"
+    },
+    "Vr_lim": {
+      "description": "Limits for excitor field voltage",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "Te": {
+      "description": "Exciter field time constant",
+      "type": "number"
+    },
+    "Ke": {
+      "description": "Exciter field proportional constant",
+      "type": "number"
+    },
+    "E_sat": {
+      "type": "array",
+      "description": "Exciter output voltage for saturation factor",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "Se": {
+      "type": "array",
+      "description": "Exciter saturation factor at exciter output voltage",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "V_ref": {
+      "description": "Reference voltage set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "Tr",
+    "Kp",
+    "Ki",
+    "Kd",
+    "Td",
+    "Ka",
+    "Ta",
+    "Vr_lim",
+    "Te",
+    "Ke",
+    "E_sat",
+    "Se"
+  ],
+  "title": "ESAC8B",
+  "type": "object"
+}

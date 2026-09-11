@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameters of 3-states salient-pole synchronous machine with quadratic/exponential saturation: IEEE Std 1110 §5.3.1 (Model 2.1). GENSAL or GENSAE model in PSSE and PSLF",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "R": {
+      "description": "Armature resistance",
+      "type": "number"
+    },
+    "Td0_p": {
+      "description": "Time constant of transient d-axis voltage",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "Td0_pp": {
+      "description": "Time constant of sub-transient d-axis voltage",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "Tq0_pp": {
+      "description": "Time constant of sub-transient q-axis voltage",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "Xd": {
+      "description": "Reactance after EMF in d-axis",
+      "type": "number"
+    },
+    "Xq": {
+      "description": "Reactance after EMF in q-axis",
+      "type": "number"
+    },
+    "Xd_p": {
+      "description": "Transient reactance after EMF in d-axis",
+      "type": "number"
+    },
+    "Xd_pp": {
+      "description": "Sub-Transient reactance after EMF in d-axis. Note: Xd_pp = Xq_pp",
+      "type": "number"
+    },
+    "Xl": {
+      "description": "Stator leakage reactance",
+      "type": "number"
+    },
+    "Se": {
+      "type": "array",
+      "description": "Saturation factor at 1 and 1.2 pu flux: Se(eqp) = B(eqp-A)^2",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    }  
+  },
+  "required": [
+    "id",
+    "R",
+    "Td0_p",
+    "Td0_pp",
+    "Tq0_pp",
+    "Xd",
+    "Xq",
+    "Xd_p",
+    "Xd_pp",
+    "Xl",
+    "Se"
+  ],
+  "title": "SalientPoleMachine",
+  "type": "object"
+}
