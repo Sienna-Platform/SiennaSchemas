@@ -90,10 +90,10 @@
       "description": "Operating cost of generation, or a MarketBidCost.",
       "discriminator": {
         "mapping": {
-          "THERMAL": "#/components/schemas/ThermalGenerationCost",
-          "MARKET_BID": "#/components/schemas/MarketBidCost",
-          "MARKET_BID_TIME_SERIES": "#/components/schemas/MarketBidTimeSeriesCost",
-          "IMPORT_EXPORT_TIME_SERIES": "#/components/schemas/ImportExportTimeSeriesCost"
+          "THERMAL": "../../Core/common.json#/$defs/ThermalGenerationCost",
+          "MARKET_BID": "../../Core/common.json#/$defs/MarketBidCost",
+          "MARKET_BID_TIME_SERIES": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost",
+          "IMPORT_EXPORT_TIME_SERIES": "../../Core/common.json#/$defs/ImportExportTimeSeriesCost"
         },
         "propertyName": "cost_type"
       },

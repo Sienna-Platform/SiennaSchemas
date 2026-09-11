@@ -37,8 +37,8 @@
       "description": "Bid curves as an offer-curve operating cost.",
       "discriminator": {
         "mapping": {
-          "MARKET_BID": "#/components/schemas/MarketBidCost",
-          "MARKET_BID_TIME_SERIES": "#/components/schemas/MarketBidTimeSeriesCost"
+          "MARKET_BID": "../../Core/common.json#/$defs/MarketBidCost",
+          "MARKET_BID_TIME_SERIES": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost"
         },
         "propertyName": "cost_type"
       },

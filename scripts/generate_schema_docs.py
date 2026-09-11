@@ -154,11 +154,9 @@ def load_domain(domain):
 
 def resolve(node, definitions):
     """Resolve a bare ``{"$ref": "#/$defs/X"}`` (or "#/components/...")
-    node against the bundle's hoisted definitions, merging sibling keys on
-    top (siblings win), mirroring bundle_specs.py's own merge rule. Returns
-    the node unchanged if it carries no ``$ref`` or the target is not among
-    the hoisted definitions (e.g. a same-file reference bundling left
-    untouched)."""
+    node against the bundle's ``components.schemas``, layering the sibling keys
+    on top for display (siblings win). Returns the node unchanged if it
+    carries no ``$ref`` or the target is not a known component."""
     if not (isinstance(node, dict) and "$ref" in node):
         return node
     name = node["$ref"].rsplit("/", 1)[-1]
@@ -729,7 +727,7 @@ def validate_worked_example():
     fields exist on ThermalStandard and what discriminates them, and the
     CostCurve-vs-FuelCurve `power_units` default asymmetry."""
     bundled, _ = load_domain(UNITS_WORKED_EXAMPLE_DOMAIN)
-    definitions = bundled.get("$defs", {})
+    definitions = bundled["components"]["schemas"]
     schema = resolve(bundled["components"]["schemas"][UNITS_WORKED_EXAMPLE_TYPE], definitions)
     props = schema["properties"]
     required = set(schema.get("required", []))
@@ -761,7 +759,7 @@ def validate_worked_example():
         ),
     ]
     core_bundled, _ = load_domain("core")
-    core_defs = core_bundled.get("$defs", {})
+    core_defs = core_bundled["components"]["schemas"]
     cost_curve_power_units = core_defs.get("CostCurve", {}).get("properties", {}).get("power_units", {})
     fuel_curve_power_units = core_defs.get("FuelCurve", {}).get("properties", {}).get("power_units", {})
     checks += [
@@ -892,7 +890,7 @@ def render_units_example_table():
     """The worked example's rows, rendered from the bundled spec with the same
     render_unit used on the type pages, so the example matches the real page."""
     bundled, _ = load_domain(UNITS_EXAMPLE_DOMAIN)
-    definitions = bundled.get("$defs", {})
+    definitions = bundled["components"]["schemas"]
     schema = resolve(bundled["components"]["schemas"][UNITS_EXAMPLE_TYPE], definitions)
     lines = [
         f"| `{UNITS_EXAMPLE_TYPE}` property | Unit | Description |",
@@ -956,12 +954,14 @@ def write_tree(out_dir):
     domain_info = {}
     for domain in DOMAINS:
         bundled, source_paths = load_domain(domain)
-        definitions = bundled.get("$defs", {})
-        schema_names = set(bundled["components"]["schemas"].keys())
+        # Every schema the bundle pulled in resolves types; only the selector's own
+        # entries get a page, since a shared definition is documented by its owner.
+        definitions = bundled["components"]["schemas"]
+        schema_names = set(source_paths)
         known_schemas = build_known_schemas(bundled, definitions)
         domain_dir = out_dir / domain
         domain_dir.mkdir(parents=True, exist_ok=True)
-        for name in bundled["components"]["schemas"]:
+        for name in source_paths:
             schema = resolve(bundled["components"]["schemas"][name], definitions)
             page = type_page(
                 name, domain, schema, definitions, known_schemas, schema_names, source_paths[name]

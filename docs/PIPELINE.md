@@ -27,7 +27,7 @@ Core/units.json ──► JSON Schemas (x-unit annotated)
 |---|---|---|---|
 | Unit annotations | SiennaSchemas | `python3 scripts/validate_units.py` | annotations outside the `Core/units.json` vocabulary; malformed `x-unit-base`/`x-units` |
 | Description channel | SiennaSchemas | `python3 scripts/validate_units.py --check-descriptions` | silent unit loss in generated code (descriptions are the channel that survives codegen; neither toolchain renders the `x-unit` vendor extension) |
-| Bundle staleness | SiennaSchemas | `python3 scripts/bundle_specs.py --check` | codegen consuming stale `dist/` artifacts that drop `$ref`-sibling annotations |
+| Bundle staleness | SiennaSchemas | `python3 scripts/bundle_specs.py --check` | the Julia codegen consuming a stale `dist/` document; it needs one document per domain because OpenAPI.jl resolves `discriminator.mapping` values only within a single document |
 | PSY parity | SiennaSchemas | `python3 scripts/check_psy_parity.py --psy-path ../PowerSystems.jl` | structural drift between PowerSystems.jl structs and schema components (missing schemas, field drift); SKIPs cleanly when PSY is absent |
 | Layering | SiennaSchemas | `python3 scripts/check_layering.py` | power semantics leaking into InfrastructureCore: an undeclared or missing member, a schema name shared with the power core, or a `$ref` chain from the InfrastructureCore/TimeSeries selectors reaching a file or definition outside the InfrastructureCore set |
 | Time series fixtures | SiennaSchemas | `python3 scripts/validate_fixtures.py` | a broken `oneOf` discriminator, a wrong `required` list, or a discriminator `mapping` naming the wrong schema, exercised against real example instances rather than structure alone |

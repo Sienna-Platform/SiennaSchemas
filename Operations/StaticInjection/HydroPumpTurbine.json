@@ -137,10 +137,10 @@
       "description": "Operating cost of generation. or MarketBidCost; default PSY.HydroGenerationCost(nothing)",
       "discriminator": {
         "mapping": {
-          "HYDRO_GEN": "#/components/schemas/HydroGenerationCost",
-          "MARKET_BID": "#/components/schemas/MarketBidCost",
-          "MARKET_BID_TIME_SERIES": "#/components/schemas/MarketBidTimeSeriesCost",
-          "IMPORT_EXPORT_TIME_SERIES": "#/components/schemas/ImportExportTimeSeriesCost"
+          "HYDRO_GEN": "../../Core/common.json#/$defs/HydroGenerationCost",
+          "MARKET_BID": "../../Core/common.json#/$defs/MarketBidCost",
+          "MARKET_BID_TIME_SERIES": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost",
+          "IMPORT_EXPORT_TIME_SERIES": "../../Core/common.json#/$defs/ImportExportTimeSeriesCost"
         },
         "propertyName": "cost_type"
       },

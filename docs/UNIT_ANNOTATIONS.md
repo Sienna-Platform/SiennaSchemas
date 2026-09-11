@@ -204,41 +204,40 @@ Consumers read this instead of maintaining their own lookup table. The Julia
 model generator's `declared_quantity` accessors come from `x-quantity` plus
 inference; it carries no quantity table of its own.
 
-## Placement warning: annotations as `$ref` siblings are invisible until bundling
+## `$ref` siblings: where annotations sit, and who reads them
 
-Under JSON Schema draft-07 and OpenAPI 3.0, any keyword placed **as a sibling
-of `$ref`** is ignored — the `$ref` replaces the whole object. Most of the
-`x-unit*` annotations in this repo sit next to a `$ref` (e.g. a property that
-is a `MinMax`), so **downstream draft-07/OpenAPI-3.0 code generators drop them
-silently**.
+Most `x-unit*` annotations in this repo sit beside a `$ref` (a property that is a
+`MinMax`, say) rather than inside the referenced definition. Under OpenAPI 3.1 a
+keyword beside `$ref` applies, and both code generators honor it: `description`
+and `default` reach the generated code, and the `Units:` sentence in the
+description is what carries the unit. `scripts/validate_units.py` reads the raw
+files, so it sees the annotations wherever they sit.
 
-The fix is to bundle the specs first: `scripts/bundle_specs.py` resolves
-external-file `$ref`s while **merging the sibling annotations into the
-referent**, so the bundled specs consumed by codegen lose nothing.
-`scripts/validate_units.py` reads the raw files and so sees these annotations
-regardless of the `$ref` issue.
+One consequence to know about: the Julia generator treats an `x-` key beside a
+`$ref` as a constraint and emits a per-site copy of the referenced type
+(`ACBusVoltageLimits` for a `MinMax`). That is generator behavior, not a schema
+error; the Julia package's own dedup pass collapses the copies.
 
 ## Bundling: `scripts/bundle_specs.py`
 
-For each of the four `openapi-<domain>.json` specs, the bundler emits
-`dist/openapi-<domain>-bundled.json` with every **external-file `$ref`**
-(a `$ref` whose value names a file, not a `#/...` internal pointer) resolved and
-inlined. Rules:
+The Julia generator resolves cross-file `$ref`s itself, but it resolves
+`discriminator.mapping` values only inside a single document. So for each
+`openapi-<domain>.json` selector the bundler writes
+`dist/openapi-<domain>-bundled.json`, one self-contained document:
 
-- The referring node's sibling keys (`x-unit`, `x-units`, `x-unit-base`,
-  `x-unit-discriminator`, `description`, ...) are **merged onto the resolved
-  referent; sibling keys win over referent keys on conflict**. This is what
-  recovers the `$ref`-sibling annotations that draft-07 tooling drops.
-- `Core/common.json#/definitions/<Name>` targets are hoisted once into a
-  top-level `definitions` block. A ref to one with **no** siblings becomes an
-  internal `#/definitions/<Name>` ref; a ref that **carries** siblings is
-  inlined as a merged copy (unique to that use site).
-- Refs already internal to a spec (`#/...`) are left untouched.
-- Output is **deterministic** (stable insertion order for walked keys; sorted
-  keys for the hoisted `definitions` block), so `--check` can compare bytes
-  against a fresh in-memory bundle and fail CI on stale/missing `dist/` output.
+- `components.schemas` holds every schema the selector reaches, once, under one
+  name: the selector's key, else the `$defs` key, else the file stem.
+- Every `$ref` becomes `#/components/schemas/<Name>`; the keys beside it stay.
+- `discriminator.mapping` values are references resolved relative to the file
+  that contains them, exactly like `$ref`, and are rewritten the same way. A
+  mapping inside `Core/common.json` reads `#/$defs/X`; one inside a component
+  file reads `../../Core/common.json#/$defs/X`.
+- Nothing is inlined or merged, and there is no root `$defs` block.
+- Output is deterministic (selector order, then pulled-in names sorted), so
+  `--check` compares bytes against a fresh in-memory bundle and fails CI on
+  stale or missing `dist/` output.
 
-`dist/` is generated (git-ignored) — never hand-edit; regenerate with
+`dist/` is generated and git-ignored. Never hand-edit it; regenerate with
 `python scripts/bundle_specs.py`.
 
 ## The description channel (`--fix-descriptions` / `--check-descriptions`)
