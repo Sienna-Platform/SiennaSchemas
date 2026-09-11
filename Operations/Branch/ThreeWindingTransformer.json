@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A three-winding transformer, modeled as an equivalent star: each referenced `TransformerCircuit` connects a terminal bus to the star (hidden) bus and carries that winding's series electrical data; availability is circuit-level. The pairwise measured impedances `r_12`/`x_12`, `r_23`/`x_23`, `r_31`/`x_31` (PSS/E CZ = 1, each in pu on the corresponding `base_power_12`/`base_power_23`/`base_power_31` and referenced to the first-index winding's base voltage) are optional and must be set together or all be absent; the star-leg impedances derived from them at parse time live on the circuits and are not synced back. Power-flow and Ybus assembly read the per-circuit star-leg impedances, not the pairwise fields. The model is described in Chapter 3.6 of J.D. Glover, M.S. Sarma and T. Overbye: Power Systems Analysis and Design.",
+  "description": "A three-winding transformer modeled as an equivalent star: each TransformerCircuit connects a terminal bus to the star bus, carrying that winding's series data. r_12/x_12, r_23/x_23, r_31/x_31 are optional, set together or all absent.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "description": "Name of the component. Unique among components of the same type; components of different types may share a name.",
       "type": "string"
     },
     "primary_circuit": {
@@ -27,7 +27,7 @@
       "type": "integer"
     },
     "parameter_units": {
-      "description": "Unit basis for the pairwise measured impedance fields (r_12, x_12, r_23, x_23, r_31, x_31). PSS/E supplies a single CZ flag for the whole three-winding transformer record, so one basis governs all three winding pairs.",
+      "description": "Unit basis for the pairwise measured impedance fields (r_12, x_12, r_23, x_23, r_31, x_31). One basis governs all three winding pairs.",
       "default": "COMPONENT_BASE",
       "$ref": "../../Core/common.json#/$defs/ImpedanceUnitBasis"
     },

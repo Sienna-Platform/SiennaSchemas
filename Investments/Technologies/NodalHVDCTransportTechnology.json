@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A nodal representation of candidate HVDC transmission lines between two regions, added in discrete units of `unit_size` and characterized by capacity limits, a capital cost curve, and a loss model expressed as a fraction of installed nameplate capacity.",
+  "description": "Nodal representation of candidate HVDC transmission lines between two regions, added in discrete units of unit_size. Characterized by capacity limits, a capital cost curve, and a loss model as a fraction of installed capacity.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -36,7 +36,7 @@
       "$ref": "../../Core/common.json#/$defs/CapitalCost"
     },
     "line_loss": {
-      "description": "Loss model coefficients. Accepts a linear model with a constant loss and a proportional loss rate, or a Piecewise loss with N segments for different proportional losses. All terms are defined as fraction of installed nameplate capacity. Units: 1.",
+      "description": "Loss model coefficients: a linear model with constant loss and proportional rate, or a piecewise loss with N segments. Fraction of installed capacity. Units: 1.",
       "$ref": "../../Core/common.json#/$defs/ValueCurve",
       "x-unit": "1",
       "x-quantity": "Fraction"

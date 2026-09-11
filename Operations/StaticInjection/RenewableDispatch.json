@@ -1,17 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A renewable (e.g., wind or solar) generator whose output can be curtailed to satisfy power system constraints.\n\nThese generators can also participate in reserves markets, including upwards reserves by proactively curtailing some available power (based on its `max_active_power` time series). Example uses include: a utility-scale wind or solar generator whose PPA allows curtailment. For non-curtailable or must-take renewables, see `RenewableNonDispatch`.\n\nRenewable generators do not have a `max_active_power` parameter, which is instead calculated when calling `get_max_active_power()`.",
+  "description": "A renewable (wind or solar) generator whose output can be curtailed to satisfy system constraints, including proactive curtailment for reserves. For non-curtailable renewables, see RenewableNonDispatch.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "description": "Name of the component. Unique among components of the same type; components of different types may share a name.",
       "type": "string"
     },
     "available": {
-      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
+      "description": "Whether the component is online (true) or offline (false). Unavailable components are excluded from simulations.",
       "type": "boolean"
     },
     "bus": {
@@ -19,7 +19,7 @@
       "type": "integer"
     },
     "active_power": {
-      "description": "Initial active power set point of the unit. For power flow, this is the steady state operating point of the system. For production cost modeling, this may or may not be used as the initial starting point for the solver, depending on the solver used. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "description": "Initial active power set point. The steady-state operating point for power flow; an optional starting point for other solvers. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -53,7 +53,7 @@
       "$ref": "../../Core/common.json#/$defs/PrimeMovers"
     },
     "reactive_power_limits": {
-      "description": "Minimum and maximum reactive power limits, used in some production cost model simulations and in power flow if the unit is connected to a `PV` bus. Set to `null` if not applicable. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
+      "description": "Minimum and maximum reactive power limits, used in some production cost simulations and in power flow when connected to a PV bus. Null if not applicable. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -100,7 +100,7 @@
       "x-unit": "MVA"
     },
     "power_units": {
-      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "description": "Unit basis for this component's power fields (power, ratings, ramp rates): COMPONENT_BASE per unit on base_power, NATURAL_UNITS the field's own unit.",
       "$ref": "../../Core/common.json#/$defs/UnitSystem"
     },
     "dynamic_injector": {

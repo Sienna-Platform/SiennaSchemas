@@ -7,11 +7,11 @@
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "description": "Name of the component. Unique among components of the same type; components of different types may share a name.",
       "type": "string"
     },
     "available": {
-      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
+      "description": "Whether the component is online (true) or offline (false). Unavailable components are excluded from simulations.",
       "type": "boolean"
     },
     "arc": {
@@ -44,7 +44,7 @@
       "x-quantity": "Resistance"
     },
     "transfer_setpoint": {
-      "description": "Desired set-point of power. If `power_mode = true` this value is in MW units, and if `power_mode = false` is in Amperes units. This parameter must not be specified in per-unit. A positive value represents the desired consumed power at the rectifier bus, while a negative value represents the desired power at the inverter bus (i.e. the absolute value of `transfer_setpoint` is the generated power at the inverter bus). Units: per power_mode — true: MW, false: A .",
+      "description": "Desired power set point: MW if power_mode true, Amperes otherwise. Not per-unit. Positive: power consumed at the rectifier bus; negative: at the inverter bus. Units: per power_mode — true: MW, false: A .",
       "type": "number",
       "x-unit-discriminator": "power_mode",
       "x-units": {
@@ -58,7 +58,7 @@
       "$ref": "../../Operations/common.json#/$defs/VoltageUnitBasis"
     },
     "scheduled_dc_voltage": {
-      "description": "Scheduled compounded DC voltage. By default this parameter is the scheduled DC voltage in the inverter bus. This parameter must not be specified in per-unit. Units: kV. Units: per dc_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "description": "Scheduled compounded DC voltage, by default the scheduled DC voltage at the inverter bus. Not specified in per-unit. Units: per dc_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "dc_voltage_units",
       "x-units": {
@@ -136,12 +136,12 @@
       "x-unit": "kV"
     },
     "power_mode": {
-      "description": "Boolean flag to identify if the LCC line is in power mode or current mode. If `power_mode = true`, setpoint values must be specified in MW, and if `power_mode = false` setpoint values must be specified in Amperes.",
+      "description": "Whether the LCC line is in power mode (true, setpoints in MW) or current mode (false, setpoints in Amperes).",
       "default": true,
       "type": "boolean"
     },
     "switch_mode_voltage": {
-      "description": "Mode switch DC voltage. This parameter must not be added in per-unit. If LCC line is in power mode control, and DC voltage falls below this value, the line switch to current mode control. Units: kV. Units: per dc_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "description": "Mode-switch DC voltage. Not specified in per-unit. If the line is in power mode and DC voltage falls below this value, it switches to current mode. Units: per dc_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "dc_voltage_units",
@@ -152,7 +152,7 @@
       "x-quantity": "Voltage"
     },
     "compounding_resistance": {
-      "description": "Compounding Resistance. This parameter is for control of the DC voltage in the rectifier or inverter end. For inverter DC voltage control, the parameter is set to zero; for rectifier DC voltage control, the parameter is set to the DC line resistance; otherwise, set to a fraction of the DC line resistance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "description": "Compounding resistance controlling DC voltage: zero for inverter control, line resistance for rectifier control, else a fraction. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "parameter_units",
@@ -163,7 +163,7 @@
       "x-quantity": "Resistance"
     },
     "min_compounding_voltage": {
-      "description": "Minimum compounded voltage. This parameter must not be added in per-unit. Only used in constant gamma operation (gamma_min = gamma_max), and the AC transformer is used to control the DC voltage. Units: kV. Units: per dc_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "description": "Minimum compounded voltage. Not specified in per-unit. Used only in constant-gamma operation, where the AC transformer controls DC voltage. Units: per dc_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "dc_voltage_units",
@@ -326,7 +326,7 @@
       "x-quantity": "ReactivePower"
     },
     "loss": {
-      "description": "A generic loss model coefficients. It accepts a linear model with a constant loss and a proportional loss rate (MW of loss per MW of flow). It also accepts a Piecewise loss, with N segments to specify different proportional losses for different segments.",
+      "description": "Loss model coefficients: a linear model with constant loss and proportional rate (MW loss per MW flow), or a piecewise loss with N segments.",
       "default": {
         "power_units": "NATURAL_UNITS",
         "value_curve": {
@@ -346,7 +346,7 @@
       "x-unit": "MVA"
     },
     "power_units": {
-      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "description": "Unit basis for this component's power fields (power, ratings, ramp rates): COMPONENT_BASE per unit on base_power, NATURAL_UNITS the field's own unit.",
       "$ref": "../../Core/common.json#/$defs/UnitSystem"
     }
   },

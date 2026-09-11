@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Candidate generation technology for a region, representing either a thermal or a renewable generation technology. It carries the capital and operating cost of new capacity together with the operating characteristics the added units take on — capacity limits, ramp and time limits, outage derating, fuel, and start-up fuel use.",
+  "description": "Candidate generation technology for a region: thermal or renewable. Carries capital and operating cost of new capacity plus operating characteristics: capacity limits, ramp and time limits, outage derating, fuel, and start-up fuel use.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -71,7 +71,7 @@
       "x-unit": "MW"
     },
     "capacity_limits": {
-      "description": "Minimum and maximum allowable installed capacity for a technology, given either as a single bound applied to all capacity or as a mapping from a float key (stringified) to the bound that applies at that key. Units: MW.",
+      "description": "Minimum and maximum allowable installed capacity: a single bound applied to all capacity, or a mapping from a stringified float key to the bound at that key. Units: MW.",
       "x-unit": "MW",
       "anyOf": [
         {

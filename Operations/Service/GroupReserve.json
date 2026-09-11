@@ -1,17 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A reserve product met by a group of individual reserves. The group requirement is additional to each member's own requirement, and a device contributing to a member reserve also counts toward the group. Membership is carried by `ServiceAssociation` rows, not by a field here.",
+  "description": "A reserve product met by a group of individual reserves. The group requirement is additional to each member's own; a device contributing to a member reserve also counts toward the group. Membership is carried by ServiceAssociation rows.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "description": "Name of the component. Unique among components of the same type; components of different types may share a name.",
       "type": "string"
     },
     "available": {
-      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
+      "description": "Whether the component is online (true) or offline (false). Unavailable components are excluded from simulations.",
       "type": "boolean"
     },
     "requirement": {
@@ -20,7 +20,7 @@
       "x-unit": "MW"
     },
     "variable": {
-      "description": "Operating reserve demand curve for the group, either static or time-series-backed. A group carrying a curve is elastic: its requirement is priced by the curve rather than enforced. Time series values are carried via `time_series_associations` in the sidecar, never inline. Omit when the group has no demand curve.",
+      "description": "Operating reserve demand curve for the group, static or time-series-backed. A curve makes the group elastic, priced rather than enforced. Omit if none.",
       "$ref": "../../Core/common.json#/$defs/CostCurve"
     },
     "reserve_direction": {

@@ -9,7 +9,7 @@
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "description": "Name of the component. Unique among components of the same type; components of different types may share a name.",
       "type": "string"
     },
     "available": {

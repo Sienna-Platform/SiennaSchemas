@@ -7,7 +7,7 @@
       "type": "integer"
     },
     "available": {
-      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
+      "description": "Whether the component is online (true) or offline (false). Unavailable components are excluded from simulations.",
       "type": "boolean"
     },
     "base_voltage": {
@@ -31,7 +31,7 @@
       "x-unit-base": "base_voltage"
     },
     "name": {
-      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "description": "Name of the component. Unique among components of the same type; components of different types may share a name.",
       "type": "string"
     },
     "number": {

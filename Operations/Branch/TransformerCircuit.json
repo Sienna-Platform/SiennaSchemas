@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "The data defining one modeled arc of a transformer.\n\nA `TwoWindingTransformer` has one circuit; a `ThreeWindingTransformer` has three, each connecting a terminal bus to the star bus. Circuit `available` is the single source of truth for availability; the owning transformer derives its availability from its circuits. `r`/`x` are the circuit impedance (for a two-winding transformer, the series impedance; for a three-winding transformer, the star-leg equivalent), in pu (device base) on `base_power` referenced to `base_voltage_primary`. Tap-changer / phase-shifter control is described by the flat control fields: `control_objective = UNDEFINED` means the circuit has no control block. For a `TwoWindingTransformer`, the single circuit's `base_power` is the transformer's device base.",
+  "description": "Data defining one modeled arc of a transformer. A TwoWindingTransformer has one circuit; a ThreeWindingTransformer has three, each connecting a terminal bus to the star bus. Circuit `available` is the source of truth for availability.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -176,7 +176,7 @@
       "x-unit": "MVA"
     },
     "power_units": {
-      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "description": "Unit basis for this component's power fields (power, ratings, ramp rates): COMPONENT_BASE per unit on base_power, NATURAL_UNITS the field's own unit.",
       "$ref": "../../Core/common.json#/$defs/UnitSystem"
     },
     "base_voltage_primary": {

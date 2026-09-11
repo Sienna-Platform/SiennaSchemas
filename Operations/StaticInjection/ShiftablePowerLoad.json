@@ -1,17 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A static power load that can be partially or completed shifted to later time periods.\n\nThese loads are used to model demand response. This load has a target demand profile (set by a `max_active_power` time series for an operational simulation). Load in the profile can be shifted to later time periods to aid in satisfying other system needs; however, any shifted load must be served within a designated time horizon (e.g., 24 hours), which is set by `load_balance_time_horizon`.",
+  "description": "A static power load, used to model demand response, that can be partially or fully shifted to later periods. Has a target demand profile; shifted load must be served within a horizon set by load_balance_time_horizon.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "description": "Name of the component. Unique among components of the same type; components of different types may share a name.",
       "type": "string"
     },
     "available": {
-      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
+      "description": "Whether the component is online (true) or offline (false). Unavailable components are excluded from simulations.",
       "type": "boolean"
     },
     "bus": {
@@ -74,7 +74,7 @@
       "x-unit": "MVA"
     },
     "power_units": {
-      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "description": "Unit basis for this component's power fields (power, ratings, ramp rates): COMPONENT_BASE per unit on base_power, NATURAL_UNITS the field's own unit.",
       "$ref": "../../Core/common.json#/$defs/UnitSystem"
     },
     "load_balance_time_horizon": {

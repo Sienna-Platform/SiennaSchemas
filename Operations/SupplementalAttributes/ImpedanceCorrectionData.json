@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Supplemental attribute carrying one row of an impedance correction table, linked to a transformer. The correction curve defines intervals over tap ratio or angle shift, and the accompanying fields name which winding the row applies to and whether the controlled quantity is an off-nominal turns ratio or a phase angle shift.",
+  "description": "One row of an impedance correction table, linked to a transformer. The curve defines intervals over tap ratio or angle shift; other fields name the winding and whether the controlled quantity is a turns ratio or a phase angle.",
   "title": "ImpedanceCorrectionData",
   "type": "object",
   "properties": {

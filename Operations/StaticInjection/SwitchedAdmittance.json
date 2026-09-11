@@ -1,17 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A switched admittance, with discrete steps to adjust the admittance.\n\nMost often used in power flow studies, iterating over the steps to see impacts of admittance on the results. Total admittance is `number_engaged` * `Y_increase`, unless `solved_admittance` is set, in which case that value is the effective admittance. There is no fixed base admittance: a PSS/E SWITCHED SHUNT record carries only BINIT and the per-block increments.",
+  "description": "A switched admittance with discrete steps, most often used in power flow studies. Total admittance is number_engaged * Y_increase, unless solved_admittance is set, in which case that value is the effective admittance.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "description": "Name of the component. Unique among components of the same type; components of different types may share a name.",
       "type": "string"
     },
     "available": {
-      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
+      "description": "Whether the component is online (true) or offline (false). Unavailable components are excluded from simulations.",
       "type": "boolean"
     },
     "bus": {
@@ -24,21 +24,21 @@
       "$ref": "../../Core/common.json#/$defs/ShuntAdmittanceUnitBasis"
     },
     "number_engaged": {
-      "description": "Vector with the number of steps currently engaged (switched in) for each adjustable shunt block. For example, `number_engaged[2]` is the number of steps in service at block 2, and cannot exceed `number_of_steps[2]`.",
+      "description": "Number of steps currently engaged (switched in) for each adjustable shunt block; cannot exceed number_of_steps for that block.",
       "type": "array",
       "items": {
         "type": "integer"
       }
     },
     "number_of_steps": {
-      "description": "Vector with number of steps for each adjustable shunt block. For example, `number_of_steps[2]` are the number of available steps for admittance increment at block 2.",
+      "description": "Number of available steps for admittance increment at each adjustable shunt block.",
       "type": "array",
       "items": {
         "type": "integer"
       }
     },
     "Y_increase": {
-      "description": "Vector with admittance increment step for each adjustable shunt block. For example, `Y_increase[2]` is the complex admittance increment for each step at block 2. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
+      "description": "Admittance increment for each adjustable shunt block, e.g. Y_increase[2] is the increment at block 2. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
       "type": "array",
       "items": {
         "$ref": "../../Core/common.json#/$defs/ComplexNumber"

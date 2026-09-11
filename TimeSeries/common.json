@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "TimeSeriesCommon",
-  "description": "Shared value types for the time series association schemas. Field names, shapes, and wire forms mirror the backing time-series store's types exactly; only the Features/FeatureValue/Descriptors names carry a TimeSeries prefix, because the bare names are too generic for a shared schema namespace.",
+  "description": "Shared value types for the time series association schemas, mirroring the backing store's types. Only Features/FeatureValue names carry a TimeSeries prefix, since the bare names are too generic for a shared namespace.",
   "$defs": {
     "OwnerCategory": {
       "title": "OwnerCategory",
@@ -10,7 +10,7 @@
         "Component",
         "SupplementalAttribute"
       ],
-      "description": "Whether a time series' owner is a component or a supplemental attribute. The producing data layer allocates both kinds of id from one stream, so an owner_id never names one of each; the category is required regardless, because the store's catalog contract still supports independent streams from other producers and remains the store's disambiguator. These are the display and serde spellings; the store's catalog holds them as the integer codes 0 and 1."
+      "description": "Whether a time series' owner is a component or a supplemental attribute. Required regardless of id, since the store's catalog contract supports independent id streams from other producers."
     },
     "TimeSeriesFeatureValue": {
       "title": "TimeSeriesFeatureValue",
@@ -28,7 +28,7 @@
           "type": "string"
         }
       ],
-      "description": "One feature value. Four kinds, matching the backing store's feature-value type: int, float, bool, str. `anyOf` rather than `oneOf` is required, not stylistic: JSON Schema's `integer` is a subset of `number`, so an integer instance matches both branches and `oneOf` — which demands exactly one match — would reject every integer feature. A float feature is compared and hashed by its bit pattern rather than by IEEE comparison, so 0.0 and -0.0 are two different series; NaN and negative zero are rejected on write because the catalog cannot store either faithfully."
+      "description": "One feature value: int, float, bool, or str. anyOf (not oneOf) because JSON Schema's integer is a subset of number. A float is compared and hashed by bit pattern, so 0.0 and -0.0 differ; NaN and negative zero are rejected on write."
     },
     "TimeSeriesFeatures": {
       "title": "TimeSeriesFeatures",
@@ -74,22 +74,22 @@
           ]
         }
       },
-      "description": "User-defined key/value tags forming part of a series' identity. A map, matching the backing store's feature-map type (a BTreeMap whose sort order is load-bearing, because the hash of the feature map keys the catalog's uniqueness index). The excluded property names each already name a field of a time series or of the tuple that addresses one: consumers routinely spread a feature map into keyword arguments, where a feature called `name` or `resolution` would shadow the real field and silently change what a query means. The comparison is exact and case-sensitive — `resolution` is reserved, `Resolution` is not."
+      "description": "User-defined key/value tags forming part of a series' identity. Excludes names already used by a series field or by the tuple addressing one, since a feature would otherwise shadow that field. Comparison is exact and case-sensitive."
     },
     "ElementType": {
       "title": "ElementType",
       "type": "string",
-      "description": "Canonical element type of the stored array: a dtype spelling (`f64`, `f32`, `i64`, `i32`, `u64`, `u32`, `u16`, `u8`, `i16`, `i8`, `bool`) for plain scalars, else `tuple(N,dtype)` or a function-data kind (`linear_function`, `quadratic_function`, `piecewise_linear`, `piecewise_step`). It says what one timestep's value means and how it is laid out; the physical dtype of the bytes derives from it rather than being recorded separately. `linear_function` occupies 2 slots, `quadratic_function` 3; the two piecewise kinds are ragged, with the used count in the row's leading element."
+      "description": "Canonical element type of the stored array: a dtype spelling (f64, f32, i64, i32, u64, u32, u16, u8, i16, i8, bool) for scalars, else tuple(N,dtype) or a function-data kind. Says what one timestep's value means and how it is laid out."
     },
     "TimeReference": {
       "title": "TimeReference",
       "type": "string",
-      "description": "How a series' timestamps were spelled, recorded so a read hands back what the write declared instead of relabelling every series UTC. Four forms share one string, and are unambiguous because a zone name that would read as either literal or as an offset is rejected: `utc`; `zoneless` for a wall clock, which names no instant; a fixed UTC offset (`-07:00`, `+0530`, `+05`); or an IANA zone name (`America/Denver`). Only the name's shape is checked here — whether a zone exists is a tz-database question, and the store records the name either way. A spelling, not a grid: it does not change what a calendar `resolution` steps on, and a series on a local-clock grid is a NonSequentialTimeSeries. Descriptive, so two series differing only in it are duplicates rather than distinct series, but not inert — a query's bounds must match the series' spelling, and the zoneless series form their own group."
+      "description": "How a series' timestamps are spelled: utc; zoneless for a wall clock; a fixed UTC offset (-07:00, +0530); or an IANA zone name. Not a grid: does not change what resolution steps on."
     },
     "Period": {
       "title": "Period",
       "type": "string",
-      "description": "A time period as an ISO-8601 duration string, used for `resolution`, `horizon`, and `interval`. Two kinds, which are never equal even when their spans coincide: fixed spans (`PT1H`, `PT5M`, down to a one-millisecond floor of `PT0.001S`) and calendar spans (`P1M`, `P1Y`), whose length depends on the calendar. `PT0S` is the canonical interval of a single-window forecast. More than three fractional-second digits is rejected, so a series on a grid finer than a millisecond is not storable at all rather than storable and unreadable."
+      "description": "A time period as an ISO-8601 duration string, used for resolution, horizon, and interval. Fixed spans (PT1H, down to a millisecond floor) and calendar spans (P1M, P1Y) are never equal even when their spans coincide."
     }
   }
 }

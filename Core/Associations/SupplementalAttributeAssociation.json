@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "SupplementalAttributeAssociation",
-  "description": "Links a supplemental attribute to the component it describes — the JSON form of a row in the store's `supplemental_attribute_associations` catalog table, field-for-field. `component_type` and `attribute_type` are denormalized labels carried for filtering and reporting, not identity: identity is the `(component_id, attribute_id)` pair. Lives in Core because either side may be a Core or an Operations type. Unlike `components`, `supplemental_attributes` is a flat, untyped array, so `attribute_type` is this record's only per-row type discriminator.",
+  "description": "Links a supplemental attribute to the component it describes: one row per (component_id, attribute_id) pair. `component_type` and `attribute_type` are denormalized labels for filtering, not part of the row's identity.",
   "type": "object",
   "properties": {
     "component_id": {
@@ -9,7 +9,7 @@
       "type": "integer"
     },
     "component_type": {
-      "description": "Type name of the component the attribute describes. A denormalized label matching the relational mirror's column, used for filtering; not part of the row's identity, which is the `(component_id, attribute_id)` pair.",
+      "description": "Type name of the component the attribute describes. A denormalized label for filtering; not part of the row's identity.",
       "type": "string"
     },
     "attribute_id": {
@@ -17,7 +17,7 @@
       "type": "integer"
     },
     "attribute_type": {
-      "description": "Schema title of the referenced supplemental attribute (e.g. \"EmissionsData\", \"GeographicInfo\"). A free-form string, not an enum: new attribute types are added elsewhere in this repo continuously, and a closed enum here would go stale.",
+      "description": "Schema title of the referenced supplemental attribute (e.g. EmissionsData). Free-form, not an enum: attribute types are added continuously.",
       "type": "string"
     }
   },

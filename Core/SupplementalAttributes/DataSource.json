@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "DataSource",
-  "description": "Records data provenance for a component's field values: which organization or dataset the data came from, the URL it was retrieved from, and when it was retrieved. Mirrors the `DataSource` supplemental attribute from the upstream data layer, with two deliberate divergences: `organization` is optional here although it is required upstream, and `extra` is narrowed from an any-valued map to a string-valued one. Linked to the entity it describes through Core/Associations/SupplementalAttributeAssociation.json with attribute_type: \"DataSource\".",
+  "description": "Records data provenance for a component's field values: the organization or dataset it came from, the URL retrieved from, and when. Linked to the entity it describes via SupplementalAttributeAssociation with attribute_type: DataSource.",
   "type": "object",
   "properties": {
     "id": {

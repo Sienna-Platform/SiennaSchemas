@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Candidate storage technology in a region. Charge capacity, discharge capacity, and energy capacity are added independently, each with its own capital cost, unit size, and capacity limits; charge and discharge efficiency, self-discharge losses, and limits on the ratio of energy to discharge capacity complete the description.",
+  "description": "Candidate storage technology in a region. Charge, discharge, and energy capacity are added independently with their own capital cost, unit size, and limits; efficiency and self-discharge complete it.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -42,7 +42,7 @@
       "$ref": "../../Core/common.json#/$defs/StorageTech"
     },
     "capital_costs": {
-      "description": "Capital and interconnection cost for investing in a storage technology's charge, discharge, and energy capacity (charge and discharge in USD/MW, energy in USD/MWh).",
+      "description": "Capital and interconnection cost for a storage technology's charge, discharge, and energy capacity (charge/discharge in USD/MW, energy in USD/MWh).",
       "$ref": "../../Core/common.json#/$defs/StorageCapitalCost"
     },
     "operation_costs": {
@@ -68,7 +68,7 @@
       "x-unit": "MWh"
     },
     "capacity_limits_charge": {
-      "description": "Allowable installed power capacity for charging of a storage technology, given either as a single bound applied to all capacity or as a mapping from a float key (stringified) to the bound that applies at that key. Units: MW.",
+      "description": "Allowable installed charging capacity: a single bound applied to all capacity, or a mapping from a stringified float key to the bound at that key. Units: MW.",
       "x-unit": "MW",
       "anyOf": [
         {
@@ -80,7 +80,7 @@
       ]
     },
     "capacity_limits_discharge": {
-      "description": "Allowable installed power capacity for discharging of a storage technology, given either as a single bound applied to all capacity or as a mapping from a float key (stringified) to the bound that applies at that key. Units: MW.",
+      "description": "Allowable installed discharging capacity: a single bound applied to all capacity, or a mapping from a stringified float key to the bound at that key. Units: MW.",
       "x-unit": "MW",
       "anyOf": [
         {
@@ -92,7 +92,7 @@
       ]
     },
     "capacity_limits_energy": {
-      "description": "Allowable installed energy capacity for a storage technology, given either as a single bound applied to all capacity or as a mapping from a float key (stringified) to the bound that applies at that key. Units: MWh.",
+      "description": "Allowable installed energy capacity: a single bound applied to all capacity, or a mapping from a stringified float key to the bound at that key. Units: MWh.",
       "x-unit": "MWh",
       "anyOf": [
         {

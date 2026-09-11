@@ -9,15 +9,15 @@
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "description": "Name of the component. Unique among components of the same type; components of different types may share a name.",
       "type": "string"
     },
     "seller_id": {
-      "description": "External participant identifier for the selling counterparty, as reported on the transaction. Not a component reference: sellers are not represented in the entity registry.",
+      "description": "External participant identifier for the selling counterparty, as reported on the transaction. Not a component reference.",
       "type": "string"
     },
     "buyer_id": {
-      "description": "External participant identifier for the buying counterparty, as reported on the transaction. Not a component reference: buyers are not represented in the entity registry.",
+      "description": "External participant identifier for the buying counterparty, as reported on the transaction. Not a component reference.",
       "type": "string"
     },
     "from_id": {

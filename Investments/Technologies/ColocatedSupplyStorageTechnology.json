@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Supply technology co-located with storage behind a shared grid connection. The generation and storage portions are referenced by id (`supply_technology` and `storage_technology`); the inverter that couples them to the grid carries its own capacity limits, capital and operating costs, and efficiency.",
+  "description": "Supply technology co-located with storage behind a shared grid connection. Generation and storage are referenced by id; the coupling inverter carries its own capacity limits, capital and operating costs, and efficiency.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
