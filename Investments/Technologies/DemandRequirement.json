@@ -20,7 +20,7 @@
       "type": "string"
     },
     "conformity": {
-      "description": "How the demand requirement should conform to the load profile of existing technologies. Only used for new demand requirements.",
+      "description": "Indicator of how the demand requirement should conform to the load profile of existing technologies in the system. Should only be used for new demand requirements.",
       "type": "string",
       "default": "UNDEFINED"
     },

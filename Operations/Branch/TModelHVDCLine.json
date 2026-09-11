@@ -1,17 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A high-voltage DC line for modeling DC transmission networks. Connects to a DCBus on each end and uses a T-model of the line impedance, suitable for multi-terminal DC networks. Power fields are always natural units.",
+  "description": "A High Voltage DC transmission line for modeling DC transmission networks.\n\nThis line must be connected to a `DCBus` on each end. It uses a T-Model of the line impedance. This is suitable for operational simulations with a multi-terminal DC network. This line has no independent per-component power base, so its power fields are always natural units.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Unique among components of the same type; components of different types may share a name.",
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
-      "description": "Whether the component is online (true) or offline (false). Unavailable components are excluded from simulations.",
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "active_power_flow": {

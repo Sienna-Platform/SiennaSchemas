@@ -12,7 +12,7 @@
       "type": "string"
     },
     "VSCDCControlModes": {
-      "description": "DC-side control mode of a VSC terminal. DC_POWER: controls active power to the DC side. DC_VOLTAGE: controls DC-side voltage. DC_VOLTAGE_DROOP: P-Vdc droop, V_dc = dc_setpoint - droop_gain * P_c.",
+      "description": "DC-side control mode of a voltage-source-converter (VSC) terminal. DC_POWER: converter controls active power transferred to the DC side. DC_VOLTAGE: converter controls the DC-side voltage. DC_VOLTAGE_DROOP: P-Vdc droop, V_dc = dc_setpoint - droop_gain * P_c.",
       "enum": [
         "DC_POWER",
         "DC_VOLTAGE",
@@ -22,7 +22,7 @@
       "type": "string"
     },
     "FACTSControlDeviceControlMode": {
-      "description": "Operating mode of a FACTS control device. OOS: both series and shunt links open. NML: both links operating. BYP: series link bypassed as a zero-impedance line; shunt link operates as a reactive-only STATCOM.",
+      "description": "Operating mode of a FACTS control device. `OOS` (out-of-service): both series and shunt links are open. `NML` (normal): both series and shunt links are operating. `BYP` (bypass): the series link is bypassed (acts as a zero-impedance line) and the shunt link operates as a STATCOM (reactive-only).",
       "enum": [
         "OOS",
         "NML",
@@ -32,7 +32,7 @@
       "type": "string"
     },
     "SwitchedAdmittanceControlMode": {
-      "description": "Control mode of a switched shunt admittance. UNDEFINED: unspecified. FIXED: constant value. CONTINUOUS_VOLTAGE: adjusts continuously. DISCRETE_* modes switch blocks stepwise to control voltage, reactive power, or a remote bus's admittance.",
+      "description": "Control mode of a switched shunt admittance. `UNDEFINED` leaves the mode unspecified; `FIXED` holds the admittance at a constant value; `CONTINUOUS_VOLTAGE` adjusts it continuously to control voltage. The `DISCRETE_*` modes switch blocks in discrete steps to control voltage, a plant's reactive power, a voltage-source-converter terminal's reactive power, or a remote bus's admittance, respectively.",
       "enum": [
         "UNDEFINED",
         "FIXED",
@@ -46,7 +46,7 @@
       "type": "string"
     },
     "CombinedCycleConfiguration": {
-      "description": "Shaft and turbine arrangement of a combined cycle plant: one shaft with one combustion and one steam turbine, separate shafts for the two, two or three combustion turbines feeding one steam turbine, or Other.",
+      "description": "Shaft and turbine arrangement of a combined cycle plant: a single shaft carrying one combustion and one steam turbine, separate shafts for the two, two or three combustion turbines feeding one steam turbine, or `Other` for any arrangement outside these.",
       "enum": [
         "SingleShaftCombustionSteam",
         "SeparateShaftCombustionSteam",
@@ -58,7 +58,7 @@
       "type": "string"
     },
     "ReserveDirection": {
-      "description": "Direction a reserve product is procured in. UP increases generation or reduces load above expected demand. DOWN decreases generation or increases load below it. SYMMETRIC procures the same quantity both ways.",
+      "description": "Direction a reserve product is procured in. `UP` increases generation or reduces load when demand exceeds its expected level; `DOWN` decreases generation or increases load when demand falls below it; `SYMMETRIC` procures the same quantity in both directions. Upstream this distinction is a type parameter on the reserve; here it is flattened into a property.",
       "enum": [
         "UP",
         "DOWN",
@@ -68,7 +68,7 @@
       "type": "string"
     },
     "TransformerControlObjective": {
-      "description": "Control objective of a tap changer or phase shifter: FIXED (no adjustment), or regulation of voltage, reactive power, active power, asymmetric power, or a DC line. Each has a paired _DISABLED value; UNDEFINED means none stated.",
+      "description": "Control objective of a transformer tap changer or phase shifter: a fixed tap position with no automatic adjustment (`FIXED`), or regulation of voltage magnitude at the controlled bus, reactive power flow, active power flow, asymmetric active power flow, or a DC line. Each regulating objective has a paired `_DISABLED` value naming the same control block while it is out of service, and `UNDEFINED` means no control objective is stated.",
       "enum": [
         "UNDEFINED",
         "VOLTAGE_DISABLED",
@@ -87,7 +87,7 @@
       "type": "string"
     },
     "TwoWindingTransformerShuntLocation": {
-      "description": "Placement of a TwoWindingTransformer's magnetizing shunt admittance. PRIMARY: applied on the primary side. SECONDARY: applied on the secondary side. SPLIT: applied on both sides.",
+      "description": "Placement of a `TwoWindingTransformer`'s magnetizing shunt admittance on the two sides of its single circuit arc. PRIMARY: the full magnetizing shunt is applied on the primary (from) side. SECONDARY: the full magnetizing shunt is applied on the secondary (to) side. SPLIT: the full complex magnetizing shunt value is applied on BOTH sides.",
       "enum": [
         "PRIMARY",
         "SECONDARY",
@@ -97,7 +97,7 @@
       "type": "string"
     },
     "ThreeWindingTransformerShuntLocation": {
-      "description": "Placement of a ThreeWindingTransformer's magnetizing shunt admittance. PRIMARY: applied on the winding-1 terminal side. STAR: applied at the star node.",
+      "description": "Placement of a `ThreeWindingTransformer`'s magnetizing shunt admittance in the equivalent star model. PRIMARY: the full magnetizing shunt is applied on the winding-1 (primary) terminal side. STAR: the full magnetizing shunt is applied at the star node.",
       "enum": [
         "PRIMARY",
         "STAR"
@@ -106,7 +106,7 @@
       "type": "string"
     },
     "VoltageUnitBasis": {
-      "description": "Unit basis a voltage setpoint is stored in. NATURAL_UNITS: kilovolts. COMPONENT_BASE: per-unit on the component's own base voltage. No separate system-base option.",
+      "description": "Unit basis a voltage setpoint is stored in. NATURAL_UNITS: kilovolts. COMPONENT_BASE: per-unit on the component's own base voltage (the connected bus's base voltage for AC setpoints — PSS/E RAW native for FACTS VSET — and the device voltage base PSS/E supplies for DC-line converters and CZ=2 transformer windings). There is no separate system-base option: bus-base per-unit is the device base for voltage.",
       "enum": [
         "NATURAL_UNITS",
         "COMPONENT_BASE"
@@ -115,7 +115,7 @@
       "type": "string"
     },
     "LoadConformity": {
-      "description": "How a load tracks voltage and frequency variation in dynamic studies. CONFORMING responds predictably, following standard practice. NON_CONFORMING does not, e.g. a constant power load. UNDEFINED leaves it unstated.",
+      "description": "WECC classification of how a load tracks voltage and frequency variation, used in dynamic studies to decide how it is modeled during a disturbance. `CONFORMING` responds predictably and follows standard load modeling practice; `NON_CONFORMING` does not, as with a constant power load or one behind a complex control system; `UNDEFINED` leaves the classification unstated.",
       "enum": [
         "NON_CONFORMING",
         "CONFORMING",
@@ -125,7 +125,7 @@
       "type": "string"
     },
     "OperationalStates": {
-      "description": "The on/off lifecycle of an in-service committable unit. OFFLINE: shut down. ONLINE: synchronized and producing. STARTUP/SHUTDOWN: mid-transition. Distinct from availability: an outaged unit has available = false regardless of state.",
+      "description": "The running on/off lifecycle of an in-service committable unit, mutually exclusive. OFFLINE: shut down and not synchronized. ONLINE: synchronized and able to produce. STARTUP: in its start-up sequence. SHUTDOWN: in its shut-down sequence. Availability is not one of these values: a unit on outage is `available = false`; an OFFLINE unit with `available = true` is in service and eligible for re-commitment and off-line ancillary services.",
       "enum": [
         "OFFLINE",
         "ONLINE",
@@ -136,7 +136,7 @@
       "type": "string"
     },
     "CommitmentModes": {
-      "description": "Why a committable unit is committed. UNCOMMITTED: not committed, available. COMMITTED: by the scheduling process. SELF_SCHEDULED: by its owner. RELIABILITY: by the system operator. MUST_RUN: required by contract or constraint.",
+      "description": "Why a committable unit is (or would be) committed, orthogonal to its operational state. UNCOMMITTED: not committed, offline but available. COMMITTED: committed by the scheduling process (a planning model's commitment decision or a cleared schedule). SELF_SCHEDULED: scheduled by its owner rather than by the scheduling process. RELIABILITY: committed by the system operator for reliability rather than by the scheduling process. MUST_RUN: required to run by contract or operating constraint.",
       "enum": [
         "UNCOMMITTED",
         "COMMITTED",
@@ -168,7 +168,7 @@
       "type": "string"
     },
     "BilateralConfirmation": {
-      "description": "Confirmation status a bilateral transaction settled under. DUAL_CONFIRM: both confirmed. UNILATERAL_BUYER/SELLER: only that side. FIRST_REPORTER_DEEMED: first-reported side deemed confirmed. EXACT_MATCH_OR_REJECT: exact match only.",
+      "description": "Confirmation status a bilateral transaction settled under. DUAL_CONFIRM: both counterparties confirmed. UNILATERAL_BUYER: only the buyer confirmed. UNILATERAL_SELLER: only the seller confirmed. FIRST_REPORTER_DEEMED: the first-reported side is deemed confirmed. EXACT_MATCH_OR_REJECT: accepted only on an exact match between counterparties, otherwise rejected.",
       "enum": [
         "DUAL_CONFIRM",
         "UNILATERAL_BUYER",

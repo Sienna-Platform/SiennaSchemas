@@ -1,17 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "An interruptible, voltage-dependent ZIP load whose demand can be curtailed subject to an interruption cost. Like StandardLoad, splits demand into Z, I, and P terms, but carries an operation_cost for interrupting the load.",
+  "description": "An interruptible, voltage-dependent ZIP load whose demand can be curtailed through demand response programs, subject to an interruption cost.\n\nLike `StandardLoad`, it breaks the ZIP into three pieces: Z (constant impedance), I (constant current), and P (constant power), according to `P = P_P * V^0 + P_I * V^1 + P_Z * V^2` for active power and `Q = Q_P * V^0 + Q_I * V^1 + Q_Z * V^2` for reactive power. (Voltage V is in per unit.) Unlike `StandardLoad`, it carries an `operation_cost` for interrupting the load.\n\nFor a non-interruptible ZIP load, see `StandardLoad`. For an interruptible constant-power load, see `InterruptiblePowerLoad`.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Unique among components of the same type; components of different types may share a name.",
+      "description": "Name of the component. Components of the same type (e.g., `InterruptibleStandardLoad`) must have unique names, but components of different types (e.g., `InterruptibleStandardLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
-      "description": "Whether the component is online (true) or offline (false). Unavailable components are excluded from simulations.",
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
@@ -24,7 +24,7 @@
       "x-unit": "MVA"
     },
     "power_units": {
-      "description": "Unit basis for this component's power fields (power, ratings, ramp rates): COMPONENT_BASE per unit on base_power, NATURAL_UNITS the field's own unit.",
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
       "$ref": "../../Core/common.json#/$defs/UnitSystem"
     },
     "operation_cost": {

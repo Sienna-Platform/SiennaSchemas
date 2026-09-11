@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "EmissionsData",
-  "description": "Describes emission of a single pollutant from a host component: pollutant identity (CO2, NOx, etc.) plus an emission rate as a ValueCurve. One instance can attach to one or many components.",
+  "description": "Supplemental attribute describing the emission of a single pollutant from a host component. Combines pollutant identity (CO2, NOx, etc.) with an emission rate expressed as a ValueCurve (supporting constant, linear, or piecewise relationships between fuel consumption / power output and emissions). One EmissionsData instance can be attached to one or many components.",
   "type": "object",
   "properties": {
     "id": {
@@ -17,7 +17,7 @@
     },
     "emission_rate": {
       "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "description": "Emission rate as a ValueCurve, typically an IncrementalCurve with LinearFunctionData or PiecewiseStepData. Rates must be non-negative and finite."
+      "description": "Emission rate as a ValueCurve, typically an IncrementalCurve with LinearFunctionData (constant or linearly varying rate) or PiecewiseStepData (piecewise step rates). Rates must be non-negative and finite."
     },
     "basis": {
       "$ref": "../../Core/common.json#/$defs/EmissionBasis",

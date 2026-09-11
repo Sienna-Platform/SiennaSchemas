@@ -1,17 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A non-spinning reserve from devices not synchronized but able to come online quickly after a contingency. Upward only. The requirement is static unless a requirement time series is attached, in which case it is the scaling factor.",
+  "description": "A non-spinning reserve product from devices not currently synchronized with the system but able to come online quickly after an unexpected contingency. Upward only, so unlike `OnlineReserve` there is no reserve direction. The procurement requirement is static unless a `requirement` time series is attached, in which case `requirement` is the scaling factor.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Unique among components of the same type; components of different types may share a name.",
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
-      "description": "Whether the component is online (true) or offline (false). Unavailable components are excluded from simulations.",
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "time_frame": {
@@ -26,7 +26,7 @@
       "x-unit": "MW"
     },
     "variable": {
-      "description": "Operating reserve demand curve, static or time-series-backed. Time series values are carried via `time_series_associations`. Omit if there is no demand curve.",
+      "description": "Operating reserve demand curve, either static or time-series-backed. Time series values are carried via `time_series_associations` in the sidecar, never inline. Omit when the reserve has no demand curve.",
       "$ref": "../../Core/common.json#/$defs/CostCurve"
     },
     "sustained_time": {

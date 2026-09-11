@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "SystemDocument",
-  "description": "The serialized form of a power system: every component, the association tables linking them, and the sidecar file holding time series values. Each component blob is self-contained: a per-unit basis is resolved against that blob's own basis-selector property and base_power, never a document-wide table. `time_series_associations` carries series metadata; `time_series_storage_file` names the sidecar.",
+  "description": "The serialized form of a whole power system: every component, the association tables that link them, and the name of the HDF5 sidecar holding time series values. This is the interchange format between producers (the producing parsers and the data model library) and consumers (the data model library, the relational mirror, non-Julia clients), so the shape is defined here rather than by convention in each producer.\n\nThere is no document-level unit system or base power: every value in the document is interpretable from its own component blob alone. A discriminated field is resolved against a basis-selector property recorded on that same blob (`power_units`, `parameter_units`, `energy_units`, and the like) and, for a COMPONENT_BASE reading, against that blob's own `base_power` — never a document-wide table. A field with a fixed `x-unit` is already in its natural unit and needs no basis at all. This applies uniformly to component blobs and to any embedded cost payload's own `power_units`; a time series association's `unit_system` likewise governs only that one series.\n\nDeliberately excluded from openapi-generator: `components` is a map from type name to an array of heterogeneous component objects, which the generated Julia client cannot express as typed buckets. The hand-written container in the generated core model package (`src/document.jl`) is the single Julia representation, and its fields are checked against this file. This schema remains authoritative for every other language binding.\n\nTime series *values* never appear here. `time_series_associations` carries the metadata rows and `time_series_storage_file` names the sidecar; reading or writing that file is the consumer's job.",
   "type": "object",
   "properties": {
     "name": {
@@ -25,7 +25,7 @@
       "x-unit": "Hz"
     },
     "components": {
-      "description": "Components grouped by type name, e.g. {\"ACBus\": [...]}. Keys are the schema's title, sorted for deterministic output. An unknown type must fail conversion.",
+      "description": "Components grouped by type name, e.g. `{\"ACBus\": [...], \"ThermalStandard\": [...]}`. The key is the referenced schema's `title`. Keys are emitted in sorted order so output is deterministic. Every type present must be one the consumer can convert: a consumer encountering an unknown type name must fail rather than skip it.",
       "type": "object",
       "additionalProperties": {
         "type": "array",
@@ -35,21 +35,21 @@
       }
     },
     "supplemental_attributes": {
-      "description": "Supplemental attributes as one flat array, not bucketed by type. `supplemental_attribute_associations` carries the link and the attribute_type discriminator.",
+      "description": "Supplemental attributes in one flat array rather than bucketed by type: nothing iterates them per type, and `supplemental_attribute_associations` carries both the link and the `attribute_type` discriminator a consumer needs to pick a converter.",
       "type": "array",
       "items": {
         "type": "object"
       }
     },
     "supplemental_attribute_associations": {
-      "description": "Links each plain supplemental attribute (e.g. EmissionsData, GeographicInfo) to the entity it describes. One row per (attribute, entity) pair.",
+      "description": "Links each plain supplemental attribute (e.g. EmissionsData, GeographicInfo) to the entity it describes. One row per (attribute, entity) pair. Plant, combined-cycle, and service memberships are carried by their own arrays below, not here.",
       "type": "array",
       "items": {
         "$ref": "Associations/SupplementalAttributeAssociation.json"
       }
     },
     "plant_associations": {
-      "description": "Links a power plant attribute (ThermalPowerPlant, HydroPowerPlant, RenewablePowerPlant, CombinedCycleFractional) to a unit and its group within the plant.",
+      "description": "Links a power plant supplemental attribute (ThermalPowerPlant, HydroPowerPlant, RenewablePowerPlant, CombinedCycleFractional) to a generating unit and the group it belongs to within the plant: shafts, penstocks, PCCs, or exclusion groups.",
       "type": "array",
       "items": {
         "$ref": "../Operations/Associations/PlantAssociation.json"
@@ -70,7 +70,7 @@
       }
     },
     "trading_hub_associations": {
-      "description": "Links a trading hub to one entity: a member bus, or a transaction settling there. One row per (hub, member) pair. Optional, defaults to empty.",
+      "description": "Links a trading hub to one associated entity: a member bus or a market transaction settling at the hub. One row per (hub, member) pair. Optional, defaulting to empty: unlike the association arrays that have been required since the format existed, this one was added later, so documents written before it exist and omit it.",
       "default": [],
       "type": "array",
       "items": {
@@ -78,21 +78,21 @@
       }
     },
     "time_series_associations": {
-      "description": "Time series metadata rows, one per (series, owner) association. Each names the store holding its values; `time_series_storage_file` is the sidecar name.",
+      "description": "Time series metadata rows, one per (series, owner) association. Each row names the store holding its values in its own `address`; `time_series_storage_file` remains the document-level sidecar name.",
       "type": "array",
       "items": {
         "$ref": "../TimeSeries/TimeSeriesAssociation.json"
       }
     },
     "ext": {
-      "description": "Source data no schema field claims, keyed by component id. A consumer must consult a declared ignore list: a listed key is skipped, an unlisted key errors.",
+      "description": "Source data that no schema field claims, keyed by the stringified component id it belongs to. Only values genuinely unclaimed by any schema field may appear here; a producer must never mirror a value that also landed in a schema field. An absent or empty `ext` means the producer mapped everything. A consumer must consume keys via a declared ignore list: a listed key is skipped, an unlisted key is an error naming the key and the component id — never a silent drop.",
       "type": "object",
       "additionalProperties": {
         "type": "object"
       }
     },
     "time_series_storage_file": {
-      "description": "Basename of the sidecar holding time series values, or null if none. A name, not a path: resolved relative to the document.",
+      "description": "Basename of the HDF5 sidecar holding time series values, or null when the system has no time series. A name, not a path: the file is resolved relative to the document, so a document and its sidecar can be moved together.",
       "type": [
         "string",
         "null"
