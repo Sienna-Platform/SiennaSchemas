@@ -24,7 +24,7 @@
     },
     "speed_error_signal": {
       "description": "Speed error signal limits",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Kp_gov": {
       "description": "Governor proportional gain",
@@ -44,7 +44,7 @@
     },
     "valve_position_limits": {
       "description": "Valve position limits",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "T_act": {
       "description": "Actuator time constant",
@@ -132,7 +132,7 @@
     },
     "R_lim": {
       "description": "Maximum rate of load increase",
-      "$ref": "../../../Core/common.json#/definitions/UpDown"
+      "$ref": "../../../Core/common.json#/$defs/UpDown"
     },
     "P_ref": {
       "description": "Reference power set-point",

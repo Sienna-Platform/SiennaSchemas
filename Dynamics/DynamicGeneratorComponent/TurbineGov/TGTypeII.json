@@ -20,7 +20,7 @@
     },
     "tau_limits": {
       "description": "Power limits into the governor",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "P_ref": {
       "description": "Reference power set-point",

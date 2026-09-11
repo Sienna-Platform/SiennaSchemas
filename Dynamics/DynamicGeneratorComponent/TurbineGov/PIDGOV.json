@@ -62,7 +62,7 @@
     },
     "G_lim": {
       "description": "Minimum and maximum gate openings",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "A_tw": {
       "description": "Factor multiplying Tw",
@@ -74,7 +74,7 @@
     },
     "G_lim": {
       "description": "Gate opening velocity limits",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "P_ref": {
       "description": "Reference load set-point",

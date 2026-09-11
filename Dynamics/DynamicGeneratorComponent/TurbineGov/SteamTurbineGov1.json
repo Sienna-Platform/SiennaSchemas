@@ -17,7 +17,7 @@
     },
     "valve_position_limits": {
       "description": "Valve position limits",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "T2": {
       "description": "Lead-lag lead time constant. Units: s",

@@ -36,11 +36,11 @@
     },
     "V_lim": {
       "description": "Gate opening velocity limits",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "G_lim": {
       "description": "Minimum and maximum gate velocity",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Tw": {
       "description": "Water inertia time constant",
@@ -48,7 +48,7 @@
     },
     "P_lim": {
       "description": "Minimum and maximum gate openings",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "D_turb": {
       "description": "Turbine damping coefficient",

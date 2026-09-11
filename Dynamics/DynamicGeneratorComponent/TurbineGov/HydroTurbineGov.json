@@ -32,7 +32,7 @@
     },
     "gate_position_limits": {
       "description": "Gate position limits",
-      "$ref": "../../../Core/common.json#/definitions/MinMax"
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Tw": {
       "description": "Water time constant",
