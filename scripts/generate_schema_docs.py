@@ -810,12 +810,12 @@ def render_factor(value):
     return f"`{value!r}`"
 
 
-def render_quantity_types_table(units):
+def render_quantity_kinds_table(units):
     lines = [
         "| Quantity type | Default unit | Description |",
         "|---|---|---|",
     ]
-    for entry in units["quantity_types"]:
+    for entry in units["quantity_kinds"]:
         lines.append(
             f"| `{entry['name']}` | `{entry['default_unit']}` "
             f"| {table_cell(entry['description'])} |"
@@ -827,9 +827,9 @@ def render_quantity_types_table(units):
 def render_allowed_units_table(units):
     """One row per allowed unit, grouped by quantity type in vocabulary order
     (the allowed_units list itself is not grouped)."""
-    by_quantity = {entry["name"]: [] for entry in units["quantity_types"]}
+    by_quantity = {entry["name"]: [] for entry in units["quantity_kinds"]}
     for entry in units["allowed_units"]:
-        by_quantity[entry["quantity_type"]].append(entry)
+        by_quantity[entry["quantity_kind"]].append(entry)
     lines = [
         "| Quantity type | Unit | Factor to default |",
         "|---|---|---|",
@@ -846,12 +846,12 @@ UNITS_READING_JSON = f"""\
 
 The vocabulary file has two lists, answering two different questions.
 
-- **`quantity_types`** — one entry per *kind* of quantity: `name`, its `dimension` (an
+- **`quantity_kinds`** — one entry per *kind* of quantity: `name`, its `dimension` (an
   exponent map over the base dimensions), `default_unit`, `ucum` (the UCUM code for that
   default unit, or `null` where none applies), and a `description`. This is what is being
   measured, independent of how any one value happens to be stored — the source of the
   Quantity types table above.
-- **`allowed_units`** — one row per `(quantity_type, unit)` pair that quantity may actually
+- **`allowed_units`** — one row per `(quantity_kind, unit)` pair that quantity may actually
   be stored in, each carrying its own `to_default`. This is which spellings are legal, and
   the factor from each to its quantity's `default_unit` — the source of the Allowed units
   table above.
@@ -906,7 +906,7 @@ def units_page():
         ]
     )
     lines += ["# Units", "", UNITS_LEAD, UNITS_ROUTING, UNITS_MODEL, UNITS_QUANTITY_TYPES_LEAD]
-    lines += render_quantity_types_table(units)
+    lines += render_quantity_kinds_table(units)
     lines.append(UNITS_ALLOWED_LEAD)
     if any(entry["to_default"] == 0.0 for entry in units["allowed_units"]):
         lines.append(UNITS_ALLOWED_ZERO_NOTE)

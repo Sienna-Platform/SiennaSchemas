@@ -109,7 +109,7 @@ def _check_fraction_per_time_basis(units):
     """FractionPerTime multiplies the simulation step, so its time basis must be
     the one OperationalDuration uses — re-basing either alone silently corrupts
     every stored decay rate by the ratio of the two."""
-    defaults = {q["name"]: q["default_unit"] for q in units["quantity_types"]}
+    defaults = {q["name"]: q["default_unit"] for q in units["quantity_kinds"]}
     fpt = defaults.get("FractionPerTime")
     opd = defaults.get("OperationalDuration")
     if fpt is not None and opd is not None and fpt != f"1/{opd}":
@@ -120,19 +120,19 @@ def _check_fraction_per_time_basis(units):
 
 
 # Optional sibling SiennaGridDB checkout carrying the DB-owned
-# column -> (quantity_type, unit) conventions. When present, it lets rule 2
-# tighten the flat vocabulary check into a (quantity_type, unit) pairing check
+# column -> (quantity_kind, unit) conventions. When present, it lets rule 2
+# tighten the flat vocabulary check into a (quantity_kind, unit) pairing check
 # for any schema property whose name matches a registered DB column.
 DEFAULT_GRIDDB_PATH = REPO_ROOT / ".." / "SiennaGridDB"
 COLUMN_CONVENTIONS_RELATIVE = Path("schema") / "column_conventions.json"
 
 
 def load_quantity_units():
-    """Map quantity_type -> set of units allowed for it (from units.json)."""
+    """Map quantity_kind -> set of units allowed for it (from units.json)."""
     units = load_json(UNITS_JSON)
     q2u = {}
     for a in units["allowed_units"]:
-        q2u.setdefault(a["quantity_type"], set()).add(a["unit"])
+        q2u.setdefault(a["quantity_kind"], set()).add(a["unit"])
     return q2u
 
 
@@ -147,7 +147,7 @@ def load_unit_quantities():
     units = load_json(UNITS_JSON)
     by_unit = {}
     for a in units["allowed_units"]:
-        by_unit.setdefault(a["unit"], set()).add(a["quantity_type"])
+        by_unit.setdefault(a["unit"], set()).add(a["quantity_kind"])
     return {u: sorted(q) for u, q in by_unit.items()}
 
 
@@ -286,23 +286,34 @@ def check_x_quantity(spec, path, source_file, failures, unit_quantities, prop_na
 
 def load_column_allowed_units(griddb_path=None):
     """Map DB column name -> set of units the registry allows for that column's
-    quantity_type(s), sourced from SiennaGridDB's column_conventions.json
-    crossed with units.json. Returns {} when the checkout is absent (the tighter
-    pairing check is then simply skipped), so pass --griddb-path in CI if the
-    rule is meant to run — a missing path makes this check silently vacuous."""
+    quantity kind(s), sourced from SiennaGridDB's column_conventions.json
+    crossed with units.json.
+
+    Returns None when the checkout is genuinely absent, so the caller can say
+    so rather than reporting a vacuous pass. A checkout that IS present but
+    yields nothing is an error, not a skip: that means the file moved, emptied,
+    or renamed its keys, and reporting it as "absent" would turn this rule into
+    a gate-shaped no-op."""
     root = Path(griddb_path) if griddb_path else DEFAULT_GRIDDB_PATH
     path = (root / COLUMN_CONVENTIONS_RELATIVE).resolve()
     if not path.exists():
-        return {}
+        return None
     q2u = load_quantity_units()
     conventions = load_json(path).get("conventions", [])
     col_quantities = {}
     for entry in conventions:
         column = entry.get("column")
-        quantity = entry.get("quantity_type")
+        quantity = entry.get("quantity_kind")
         if column is None or quantity is None:
             continue
         col_quantities.setdefault(column, set()).add(quantity)
+    if not col_quantities:
+        raise SystemExit(
+            f"{path} is present but yielded no (column, quantity_kind) pairs from "
+            f"{len(conventions)} convention(s). Expected each entry to carry "
+            "'column' and 'quantity_kind'. Refusing to report this as a skipped "
+            "check -- fix the path or the key spelling."
+        )
     col_allowed = {}
     for column, quantities in col_quantities.items():
         allowed = set()
@@ -636,10 +647,10 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
                     Failure(source_file, path + "/x-unit", "x-unit-vocabulary",
                             val, "a unit in Core/units.json allowed_units or 'pu'")
                 )
-            # Rule 2b: (quantity_type, unit) pairing. When the property name
+            # Rule 2b: (quantity_kind, unit) pairing. When the property name
             # matches a DB column registered in SiennaGridDB's
             # column_conventions.json, the unit must be one the registry allows
-            # for that column's quantity_type — catches e.g. a reactive-power
+            # for that column's quantity kind — catches e.g. a reactive-power
             # field annotated 'MW' that the flat vocabulary check waves through.
             elif prop_name in col_allowed and val not in col_allowed[prop_name]:
                 failures.append(
@@ -917,7 +928,7 @@ def main():
     parser.add_argument("--griddb-path", default=None,
                         help="Path to the SiennaGridDB checkout supplying "
                              "schema/column_conventions.json for the "
-                             "(quantity_type, unit) pairing rule. Defaults to "
+                             "(quantity_kind, unit) pairing rule. Defaults to "
                              "../SiennaGridDB; the rule is skipped when absent.")
     args = parser.parse_args()
 
@@ -955,11 +966,11 @@ def run_validation(files, griddb_path=None):
     ambiguous = sum(1 for q in unit_quantities.values() if len(q) > 1)
     print(f"Quantity declarations: {ambiguous} ambiguous unit(s) in the vocabulary "
           "require x-quantity where inference cannot resolve them.")
-    if col_allowed:
+    if col_allowed is None:
+        print("Quantity pairing: SiennaGridDB checkout absent -- flat check only.")
+    else:
         print(f"Quantity pairing: {len(col_allowed)} DB columns from "
               "SiennaGridDB/schema/column_conventions.json.")
-    else:
-        print("Quantity pairing: SiennaGridDB checkout absent -- flat check only.")
 
     if failures:
         print(f"\n{len(failures)} failure(s):\n")

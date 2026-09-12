@@ -9,8 +9,8 @@ enforces on every schema in `Core/`, `Operations/`, `Investments/`, and
 ## The vocabulary lives in `Core/units.json`
 
 `Core/units.json` is the single source of truth for the unit vocabulary. It
-lists the `quantity_types` (name, dimension, default unit) and `allowed_units`
-(the exact `(quantity_type, unit)` pairs and their conversion factor to the
+lists the `quantity_kinds` (name, dimension, default unit) and `allowed_units`
+(the exact `(quantity_kind, unit)` pairs and their conversion factor to the
 default unit).
 
 **Every unit string an annotation names must be a `unit` from
@@ -297,12 +297,12 @@ annotated property's description is not exactly the canonical form.
 
 To add or change a unit:
 
-1. **Edit `Core/units.json`** — add the `quantity_type` and/or the
-   `allowed_units` `(quantity_type, unit, to_default)` row. This is the only
+1. **Edit `Core/units.json`** — add the `quantity_kind` and/or the
+   `allowed_units` `(quantity_kind, unit, to_default)` row. This is the only
    place the vocabulary is defined.
 2. **Regenerate the SiennaGridDB unit registry** from the updated
    `Core/units.json` (GridDB's `scripts/generate_unit_registry.py`) so the
-   database's `quantity_types` / `allowed_units` tables stay in sync.
+   database's `quantity_kinds` / `allowed_units` tables stay in sync.
 
 Never introduce a unit spelling in a schema annotation without first adding it
 to `Core/units.json`; `scripts/validate_units.py` will reject it.
