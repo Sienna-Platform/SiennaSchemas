@@ -274,21 +274,20 @@ def cmd_fix(args):
     py = find_python()
     if not py:
         raise SystemExit("no interpreter with jsonschema; run `pipeline.py doctor`")
-    for step in (["scripts/validate_units.py", "--fix-descriptions"], ["scripts/bundle_specs.py"]):
-        rc, out = run([py] + step)
-        print(out.rstrip())
-        if rc != 0:
-            say("FAIL", " ".join(step), RED)
-            return rc
-    say("OK", "descriptions canonicalized and dist/ rebundled", GREEN)
+    step = ["scripts/validate_units.py", "--fix-descriptions"]
+    rc, out = run([py] + step)
+    print(out.rstrip())
+    if rc != 0:
+        say("FAIL", " ".join(step), RED)
+        return rc
+    say("OK", "descriptions canonicalized", GREEN)
     return 0
 
 
 GATES = [
     ("unit annotations", ["scripts/validate_units.py"]),
     ("description channel", ["scripts/validate_units.py", "--check-descriptions"]),
-    ("bundle freshness", ["scripts/bundle_specs.py", "--check"]),
-    ("$ref resolution", ["scripts/check_refs.py"]),
+    ("$ref resolution and selector completeness", ["scripts/check_refs.py"]),
     ("package layering", ["scripts/check_layering.py"]),
     ("time series fixtures", ["scripts/validate_fixtures.py"]),
 ]
@@ -444,8 +443,8 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     sub.add_parser("doctor", help="report which interpreters/images each leg can use")
-    sub.add_parser("fix", help="canonicalize Units: sentences and rebundle dist/")
-    sub.add_parser("check", help="run the six in-repo gates")
+    sub.add_parser("fix", help="canonicalize Units: sentences")
+    sub.add_parser("check", help="run the five in-repo gates")
 
     s = sub.add_parser("scaffold", help="create a new schema file and register it")
     s.add_argument("kind", choices=sorted(STUBS))

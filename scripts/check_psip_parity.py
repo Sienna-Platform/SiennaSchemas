@@ -40,6 +40,9 @@ import json
 import os
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from refs import definitions, selector_entries  # noqa: E402
+
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # IS implementation details. PSIP declares them on every type; SiennaSchemas
@@ -128,16 +131,19 @@ def load_psip_types(psip_path):
 
 
 def load_schema_components():
-    """title -> (properties, required, property specs) for every Investments component."""
-    with open(os.path.join(REPO_ROOT, "openapi-investments.json")) as handle:
-        spec = json.load(handle)
+    """title -> (properties, required, property specs) for every Investments component.
+
+    The selector declares every schema the domain reaches, shared types the power
+    core owns included, so subtract what the base selectors declare: PSIP is
+    compared against the types this package actually owns.
+    """
+    owned = set(selector_entries("investments"))
+    for base in ("core", "infrastructure-core"):
+        owned -= set(selector_entries(base))
     components = {}
-    for title, node in spec["components"]["schemas"].items():
-        ref = node.get("$ref")
-        if not ref:
+    for title, schema in definitions("investments").items():
+        if title not in owned:
             continue
-        with open(os.path.join(REPO_ROOT, ref)) as handle:
-            schema = json.load(handle)
         properties = schema.get("properties", {})
         components[title] = (
             set(properties),

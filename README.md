@@ -80,7 +80,7 @@ Every numeric property carries a unit annotation (`x-unit`, or `x-units` +
 - **`docs/UNIT_ANNOTATIONS.md`** — the annotation spec: rules for `x-unit`, the `pu`
   channel, discriminated units, and the physics conventions (reactive power is `MVAr`,
   impedance/admittance are `pu`, percent is banned in favor of fractions).
-- **`docs/PIPELINE.md`** — the end-to-end pipeline: schemas → bundles → generated model
+- **`docs/PIPELINE.md`** — the end-to-end pipeline: schemas → generated model
   packages, schemas → GridDB registry/DDL, and the PSY parity gate
   (`scripts/check_psy_parity.py`), with the change protocol and release order.
 
@@ -93,7 +93,7 @@ live in this repo:
 ```bash
 python3 scripts/validate_units.py
 python3 scripts/validate_units.py --check-descriptions
-python3 scripts/bundle_specs.py --check
+python3 scripts/check_refs.py
 python3 scripts/check_psy_parity.py --psy-path ../PowerSystems.jl
 python3 scripts/check_layering.py
 python3 scripts/validate_fixtures.py
@@ -128,16 +128,15 @@ The tarball for a tagged release ships:
 
 - the raw schema files (`Core/`, `Operations/`, `Investments/`, `Dynamics/`, `TimeSeries/`)
 - `Core/units.json`, the unit vocabulary
-- the built `dist/openapi-*-bundled.json` specs
+- the `openapi-*.json` selectors
 
-The Julia codegen consumes the **bundled** specs, not the raw `openapi-*.json` selector files.
-OpenAPI.jl's native generator resolves cross-file `$ref`s on its own, but it resolves
-`discriminator.mapping` values only inside a single document, so the bundler gathers every
-schema a selector reaches into that document's `components.schemas` and rewrites each
-reference to point there. It moves schemas and rewrites references; it inlines and merges
-nothing. The Python codegen reads the raw selectors directly. Every property description also
-carries a `Units:` sentence, because neither generator renders the `x-unit` vendor extension;
-the description is the one channel every generator target preserves.
+Nothing is built first: both codegen toolchains read the selectors and resolve the `$ref`
+graph across files themselves, `discriminator.mapping` values included. That is why a
+selector must declare every schema its domain reaches — the generators name their output
+after `components.schemas` keys, and `scripts/check_refs.py` gates the completeness. Every
+property description also carries a `Units:` sentence, because neither generator renders the
+`x-unit` vendor extension; the description is the one channel every generator target
+preserves.
 
 ### Creating a release
 
@@ -146,7 +145,7 @@ git tag v0.1.0
 git push origin v0.1.0
 ```
 
-This triggers the release workflow, which builds the bundled specs and publishes the schema
+This triggers the release workflow, which publishes the schema
 tarball as a GitHub Release. Downstream repos pick up the new tag on their next polling cycle
 or via manual workflow dispatch. SiennaSchemas tags first — see "Release order" in
 `docs/PIPELINE.md` for why the other repos must not release ahead of it.

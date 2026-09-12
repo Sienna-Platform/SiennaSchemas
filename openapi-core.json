@@ -172,6 +172,42 @@
       },
       "TimeSeriesInputOutputCurve": {
         "$ref": "Core/common.json#/$defs/TimeSeriesInputOutputCurve"
+      },
+      "FunctionData": {
+        "$ref": "Core/common.json#/$defs/FunctionData"
+      },
+      "LinearFunctionData": {
+        "$ref": "Core/common.json#/$defs/LinearFunctionData"
+      },
+      "MinMax": {
+        "$ref": "Core/common.json#/$defs/MinMax"
+      },
+      "PiecewiseLinearData": {
+        "$ref": "Core/common.json#/$defs/PiecewiseLinearData"
+      },
+      "PiecewiseStepData": {
+        "$ref": "Core/common.json#/$defs/PiecewiseStepData"
+      },
+      "QuadraticFunctionData": {
+        "$ref": "Core/common.json#/$defs/QuadraticFunctionData"
+      },
+      "TimeSeriesLinearFunctionData": {
+        "$ref": "Core/common.json#/$defs/TimeSeriesLinearFunctionData"
+      },
+      "TimeSeriesPiecewiseLinearData": {
+        "$ref": "Core/common.json#/$defs/TimeSeriesPiecewiseLinearData"
+      },
+      "TimeSeriesPiecewiseStepData": {
+        "$ref": "Core/common.json#/$defs/TimeSeriesPiecewiseStepData"
+      },
+      "TimeSeriesQuadraticFunctionData": {
+        "$ref": "Core/common.json#/$defs/TimeSeriesQuadraticFunctionData"
+      },
+      "UnitSystem": {
+        "$ref": "Core/common.json#/$defs/UnitSystem"
+      },
+      "XY_Coords": {
+        "$ref": "Core/common.json#/$defs/XY_Coords"
       }
     }
   }

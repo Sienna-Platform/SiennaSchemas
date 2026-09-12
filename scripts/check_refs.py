@@ -1,65 +1,47 @@
 #!/usr/bin/env python3
-"""Verify every `$ref` and `discriminator.mapping` value actually resolves.
+"""Verify every `$ref` and `discriminator.mapping` value resolves, and that each
+selector declares everything it reaches.
 
-Two passes, because the two artifact shapes resolve differently:
+Two passes:
 
-1. Source schemas. A `$ref` is chased across files, or within its own file,
-   and its target must exist. A `discriminator.mapping` (or `defaultMapping`)
-   value is a reference too, resolved relative to the file that contains it
-   exactly like `$ref`, so a mapping inside `Core/common.json` reads
-   `#/$defs/X`, one inside a component file reads
-   `../../Core/common.json#/$defs/X`, and one naming a whole sibling file
-   reads `SingleTimeSeries.json#`. This is what lets every schema file
-   stand on its own, and what the bundler relies on to rewrite them.
+1. Source schemas. A `$ref` is chased across files, or within its own file, and
+   its target must exist. A `discriminator.mapping` (or `defaultMapping`) value
+   is a reference too, resolved relative to the file that contains it exactly
+   like `$ref`, so a mapping inside `Core/common.json` reads `#/$defs/X`, one
+   inside a component file reads `../../Core/common.json#/$defs/X`, and one
+   naming a whole sibling file reads `SingleTimeSeries.json#`. This is what lets
+   every schema file stand on its own.
 
-2. Bundled specs, built in-process (dist/ is gitignored and may not exist).
-   A bundle is self-contained, so both `$ref` and `discriminator.mapping`
-   must resolve as literal JSON pointers into it, and it must carry no root
-   `$defs` block, which the Julia generator's document validator rejects.
+2. Selectors. Each `openapi-<domain>.json` must be a well-formed selection ---
+   every entry a bare external `$ref`, no name or target claimed twice --- and
+   must declare every schema the domain reaches. The generators name their
+   output after `components.schemas` keys, so a reached-but-undeclared schema
+   has no name to generate under: both toolchains invent one per reference site
+   and a shared type silently becomes several.
 
-Exit 1 and print one line per unresolved target.
+Exit 1 and print one line per problem.
 """
 
-import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from bundle_specs import (  # noqa: E402
+from refs import (  # noqa: E402
     DOMAINS,
-    BundleError,
-    bundle_spec,
-    is_external,
+    REPO_ROOT,
+    RefError,
+    default_name,
+    load_json,
+    resolve_fragment,
     resolve_ref_path,
-    split_ref,
+    selector_entries,
+    selector_path,
+    undeclared_targets,
+    walk_refs,
 )
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
 SCAN_DIRS = ["Core", "Operations", "Investments", "Dynamics", "TimeSeries"]
-
-_doc_cache = {}
-
-
-def load_json(path):
-    key = str(Path(path).resolve())
-    if key not in _doc_cache:
-        with open(path) as fh:
-            _doc_cache[key] = json.load(fh)
-    return _doc_cache[key]
-
-
-def resolve_fragment(doc, fragment):
-    node = doc
-    if fragment in ("", "/"):
-        return node
-    for token in fragment.strip("/").split("/"):
-        token = token.replace("~1", "/").replace("~0", "~")
-        if isinstance(node, dict) and token in node:
-            node = node[token]
-        else:
-            raise KeyError(token)
-    return node
 
 
 def collect_source_files():
@@ -72,87 +54,45 @@ def collect_source_files():
                 continue
             files.append(p)
     for domain in DOMAINS:
-        files.append(REPO_ROOT / f"openapi-{domain}.json")
+        files.append(selector_path(domain))
     return files
 
 
-def find_nodes(doc, path=""):
-    """Yield (path, dict) for every dict node in doc, depth-first."""
-    if isinstance(doc, dict):
-        yield path, doc
-        for k, v in doc.items():
-            yield from find_nodes(v, f"{path}/{k}")
-    elif isinstance(doc, list):
-        for i, v in enumerate(doc):
-            yield from find_nodes(v, f"{path}[{i}]")
+def check_source(file_path, errors):
+    for label, ref in walk_refs(load_json(file_path)):
+        if not isinstance(ref, str):
+            errors.append(f"{file_path.name}:{label} is not a string")
+            continue
+        try:
+            target, fragment = resolve_ref_path(file_path, ref)
+        except RefError as exc:
+            errors.append(f"{file_path.name}:{label} -> {exc}")
+            continue
+        try:
+            resolve_fragment(load_json(target), fragment)
+        except KeyError as exc:
+            errors.append(f"{file_path.name}:{label} -> {target.name}#{fragment} ({exc})")
 
 
-def mapping_targets(node):
-    """Yield (label, target) for each discriminator reference on `node`."""
-    disc = node.get("discriminator")
-    if not isinstance(disc, dict):
-        return
-    mapping = disc.get("mapping")
-    if isinstance(mapping, dict):
-        for key, target in mapping.items():
-            yield f"mapping/{key}", target
-    default = disc.get("defaultMapping")
-    if isinstance(default, str):
-        yield "defaultMapping", default
-
-
-def check_source_target(file_path, ref, label, errors):
-    """Resolve one reference the way a JSON Schema tool would, through the same
-    helper the bundler uses, so the gate and the bundler cannot drift."""
+def check_selector(domain, errors):
     try:
-        target, fragment = resolve_ref_path(file_path, ref)
-    except BundleError as exc:
-        errors.append(f"{file_path}:{label} -> {exc}")
+        selector_entries(domain)
+        missing = undeclared_targets(domain)
+    except RefError as exc:
+        errors.append(f"openapi-{domain}.json: {exc}")
         return
-    try:
-        resolve_fragment(load_json(target), fragment)
-    except KeyError as exc:
-        errors.append(f"{file_path}:{label} -> {target.name}#{fragment} ({exc})")
-
-
-def check_source(file_path, doc, errors):
-    for path, node in find_nodes(doc):
-        ref = node.get("$ref")
-        if isinstance(ref, str):
-            check_source_target(file_path, ref, f"{path} $ref", errors)
-        for label, target in mapping_targets(node):
-            if not isinstance(target, str):
-                errors.append(f"{file_path}:{path}/discriminator/{label} is not a string")
-                continue
-            check_source_target(
-                file_path, target, f"{path}/discriminator/{label}", errors
-            )
-
-
-def check_bundle(domain, errors):
-    try:
-        bundled = bundle_spec(domain)
-    except BundleError as exc:
-        errors.append(f"bundle:{domain} cannot be built: {exc}")
-        return
-    if "$defs" in bundled:
-        errors.append(f"bundle:{domain} carries a root $defs block")
-    for path, node in find_nodes(bundled):
-        ref = node.get("$ref")
-        targets = []
-        if isinstance(ref, str):
-            targets.append((f"{path} $ref", ref))
-        for label, target in mapping_targets(node):
-            targets.append((f"{path}/discriminator/{label}", target))
-        for label, target in targets:
-            if is_external(target):
-                errors.append(f"bundle:{domain}{label} is still external: {target}")
-                continue
-            _, fragment = split_ref(target)
-            try:
-                resolve_fragment(bundled, fragment)
-            except KeyError as exc:
-                errors.append(f"bundle:{domain}{label} -> {target} ({exc})")
+    for target, labels in sorted(missing.items(), key=lambda item: str(item[0])):
+        try:
+            name = default_name(target)
+        except RefError as exc:
+            errors.append(f"openapi-{domain}.json: {exc}")
+            continue
+        rel = target[0].relative_to(REPO_ROOT).as_posix()
+        ref = rel + (f"#{target[1]}" if target[1] else "")
+        errors.append(
+            f'openapi-{domain}.json: reaches {ref} but does not declare it; add '
+            f'"{name}": {{"$ref": "{ref}"}} (reached from {labels[0]})'
+        )
 
 
 def main():
@@ -160,20 +100,20 @@ def main():
 
     source_files = collect_source_files()
     for f in source_files:
-        check_source(f, load_json(f), errors)
+        check_source(f, errors)
 
     for domain in DOMAINS:
-        check_bundle(domain, errors)
+        check_selector(domain, errors)
 
     if errors:
-        print(f"{len(errors)} unresolved $ref/discriminator target(s):")
+        print(f"{len(errors)} problem(s):")
         for e in errors:
             print(f"  {e}")
         return 1
 
     print(
-        f"OK: 0 dangling targets across {len(source_files)} source file(s) "
-        f"and {len(DOMAINS)} bundled spec(s)."
+        f"OK: 0 dangling targets across {len(source_files)} source file(s); "
+        f"{len(DOMAINS)} selector(s) declare everything they reach."
     )
     return 0
 

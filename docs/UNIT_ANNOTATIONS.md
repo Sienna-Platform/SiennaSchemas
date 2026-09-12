@@ -218,29 +218,26 @@ One consequence to know about: the Julia generator treats an `x-` key beside a
 (`ACBusVoltageLimits` for a `MinMax`). That is generator behavior, not a schema
 error; the Julia package's own dedup pass collapses the copies.
 
-## Bundling: `scripts/bundle_specs.py`
+## Selectors: one document, many files
 
-The Julia generator resolves cross-file `$ref`s itself, but it resolves
-`discriminator.mapping` values only inside a single document. So for each
-`openapi-<domain>.json` selector the bundler writes
-`dist/openapi-<domain>-bundled.json`, one self-contained document:
+Each `openapi-<domain>.json` selector maps a component name onto a bare `$ref`
+into the schema tree, and both codegen toolchains read it directly — OpenAPI.jl
+resolves cross-file `$ref` and `discriminator.mapping` values alike, each
+relative to the file that carries it. A mapping inside `Core/common.json` reads
+`#/$defs/X`; one inside a component file reads `../../Core/common.json#/$defs/X`;
+one naming a whole sibling file reads `SingleTimeSeries.json#`. Every mapping
+value carries a `#`, so it reads as a reference rather than a bare schema name.
 
-- `components.schemas` holds every schema the selector reaches, once, under one
-  name: the selector's key, else the `$defs` key, else the file stem.
-- Every `$ref` becomes `#/components/schemas/<Name>`; the keys beside it stay.
-- `discriminator.mapping` values are references resolved relative to the file
-  that contains them, exactly like `$ref`, and are rewritten the same way. A
-  mapping inside `Core/common.json` reads `#/$defs/X`; one inside a component
-  file reads `../../Core/common.json#/$defs/X`; one naming a whole sibling file
-  reads `SingleTimeSeries.json#`. Every mapping value carries a `#`, so it reads
-  as a reference rather than a bare schema name.
-- Nothing is inlined or merged, and there is no root `$defs` block.
-- Output is deterministic (selector order, then pulled-in names sorted), so
-  `--check` compares bytes against a fresh in-memory bundle and fails CI on
-  stale or missing `dist/` output.
+A selector must declare **every** schema its domain reaches, including shared
+types a package it depends on already owns. The generators name their output
+after `components.schemas` keys; a schema that is reached but not declared has
+no name to generate under, so each toolchain invents one per reference site and
+a shared type silently becomes several. `scripts/check_refs.py` is that gate,
+and it prints the exact entry to add.
 
-`dist/` is generated and git-ignored. Never hand-edit it; regenerate with
-`python scripts/bundle_specs.py`.
+Declaring a base package's type does not put it in this package: the Julia
+generator's dedup pass replaces it with a `using` of the owning package, and the
+docs generator documents it on the owner's page only.
 
 ## The description channel (`--fix-descriptions` / `--check-descriptions`)
 

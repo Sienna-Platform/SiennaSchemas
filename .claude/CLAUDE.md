@@ -61,9 +61,8 @@ Investments/             # Technologies/, Financials/, Requirements/, Supplement
 Dynamics/                # DynamicGeneratorComponent/, DynamicInverterComponent/
 TimeSeries/              # common.json, the six per-type schemas, TimeSeriesAssociation.json (oneOf wrapper)
 openapi-infrastructure-core.json, openapi-{core,operations,investments,dynamics,timeseries}.json     # $ref wrappers selecting package membership
-scripts/                 # validate_units.py, bundle_specs.py, check_layering.py,
+scripts/                 # validate_units.py, refs.py, check_refs.py, check_layering.py,
                          # check_psy_parity.py, check_psip_parity.py
-dist/                    # bundled specs for codegen consumers (gitignored)
 docs/                    # PIPELINE.md (gates), UNIT_ANNOTATIONS.md (annotation spec)
 .github/workflows/       # release.yml, validate-schemas.yml
 ```
@@ -107,7 +106,7 @@ Julia packages regenerate with OpenAPI.jl 1.1's native generator (`scripts/gener
 
 1. Edit the domain JSON; keep `$ref` paths valid — layout is load-bearing.
 2. Annotate numerics with `x-unit` from `Core/units.json`.
-3. Run the gates in `docs/PIPELINE.md`, then rebundle with `bundle_specs.py` → `dist/` (units ride as `Units:` sentences for generators that drop vendor extensions).
+3. Declare every schema the domain now reaches in its `openapi-<domain>.json` selector — `check_refs.py` prints the exact entry when one is missing — then run the gates in `docs/PIPELINE.md` (units ride as `Units:` sentences for generators that drop vendor extensions).
 4. If the change mirrors a PSY descriptor change, confirm both sides. If it affects DB columns, coordinate `SiennaGridDB/schema/column_conventions.json` and registry regeneration — **tag a Schemas release before GridDB regenerates**.
 5. Regenerate both model packages (`make generate && make validate` in each). Codegen breakage is cheapest to catch here.
 6. Tag a release when the change set is coherent.
