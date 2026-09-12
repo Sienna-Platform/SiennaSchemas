@@ -77,8 +77,11 @@ import shutil
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from refs import resolved_document  # noqa: E402
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
-DIST_DIR = REPO_ROOT / "dist"
 GITHUB_BLOB = "https://github.com/Sienna-Platform/SiennaSchemas/blob/main"
 UNIT_DOCS_URL = f"{GITHUB_BLOB}/docs/UNIT_ANNOTATIONS.md"
 
@@ -140,18 +143,43 @@ def load_json(path):
 
 
 def load_domain(domain):
-    """Return (bundled_spec, source_paths) for one domain.
+    """Return (spec, source_paths) for one domain.
 
-    source_paths maps each type name to the relative file path it was
-    authored in, read from the unbundled selector (bundling discards this).
+    source_paths maps each declared type name to the relative file path it was
+    authored in, read from the selector (flattening discards this).
     """
-    bundled = load_json(DIST_DIR / f"openapi-{domain}-bundled.json")
+    bundled = resolved_document(domain)
     unbundled = load_json(REPO_ROOT / f"openapi-{domain}.json")
     source_paths = {}
     for name, entry in unbundled["components"]["schemas"].items():
         filepart = entry["$ref"].split("#", 1)[0]
         source_paths[name] = filepart
     return bundled, source_paths
+
+
+def base_domains(domain):
+    """Every package `domain` sits on top of, transitively."""
+    out = []
+    for dep in PACKAGE_META[domain]["depends_on"]:
+        for base in base_domains(dep) + [dep]:
+            if base not in out:
+                out.append(base)
+    return out
+
+
+def published_names(domain, declared):
+    """The names this package documents, in declared order.
+
+    A selector declares every schema it reaches, including shared types a
+    package it depends on already owns -- both toolchains need a name for each
+    one to avoid inventing several (see scripts/refs.py). A shared type is
+    documented once, on the page of the package that owns it, so subtract what
+    the bases declare.
+    """
+    owned = set()
+    for base in base_domains(domain):
+        owned |= set(load_json(REPO_ROOT / f"openapi-{base}.json")["components"]["schemas"])
+    return [name for name in declared if name not in owned]
 
 
 def resolve(node, definitions):
@@ -931,8 +959,8 @@ def build_nav():
     lines = ["- Units: units.md", "- Reference:", "    - Overview: reference/index.md"]
     for domain in DOMAINS:
         meta = PACKAGE_META[domain]
-        bundled, _ = load_domain(domain)
-        type_names = sorted(bundled["components"]["schemas"].keys())
+        _, source_paths = load_domain(domain)
+        type_names = sorted(published_names(domain, source_paths))
         lines.append(f"    - {meta['label']}:")
         lines.append(f"        - Overview: reference/{domain}/index.md")
         for name in type_names:
@@ -945,14 +973,15 @@ def write_tree(out_dir):
     domain_info = {}
     for domain in DOMAINS:
         bundled, source_paths = load_domain(domain)
-        # Every schema the bundle pulled in resolves types; only the selector's own
-        # entries get a page, since a shared definition is documented by its owner.
+        # Everything the domain declares resolves types; only what it owns gets a
+        # page, since a shared definition is documented by the package that owns it.
         definitions = bundled["components"]["schemas"]
-        schema_names = set(source_paths)
+        published = published_names(domain, source_paths)
+        schema_names = set(published)
         known_schemas = dict(definitions)
         domain_dir = out_dir / domain
         domain_dir.mkdir(parents=True, exist_ok=True)
-        for name in source_paths:
+        for name in published:
             schema = resolve(bundled["components"]["schemas"][name], definitions)
             page = type_page(
                 name, domain, schema, definitions, known_schemas, schema_names, source_paths[name]

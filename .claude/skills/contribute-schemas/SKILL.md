@@ -93,7 +93,7 @@ such field is annotated against it:
 }
 ```
 
-**Never hand-edit generated output**: `dist/`, both model packages,
+**Never hand-edit generated output**: both model packages,
 `SiennaGridDB/schema/unit_registry.sql`, `SiennaGridDB/schema/generated_schema.sql`.
 
 **Directory layout is load-bearing.** Cross-references are relative paths.
@@ -122,13 +122,13 @@ python3 .claude/skills/contribute-schemas/pipeline.py fix
 python3 .claude/skills/contribute-schemas/pipeline.py check
 ```
 
-`fix` regenerates the canonical `Units:` description sentences and rebundles
-`dist/`. Do not write those sentences by hand — the generator owns their exact
+`fix` regenerates the canonical `Units:` description sentences. Do not write
+those sentences by hand — the generator owns their exact
 punctuation, down to the em dash and the space before the final period.
 
-`check` runs all six gates and prints one line each: unit annotations,
-description channel, bundle freshness, `$ref` resolution, package layering, and
-time series fixtures. Fix everything before moving on; the downstream legs
+`check` runs all five gates and prints one line each: unit annotations,
+description channel, `$ref` resolution and selector completeness, package
+layering, and time series fixtures. Fix everything before moving on; the downstream legs
 assume these pass.
 
 ### Ambiguous units need `x-quantity`
@@ -229,8 +229,8 @@ reports how many files each leg changed.
 - **Adding a component that `$ref`s a shared type without naming it in `$defs`
   can silently duplicate it.** An inline object or enum left anonymous at the
   reference site gets minted as a fresh copy — `MinMax_3`, say — by OpenAPI.jl's
-  native generator; name it as a `$defs` entry instead, so the bundler points
-  every reference at the one definition. The `No unmapped inline schema
+  native generator; name it as a `$defs` entry instead, and declare that entry
+  in the domain selector, so every reference resolves to the one named type. The `No unmapped inline schema
   aliases` testset in `PowerOpenAPIModels/test/validate.jl` is the downstream
   backstop that catches anything that slips through, which is why the Julia
   validate is not optional.
@@ -250,7 +250,7 @@ reports how many files each leg changed.
 |---|---|
 | `ModuleNotFoundError: No module named 'jsonschema'` | Use `.venv/bin/python3`, or `pipeline.py`, which finds it. |
 | `FAIL [units-description-sentence] ... expected: '... Units: MVA.'` | `pipeline.py fix`. Never hand-write the sentence. |
-| `bundle_specs.py --check` fails | You edited a schema and did not rebundle. `pipeline.py fix`. |
+| `check_refs.py` says a selector "reaches X but does not declare it" | Add the `$ref` entry it prints to that `openapi-<domain>.json`, even when a base package owns the type. |
 | `declares ambiguous x-unit="pu" ... Declare "x-quantity"` from the Julia codegen | You skipped `check`. Run it — gate 1 names the property and the candidates. |
 | `FAIL [x-quantity-required]` | Add `"x-quantity"` to that property, picking from the listed quantity types. |
 | `FAIL [x-quantity-contradicts-siblings]` | Your declaration disagrees with what the unambiguous branch implies; one of the two is wrong. |

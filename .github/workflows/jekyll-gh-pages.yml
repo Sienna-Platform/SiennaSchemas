@@ -32,9 +32,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      # dist/ is gitignored and absent on a fresh checkout; the generator reads it.
-      - name: Build bundled specs
-        run: python scripts/bundle_specs.py
       # The reference pages are the entire site content and are generated here,
       # never committed.
       - name: Build the schema reference

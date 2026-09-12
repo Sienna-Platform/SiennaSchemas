@@ -28,6 +28,15 @@
       },
       "SteamTurbineGov1": {
         "$ref": "Dynamics/DynamicGeneratorComponent/SteamTurbineGov1.json"
+      },
+      "DbdPnts": {
+        "$ref": "Core/common.json#/$defs/DbdPnts"
+      },
+      "FdbdPnts": {
+        "$ref": "Core/common.json#/$defs/FdbdPnts"
+      },
+      "MinMax": {
+        "$ref": "Core/common.json#/$defs/MinMax"
       }
     }
   }

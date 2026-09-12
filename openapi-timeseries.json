@@ -43,6 +43,12 @@
       },
       "Period": {
         "$ref": "TimeSeries/common.json#/$defs/Period"
+      },
+      "TimeReference": {
+        "$ref": "TimeSeries/common.json#/$defs/TimeReference"
+      },
+      "UnitSystem": {
+        "$ref": "Core/common.json#/$defs/UnitSystem"
       }
     }
   }

@@ -6,8 +6,11 @@ Four rules, each a separate failure mode:
 1. MEMBERSHIP    -- openapi-infrastructure-core.json names exactly the 20
    definitions the design fixed. A drive-by addition is a layering decision
    and must be an explicit edit here, not a silent one there.
-2. DISJOINT      -- openapi-core.json and openapi-infrastructure-core.json
-   share no schema name. A definition belongs to exactly one package.
+2. DISJOINT      -- a schema name declared by both openapi-core.json and
+   openapi-infrastructure-core.json must resolve to the same definition.
+   Both selectors declare every schema their domain reaches, so the power
+   core legitimately declares InfrastructureCore's shared types; what must
+   never happen is the two spelling one name over two different targets.
 3. CLOSURE       -- nothing reachable from the InfrastructureCore or
    TimeSeries selectors resolves to a Core/common.json definition outside
    the InfrastructureCore set. This is the rule that actually keeps
@@ -27,6 +30,10 @@ Run: python3 scripts/check_layering.py
 import json
 import pathlib
 import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+
+from refs import RefError, selector_entries  # noqa: E402
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -256,11 +263,21 @@ def main():
             )
 
     # 2. DISJOINT
-    for shared in sorted(schema_names(core) & declared):
+    try:
+        infra_targets = selector_entries("infrastructure-core")
+        core_targets = selector_entries("core")
+    except RefError as exc:
+        print(f"FAIL DISJOINT: {exc}", file=sys.stderr)
+        return 1
+    for shared in sorted(set(core_targets) & set(infra_targets)):
+        if core_targets[shared] == infra_targets[shared]:
+            continue
         failures.append(
-            f"DISJOINT: {shared!r} is claimed by both openapi-core.json and "
-            f"openapi-infrastructure-core.json. A definition belongs to "
-            f"exactly one package."
+            f"DISJOINT: {shared!r} names "
+            f"{display_path(core_targets[shared][0])}#{core_targets[shared][1]} in "
+            f"openapi-core.json and "
+            f"{display_path(infra_targets[shared][0])}#{infra_targets[shared][1]} in "
+            f"openapi-infrastructure-core.json. One name, one definition."
         )
 
     # 3. CLOSURE
