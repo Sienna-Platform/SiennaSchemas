@@ -5,7 +5,11 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project is pre-1.0; any release may change schemas incompatibly.
 
-## [Unreleased]
+## [0.1.0] - 2026-09-12
+
+First release. Definitions for the power system data model, in six groups — grid topology and
+equipment, costs and curves, investment planning, machine dynamics, time series, and the shared
+basics — each generated as its own package for Python, Julia, and SQL.
 
 ### Added
 
@@ -20,10 +24,29 @@ This project is pre-1.0; any release may change schemas incompatibly.
   distinguishes them. A locator rather than the vector itself because the axis is shared — a
   cohort names it once each, where inlining the timestamps would repeat the whole vector per row.
 
-## [0.1.0] - 2026-08-31
+### How to consume it
 
-First release. Definitions for the power system data model, in six groups — grid topology and
-equipment, costs and curves, investment planning, machine dynamics, time series, and the shared
-basics — each generated as its own package for Python, Julia, and SQL.
+The release tarball ships the schema tree as authored: the domain schemas, `Core/units.json`,
+and the `openapi-<domain>.json` selectors. There is nothing to build first — both codegen
+toolchains resolve the `$ref` graph across files themselves, selectors included. A consumer
+records the tag it generated from in its own `.schema-version`.
+
+Every numeric property carries its unit twice: as an `x-unit` annotation, and as a canonical
+`Units:` sentence at the end of its description. The sentence exists because neither toolchain
+renders vendor extensions, so it is the only channel that survives into generated code.
+
+### Known limitations
+
+- **Dynamics is a stub.** Ten components over seven files. The dynamics family — AVR,
+  TurbineGov, Machine, PSS, DynamicInjection, filters, limiters — is deferred by design, and
+  dynamics supertypes are excluded from the PowerSystems.jl parity gate.
+- **No service membership.** Service components exist, but no schema records which devices
+  contribute to which service. There is no membership type here, unlike
+  `Core/SupplementalAttributes/SupplementalAttributeAssociation.json`.
+- **Investments diverges from PowerSystemsInvestmentsPortfolios.jl.** `Node` and `Zone` have no
+  schema; `RequirementAssociation` has no matching struct; several technology types differ in
+  fields and units. The parity gate reports this and is deliberately non-blocking.
+- **The unit-quantity pairing rule needs a SiennaGridDB checkout** and skips silently without
+  one, so a green CI run is not evidence that it holds.
 
 [0.1.0]: https://github.com/Sienna-Platform/SiennaSchemas/releases/tag/v0.1.0

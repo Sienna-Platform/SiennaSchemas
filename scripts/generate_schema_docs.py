@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Generate a Markdown type reference from the bundled OpenAPI specs.
+"""Generate a Markdown type reference from the domain selectors.
 
-For each ``openapi-<domain>-bundled.json`` in ``dist/`` this writes one page per
-component schema, one index page per package, and a root index page, under
+For each ``openapi-<domain>.json`` this writes one page per component schema
+the package owns, one index page per package, and a root index page, under
 ``docs/reference/`` (or ``--out``).
 
 It also writes ``docs/units.md`` (or ``--units-out``), the site's one narrative
@@ -11,15 +11,14 @@ they cannot drift from it.
 
 Why this exists
 ----------------
-The 183 hand-written JSON Schema types in this repo have no published, readable
-form. The bundled specs (see ``bundle_specs.py``) gather every type a domain
-reaches into one ``components.schemas`` block with every ``$ref`` repointed
-inside it -- one document to render from. Bundling leaves ``x-unit*`` and the
-other annotations beside their ``$ref`` rather than merging them, so ``resolve``
-below layers them on for display. The one thing bundling throws away is *which
-file a type was authored in*, so this script also reads the unbundled
-``openapi-<domain>.json`` selectors, whose ``$ref`` values still name the
-source file.
+The hand-written JSON Schema types in this repo have no published, readable
+form. A Markdown page cannot follow a relative file path, so ``refs.py``'s
+``resolved_document`` flattens each domain in memory: every declared schema
+under one ``components.schemas`` block, each reference repointed at the name it
+resolves to. Nothing is inlined, so ``x-unit*`` and the other annotations stay
+beside their ``$ref`` and ``resolve`` below layers them on for display. What
+the flat view drops is *which file a type was authored in*, so this script also
+reads the selector directly, whose ``$ref`` values still name the source file.
 
 Shape coverage
 --------------
