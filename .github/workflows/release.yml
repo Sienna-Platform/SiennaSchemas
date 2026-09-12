@@ -22,10 +22,15 @@ jobs:
         # Core/units.json, and the openapi-*.json selectors. Both codegen
         # toolchains resolve the $ref graph themselves, so there is nothing to
         # build first.
-        run: tar -czf schemas-${{ github.ref_name }}.tar.gz --exclude='.git' .
+        #
+        # Written to RUNNER_TEMP, not into the checkout: tar reads `.` while
+        # writing the archive, so an archive inside `.` is a file that changes
+        # as tar reads it, which GNU tar exits 1 on. This step had never
+        # succeeded -- v0.1.0 was the first tag to exercise it.
+        run: tar -czf "$RUNNER_TEMP/schemas-${{ github.ref_name }}.tar.gz" --exclude='.git' .
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: schemas-${{ github.ref_name }}.tar.gz
+          files: ${{ runner.temp }}/schemas-${{ github.ref_name }}.tar.gz
           generate_release_notes: true
