@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "InfrastructureCoreOpenAPIModels",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "Domain-neutral shared types: the unit convention, the function-data family, and the value shapes and supplemental attributes that carry no power semantics. Consumed by the data layer and the time series store, neither of which should inherit power-specific definitions."
   },
   "paths": {},

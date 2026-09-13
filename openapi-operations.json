@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "PowerOperationsOpenAPIModels",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "Power system operations models: Branch, StaticInjection, and Service components"
   },
   "paths": {},

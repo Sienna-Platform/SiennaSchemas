@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "PowerInvestmentsOpenAPIModels",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "Power system investments models: Technologies, Financials, Requirements, SupplementalAttributes, and Portfolio components"
   },
   "paths": {},

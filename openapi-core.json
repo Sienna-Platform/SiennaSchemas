@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "PowerCoreOpenAPIModels",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "Shared types for the Sienna power systems ecosystem: curves, enums, helpers (MinMax, UpDown, CostCurve, etc.)"
   },
   "paths": {},
