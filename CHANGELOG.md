@@ -37,12 +37,10 @@ renders vendor extensions, so it is the only channel that survives into generate
 
 ### Known limitations
 
-- **Dynamics is a stub.** Ten components over seven files. The dynamics family — AVR,
-  TurbineGov, Machine, PSS, DynamicInjection, filters, limiters — is deferred by design, and
-  dynamics supertypes are excluded from the PowerSystems.jl parity gate.
-- **No service membership.** Service components exist, but no schema records which devices
-  contribute to which service. There is no membership type here, unlike
-  `Core/SupplementalAttributes/SupplementalAttributeAssociation.json`.
+- **Dynamics is a sample, not yet a model of the domain.** Seven component schemas: one
+  machine, one turbine governor, one excitation system, and four renewable-inverter
+  controllers. The rest of the family is deferred by design, and dynamics supertypes are
+  excluded from the PowerSystems.jl parity gate.
 - **Investments diverges from PowerSystemsInvestmentsPortfolios.jl.** `Node` and `Zone` have no
   schema; `RequirementAssociation` has no matching struct; several technology types differ in
   fields and units. The parity gate reports this and is deliberately non-blocking.

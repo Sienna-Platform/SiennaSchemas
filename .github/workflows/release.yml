@@ -18,16 +18,50 @@ jobs:
           python-version: "3.12"
 
       - name: Package schemas
-        # Tarball ships the schema tree as authored: the domain schemas,
-        # Core/units.json, and the openapi-*.json selectors. Both codegen
-        # toolchains resolve the $ref graph themselves, so there is nothing to
-        # build first.
+        # Ships the schema tree as authored: the domain schemas, Core/units.json,
+        # and the openapi-*.json selectors. Both codegen toolchains resolve the
+        # $ref graph themselves, so there is nothing to build first.
         #
-        # Written to RUNNER_TEMP, not into the checkout: tar reads `.` while
-        # writing the archive, so an archive inside `.` is a file that changes
-        # as tar reads it, which GNU tar exits 1 on. This step had never
-        # succeeded -- v0.1.0 was the first tag to exercise it.
-        run: tar -czf "$RUNNER_TEMP/schemas-${{ github.ref_name }}.tar.gz" --exclude='.git' .
+        # Staged into a named directory before archiving, so the tarball unpacks
+        # as schemas/ instead of scattering its members into whatever directory
+        # the consumer extracts into. v0.1.0 shipped without this:
+        # `tar -czf ... .` produced members rooted at `.`, so the one workflow
+        # built to ingest it (PowerOpenAPIModels' update-schema.yml, which
+        # extracts with `-C /tmp` then mounts /tmp/schemas) mounted a path the
+        # archive never created.
+        #
+        # Staged under RUNNER_TEMP, not into the checkout: tar reads `.` while
+        # writing, so an archive inside `.` is a file that changes as tar reads
+        # it, which GNU tar exits 1 on.
+        run: |
+          # The directory is named `schemas`, not `schemas-<tag>`: the consumer
+          # extracts with `-C /tmp` and mounts /tmp/schemas, a fixed path. The
+          # tag already distinguishes releases via the archive filename.
+          stage="$RUNNER_TEMP/schemas"
+          rm -rf "$stage" && mkdir -p "$stage"
+          # Everything a consumer needs, and nothing internal: .claude, .github,
+          # tests/ and the Jekyll Gemfiles are development tooling, not schema.
+          cp -r Core Operations Investments Dynamics TimeSeries docs scripts \
+                openapi-*.json README.md CHANGELOG.md LICENSE "$stage/"
+          tar -czf "$RUNNER_TEMP/schemas-${GITHUB_REF_NAME}.tar.gz" -C "$RUNNER_TEMP" schemas
+          echo "Top-level members:"
+          tar -tzf "$RUNNER_TEMP/$name.tar.gz" | awk -F/ '{print $1}' | sort -u
+
+      - name: Assert the tarball unpacks into a single directory
+        # The defect this release workflow shipped in v0.1.0, turned into a gate.
+        run: |
+          archive="$RUNNER_TEMP/schemas-${GITHUB_REF_NAME}.tar.gz"
+          roots=$(tar -tzf "$archive" | awk -F/ '{print $1}' | sort -u)
+          if [ "$roots" != "schemas" ]; then
+            echo "::error::tarball must unpack into a single top-level directory named 'schemas' (the path consumers mount), got: $roots" >&2
+            exit 1
+          fi
+          for internal in .claude .github tests Gemfile; do
+            if tar -tzf "$archive" | grep -q "^schemas/$internal"; then
+              echo "::error::internal tooling $internal must not ship in the release tarball" >&2
+              exit 1
+            fi
+          done
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
