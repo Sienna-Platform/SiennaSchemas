@@ -20,8 +20,12 @@ Output contract:
   CONVERTER DRIFT missing <Type>       registered hand-written but no from_openapi found
   CONVERTER DRIFT unregistered <Type>  from_openapi found but not registered anywhere
   CONVERTER DRIFT overlap <Type>       both openapi_type-annotated and hand-written registered
-  UNIT DRIFT <Type>.<field>: conversion_unit=<v> x-unit=<v>   family mismatch
-  UNIT DRIFT <Type>.<field>: openapi_unit=<v> x-unit=<v>      pu-identity mismatch
+  UNIT DRIFT <Type>.<field>: conversion_unit=<v> units=[...] not in family [...]
+  UNIT DRIFT <Type>.<field>: conversion_unit=<v> but schema carries no unit annotation
+  UNIT DRIFT <Type>.<field>: conversion_unit=<v> x-quantity=<v> not in family [...]
+  UNIT DRIFT <Type>.<field>: x-quantity=<v> is not a quantity kind in Core/units.json
+  UNIT DRIFT <Type>.<field>: unknown conversion_unit=<v>      absent from the family table
+  UNITS CHECKED: N converted fields across M structs          scope of the unit check
   SUMMARY: N missing schemas, M unexplained drifts
 Exit 1 if N + M > 0.
 """
@@ -324,35 +328,53 @@ def derive_openapi_annotated_types(descriptor):
 
 
 # The quantity families, named by the descriptor's `conversion_unit` value.
-# `Voltage`/`Angle` fields use a different (V_base-anchored) mechanism, not
-# `needs_conversion`+`conversion_unit`, so they are not part of this table.
-# `:mw` covers both ActivePower (MW) and ActivePowerChangeRate (MW/min) --
-# PSY tags ramp/flow-rate fields with the same `:mw` conversion_unit as plain
-# power fields, so both quantity types must be accepted for it.
-CONVERSION_UNIT_QUANTITY_TYPES = {
-    ":mw": {"ActivePower", "ActivePowerChangeRate"},
+# Every value the descriptor uses must appear here; an unlisted one is reported
+# per field rather than passing silently. `Voltage`/`Angle` fields use a
+# different (V_base-anchored) mechanism and are not part of this table.
+#
+# Keep `:mw_per_minute` separate from `:mw`: it shares the power base but
+# carries a time dimension, so it must not accept a plain power unit.
+CONVERSION_UNIT_QUANTITY_KINDS = {
+    ":mw": {"ActivePower"},
     ":mvar": {"ReactivePower"},
     ":mva": {"ApparentPower"},
+    ":mw_per_minute": {"ActivePowerChangeRate"},
     ":ohm": {"Resistance", "Reactance", "Impedance"},
     ":siemens": {"Conductance", "Susceptance"},
 }
 
 
 def load_conversion_unit_families():
-    """Map each `conversion_unit` to the set of natural (non-"pu") schema
-    `x-unit` strings its quantity family allows, sourced from Core/units.json
-    so the mapping cannot drift from the vocabulary independently of it."""
+    """Map each `conversion_unit` to the schema units its quantity family
+    allows, sourced from Core/units.json so the two cannot drift apart.
+
+    Per-unit spellings are included: `pu`/`pu/min` are registered vocabulary
+    units for exactly these families, and are the `COMPONENT_BASE` leaf of the
+    discriminated `x-units` maps these fields carry.
+
+    Returns (families, known_kinds, vocab_units), the last being the
+    unit -> quantity-kinds index POWER_EQUIVALENT_FIELDS widens a field with."""
     units_path = os.path.join(REPO_ROOT, "Core", "units.json")
     with open(units_path, encoding="utf-8") as f:
         vocab = json.load(f)
+    known_kinds = {entry["quantity_kind"] for entry in vocab["allowed_units"]}
     families = {}
-    for conversion_unit, quantity_kinds in CONVERSION_UNIT_QUANTITY_TYPES.items():
+    for conversion_unit, quantity_kinds in CONVERSION_UNIT_QUANTITY_KINDS.items():
+        unknown = quantity_kinds - known_kinds
+        if unknown:
+            raise SystemExit(
+                f"check_psy_parity: CONVERSION_UNIT_QUANTITY_KINDS[{conversion_unit}] "
+                f"names quantity kinds absent from Core/units.json: {sorted(unknown)}"
+            )
         families[conversion_unit] = {
             entry["unit"]
             for entry in vocab["allowed_units"]
-            if entry["quantity_kind"] in quantity_kinds and entry["unit"] != "pu"
+            if entry["quantity_kind"] in quantity_kinds
         }
-    return families
+    vocab_units = {}
+    for entry in vocab["allowed_units"]:
+        vocab_units.setdefault(entry["unit"], set()).add(entry["quantity_kind"])
+    return families, known_kinds, vocab_units
 
 
 def julia_struct_fields(path, struct_name):
@@ -395,8 +417,8 @@ def load_psy_structs(psy_path, is_path):
     Hand-written structs whose Julia source is absent (partial checkout) land
     in `unresolved` so their schema components are skipped instead of
     reported as spurious MISSING STRUCT. `conversions` carries, for every
-    openapi_type-annotated struct only, the needs_conversion field metadata
-    (conversion_unit/openapi_unit) check_unit_consistency needs."""
+    non-dynamics struct, the needs_conversion field metadata
+    (conversion_unit) check_unit_consistency needs."""
     descriptor_path = os.path.join(
         psy_path, "src", "descriptors", "power_system_structs.json"
     )
@@ -424,14 +446,13 @@ def load_psy_structs(psy_path, is_path):
         }
         if "openapi_type" in entry:
             annotated_types.add(entry["struct_name"])
-            conversions[entry["struct_name"]] = {
-                field["name"]: {
-                    "conversion_unit": field.get("conversion_unit"),
-                    "openapi_unit": field.get("openapi_unit"),
-                }
-                for field in entry.get("fields", [])
-                if field.get("needs_conversion")
-            }
+        # Every non-dynamics struct, not just the openapi_type-annotated ones:
+        # how a type's converter is written has no bearing on its units.
+        conversions[entry["struct_name"]] = {
+            field["name"]: {"conversion_unit": field.get("conversion_unit")}
+            for field in entry.get("fields", [])
+            if field.get("needs_conversion")
+        }
     _load_hand_written(structs, unresolved, psy_path, HAND_WRITTEN)
     _load_hand_written(structs, unresolved, is_path, IS_HAND_WRITTEN)
     return structs, unresolved, defaults, conversions, annotated_types
@@ -532,37 +553,87 @@ def check_converter_coverage(psy_path, annotated_types):
     return drifts
 
 
-def resolve_natural_unit(node):
-    """For a property with no plain x-unit, resolve the natural (non-per-unit)
-    unit from a discriminated x-units map: the leaf recorded under the
-    UnitSystem "NATURAL_UNITS" key, mirroring how validate_units.py reads
-    x-units leaves. docs/UNIT_ANNOTATIONS.md's power_units convention is the
-    only discriminator this resolves against -- a map with no NATURAL_UNITS
-    leaf (a different discriminator, or a nested multi-dimensional unit)
-    returns None, so the caller reports drift rather than guessing."""
+# `x-units` keys whose unit spells the storage basis, not the property's own
+# quantity: COMPONENT_MVAR records a shunt admittance as reactive power at unity
+# voltage, so its `MVAr` leaf says nothing about the property's quantity. That
+# travels in `x-quantity`, which check_declared_quantity verifies instead.
+BASIS_SPELLED_UNIT_KEYS = {"COMPONENT_MVAR"}
+
+# Fields whose `conversion_unit` names the base PSY per-unitizes AGAINST while
+# the stored quantity is something else, with the extra quantity kinds their
+# units may name. Widening the family instead would re-admit genuine drift.
+# Reviewable per field like SCHEMA_AHEAD; each holds only while PSY still
+# per-unitizes that field against that base (quoting its descriptor comment).
+POWER_EQUIVALENT_FIELDS = {
+    # "in per unit power-equivalent on the converter `base_power`
+    # (I is approximately P at 1.0 pu DC voltage)" -- stored in amps.
+    ("InterconnectingConverter", "dc_current"): {"CurrentFlow"},
+    ("InterconnectingConverter", "max_dc_current"): {"CurrentFlow"},
+    # "this value divided by base_power (MVA) gives an approximate duration in
+    # hours" -- stored as an energy, MWh/MWmin per `energy_units`.
+    ("EnergyReservoirStorage", "storage_capacity"): {"ElectricalEnergy"},
+}
+
+
+def allowed_units_for(conversion_unit, struct_name, field, families, vocab_units):
+    """The units a field may carry: its conversion_unit family, widened by any
+    POWER_EQUIVALENT_FIELDS entry for that field."""
+    allowed = set(families[conversion_unit])
+    extra_kinds = POWER_EQUIVALENT_FIELDS.get((struct_name, field))
+    if extra_kinds:
+        allowed |= {
+            unit for unit, kinds in vocab_units.items() if kinds & extra_kinds
+        }
+    return allowed
+
+
+def property_unit_leaves(node):
+    """Every unit string a schema property can carry: a plain `x-unit`, or all
+    leaves of a discriminated `x-units` map, recursing into nested maps
+    (docs/UNIT_ANNOTATIONS.md). Every leaf counts, not just `NATURAL_UNITS` --
+    the `COMPONENT_BASE` -> `pu` branch is a real storage option. Empty set
+    when the property carries no unit annotation."""
+    if not isinstance(node, dict):
+        return set()
+    x_unit = node.get("x-unit")
+    if isinstance(x_unit, str):
+        return {x_unit}
     x_units = node.get("x-units")
     if not isinstance(x_units, dict):
-        return None
-    value = x_units.get("NATURAL_UNITS")
-    if isinstance(value, str):
-        return value
-    return None
+        return set()
+    leaves = set()
+    for key, value in x_units.items():
+        if key in BASIS_SPELLED_UNIT_KEYS:
+            continue
+        if isinstance(value, str):
+            leaves.add(value)
+        elif isinstance(value, dict):
+            leaves |= property_unit_leaves(value)
+    return leaves
 
 
-def check_unit_consistency(conversions, components, families):
-    """For every openapi_type-annotated PSY struct, every field with
-    needs_conversion+conversion_unit must have a schema unit consistent with
-    it — either a plain x-unit, or a discriminated x-units map whose
-    NATURAL_UNITS branch (resolve_natural_unit) serves the same role. That
-    unit must be "pu" when the descriptor's `openapi_unit` key says so,
-    otherwise a natural unit in the conversion_unit's quantity family. The
-    reverse direction (a schema x-unit of "pu" with no matching openapi_unit
-    key) is caught structurally: "pu" is never a member of a natural-unit
-    family, so it fails the same branch.
-    Returns the drift count; a property with neither a plain x-unit nor a
-    resolvable discriminated NATURAL_UNITS branch is its own drift rather
-    than silently skipped."""
+def declared_quantity_kinds(node):
+    """The quantity kinds a property's `x-quantity` declares, as a
+    {unit_or_None: kind} map. `x-quantity` is either a bare kind string (it
+    applies to every ambiguous unit on the property) or a unit -> kind object
+    for a property whose branches genuinely disagree. Returns {} when absent."""
+    x_quantity = node.get("x-quantity") if isinstance(node, dict) else None
+    if isinstance(x_quantity, str):
+        return {None: x_quantity}
+    if isinstance(x_quantity, dict):
+        return {unit: kind for unit, kind in x_quantity.items()
+                if isinstance(kind, str)}
+    return {}
+
+
+def check_unit_consistency(conversions, components, families, known_kinds, vocab_units):
+    """Every PSY field with `needs_conversion`+`conversion_unit` must carry a
+    schema unit annotation drawn from that conversion_unit's quantity family,
+    and must not declare an `x-quantity` outside it. Runs over every
+    non-dynamics struct. Returns the drift count; a field with no unit
+    annotation at all is its own drift rather than silently skipped."""
     drifts = 0
+    checked = 0
     for struct_name, fields in sorted(conversions.items()):
         props = components.get(struct_name)
         if props is None:
@@ -572,30 +643,72 @@ def check_unit_consistency(conversions, components, families):
             node = props.get(prop)
             if node is None:
                 continue  # FIELD DRIFT already reported for this psy_only field
-            x_unit = node.get("x-unit")
-            if x_unit is None:
-                x_unit = resolve_natural_unit(node)
-            if x_unit is None:
+            checked += 1
+            conversion_unit = meta["conversion_unit"]
+            if conversion_unit not in families:
                 print(
-                    f"UNIT DRIFT {struct_name}.{prop}: conversion_unit="
-                    f"{meta['conversion_unit']} but schema has no plain x-unit"
+                    f"UNIT DRIFT {struct_name}.{prop}: unknown conversion_unit="
+                    f"{conversion_unit} (not in CONVERSION_UNIT_QUANTITY_KINDS)"
                 )
                 drifts += 1
                 continue
-            if meta.get("openapi_unit") == "pu":
-                if x_unit != "pu":
-                    print(
-                        f"UNIT DRIFT {struct_name}.{prop}: openapi_unit=pu x-unit={x_unit}"
-                    )
-                    drifts += 1
-                continue
-            natural_units = families.get(meta["conversion_unit"], set())
-            if x_unit not in natural_units:
+            allowed = allowed_units_for(
+                conversion_unit, struct_name, prop, families, vocab_units
+            )
+            leaves = property_unit_leaves(node)
+            if not leaves:
                 print(
                     f"UNIT DRIFT {struct_name}.{prop}: conversion_unit="
-                    f"{meta['conversion_unit']} x-unit={x_unit}"
+                    f"{conversion_unit} but schema carries no unit annotation"
                 )
                 drifts += 1
+                continue
+            bad = sorted(leaves - allowed)
+            if bad:
+                print(
+                    f"UNIT DRIFT {struct_name}.{prop}: conversion_unit="
+                    f"{conversion_unit} units={bad} not in family "
+                    f"{sorted(allowed)}"
+                )
+                drifts += 1
+                continue
+            drifts += check_declared_quantity(
+                struct_name, prop, node, conversion_unit, allowed, known_kinds
+            )
+    # Printed so a narrowing of this check's scope shows up in the log rather
+    # than as a suspiciously clean run.
+    print(f"UNITS CHECKED: {checked} converted fields across {len(conversions)} structs")
+    return drifts
+
+
+def check_declared_quantity(struct_name, prop, node, conversion_unit, allowed, known_kinds):
+    """An `x-quantity` on a converted field must name a quantity kind in the
+    conversion_unit's family. Catches what unit strings cannot: `pu` is legal
+    for eight kinds, so a per-unit branch labelled with the wrong quantity
+    passes the unit check but not this one. For the unit -> kind object form,
+    only entries whose unit belongs to this family are checked -- a property
+    whose branches genuinely disagree may name an outside kind elsewhere."""
+    family_kinds = CONVERSION_UNIT_QUANTITY_KINDS[conversion_unit] | POWER_EQUIVALENT_FIELDS.get(
+        (struct_name, prop), set()
+    )
+    drifts = 0
+    for unit, kind in sorted(declared_quantity_kinds(node).items(),
+                             key=lambda item: (item[0] or "")):
+        if unit is not None and unit not in allowed:
+            continue
+        if kind not in known_kinds:
+            print(
+                f"UNIT DRIFT {struct_name}.{prop}: x-quantity={kind} is not a "
+                f"quantity kind in Core/units.json"
+            )
+            drifts += 1
+        elif kind not in family_kinds:
+            print(
+                f"UNIT DRIFT {struct_name}.{prop}: conversion_unit="
+                f"{conversion_unit} x-quantity={kind} not in family "
+                f"{sorted(family_kinds)}"
+            )
+            drifts += 1
     return drifts
 
 
@@ -632,8 +745,9 @@ def main():
     drifts = 0
 
     drifts += check_converter_coverage(args.psy_path, annotated_types)
+    families, known_kinds, vocab_units = load_conversion_unit_families()
     drifts += check_unit_consistency(
-        conversions, components, load_conversion_unit_families()
+        conversions, components, families, known_kinds, vocab_units
     )
 
     for name in sorted(set(psy_structs) - set(components)):
