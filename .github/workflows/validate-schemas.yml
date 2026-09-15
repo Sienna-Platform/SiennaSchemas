@@ -72,13 +72,11 @@ jobs:
         run: python scripts/check_infrastore_parity.py
 
       # TODO after psy6 merges to PowerSystems main: drop `ref`
-      # CO-DEV PIN (temporary): the OpenAPI 1.x serde work this parity gate checks
-      # lands on this branch. Revert to `psy6` once it merges.
-      - name: Checkout PowerSystems (jd/openapi-1x) for parity gate
+      - name: Checkout PowerSystems (psy6) for parity gate
         uses: actions/checkout@v4
         with:
           repository: Sienna-Platform/PowerSystems.jl
-          ref: jd/openapi-1x
+          ref: psy6
           path: PowerSystems.jl
           fetch-depth: 1
 
