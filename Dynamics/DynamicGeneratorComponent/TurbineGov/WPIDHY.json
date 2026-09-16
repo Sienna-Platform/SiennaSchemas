@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Woodward PID Hydro Governor",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "T_reg": {
+      "description": "Input time constant of the governor",
+      "type": "number"
+    },
+    "reg": {
+      "description": "Input governor gain",
+      "type": "number"
+    },
+    "Kp": {
+      "description": "Governor proportional gain",
+      "type": "number"
+    },
+    "Ki": {
+      "description": "Governor integral gain",
+      "type": "number"
+    },
+    "Kd": {
+      "description": "Governor derivative gain",
+      "type": "number"
+    },
+    "Ta": {
+      "description": "Governor derivative/high-frequency time constant",
+      "type": "number"
+    },
+    "Tb": {
+      "description": "Gate-servo time constant",
+      "type": "number"
+    },
+    "V_lim": {
+      "description": "Gate opening velocity limits",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "G_lim": {
+      "description": "Minimum and maximum gate velocity",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "Tw": {
+      "description": "Water inertia time constant",
+      "type": "number"
+    },
+    "P_lim": {
+      "description": "Minimum and maximum gate openings",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "D_turb": {
+      "description": "Turbine damping coefficient",
+      "type": "number"
+    },
+    "gate_openings": {
+      "type": "array",
+      "description": "Gate opening speed at different loads",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "power_gate_openings": {
+      "type": "array",
+      "description": "Power at gate_openings",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "P_ref": {
+      "description": "Reference load set-point",
+      "default": "1.0",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "T_reg",
+    "reg",
+    "Kp",
+    "Ki",
+    "Kd",
+    "Ta",
+    "Tb",
+    "V_lim",
+    "G_lim",
+    "Tw",
+    "P_lim",
+    "D",
+    "gate_openings",
+    "power_gate_openings"
+  ],
+  "title": "WPIDHY",
+  "type": "object"
+}

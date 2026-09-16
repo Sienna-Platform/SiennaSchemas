@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameters of Gas Turbine-Governor. GAST in PSSE and GAST_PTI in PowerWorld",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "R": {
+      "description": "Speed droop parameter",
+      "type": "number"
+    },
+    "T1": {
+      "description": "Governor time constant",
+      "type": "number"
+    },
+    "T2": {
+      "description": "Combustion chamber time constant",
+      "type": "number"
+    },
+    "T3": {
+      "description": "Load limit time constant (exhaust gas measurement time)",
+      "type": "number"
+    },
+    "AT": {
+      "description": "Ambient temperature load limit",
+      "type": "number"
+    },
+    "Kt": {
+      "description": "Load limit feedback gain",
+      "type": "number"
+    },
+    "V_lim": {
+      "type": "array",
+      "description": "Operational control limits on fuel valve opening (Vmin, Vmax)",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "D_turb": {
+      "description": "Speed damping coefficient of gas turbine rotor",
+      "type": "number"
+    },
+    "P_ref": {
+      "description": "Reference load set-point",
+      "default": "1.0",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "R",
+    "T1",
+    "T2",
+    "T3",
+    "AT",
+    "Kt",
+    "V_lim",
+    "D_turb"
+  ],
+  "title": "GasTG",
+  "type": "object"
+}

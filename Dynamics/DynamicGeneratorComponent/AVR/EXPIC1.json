@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Generic Proportional/Integral Excitation System",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "Tr": {
+      "description": "Regulator input filter time constant",
+      "type": "number"
+    },
+    "Ka": {
+      "description": "Voltage regulator gain",
+      "type": "number"
+    },
+    "Ta": {
+      "description": "Voltage regulator time constant",
+      "type": "number"
+    },
+    "Va_lim": {
+      "description": "Limits for pi controller",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "Ta_2": {
+      "description": "Voltage regulator time constant",
+      "type": "number"
+    },
+    "Ta_3": {
+      "description": "Voltage regulator time constant",
+      "type": "number"
+    },
+    "Ta_4": {
+      "description": "Voltage regulator time constant",
+      "type": "number"
+    },
+    "Vr_lim": {
+      "description": "Voltage regulator limits (regulator output)",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "Kf": {
+      "description": "Rate feedback excitation system stabilizer gain",
+      "type": "number"
+    },
+    "Tf_1": {
+      "description": "Rate feedback time constant",
+      "type": "number"
+    },
+    "Tf_2": {
+      "description": "Rate feedback time constant",
+      "type": "number"
+    },
+    "Efd_lim": {
+      "description": "Field voltage regulator limits (regulator output)",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "Ke": {
+      "description": "Exciter constant",
+      "type": "number"
+    },
+    "Te": {
+      "description": "Exciter time constant",
+      "type": "number"
+    },
+    "E_sat": {
+      "type": "array",
+      "description": "Exciter output voltage for saturation factor",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "Se": {
+      "type": "array",
+      "description": "Exciter saturation factor at exciter output voltage",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "Kp": {
+      "description": "Potential source gain",
+      "type": "number"
+    },
+    "Kc": {
+      "description": "Current source gain",
+      "type": "number"
+    },
+    "Kc": {
+      "description": "Exciter regulator factor",
+      "type": "number"
+    },
+    "V_ref": {
+      "description": "Reference voltage set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "Tr",
+    "Ka",
+    "Ta",
+    "Va_lim",
+    "Ta_2",
+    "Ta_3",
+    "Ta_4",
+    "Vr_lim",
+    "Kf",
+    "Tf_1",
+    "Tf_2",
+    "Efd_lim",
+    "Ke",
+    "Te",
+    "E_sat",
+    "Se",
+    "Kp",
+    "Ki",
+    "Kc"
+  ],
+  "title": "EXPIC1",
+  "type": "object"
+}

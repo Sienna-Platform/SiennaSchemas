@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameters of single mass shaft model. Typically represents the rotor mass",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "H": {
+      "description": "Rotor inertia constant in MWs/MVA",
+      "type": "number"
+    },
+    "D": {
+      "description": "Rotor natural damping",
+      "type": "number"
+    }  
+  },
+  "required": [
+    "id",
+    "H",
+    "D"
+  ],
+  "title": "SingleMass",
+  "type": "object"
+}

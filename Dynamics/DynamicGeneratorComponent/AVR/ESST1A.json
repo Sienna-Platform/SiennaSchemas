@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "This excitation system supplies power through a transformer from the generator terminals and its regulated by a controlled rectifier (via thyristors). Parameters of IEEE Std 421.5 Type ST1A Excitacion System. ESST1A in PSSE and PSLF",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "UEL_flags": {
+      "description": "Code input for Underexcitization limiter (UEL) entry",
+      "type": "integer"
+    },
+    "PSS_flags": {
+      "description": "Code input for Power System Stabilizer (PSS) or (VOS) entry",
+      "type": "integer"
+    },
+    "Tr": {
+      "description": "Regulator input filter time constant",
+      "type": "number"
+    },
+    "Vi_lim": {
+      "type": "array",
+      "description": "Voltage error limits (regulator input)",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "Tc": {
+      "description": "First regulator numerator (lead) time constant",
+      "type": "number"
+    },
+    "Tb": {
+      "description": "First regulator denominator (lag) time constant",
+      "type": "number"
+    },
+    "Tc1": {
+      "description": "Second regulator numerator (lead) time constant",
+      "type": "number"
+    },
+    "Tb1": {
+      "description": "Second regulator denominator (lag) time constant",
+      "type": "number"
+    },
+    "Ka": {
+      "description": "Voltage regulator gain",
+      "type": "number"
+    },
+    "Ta": {
+      "description": "Voltage regulator time constant",
+      "type": "number"
+    },
+    "Va_lim": {
+      "description": "Limits for regulator output",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "Vr_lim": {
+      "description": "Limits for excitor output",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "Kc": {
+      "description": "Rectifier loading factor proportional to commutating reactance",
+      "type": "number"
+    },
+    "Kf": {
+      "description": "Rate feedback gain",
+      "type": "number"
+    },
+    "Tf": {
+      "description": "Rate feedback time constant",
+      "type": "number"
+    },
+    "K_lr": {
+      "description": "Exciter output current limiter gain",
+      "type": "number"
+    },
+    "I_lr": {
+      "description": "Exciter output current limit reference",
+      "type": "number"
+    },
+    "V_ref": {
+      "description": "Reference voltage set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "UEL_flags",
+    "PSS_flags",
+    "Tr",
+    "Vi_lim",
+    "Tc",
+    "Tb",
+    "Tc1",
+    "Tb1",
+    "Ka",
+    "Ta",
+    "Va_lim",
+    "Vr_lim",
+    "Kc",
+    "Kf",
+    "Tf",
+    "K_lr",
+    "I_lr"
+  ],
+  "title": "ESST1A",
+  "type": "object"
+}
