@@ -180,7 +180,7 @@
         "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/PIDGOV.json"
       },
       "SteamTurbineGov1": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/SteamTurbineGov1.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/SteamTurbineGov1.json"
       },
       "TGFixed": {
         "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/TGFixed.json"
@@ -205,6 +205,9 @@
       },
       "MinMax": {
         "$ref": "Core/common.json#/$defs/MinMax"
+      },
+      "UpDown": {
+        "$ref": "Core/common.json#/$defs/UpDown"
       }
     }
   }
