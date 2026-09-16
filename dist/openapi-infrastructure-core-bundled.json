@@ -1,0 +1,526 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "InfrastructureCoreOpenAPIModels",
+    "version": "1.0.0",
+    "description": "Domain-neutral shared types: the unit convention, the function-data family, and the value shapes and supplemental attributes that carry no power semantics. Consumed by the data layer and the time series store, neither of which should inherit power-specific definitions."
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "UnitSystem": {
+        "$ref": "#/$defs/UnitSystem"
+      },
+      "ComplexNumber": {
+        "$ref": "#/$defs/ComplexNumber"
+      },
+      "XY_Coords": {
+        "$ref": "#/$defs/XY_Coords"
+      },
+      "MinMax": {
+        "$ref": "#/$defs/MinMax"
+      },
+      "UpDown": {
+        "$ref": "#/$defs/UpDown"
+      },
+      "InOut": {
+        "$ref": "#/$defs/InOut"
+      },
+      "FromTo": {
+        "$ref": "#/$defs/FromTo"
+      },
+      "FromTo_ToFrom": {
+        "$ref": "#/$defs/FromTo_ToFrom"
+      },
+      "FunctionData": {
+        "$ref": "#/$defs/FunctionData"
+      },
+      "LinearFunctionData": {
+        "$ref": "#/$defs/LinearFunctionData"
+      },
+      "QuadraticFunctionData": {
+        "$ref": "#/$defs/QuadraticFunctionData"
+      },
+      "PiecewiseLinearData": {
+        "$ref": "#/$defs/PiecewiseLinearData"
+      },
+      "PiecewiseStepData": {
+        "$ref": "#/$defs/PiecewiseStepData"
+      },
+      "TimeSeriesLinearFunctionData": {
+        "$ref": "#/$defs/TimeSeriesLinearFunctionData"
+      },
+      "TimeSeriesQuadraticFunctionData": {
+        "$ref": "#/$defs/TimeSeriesQuadraticFunctionData"
+      },
+      "TimeSeriesPiecewiseLinearData": {
+        "$ref": "#/$defs/TimeSeriesPiecewiseLinearData"
+      },
+      "TimeSeriesPiecewiseStepData": {
+        "$ref": "#/$defs/TimeSeriesPiecewiseStepData"
+      },
+      "GeographicInfo": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Supplemental attribute carrying geographic information about a component as a GeoJSON object. An empty object is permitted and means no geographic information is recorded.",
+        "title": "GeographicInfo",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "geo_json": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "id",
+          "geo_json"
+        ]
+      },
+      "DataSource": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "DataSource",
+        "description": "Records data provenance for a component's field values: which organization or dataset the data came from, the URL it was retrieved from, and when it was retrieved. Mirrors the `DataSource` supplemental attribute from the upstream data layer, with two deliberate divergences: `organization` is optional here although it is required upstream, and `extra` is narrowed from an any-valued map to a string-valued one. Linked to the entity it describes through Core/Associations/SupplementalAttributeAssociation.json with attribute_type: \"DataSource\".",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "organization": {
+            "type": "string",
+            "description": "Publishing organization, e.g. 'U.S. Energy Information Administration'."
+          },
+          "retrieved_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the data was obtained."
+          },
+          "dataset": {
+            "type": "string",
+            "description": "Dataset identifier within the publishing organization, e.g. 'EIA-860 2023, Schedule 3'."
+          },
+          "url": {
+            "type": "string",
+            "description": "URL the data was retrieved from."
+          },
+          "version": {
+            "type": "string",
+            "description": "Data version or vintage, e.g. '2023 final'."
+          },
+          "published_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When the source published the data; null if unknown."
+          },
+          "confidence": {
+            "type": "string",
+            "description": "Confidence qualifier, e.g. 'high', 'medium'."
+          },
+          "recorded_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "User or agent that recorded the value."
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Names of the component fields this provenance record applies to."
+          },
+          "extra": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Additional string-valued provenance metadata."
+          }
+        },
+        "required": [
+          "id",
+          "retrieved_at",
+          "fields"
+        ]
+      },
+      "SupplementalAttributeAssociation": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "SupplementalAttributeAssociation",
+        "description": "Links a supplemental attribute to the component it describes — the JSON form of a row in the store's `supplemental_attribute_associations` catalog table, field-for-field. `component_type` and `attribute_type` are denormalized labels carried for filtering and reporting, not identity: identity is the `(component_id, attribute_id)` pair. Lives in Core because either side may be a Core or an Operations type. Unlike `components`, `supplemental_attributes` is a flat, untyped array, so `attribute_type` is this record's only per-row type discriminator.",
+        "type": "object",
+        "properties": {
+          "component_id": {
+            "description": "ID of the component the attribute describes.",
+            "type": "integer"
+          },
+          "component_type": {
+            "description": "Type name of the component the attribute describes. A denormalized label matching the relational mirror's column, used for filtering; not part of the row's identity, which is the `(component_id, attribute_id)` pair.",
+            "type": "string"
+          },
+          "attribute_id": {
+            "description": "ID of the supplemental attribute.",
+            "type": "integer"
+          },
+          "attribute_type": {
+            "description": "Schema title of the referenced supplemental attribute (e.g. \"EmissionsData\", \"GeographicInfo\"). A free-form string, not an enum: new attribute types are added elsewhere in this repo continuously, and a closed enum here would go stale.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "component_id",
+          "component_type",
+          "attribute_id",
+          "attribute_type"
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "ComplexNumber": {
+      "description": "A complex number, given as its `real` and `imag` parts.",
+      "properties": {
+        "real": {
+          "type": "number"
+        },
+        "imag": {
+          "type": "number"
+        }
+      },
+      "title": "ComplexNumber",
+      "type": "object"
+    },
+    "FromTo": {
+      "description": "A pair of values, one at the `from` end and one at the `to` end of a directed edge.",
+      "properties": {
+        "from": {
+          "title": "From",
+          "type": "number"
+        },
+        "to": {
+          "title": "To",
+          "type": "number"
+        }
+      },
+      "title": "FromTo",
+      "type": "object"
+    },
+    "FromTo_ToFrom": {
+      "description": "A pair of values for a directed edge, one for each orientation: `from_to` and `to_from`. The two are carried separately because the quantity need not be equal in the two directions.",
+      "properties": {
+        "from_to": {
+          "title": "FromTo",
+          "type": "number"
+        },
+        "to_from": {
+          "title": "ToFrom",
+          "type": "number"
+        }
+      },
+      "title": "FromTo_ToFrom",
+      "type": "object"
+    },
+    "FunctionData": {
+      "description": "Raw mathematical data defining a function `f(x)` — coefficients or point tables with no units or interpretation attached. `function_type` selects the shape: linear, quadratic, piecewise linear through (x, y) points, or piecewise constant between x endpoints. What `x` and `y` stand for is supplied by whatever wraps this, and the `TIME_SERIES_*` variants hold a reference to a stored series in place of the numbers.",
+      "discriminator": {
+        "mapping": {
+          "LINEAR": "#/$defs/LinearFunctionData",
+          "PIECEWISE_LINEAR": "#/$defs/PiecewiseLinearData",
+          "PIECEWISE_STEP": "#/$defs/PiecewiseStepData",
+          "QUADRATIC": "#/$defs/QuadraticFunctionData",
+          "TIME_SERIES_LINEAR": "#/$defs/TimeSeriesLinearFunctionData",
+          "TIME_SERIES_QUADRATIC": "#/$defs/TimeSeriesQuadraticFunctionData",
+          "TIME_SERIES_PIECEWISE_LINEAR": "#/$defs/TimeSeriesPiecewiseLinearData",
+          "TIME_SERIES_PIECEWISE_STEP": "#/$defs/TimeSeriesPiecewiseStepData"
+        },
+        "propertyName": "function_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/LinearFunctionData"
+        },
+        {
+          "$ref": "#/$defs/QuadraticFunctionData"
+        },
+        {
+          "$ref": "#/$defs/PiecewiseLinearData"
+        },
+        {
+          "$ref": "#/$defs/PiecewiseStepData"
+        },
+        {
+          "$ref": "#/$defs/TimeSeriesLinearFunctionData"
+        },
+        {
+          "$ref": "#/$defs/TimeSeriesQuadraticFunctionData"
+        },
+        {
+          "$ref": "#/$defs/TimeSeriesPiecewiseLinearData"
+        },
+        {
+          "$ref": "#/$defs/TimeSeriesPiecewiseStepData"
+        }
+      ],
+      "title": "FunctionData",
+      "type": "object"
+    },
+    "InOut": {
+      "description": "A pair of values, one for the inbound (`in`) and one for the outbound (`out`) direction of a quantity.",
+      "properties": {
+        "in": {
+          "type": "number"
+        },
+        "out": {
+          "type": "number"
+        }
+      },
+      "title": "InOut",
+      "type": "object"
+    },
+    "LinearFunctionData": {
+      "description": "Data for a linear function `f(x) = proportional_term * x + constant_term`.",
+      "properties": {
+        "constant_term": {
+          "type": "number"
+        },
+        "function_type": {
+          "const": "LINEAR",
+          "type": "string",
+          "default": "LINEAR"
+        },
+        "proportional_term": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "proportional_term",
+        "constant_term",
+        "function_type"
+      ],
+      "title": "LinearFunctionData",
+      "type": "object"
+    },
+    "MinMax": {
+      "description": "A pair of values bounding a quantity from below (`min`) and from above (`max`).",
+      "properties": {
+        "max": {
+          "title": "Max",
+          "type": "number"
+        },
+        "min": {
+          "title": "Min",
+          "type": "number"
+        }
+      },
+      "title": "MinMax",
+      "type": "object"
+    },
+    "PiecewiseLinearData": {
+      "description": "Data for a piecewise linear function defined by (x, y) points and interpolated linearly between consecutive ones. The y values are absolute values at each x, not per-segment slopes; use `PiecewiseStepData` when the data gives per-segment rates. Points run in ascending x order, and two of them define one segment.",
+      "properties": {
+        "function_type": {
+          "const": "PIECEWISE_LINEAR",
+          "type": "string",
+          "default": "PIECEWISE_LINEAR"
+        },
+        "points": {
+          "items": {
+            "$ref": "#/$defs/XY_Coords"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "points",
+        "function_type"
+      ],
+      "title": "PiecewiseLinearData",
+      "type": "object"
+    },
+    "PiecewiseStepData": {
+      "description": "Data for a step function, constant on each segment, defined by the x coordinates of the segment endpoints and one y value per segment. The y values are per-segment rates, not absolute values; use `PiecewiseLinearData` when the data gives a value at each point. `x_coords` ascends and holds at least two entries, and `y_coords` holds exactly one fewer.",
+      "properties": {
+        "function_type": {
+          "const": "PIECEWISE_STEP",
+          "type": "string",
+          "default": "PIECEWISE_STEP"
+        },
+        "x_coords": {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "y_coords": {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "x_coords",
+        "y_coords",
+        "function_type"
+      ],
+      "title": "PiecewiseStepData",
+      "type": "object"
+    },
+    "QuadraticFunctionData": {
+      "description": "Data for a quadratic function `f(x) = quadratic_term * x^2 + proportional_term * x + constant_term`. A non-negative `quadratic_term` makes the function convex.",
+      "properties": {
+        "constant_term": {
+          "type": "number"
+        },
+        "function_type": {
+          "const": "QUADRATIC",
+          "type": "string",
+          "default": "QUADRATIC"
+        },
+        "proportional_term": {
+          "type": "number"
+        },
+        "quadratic_term": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "quadratic_term",
+        "proportional_term",
+        "constant_term",
+        "function_type"
+      ],
+      "title": "QuadraticFunctionData",
+      "type": "object"
+    },
+    "TimeSeriesLinearFunctionData": {
+      "description": "Time-series-backed variant of `LinearFunctionData`. In place of inline coefficients it carries `association_id`, referencing a stored series that supplies them at each step; use it when the coefficients change over time.",
+      "properties": {
+        "function_type": {
+          "const": "TIME_SERIES_LINEAR",
+          "type": "string",
+          "default": "TIME_SERIES_LINEAR"
+        },
+        "association_id": {
+          "type": "integer",
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
+        }
+      },
+      "required": [
+        "function_type",
+        "association_id"
+      ],
+      "title": "TimeSeriesLinearFunctionData",
+      "type": "object"
+    },
+    "TimeSeriesPiecewiseLinearData": {
+      "description": "Time-series-backed variant of `PiecewiseLinearData`. In place of an inline point table it carries `association_id`, referencing a stored series that supplies one at each step; use it when the points change over time.",
+      "properties": {
+        "function_type": {
+          "const": "TIME_SERIES_PIECEWISE_LINEAR",
+          "type": "string",
+          "default": "TIME_SERIES_PIECEWISE_LINEAR"
+        },
+        "association_id": {
+          "type": "integer",
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
+        }
+      },
+      "required": [
+        "function_type",
+        "association_id"
+      ],
+      "title": "TimeSeriesPiecewiseLinearData",
+      "type": "object"
+    },
+    "TimeSeriesPiecewiseStepData": {
+      "description": "Time-series-backed variant of `PiecewiseStepData`. In place of inline coordinate vectors it carries `association_id`, referencing a stored series that supplies them at each step; use it when the segments change over time.",
+      "properties": {
+        "function_type": {
+          "const": "TIME_SERIES_PIECEWISE_STEP",
+          "type": "string",
+          "default": "TIME_SERIES_PIECEWISE_STEP"
+        },
+        "association_id": {
+          "type": "integer",
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
+        }
+      },
+      "required": [
+        "function_type",
+        "association_id"
+      ],
+      "title": "TimeSeriesPiecewiseStepData",
+      "type": "object"
+    },
+    "TimeSeriesQuadraticFunctionData": {
+      "description": "Time-series-backed variant of `QuadraticFunctionData`. In place of inline coefficients it carries `association_id`, referencing a stored series that supplies them at each step; use it when the coefficients change over time.",
+      "properties": {
+        "function_type": {
+          "const": "TIME_SERIES_QUADRATIC",
+          "type": "string",
+          "default": "TIME_SERIES_QUADRATIC"
+        },
+        "association_id": {
+          "type": "integer",
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
+        }
+      },
+      "required": [
+        "function_type",
+        "association_id"
+      ],
+      "title": "TimeSeriesQuadraticFunctionData",
+      "type": "object"
+    },
+    "UnitSystem": {
+      "description": "Unit basis a stored value is expressed in. COMPONENT_BASE: per-unit against a base the component records itself. NATURAL_UNITS: the quantity's own physical unit. No system-wide option: a value per-unitized against a shared base records that base on the component and rides as COMPONENT_BASE. Used in three scopes, each read against its own record rather than a document-wide table: a component's own `power_units` (against that component's `base_power`), a cost payload's own `power_units` (e.g. `CostCurve`, against the owning component's `base_power`), and a time series association's own `unit_system` (governing only that one series).",
+      "enum": [
+        "COMPONENT_BASE",
+        "NATURAL_UNITS"
+      ],
+      "title": "UnitSystem",
+      "type": "string"
+    },
+    "UpDown": {
+      "description": "A pair of values, one for the upward (`up`) and one for the downward (`down`) direction of a quantity.",
+      "properties": {
+        "down": {
+          "title": "Down",
+          "type": "number"
+        },
+        "up": {
+          "title": "Up",
+          "type": "number"
+        }
+      },
+      "required": [
+        "up",
+        "down"
+      ],
+      "title": "UpDown",
+      "type": "object"
+    },
+    "XY_Coords": {
+      "description": "A single point, given as its `x` and `y` coordinates.",
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "x",
+        "y"
+      ],
+      "title": "XY_Coords",
+      "type": "object"
+    }
+  }
+}

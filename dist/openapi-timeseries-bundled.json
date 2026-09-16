@@ -1,0 +1,2366 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "InfrastructureTimeSeriesOpenAPIModels",
+    "version": "1.0.0",
+    "description": "Time series associations: the six canonical time series types defined by the upstream data layer and their metadata, without the dense values"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "TimeSeriesAssociation": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "TimeSeriesAssociation",
+        "type": "object",
+        "description": "Metadata linking one time series to the component or supplemental attribute that owns it — the JSON form of a row in the store's `time_series_associations` catalog table. A closed set of six canonical types owned by the data layer: two static (SingleTimeSeries on a regular grid, NonSequentialTimeSeries on explicit irregular timestamps) and four forecasts. The type decides which timing fields the row carries, which is why each is its own schema rather than one row with everything nullable.\n\nDense values never appear here. `uri` names the store location that holds them; `data_hash` optionally carries a content hash of that array. A NonSequentialTimeSeries adds `timestamps_uri`, the same kind of locator for its explicit time axis, which is likewise stored rather than carried. Content hashes themselves (features_hash, timestamps_hash) remain store-internal and deliberately absent — a locator names where something is, which is not the same as exposing the store's own address for it.",
+        "discriminator": {
+          "propertyName": "time_series_type",
+          "mapping": {
+            "SingleTimeSeries": "#/components/schemas/SingleTimeSeries",
+            "NonSequentialTimeSeries": "#/components/schemas/NonSequentialTimeSeries",
+            "Deterministic": "#/components/schemas/Deterministic",
+            "DeterministicSingleTimeSeries": "#/components/schemas/DeterministicSingleTimeSeries",
+            "Probabilistic": "#/components/schemas/Probabilistic",
+            "Scenarios": "#/components/schemas/Scenarios"
+          }
+        },
+        "oneOf": [
+          {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "title": "SingleTimeSeries",
+            "type": "object",
+            "description": "A static time series on a regular grid: values at `initial_timestamp + k * resolution`. One of a closed set of six canonical time series types owned by the data layer. This schema records the association and its metadata; the dense values live in the store named by `uri`.",
+            "properties": {
+              "association_id": {
+                "type": "integer",
+                "description": "Surrogate id of this association, minted by the store that holds it. Assigned once when the association is created and never changed: renaming the series or reassigning its owner leaves it alone, so a consumer may persist it as a durable reference. Ids are never reused, and they are store-local — resolve one against the same store the document was exported from, not against an independently built store. Assigned by the store, never by a document author.",
+                "readOnly": true
+              },
+              "owner_id": {
+                "type": "integer",
+                "description": "ID of the owning component or supplemental attribute. The producing data layer allocates both from one id stream, so an `owner_id` never collides across the two categories; `owner_category` remains required because the store's catalog contract still supports independent streams from other producers, and it is still the store's disambiguator."
+              },
+              "owner_type": {
+                "type": "string",
+                "description": "Type name of the owning entity. Descriptive, not part of the series' identity."
+              },
+              "owner_category": {
+                "title": "OwnerCategory",
+                "type": "string",
+                "enum": [
+                  "Component",
+                  "SupplementalAttribute"
+                ],
+                "description": "Whether the owner is a component or a supplemental attribute."
+              },
+              "time_series_type": {
+                "const": "SingleTimeSeries",
+                "type": "string",
+                "default": "SingleTimeSeries",
+                "description": "Discriminator. Fixed to SingleTimeSeries for this schema, pinned with `const` to match this repo's existing discriminators (Core/common.json's `curve_type`), which generate a plain string literal in both toolchains."
+              },
+              "name": {
+                "type": "string",
+                "description": "Time series name (e.g. max_active_power). Part of the series' identity, and often carrying a disambiguating suffix; `component_field` records what the values are for."
+              },
+              "features": {
+                "title": "TimeSeriesFeatures",
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/$defs/TimeSeriesFeatureValue"
+                },
+                "propertyNames": {
+                  "not": {
+                    "enum": [
+                      "application_data",
+                      "array_shape",
+                      "association_id",
+                      "component_field",
+                      "count",
+                      "data",
+                      "data_hash",
+                      "dtype",
+                      "element_shape",
+                      "element_type",
+                      "ext",
+                      "features",
+                      "horizon",
+                      "id",
+                      "initial_timestamp",
+                      "interval",
+                      "length",
+                      "name",
+                      "owner_category",
+                      "owner_id",
+                      "owner_type",
+                      "percentiles",
+                      "quantity_kind",
+                      "resolution",
+                      "scenario_count",
+                      "time_reference",
+                      "time_series_type",
+                      "timestamps",
+                      "timestamps_uri",
+                      "unit_system",
+                      "units",
+                      "uri"
+                    ]
+                  }
+                },
+                "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
+              },
+              "uri": {
+                "type": "string",
+                "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+              },
+              "data_hash": {
+                "type": "string",
+                "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
+              },
+              "element_type": {
+                "title": "ElementType",
+                "type": "string",
+                "description": "What one timestep's values mean and how they are laid out. The physical dtype of the stored bytes derives from this and is not recorded separately. Unlike `units` and `quantity_kind` this is not a user-facing label — the writing package derives it from the array."
+              },
+              "element_shape": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "description": "Per-step element shape: the trailing dims after time. An empty array means a scalar element."
+              },
+              "array_shape": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "minItems": 1,
+                "description": "Full native shape of the stored array, in the order the store holds it: the first axis is the array's length and the trailing axes end with `element_shape`. Static types are `[length, *element_shape]`; a deterministic forecast stacks windows as `[horizon_count, count, *element_shape]`; probabilistic and scenarios forecasts add a percentile or scenario axis in front of that. Optional, and redundant for the static types, where it is exactly `[length] + element_shape`. It earns its place on the forecasts, whose array layout is a convention the producing package owns rather than a rule this layer enforces, so the stored geometry cannot be reconstructed from `horizon`, `count`, `percentiles`, and `scenario_count` alone. A consumer that has it should prefer it; one that does not falls back to those fields, which is exact for the static types and a best effort for the forecasts."
+              },
+              "units": {
+                "type": "string",
+                "description": "Unit label for the series values. Set by whoever creates the series and returned unchanged; not part of the series' identity, so two series differing only in this label are duplicates. Meaningless on its own when `unit_system` is a per-unit basis, where the values are dimensionless. By convention drawn from the unit vocabulary in Core/units.json, though this field is a free-text label the store does not validate against it."
+              },
+              "quantity_kind": {
+                "type": "string",
+                "description": "Kind of physical quantity the values measure (e.g. ActivePower, ReactivePower, ElectricalEnergy). Coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity kind can. It is also the only record of what the values measure when `unit_system` is a per-unit basis."
+              },
+              "unit_system": {
+                "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a COMPONENT_BASE series back to natural units needs the owning component's base_power. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS.",
+                "enum": [
+                  "COMPONENT_BASE",
+                  "NATURAL_UNITS"
+                ],
+                "title": "UnitSystem",
+                "type": "string"
+              },
+              "time_reference": {
+                "title": "TimeReference",
+                "type": "string",
+                "description": "How this series' timestamps were spelled, so a read hands back what the write declared instead of relabelling everything UTC. Absent means unspecified, which is not a claim the timestamps were written as UTC."
+              },
+              "component_field": {
+                "type": "string",
+                "description": "The field on the owning component or supplemental attribute whose value these values are the time-varying form of (e.g. max_active_power, rating). Free-form: it names a field in the consumer's own object model. Records what the values are for, where `name` only says which series they are."
+              },
+              "application_data": {
+                "type": "string",
+                "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. Element typing does not belong here — that is `element_type`."
+              },
+              "initial_timestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "First timestamp of the regular grid; every later step lands at `initial_timestamp + k * resolution`. An RFC3339 string with at most 3 fractional-second digits: the store's floor is one millisecond, matching Julia's millisecond-precision DateTime."
+              },
+              "resolution": {
+                "title": "Period",
+                "type": "string",
+                "description": "Cadence of the regular grid. Always present for a SingleTimeSeries, and part of the series' identity."
+              },
+              "length": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of timesteps."
+              }
+            },
+            "required": [
+              "association_id",
+              "owner_id",
+              "owner_type",
+              "owner_category",
+              "time_series_type",
+              "name",
+              "features",
+              "uri",
+              "element_type",
+              "element_shape",
+              "initial_timestamp",
+              "resolution",
+              "length"
+            ]
+          },
+          {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "title": "NonSequentialTimeSeries",
+            "type": "object",
+            "description": "An irregular static time series, sampled at explicit timestamps rather than on a grid. Deliberately carries neither `initial_timestamp` nor `resolution`: an irregular series has no fixed cadence and its key holds no timestamp. The timestamp vector itself lives in the store rather than here, content-addressed so that many irregular series sharing one time axis store it once; `timestamps_uri` names which axis this series sits on, so a document plus the store's arrays describe the series completely.",
+            "properties": {
+              "association_id": {
+                "type": "integer",
+                "description": "Surrogate id of this association, minted by the store that holds it. Assigned once when the association is created and never changed: renaming the series or reassigning its owner leaves it alone, so a consumer may persist it as a durable reference. Ids are never reused, and they are store-local — resolve one against the same store the document was exported from, not against an independently built store. Assigned by the store, never by a document author.",
+                "readOnly": true
+              },
+              "owner_id": {
+                "type": "integer",
+                "description": "ID of the owning component or supplemental attribute. The producing data layer allocates both from one id stream, so an `owner_id` never collides across the two categories; `owner_category` remains required because the store's catalog contract still supports independent streams from other producers, and it is still the store's disambiguator."
+              },
+              "owner_type": {
+                "type": "string",
+                "description": "Type name of the owning entity. Descriptive, not part of the series' identity."
+              },
+              "owner_category": {
+                "title": "OwnerCategory",
+                "type": "string",
+                "enum": [
+                  "Component",
+                  "SupplementalAttribute"
+                ],
+                "description": "Whether the owner is a component or a supplemental attribute."
+              },
+              "time_series_type": {
+                "const": "NonSequentialTimeSeries",
+                "type": "string",
+                "default": "NonSequentialTimeSeries",
+                "description": "Discriminator. Fixed to NonSequentialTimeSeries for this schema, pinned with `const` to match this repo's existing discriminators (Core/common.json's `curve_type`), which generate a plain string literal in both toolchains."
+              },
+              "name": {
+                "type": "string",
+                "description": "Time series name (e.g. max_active_power). Part of the series' identity, and often carrying a disambiguating suffix; `component_field` records what the values are for."
+              },
+              "features": {
+                "title": "TimeSeriesFeatures",
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/$defs/TimeSeriesFeatureValue"
+                },
+                "propertyNames": {
+                  "not": {
+                    "enum": [
+                      "application_data",
+                      "array_shape",
+                      "association_id",
+                      "component_field",
+                      "count",
+                      "data",
+                      "data_hash",
+                      "dtype",
+                      "element_shape",
+                      "element_type",
+                      "ext",
+                      "features",
+                      "horizon",
+                      "id",
+                      "initial_timestamp",
+                      "interval",
+                      "length",
+                      "name",
+                      "owner_category",
+                      "owner_id",
+                      "owner_type",
+                      "percentiles",
+                      "quantity_kind",
+                      "resolution",
+                      "scenario_count",
+                      "time_reference",
+                      "time_series_type",
+                      "timestamps",
+                      "timestamps_uri",
+                      "unit_system",
+                      "units",
+                      "uri"
+                    ]
+                  }
+                },
+                "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
+              },
+              "uri": {
+                "type": "string",
+                "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+              },
+              "timestamps_uri": {
+                "type": "string",
+                "description": "Locator for this series' explicit timestamp vector, unique within one store — `uri`'s counterpart for the time axis, with the same contract: no required format, never parsed or interpreted here, and resolved by the backing store (infrastore uses the axis's content hash, the same value it keys the shared vector under). A locator rather than the vector itself because the axis is shared: a cohort of irregular series on one axis names it once each, where inlining the timestamps would repeat the whole vector per row. Optional, so a producer that predates it is still valid, and absent from the other five types, which have no explicit axis. Without it a document cannot say which of the store's axes a row sits on, and the row cannot be reconstructed from the document — the store cannot infer it either, since arrays are content-addressed and two irregular series with identical values on different axes share one stored array. A consumer restoring rows from a document therefore requires it."
+              },
+              "data_hash": {
+                "type": "string",
+                "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
+              },
+              "element_type": {
+                "title": "ElementType",
+                "type": "string",
+                "description": "What one timestep's values mean and how they are laid out. The physical dtype of the stored bytes derives from this and is not recorded separately. Unlike `units` and `quantity_kind` this is not a user-facing label — the writing package derives it from the array."
+              },
+              "element_shape": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "description": "Per-step element shape: the trailing dims after time. An empty array means a scalar element."
+              },
+              "array_shape": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "minItems": 1,
+                "description": "Full native shape of the stored array, in the order the store holds it: the first axis is the array's length and the trailing axes end with `element_shape`. Static types are `[length, *element_shape]`; a deterministic forecast stacks windows as `[horizon_count, count, *element_shape]`; probabilistic and scenarios forecasts add a percentile or scenario axis in front of that. Optional, and redundant for the static types, where it is exactly `[length] + element_shape`. It earns its place on the forecasts, whose array layout is a convention the producing package owns rather than a rule this layer enforces, so the stored geometry cannot be reconstructed from `horizon`, `count`, `percentiles`, and `scenario_count` alone. A consumer that has it should prefer it; one that does not falls back to those fields, which is exact for the static types and a best effort for the forecasts."
+              },
+              "units": {
+                "type": "string",
+                "description": "Unit label for the series values. Set by whoever creates the series and returned unchanged; not part of the series' identity, so two series differing only in this label are duplicates. Meaningless on its own when `unit_system` is a per-unit basis, where the values are dimensionless. By convention drawn from the unit vocabulary in Core/units.json, though this field is a free-text label the store does not validate against it."
+              },
+              "quantity_kind": {
+                "type": "string",
+                "description": "Kind of physical quantity the values measure (e.g. ActivePower, ReactivePower, ElectricalEnergy). Coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity kind can. It is also the only record of what the values measure when `unit_system` is a per-unit basis."
+              },
+              "unit_system": {
+                "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a COMPONENT_BASE series back to natural units needs the owning component's base_power. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS.",
+                "enum": [
+                  "COMPONENT_BASE",
+                  "NATURAL_UNITS"
+                ],
+                "title": "UnitSystem",
+                "type": "string"
+              },
+              "time_reference": {
+                "title": "TimeReference",
+                "type": "string",
+                "description": "How this series' timestamps were spelled, so a read hands back what the write declared instead of relabelling everything UTC. Absent means unspecified, which is not a claim the timestamps were written as UTC."
+              },
+              "component_field": {
+                "type": "string",
+                "description": "The field on the owning component or supplemental attribute whose value these values are the time-varying form of (e.g. max_active_power, rating). Free-form: it names a field in the consumer's own object model. Records what the values are for, where `name` only says which series they are."
+              },
+              "application_data": {
+                "type": "string",
+                "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. Element typing does not belong here — that is `element_type`."
+              },
+              "length": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of timesteps. Together with `name` this is what identifies the series: its explicit, strictly-increasing timestamp vector lives in the store, content-addressed so that many irregular series sharing one time axis store it once."
+              }
+            },
+            "required": [
+              "association_id",
+              "owner_id",
+              "owner_type",
+              "owner_category",
+              "time_series_type",
+              "name",
+              "features",
+              "uri",
+              "element_type",
+              "element_shape",
+              "length"
+            ]
+          },
+          {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "title": "Deterministic",
+            "type": "object",
+            "description": "A deterministic forecast: one horizon-length array per window, windows stepping by `interval`. One of a closed set of six canonical time series types owned by the data layer. This schema records the association and its metadata; the dense values live in the store named by `uri`.",
+            "properties": {
+              "association_id": {
+                "type": "integer",
+                "description": "Surrogate id of this association, minted by the store that holds it. Assigned once when the association is created and never changed: renaming the series or reassigning its owner leaves it alone, so a consumer may persist it as a durable reference. Ids are never reused, and they are store-local — resolve one against the same store the document was exported from, not against an independently built store. Assigned by the store, never by a document author.",
+                "readOnly": true
+              },
+              "owner_id": {
+                "type": "integer",
+                "description": "ID of the owning component or supplemental attribute. The producing data layer allocates both from one id stream, so an `owner_id` never collides across the two categories; `owner_category` remains required because the store's catalog contract still supports independent streams from other producers, and it is still the store's disambiguator."
+              },
+              "owner_type": {
+                "type": "string",
+                "description": "Type name of the owning entity. Descriptive, not part of the series' identity."
+              },
+              "owner_category": {
+                "title": "OwnerCategory",
+                "type": "string",
+                "enum": [
+                  "Component",
+                  "SupplementalAttribute"
+                ],
+                "description": "Whether the owner is a component or a supplemental attribute."
+              },
+              "time_series_type": {
+                "const": "Deterministic",
+                "type": "string",
+                "default": "Deterministic",
+                "description": "Discriminator. Fixed to Deterministic for this schema, pinned with `const` to match this repo's existing discriminators (Core/common.json's `curve_type`), which generate a plain string literal in both toolchains."
+              },
+              "name": {
+                "type": "string",
+                "description": "Time series name (e.g. max_active_power). Part of the series' identity, and often carrying a disambiguating suffix; `component_field` records what the values are for."
+              },
+              "features": {
+                "title": "TimeSeriesFeatures",
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/$defs/TimeSeriesFeatureValue"
+                },
+                "propertyNames": {
+                  "not": {
+                    "enum": [
+                      "application_data",
+                      "array_shape",
+                      "association_id",
+                      "component_field",
+                      "count",
+                      "data",
+                      "data_hash",
+                      "dtype",
+                      "element_shape",
+                      "element_type",
+                      "ext",
+                      "features",
+                      "horizon",
+                      "id",
+                      "initial_timestamp",
+                      "interval",
+                      "length",
+                      "name",
+                      "owner_category",
+                      "owner_id",
+                      "owner_type",
+                      "percentiles",
+                      "quantity_kind",
+                      "resolution",
+                      "scenario_count",
+                      "time_reference",
+                      "time_series_type",
+                      "timestamps",
+                      "timestamps_uri",
+                      "unit_system",
+                      "units",
+                      "uri"
+                    ]
+                  }
+                },
+                "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
+              },
+              "uri": {
+                "type": "string",
+                "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+              },
+              "data_hash": {
+                "type": "string",
+                "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
+              },
+              "element_type": {
+                "title": "ElementType",
+                "type": "string",
+                "description": "What one timestep's values mean and how they are laid out. The physical dtype of the stored bytes derives from this and is not recorded separately. Unlike `units` and `quantity_kind` this is not a user-facing label — the writing package derives it from the array."
+              },
+              "element_shape": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "description": "Per-step element shape: the trailing dims after time. An empty array means a scalar element."
+              },
+              "array_shape": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "minItems": 1,
+                "description": "Full native shape of the stored array, in the order the store holds it: the first axis is the array's length and the trailing axes end with `element_shape`. Static types are `[length, *element_shape]`; a deterministic forecast stacks windows as `[horizon_count, count, *element_shape]`; probabilistic and scenarios forecasts add a percentile or scenario axis in front of that. Optional, and redundant for the static types, where it is exactly `[length] + element_shape`. It earns its place on the forecasts, whose array layout is a convention the producing package owns rather than a rule this layer enforces, so the stored geometry cannot be reconstructed from `horizon`, `count`, `percentiles`, and `scenario_count` alone. A consumer that has it should prefer it; one that does not falls back to those fields, which is exact for the static types and a best effort for the forecasts."
+              },
+              "units": {
+                "type": "string",
+                "description": "Unit label for the series values. Set by whoever creates the series and returned unchanged; not part of the series' identity, so two series differing only in this label are duplicates. Meaningless on its own when `unit_system` is a per-unit basis, where the values are dimensionless. By convention drawn from the unit vocabulary in Core/units.json, though this field is a free-text label the store does not validate against it."
+              },
+              "quantity_kind": {
+                "type": "string",
+                "description": "Kind of physical quantity the values measure (e.g. ActivePower, ReactivePower, ElectricalEnergy). Coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity kind can. It is also the only record of what the values measure when `unit_system` is a per-unit basis."
+              },
+              "unit_system": {
+                "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a COMPONENT_BASE series back to natural units needs the owning component's base_power. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS.",
+                "enum": [
+                  "COMPONENT_BASE",
+                  "NATURAL_UNITS"
+                ],
+                "title": "UnitSystem",
+                "type": "string"
+              },
+              "time_reference": {
+                "title": "TimeReference",
+                "type": "string",
+                "description": "How this series' timestamps were spelled, so a read hands back what the write declared instead of relabelling everything UTC. Absent means unspecified, which is not a claim the timestamps were written as UTC."
+              },
+              "component_field": {
+                "type": "string",
+                "description": "The field on the owning component or supplemental attribute whose value these values are the time-varying form of (e.g. max_active_power, rating). Free-form: it names a field in the consumer's own object model. Records what the values are for, where `name` only says which series they are."
+              },
+              "application_data": {
+                "type": "string",
+                "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. Element typing does not belong here — that is `element_type`."
+              },
+              "initial_timestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Start of the first forecast window."
+              },
+              "resolution": {
+                "title": "Period",
+                "type": "string",
+                "description": "Cadence within a forecast window. Always present for a forecast, and part of the series' identity."
+              },
+              "horizon": {
+                "title": "Period",
+                "type": "string",
+                "description": "Length of one forecast window. Descriptive, not part of the series' identity."
+              },
+              "interval": {
+                "title": "Period",
+                "type": "string",
+                "description": "Step between the start of consecutive forecast windows. Part of the series' identity: two forecasts of one variable at the same resolution but different intervals — a day-ahead and a real-time forecast — are distinct series. `PT0S` is the canonical interval of a single-window forecast, which has no second window to step to."
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of forecast windows. Descriptive, not part of the series' identity."
+              }
+            },
+            "required": [
+              "association_id",
+              "owner_id",
+              "owner_type",
+              "owner_category",
+              "time_series_type",
+              "name",
+              "features",
+              "uri",
+              "element_type",
+              "element_shape",
+              "initial_timestamp",
+              "resolution",
+              "horizon",
+              "interval",
+              "count"
+            ]
+          },
+          {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "title": "DeterministicSingleTimeSeries",
+            "type": "object",
+            "description": "A synthetic deterministic forecast derived from a SingleTimeSeries by `transform_single_time_series`. Field-identical to Deterministic, and it reads back as one; it stays a distinct type because the catalog records which rows are synthetic, and a request for Deterministic matches both while a request for this type narrows to the synthetic ones alone.",
+            "properties": {
+              "association_id": {
+                "type": "integer",
+                "description": "Surrogate id of this association, minted by the store that holds it. Assigned once when the association is created and never changed: renaming the series or reassigning its owner leaves it alone, so a consumer may persist it as a durable reference. Ids are never reused, and they are store-local — resolve one against the same store the document was exported from, not against an independently built store. Assigned by the store, never by a document author.",
+                "readOnly": true
+              },
+              "owner_id": {
+                "type": "integer",
+                "description": "ID of the owning component or supplemental attribute. The producing data layer allocates both from one id stream, so an `owner_id` never collides across the two categories; `owner_category` remains required because the store's catalog contract still supports independent streams from other producers, and it is still the store's disambiguator."
+              },
+              "owner_type": {
+                "type": "string",
+                "description": "Type name of the owning entity. Descriptive, not part of the series' identity."
+              },
+              "owner_category": {
+                "title": "OwnerCategory",
+                "type": "string",
+                "enum": [
+                  "Component",
+                  "SupplementalAttribute"
+                ],
+                "description": "Whether the owner is a component or a supplemental attribute."
+              },
+              "time_series_type": {
+                "const": "DeterministicSingleTimeSeries",
+                "type": "string",
+                "default": "DeterministicSingleTimeSeries",
+                "description": "Discriminator. Fixed to DeterministicSingleTimeSeries for this schema, pinned with `const` to match this repo's existing discriminators (Core/common.json's `curve_type`), which generate a plain string literal in both toolchains."
+              },
+              "name": {
+                "type": "string",
+                "description": "Time series name (e.g. max_active_power). Part of the series' identity, and often carrying a disambiguating suffix; `component_field` records what the values are for."
+              },
+              "features": {
+                "title": "TimeSeriesFeatures",
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/$defs/TimeSeriesFeatureValue"
+                },
+                "propertyNames": {
+                  "not": {
+                    "enum": [
+                      "application_data",
+                      "array_shape",
+                      "association_id",
+                      "component_field",
+                      "count",
+                      "data",
+                      "data_hash",
+                      "dtype",
+                      "element_shape",
+                      "element_type",
+                      "ext",
+                      "features",
+                      "horizon",
+                      "id",
+                      "initial_timestamp",
+                      "interval",
+                      "length",
+                      "name",
+                      "owner_category",
+                      "owner_id",
+                      "owner_type",
+                      "percentiles",
+                      "quantity_kind",
+                      "resolution",
+                      "scenario_count",
+                      "time_reference",
+                      "time_series_type",
+                      "timestamps",
+                      "timestamps_uri",
+                      "unit_system",
+                      "units",
+                      "uri"
+                    ]
+                  }
+                },
+                "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
+              },
+              "uri": {
+                "type": "string",
+                "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+              },
+              "data_hash": {
+                "type": "string",
+                "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
+              },
+              "element_type": {
+                "title": "ElementType",
+                "type": "string",
+                "description": "What one timestep's values mean and how they are laid out. The physical dtype of the stored bytes derives from this and is not recorded separately. Unlike `units` and `quantity_kind` this is not a user-facing label — the writing package derives it from the array."
+              },
+              "element_shape": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "description": "Per-step element shape: the trailing dims after time. An empty array means a scalar element."
+              },
+              "array_shape": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "minItems": 1,
+                "description": "Full native shape of the stored array, in the order the store holds it: the first axis is the array's length and the trailing axes end with `element_shape`. Static types are `[length, *element_shape]`; a deterministic forecast stacks windows as `[horizon_count, count, *element_shape]`; probabilistic and scenarios forecasts add a percentile or scenario axis in front of that. Optional, and redundant for the static types, where it is exactly `[length] + element_shape`. It earns its place on the forecasts, whose array layout is a convention the producing package owns rather than a rule this layer enforces, so the stored geometry cannot be reconstructed from `horizon`, `count`, `percentiles`, and `scenario_count` alone. A consumer that has it should prefer it; one that does not falls back to those fields, which is exact for the static types and a best effort for the forecasts."
+              },
+              "units": {
+                "type": "string",
+                "description": "Unit label for the series values. Set by whoever creates the series and returned unchanged; not part of the series' identity, so two series differing only in this label are duplicates. Meaningless on its own when `unit_system` is a per-unit basis, where the values are dimensionless. By convention drawn from the unit vocabulary in Core/units.json, though this field is a free-text label the store does not validate against it."
+              },
+              "quantity_kind": {
+                "type": "string",
+                "description": "Kind of physical quantity the values measure (e.g. ActivePower, ReactivePower, ElectricalEnergy). Coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity kind can. It is also the only record of what the values measure when `unit_system` is a per-unit basis."
+              },
+              "unit_system": {
+                "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a COMPONENT_BASE series back to natural units needs the owning component's base_power. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS.",
+                "enum": [
+                  "COMPONENT_BASE",
+                  "NATURAL_UNITS"
+                ],
+                "title": "UnitSystem",
+                "type": "string"
+              },
+              "time_reference": {
+                "title": "TimeReference",
+                "type": "string",
+                "description": "How this series' timestamps were spelled, so a read hands back what the write declared instead of relabelling everything UTC. Absent means unspecified, which is not a claim the timestamps were written as UTC."
+              },
+              "component_field": {
+                "type": "string",
+                "description": "The field on the owning component or supplemental attribute whose value these values are the time-varying form of (e.g. max_active_power, rating). Free-form: it names a field in the consumer's own object model. Records what the values are for, where `name` only says which series they are."
+              },
+              "application_data": {
+                "type": "string",
+                "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. Element typing does not belong here — that is `element_type`."
+              },
+              "initial_timestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Start of the first forecast window."
+              },
+              "resolution": {
+                "title": "Period",
+                "type": "string",
+                "description": "Cadence within a forecast window. Always present for a forecast, and part of the series' identity."
+              },
+              "horizon": {
+                "title": "Period",
+                "type": "string",
+                "description": "Length of one forecast window. Descriptive, not part of the series' identity."
+              },
+              "interval": {
+                "title": "Period",
+                "type": "string",
+                "description": "Step between the start of consecutive forecast windows. Part of the series' identity: two forecasts of one variable at the same resolution but different intervals — a day-ahead and a real-time forecast — are distinct series. `PT0S` is the canonical interval of a single-window forecast, which has no second window to step to."
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of forecast windows. Descriptive, not part of the series' identity."
+              }
+            },
+            "required": [
+              "association_id",
+              "owner_id",
+              "owner_type",
+              "owner_category",
+              "time_series_type",
+              "name",
+              "features",
+              "uri",
+              "element_type",
+              "element_shape",
+              "initial_timestamp",
+              "resolution",
+              "horizon",
+              "interval",
+              "count"
+            ]
+          },
+          {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "title": "Probabilistic",
+            "type": "object",
+            "description": "A probabilistic forecast: per-percentile, per-window horizon arrays. Adds a percentile axis in front of the deterministic layout.",
+            "properties": {
+              "association_id": {
+                "type": "integer",
+                "description": "Surrogate id of this association, minted by the store that holds it. Assigned once when the association is created and never changed: renaming the series or reassigning its owner leaves it alone, so a consumer may persist it as a durable reference. Ids are never reused, and they are store-local — resolve one against the same store the document was exported from, not against an independently built store. Assigned by the store, never by a document author.",
+                "readOnly": true
+              },
+              "owner_id": {
+                "type": "integer",
+                "description": "ID of the owning component or supplemental attribute. The producing data layer allocates both from one id stream, so an `owner_id` never collides across the two categories; `owner_category` remains required because the store's catalog contract still supports independent streams from other producers, and it is still the store's disambiguator."
+              },
+              "owner_type": {
+                "type": "string",
+                "description": "Type name of the owning entity. Descriptive, not part of the series' identity."
+              },
+              "owner_category": {
+                "title": "OwnerCategory",
+                "type": "string",
+                "enum": [
+                  "Component",
+                  "SupplementalAttribute"
+                ],
+                "description": "Whether the owner is a component or a supplemental attribute."
+              },
+              "time_series_type": {
+                "const": "Probabilistic",
+                "type": "string",
+                "default": "Probabilistic",
+                "description": "Discriminator. Fixed to Probabilistic for this schema, pinned with `const` to match this repo's existing discriminators (Core/common.json's `curve_type`), which generate a plain string literal in both toolchains."
+              },
+              "name": {
+                "type": "string",
+                "description": "Time series name (e.g. max_active_power). Part of the series' identity, and often carrying a disambiguating suffix; `component_field` records what the values are for."
+              },
+              "features": {
+                "title": "TimeSeriesFeatures",
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/$defs/TimeSeriesFeatureValue"
+                },
+                "propertyNames": {
+                  "not": {
+                    "enum": [
+                      "application_data",
+                      "array_shape",
+                      "association_id",
+                      "component_field",
+                      "count",
+                      "data",
+                      "data_hash",
+                      "dtype",
+                      "element_shape",
+                      "element_type",
+                      "ext",
+                      "features",
+                      "horizon",
+                      "id",
+                      "initial_timestamp",
+                      "interval",
+                      "length",
+                      "name",
+                      "owner_category",
+                      "owner_id",
+                      "owner_type",
+                      "percentiles",
+                      "quantity_kind",
+                      "resolution",
+                      "scenario_count",
+                      "time_reference",
+                      "time_series_type",
+                      "timestamps",
+                      "timestamps_uri",
+                      "unit_system",
+                      "units",
+                      "uri"
+                    ]
+                  }
+                },
+                "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
+              },
+              "uri": {
+                "type": "string",
+                "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+              },
+              "data_hash": {
+                "type": "string",
+                "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
+              },
+              "element_type": {
+                "title": "ElementType",
+                "type": "string",
+                "description": "What one timestep's values mean and how they are laid out. The physical dtype of the stored bytes derives from this and is not recorded separately. Unlike `units` and `quantity_kind` this is not a user-facing label — the writing package derives it from the array."
+              },
+              "element_shape": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "description": "Per-step element shape: the trailing dims after time. An empty array means a scalar element."
+              },
+              "array_shape": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "minItems": 1,
+                "description": "Full native shape of the stored array, in the order the store holds it: the first axis is the array's length and the trailing axes end with `element_shape`. Static types are `[length, *element_shape]`; a deterministic forecast stacks windows as `[horizon_count, count, *element_shape]`; probabilistic and scenarios forecasts add a percentile or scenario axis in front of that. Optional, and redundant for the static types, where it is exactly `[length] + element_shape`. It earns its place on the forecasts, whose array layout is a convention the producing package owns rather than a rule this layer enforces, so the stored geometry cannot be reconstructed from `horizon`, `count`, `percentiles`, and `scenario_count` alone. A consumer that has it should prefer it; one that does not falls back to those fields, which is exact for the static types and a best effort for the forecasts."
+              },
+              "units": {
+                "type": "string",
+                "description": "Unit label for the series values. Set by whoever creates the series and returned unchanged; not part of the series' identity, so two series differing only in this label are duplicates. Meaningless on its own when `unit_system` is a per-unit basis, where the values are dimensionless. By convention drawn from the unit vocabulary in Core/units.json, though this field is a free-text label the store does not validate against it."
+              },
+              "quantity_kind": {
+                "type": "string",
+                "description": "Kind of physical quantity the values measure (e.g. ActivePower, ReactivePower, ElectricalEnergy). Coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity kind can. It is also the only record of what the values measure when `unit_system` is a per-unit basis."
+              },
+              "unit_system": {
+                "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a COMPONENT_BASE series back to natural units needs the owning component's base_power. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS.",
+                "enum": [
+                  "COMPONENT_BASE",
+                  "NATURAL_UNITS"
+                ],
+                "title": "UnitSystem",
+                "type": "string"
+              },
+              "time_reference": {
+                "title": "TimeReference",
+                "type": "string",
+                "description": "How this series' timestamps were spelled, so a read hands back what the write declared instead of relabelling everything UTC. Absent means unspecified, which is not a claim the timestamps were written as UTC."
+              },
+              "component_field": {
+                "type": "string",
+                "description": "The field on the owning component or supplemental attribute whose value these values are the time-varying form of (e.g. max_active_power, rating). Free-form: it names a field in the consumer's own object model. Records what the values are for, where `name` only says which series they are."
+              },
+              "application_data": {
+                "type": "string",
+                "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. Element typing does not belong here — that is `element_type`."
+              },
+              "initial_timestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Start of the first forecast window."
+              },
+              "resolution": {
+                "title": "Period",
+                "type": "string",
+                "description": "Cadence within a forecast window. Always present for a forecast, and part of the series' identity."
+              },
+              "horizon": {
+                "title": "Period",
+                "type": "string",
+                "description": "Length of one forecast window. Descriptive, not part of the series' identity."
+              },
+              "interval": {
+                "title": "Period",
+                "type": "string",
+                "description": "Step between the start of consecutive forecast windows. Part of the series' identity: two forecasts of one variable at the same resolution but different intervals — a day-ahead and a real-time forecast — are distinct series. `PT0S` is the canonical interval of a single-window forecast, which has no second window to step to."
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of forecast windows. Descriptive, not part of the series' identity."
+              },
+              "percentiles": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 1,
+                "description": "The percentiles this forecast carries, one per leading axis entry of the stored array."
+              }
+            },
+            "required": [
+              "association_id",
+              "owner_id",
+              "owner_type",
+              "owner_category",
+              "time_series_type",
+              "name",
+              "features",
+              "uri",
+              "element_type",
+              "element_shape",
+              "initial_timestamp",
+              "resolution",
+              "horizon",
+              "interval",
+              "count",
+              "percentiles"
+            ]
+          },
+          {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "title": "Scenarios",
+            "type": "object",
+            "description": "A scenarios forecast: per-scenario, per-window horizon arrays. Adds a scenario axis in front of the deterministic layout.",
+            "properties": {
+              "association_id": {
+                "type": "integer",
+                "description": "Surrogate id of this association, minted by the store that holds it. Assigned once when the association is created and never changed: renaming the series or reassigning its owner leaves it alone, so a consumer may persist it as a durable reference. Ids are never reused, and they are store-local — resolve one against the same store the document was exported from, not against an independently built store. Assigned by the store, never by a document author.",
+                "readOnly": true
+              },
+              "owner_id": {
+                "type": "integer",
+                "description": "ID of the owning component or supplemental attribute. The producing data layer allocates both from one id stream, so an `owner_id` never collides across the two categories; `owner_category` remains required because the store's catalog contract still supports independent streams from other producers, and it is still the store's disambiguator."
+              },
+              "owner_type": {
+                "type": "string",
+                "description": "Type name of the owning entity. Descriptive, not part of the series' identity."
+              },
+              "owner_category": {
+                "title": "OwnerCategory",
+                "type": "string",
+                "enum": [
+                  "Component",
+                  "SupplementalAttribute"
+                ],
+                "description": "Whether the owner is a component or a supplemental attribute."
+              },
+              "time_series_type": {
+                "const": "Scenarios",
+                "type": "string",
+                "default": "Scenarios",
+                "description": "Discriminator. Fixed to Scenarios for this schema, pinned with `const` to match this repo's existing discriminators (Core/common.json's `curve_type`), which generate a plain string literal in both toolchains."
+              },
+              "name": {
+                "type": "string",
+                "description": "Time series name (e.g. max_active_power). Part of the series' identity, and often carrying a disambiguating suffix; `component_field` records what the values are for."
+              },
+              "features": {
+                "title": "TimeSeriesFeatures",
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/$defs/TimeSeriesFeatureValue"
+                },
+                "propertyNames": {
+                  "not": {
+                    "enum": [
+                      "application_data",
+                      "array_shape",
+                      "association_id",
+                      "component_field",
+                      "count",
+                      "data",
+                      "data_hash",
+                      "dtype",
+                      "element_shape",
+                      "element_type",
+                      "ext",
+                      "features",
+                      "horizon",
+                      "id",
+                      "initial_timestamp",
+                      "interval",
+                      "length",
+                      "name",
+                      "owner_category",
+                      "owner_id",
+                      "owner_type",
+                      "percentiles",
+                      "quantity_kind",
+                      "resolution",
+                      "scenario_count",
+                      "time_reference",
+                      "time_series_type",
+                      "timestamps",
+                      "timestamps_uri",
+                      "unit_system",
+                      "units",
+                      "uri"
+                    ]
+                  }
+                },
+                "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
+              },
+              "uri": {
+                "type": "string",
+                "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+              },
+              "data_hash": {
+                "type": "string",
+                "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
+              },
+              "element_type": {
+                "title": "ElementType",
+                "type": "string",
+                "description": "What one timestep's values mean and how they are laid out. The physical dtype of the stored bytes derives from this and is not recorded separately. Unlike `units` and `quantity_kind` this is not a user-facing label — the writing package derives it from the array."
+              },
+              "element_shape": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "description": "Per-step element shape: the trailing dims after time. An empty array means a scalar element."
+              },
+              "array_shape": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "minItems": 1,
+                "description": "Full native shape of the stored array, in the order the store holds it: the first axis is the array's length and the trailing axes end with `element_shape`. Static types are `[length, *element_shape]`; a deterministic forecast stacks windows as `[horizon_count, count, *element_shape]`; probabilistic and scenarios forecasts add a percentile or scenario axis in front of that. Optional, and redundant for the static types, where it is exactly `[length] + element_shape`. It earns its place on the forecasts, whose array layout is a convention the producing package owns rather than a rule this layer enforces, so the stored geometry cannot be reconstructed from `horizon`, `count`, `percentiles`, and `scenario_count` alone. A consumer that has it should prefer it; one that does not falls back to those fields, which is exact for the static types and a best effort for the forecasts."
+              },
+              "units": {
+                "type": "string",
+                "description": "Unit label for the series values. Set by whoever creates the series and returned unchanged; not part of the series' identity, so two series differing only in this label are duplicates. Meaningless on its own when `unit_system` is a per-unit basis, where the values are dimensionless. By convention drawn from the unit vocabulary in Core/units.json, though this field is a free-text label the store does not validate against it."
+              },
+              "quantity_kind": {
+                "type": "string",
+                "description": "Kind of physical quantity the values measure (e.g. ActivePower, ReactivePower, ElectricalEnergy). Coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity kind can. It is also the only record of what the values measure when `unit_system` is a per-unit basis."
+              },
+              "unit_system": {
+                "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a COMPONENT_BASE series back to natural units needs the owning component's base_power. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS.",
+                "enum": [
+                  "COMPONENT_BASE",
+                  "NATURAL_UNITS"
+                ],
+                "title": "UnitSystem",
+                "type": "string"
+              },
+              "time_reference": {
+                "title": "TimeReference",
+                "type": "string",
+                "description": "How this series' timestamps were spelled, so a read hands back what the write declared instead of relabelling everything UTC. Absent means unspecified, which is not a claim the timestamps were written as UTC."
+              },
+              "component_field": {
+                "type": "string",
+                "description": "The field on the owning component or supplemental attribute whose value these values are the time-varying form of (e.g. max_active_power, rating). Free-form: it names a field in the consumer's own object model. Records what the values are for, where `name` only says which series they are."
+              },
+              "application_data": {
+                "type": "string",
+                "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. Element typing does not belong here — that is `element_type`."
+              },
+              "initial_timestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Start of the first forecast window."
+              },
+              "resolution": {
+                "title": "Period",
+                "type": "string",
+                "description": "Cadence within a forecast window. Always present for a forecast, and part of the series' identity."
+              },
+              "horizon": {
+                "title": "Period",
+                "type": "string",
+                "description": "Length of one forecast window. Descriptive, not part of the series' identity."
+              },
+              "interval": {
+                "title": "Period",
+                "type": "string",
+                "description": "Step between the start of consecutive forecast windows. Part of the series' identity: two forecasts of one variable at the same resolution but different intervals — a day-ahead and a real-time forecast — are distinct series. `PT0S` is the canonical interval of a single-window forecast, which has no second window to step to."
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of forecast windows. Descriptive, not part of the series' identity."
+              },
+              "scenario_count": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Number of scenarios, one per leading axis entry of the stored array. The store's catalog has no column for this and reads it off the array's shape; it is recorded explicitly here because this layer carries no array."
+              }
+            },
+            "required": [
+              "association_id",
+              "owner_id",
+              "owner_type",
+              "owner_category",
+              "time_series_type",
+              "name",
+              "features",
+              "uri",
+              "element_type",
+              "element_shape",
+              "initial_timestamp",
+              "resolution",
+              "horizon",
+              "interval",
+              "count",
+              "scenario_count"
+            ]
+          }
+        ]
+      },
+      "SingleTimeSeries": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "SingleTimeSeries",
+        "type": "object",
+        "description": "A static time series on a regular grid: values at `initial_timestamp + k * resolution`. One of a closed set of six canonical time series types owned by the data layer. This schema records the association and its metadata; the dense values live in the store named by `uri`.",
+        "properties": {
+          "association_id": {
+            "type": "integer",
+            "description": "Surrogate id of this association, minted by the store that holds it. Assigned once when the association is created and never changed: renaming the series or reassigning its owner leaves it alone, so a consumer may persist it as a durable reference. Ids are never reused, and they are store-local — resolve one against the same store the document was exported from, not against an independently built store. Assigned by the store, never by a document author.",
+            "readOnly": true
+          },
+          "owner_id": {
+            "type": "integer",
+            "description": "ID of the owning component or supplemental attribute. The producing data layer allocates both from one id stream, so an `owner_id` never collides across the two categories; `owner_category` remains required because the store's catalog contract still supports independent streams from other producers, and it is still the store's disambiguator."
+          },
+          "owner_type": {
+            "type": "string",
+            "description": "Type name of the owning entity. Descriptive, not part of the series' identity."
+          },
+          "owner_category": {
+            "title": "OwnerCategory",
+            "type": "string",
+            "enum": [
+              "Component",
+              "SupplementalAttribute"
+            ],
+            "description": "Whether the owner is a component or a supplemental attribute."
+          },
+          "time_series_type": {
+            "const": "SingleTimeSeries",
+            "type": "string",
+            "default": "SingleTimeSeries",
+            "description": "Discriminator. Fixed to SingleTimeSeries for this schema, pinned with `const` to match this repo's existing discriminators (Core/common.json's `curve_type`), which generate a plain string literal in both toolchains."
+          },
+          "name": {
+            "type": "string",
+            "description": "Time series name (e.g. max_active_power). Part of the series' identity, and often carrying a disambiguating suffix; `component_field` records what the values are for."
+          },
+          "features": {
+            "title": "TimeSeriesFeatures",
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/$defs/TimeSeriesFeatureValue"
+            },
+            "propertyNames": {
+              "not": {
+                "enum": [
+                  "application_data",
+                  "array_shape",
+                  "association_id",
+                  "component_field",
+                  "count",
+                  "data",
+                  "data_hash",
+                  "dtype",
+                  "element_shape",
+                  "element_type",
+                  "ext",
+                  "features",
+                  "horizon",
+                  "id",
+                  "initial_timestamp",
+                  "interval",
+                  "length",
+                  "name",
+                  "owner_category",
+                  "owner_id",
+                  "owner_type",
+                  "percentiles",
+                  "quantity_kind",
+                  "resolution",
+                  "scenario_count",
+                  "time_reference",
+                  "time_series_type",
+                  "timestamps",
+                  "timestamps_uri",
+                  "unit_system",
+                  "units",
+                  "uri"
+                ]
+              }
+            },
+            "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
+          },
+          "uri": {
+            "type": "string",
+            "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+          },
+          "data_hash": {
+            "type": "string",
+            "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
+          },
+          "element_type": {
+            "title": "ElementType",
+            "type": "string",
+            "description": "What one timestep's values mean and how they are laid out. The physical dtype of the stored bytes derives from this and is not recorded separately. Unlike `units` and `quantity_kind` this is not a user-facing label — the writing package derives it from the array."
+          },
+          "element_shape": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Per-step element shape: the trailing dims after time. An empty array means a scalar element."
+          },
+          "array_shape": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minItems": 1,
+            "description": "Full native shape of the stored array, in the order the store holds it: the first axis is the array's length and the trailing axes end with `element_shape`. Static types are `[length, *element_shape]`; a deterministic forecast stacks windows as `[horizon_count, count, *element_shape]`; probabilistic and scenarios forecasts add a percentile or scenario axis in front of that. Optional, and redundant for the static types, where it is exactly `[length] + element_shape`. It earns its place on the forecasts, whose array layout is a convention the producing package owns rather than a rule this layer enforces, so the stored geometry cannot be reconstructed from `horizon`, `count`, `percentiles`, and `scenario_count` alone. A consumer that has it should prefer it; one that does not falls back to those fields, which is exact for the static types and a best effort for the forecasts."
+          },
+          "units": {
+            "type": "string",
+            "description": "Unit label for the series values. Set by whoever creates the series and returned unchanged; not part of the series' identity, so two series differing only in this label are duplicates. Meaningless on its own when `unit_system` is a per-unit basis, where the values are dimensionless. By convention drawn from the unit vocabulary in Core/units.json, though this field is a free-text label the store does not validate against it."
+          },
+          "quantity_kind": {
+            "type": "string",
+            "description": "Kind of physical quantity the values measure (e.g. ActivePower, ReactivePower, ElectricalEnergy). Coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity kind can. It is also the only record of what the values measure when `unit_system` is a per-unit basis."
+          },
+          "unit_system": {
+            "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a COMPONENT_BASE series back to natural units needs the owning component's base_power. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS.",
+            "enum": [
+              "COMPONENT_BASE",
+              "NATURAL_UNITS"
+            ],
+            "title": "UnitSystem",
+            "type": "string"
+          },
+          "time_reference": {
+            "title": "TimeReference",
+            "type": "string",
+            "description": "How this series' timestamps were spelled, so a read hands back what the write declared instead of relabelling everything UTC. Absent means unspecified, which is not a claim the timestamps were written as UTC."
+          },
+          "component_field": {
+            "type": "string",
+            "description": "The field on the owning component or supplemental attribute whose value these values are the time-varying form of (e.g. max_active_power, rating). Free-form: it names a field in the consumer's own object model. Records what the values are for, where `name` only says which series they are."
+          },
+          "application_data": {
+            "type": "string",
+            "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. Element typing does not belong here — that is `element_type`."
+          },
+          "initial_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "First timestamp of the regular grid; every later step lands at `initial_timestamp + k * resolution`. An RFC3339 string with at most 3 fractional-second digits: the store's floor is one millisecond, matching Julia's millisecond-precision DateTime."
+          },
+          "resolution": {
+            "title": "Period",
+            "type": "string",
+            "description": "Cadence of the regular grid. Always present for a SingleTimeSeries, and part of the series' identity."
+          },
+          "length": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of timesteps."
+          }
+        },
+        "required": [
+          "association_id",
+          "owner_id",
+          "owner_type",
+          "owner_category",
+          "time_series_type",
+          "name",
+          "features",
+          "uri",
+          "element_type",
+          "element_shape",
+          "initial_timestamp",
+          "resolution",
+          "length"
+        ]
+      },
+      "NonSequentialTimeSeries": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "NonSequentialTimeSeries",
+        "type": "object",
+        "description": "An irregular static time series, sampled at explicit timestamps rather than on a grid. Deliberately carries neither `initial_timestamp` nor `resolution`: an irregular series has no fixed cadence and its key holds no timestamp. The timestamp vector itself lives in the store rather than here, content-addressed so that many irregular series sharing one time axis store it once; `timestamps_uri` names which axis this series sits on, so a document plus the store's arrays describe the series completely.",
+        "properties": {
+          "association_id": {
+            "type": "integer",
+            "description": "Surrogate id of this association, minted by the store that holds it. Assigned once when the association is created and never changed: renaming the series or reassigning its owner leaves it alone, so a consumer may persist it as a durable reference. Ids are never reused, and they are store-local — resolve one against the same store the document was exported from, not against an independently built store. Assigned by the store, never by a document author.",
+            "readOnly": true
+          },
+          "owner_id": {
+            "type": "integer",
+            "description": "ID of the owning component or supplemental attribute. The producing data layer allocates both from one id stream, so an `owner_id` never collides across the two categories; `owner_category` remains required because the store's catalog contract still supports independent streams from other producers, and it is still the store's disambiguator."
+          },
+          "owner_type": {
+            "type": "string",
+            "description": "Type name of the owning entity. Descriptive, not part of the series' identity."
+          },
+          "owner_category": {
+            "title": "OwnerCategory",
+            "type": "string",
+            "enum": [
+              "Component",
+              "SupplementalAttribute"
+            ],
+            "description": "Whether the owner is a component or a supplemental attribute."
+          },
+          "time_series_type": {
+            "const": "NonSequentialTimeSeries",
+            "type": "string",
+            "default": "NonSequentialTimeSeries",
+            "description": "Discriminator. Fixed to NonSequentialTimeSeries for this schema, pinned with `const` to match this repo's existing discriminators (Core/common.json's `curve_type`), which generate a plain string literal in both toolchains."
+          },
+          "name": {
+            "type": "string",
+            "description": "Time series name (e.g. max_active_power). Part of the series' identity, and often carrying a disambiguating suffix; `component_field` records what the values are for."
+          },
+          "features": {
+            "title": "TimeSeriesFeatures",
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/$defs/TimeSeriesFeatureValue"
+            },
+            "propertyNames": {
+              "not": {
+                "enum": [
+                  "application_data",
+                  "array_shape",
+                  "association_id",
+                  "component_field",
+                  "count",
+                  "data",
+                  "data_hash",
+                  "dtype",
+                  "element_shape",
+                  "element_type",
+                  "ext",
+                  "features",
+                  "horizon",
+                  "id",
+                  "initial_timestamp",
+                  "interval",
+                  "length",
+                  "name",
+                  "owner_category",
+                  "owner_id",
+                  "owner_type",
+                  "percentiles",
+                  "quantity_kind",
+                  "resolution",
+                  "scenario_count",
+                  "time_reference",
+                  "time_series_type",
+                  "timestamps",
+                  "timestamps_uri",
+                  "unit_system",
+                  "units",
+                  "uri"
+                ]
+              }
+            },
+            "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
+          },
+          "uri": {
+            "type": "string",
+            "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+          },
+          "timestamps_uri": {
+            "type": "string",
+            "description": "Locator for this series' explicit timestamp vector, unique within one store — `uri`'s counterpart for the time axis, with the same contract: no required format, never parsed or interpreted here, and resolved by the backing store (infrastore uses the axis's content hash, the same value it keys the shared vector under). A locator rather than the vector itself because the axis is shared: a cohort of irregular series on one axis names it once each, where inlining the timestamps would repeat the whole vector per row. Optional, so a producer that predates it is still valid, and absent from the other five types, which have no explicit axis. Without it a document cannot say which of the store's axes a row sits on, and the row cannot be reconstructed from the document — the store cannot infer it either, since arrays are content-addressed and two irregular series with identical values on different axes share one stored array. A consumer restoring rows from a document therefore requires it."
+          },
+          "data_hash": {
+            "type": "string",
+            "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
+          },
+          "element_type": {
+            "title": "ElementType",
+            "type": "string",
+            "description": "What one timestep's values mean and how they are laid out. The physical dtype of the stored bytes derives from this and is not recorded separately. Unlike `units` and `quantity_kind` this is not a user-facing label — the writing package derives it from the array."
+          },
+          "element_shape": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Per-step element shape: the trailing dims after time. An empty array means a scalar element."
+          },
+          "array_shape": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minItems": 1,
+            "description": "Full native shape of the stored array, in the order the store holds it: the first axis is the array's length and the trailing axes end with `element_shape`. Static types are `[length, *element_shape]`; a deterministic forecast stacks windows as `[horizon_count, count, *element_shape]`; probabilistic and scenarios forecasts add a percentile or scenario axis in front of that. Optional, and redundant for the static types, where it is exactly `[length] + element_shape`. It earns its place on the forecasts, whose array layout is a convention the producing package owns rather than a rule this layer enforces, so the stored geometry cannot be reconstructed from `horizon`, `count`, `percentiles`, and `scenario_count` alone. A consumer that has it should prefer it; one that does not falls back to those fields, which is exact for the static types and a best effort for the forecasts."
+          },
+          "units": {
+            "type": "string",
+            "description": "Unit label for the series values. Set by whoever creates the series and returned unchanged; not part of the series' identity, so two series differing only in this label are duplicates. Meaningless on its own when `unit_system` is a per-unit basis, where the values are dimensionless. By convention drawn from the unit vocabulary in Core/units.json, though this field is a free-text label the store does not validate against it."
+          },
+          "quantity_kind": {
+            "type": "string",
+            "description": "Kind of physical quantity the values measure (e.g. ActivePower, ReactivePower, ElectricalEnergy). Coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity kind can. It is also the only record of what the values measure when `unit_system` is a per-unit basis."
+          },
+          "unit_system": {
+            "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a COMPONENT_BASE series back to natural units needs the owning component's base_power. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS.",
+            "enum": [
+              "COMPONENT_BASE",
+              "NATURAL_UNITS"
+            ],
+            "title": "UnitSystem",
+            "type": "string"
+          },
+          "time_reference": {
+            "title": "TimeReference",
+            "type": "string",
+            "description": "How this series' timestamps were spelled, so a read hands back what the write declared instead of relabelling everything UTC. Absent means unspecified, which is not a claim the timestamps were written as UTC."
+          },
+          "component_field": {
+            "type": "string",
+            "description": "The field on the owning component or supplemental attribute whose value these values are the time-varying form of (e.g. max_active_power, rating). Free-form: it names a field in the consumer's own object model. Records what the values are for, where `name` only says which series they are."
+          },
+          "application_data": {
+            "type": "string",
+            "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. Element typing does not belong here — that is `element_type`."
+          },
+          "length": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of timesteps. Together with `name` this is what identifies the series: its explicit, strictly-increasing timestamp vector lives in the store, content-addressed so that many irregular series sharing one time axis store it once."
+          }
+        },
+        "required": [
+          "association_id",
+          "owner_id",
+          "owner_type",
+          "owner_category",
+          "time_series_type",
+          "name",
+          "features",
+          "uri",
+          "element_type",
+          "element_shape",
+          "length"
+        ]
+      },
+      "Deterministic": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "Deterministic",
+        "type": "object",
+        "description": "A deterministic forecast: one horizon-length array per window, windows stepping by `interval`. One of a closed set of six canonical time series types owned by the data layer. This schema records the association and its metadata; the dense values live in the store named by `uri`.",
+        "properties": {
+          "association_id": {
+            "type": "integer",
+            "description": "Surrogate id of this association, minted by the store that holds it. Assigned once when the association is created and never changed: renaming the series or reassigning its owner leaves it alone, so a consumer may persist it as a durable reference. Ids are never reused, and they are store-local — resolve one against the same store the document was exported from, not against an independently built store. Assigned by the store, never by a document author.",
+            "readOnly": true
+          },
+          "owner_id": {
+            "type": "integer",
+            "description": "ID of the owning component or supplemental attribute. The producing data layer allocates both from one id stream, so an `owner_id` never collides across the two categories; `owner_category` remains required because the store's catalog contract still supports independent streams from other producers, and it is still the store's disambiguator."
+          },
+          "owner_type": {
+            "type": "string",
+            "description": "Type name of the owning entity. Descriptive, not part of the series' identity."
+          },
+          "owner_category": {
+            "title": "OwnerCategory",
+            "type": "string",
+            "enum": [
+              "Component",
+              "SupplementalAttribute"
+            ],
+            "description": "Whether the owner is a component or a supplemental attribute."
+          },
+          "time_series_type": {
+            "const": "Deterministic",
+            "type": "string",
+            "default": "Deterministic",
+            "description": "Discriminator. Fixed to Deterministic for this schema, pinned with `const` to match this repo's existing discriminators (Core/common.json's `curve_type`), which generate a plain string literal in both toolchains."
+          },
+          "name": {
+            "type": "string",
+            "description": "Time series name (e.g. max_active_power). Part of the series' identity, and often carrying a disambiguating suffix; `component_field` records what the values are for."
+          },
+          "features": {
+            "title": "TimeSeriesFeatures",
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/$defs/TimeSeriesFeatureValue"
+            },
+            "propertyNames": {
+              "not": {
+                "enum": [
+                  "application_data",
+                  "array_shape",
+                  "association_id",
+                  "component_field",
+                  "count",
+                  "data",
+                  "data_hash",
+                  "dtype",
+                  "element_shape",
+                  "element_type",
+                  "ext",
+                  "features",
+                  "horizon",
+                  "id",
+                  "initial_timestamp",
+                  "interval",
+                  "length",
+                  "name",
+                  "owner_category",
+                  "owner_id",
+                  "owner_type",
+                  "percentiles",
+                  "quantity_kind",
+                  "resolution",
+                  "scenario_count",
+                  "time_reference",
+                  "time_series_type",
+                  "timestamps",
+                  "timestamps_uri",
+                  "unit_system",
+                  "units",
+                  "uri"
+                ]
+              }
+            },
+            "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
+          },
+          "uri": {
+            "type": "string",
+            "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+          },
+          "data_hash": {
+            "type": "string",
+            "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
+          },
+          "element_type": {
+            "title": "ElementType",
+            "type": "string",
+            "description": "What one timestep's values mean and how they are laid out. The physical dtype of the stored bytes derives from this and is not recorded separately. Unlike `units` and `quantity_kind` this is not a user-facing label — the writing package derives it from the array."
+          },
+          "element_shape": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Per-step element shape: the trailing dims after time. An empty array means a scalar element."
+          },
+          "array_shape": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minItems": 1,
+            "description": "Full native shape of the stored array, in the order the store holds it: the first axis is the array's length and the trailing axes end with `element_shape`. Static types are `[length, *element_shape]`; a deterministic forecast stacks windows as `[horizon_count, count, *element_shape]`; probabilistic and scenarios forecasts add a percentile or scenario axis in front of that. Optional, and redundant for the static types, where it is exactly `[length] + element_shape`. It earns its place on the forecasts, whose array layout is a convention the producing package owns rather than a rule this layer enforces, so the stored geometry cannot be reconstructed from `horizon`, `count`, `percentiles`, and `scenario_count` alone. A consumer that has it should prefer it; one that does not falls back to those fields, which is exact for the static types and a best effort for the forecasts."
+          },
+          "units": {
+            "type": "string",
+            "description": "Unit label for the series values. Set by whoever creates the series and returned unchanged; not part of the series' identity, so two series differing only in this label are duplicates. Meaningless on its own when `unit_system` is a per-unit basis, where the values are dimensionless. By convention drawn from the unit vocabulary in Core/units.json, though this field is a free-text label the store does not validate against it."
+          },
+          "quantity_kind": {
+            "type": "string",
+            "description": "Kind of physical quantity the values measure (e.g. ActivePower, ReactivePower, ElectricalEnergy). Coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity kind can. It is also the only record of what the values measure when `unit_system` is a per-unit basis."
+          },
+          "unit_system": {
+            "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a COMPONENT_BASE series back to natural units needs the owning component's base_power. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS.",
+            "enum": [
+              "COMPONENT_BASE",
+              "NATURAL_UNITS"
+            ],
+            "title": "UnitSystem",
+            "type": "string"
+          },
+          "time_reference": {
+            "title": "TimeReference",
+            "type": "string",
+            "description": "How this series' timestamps were spelled, so a read hands back what the write declared instead of relabelling everything UTC. Absent means unspecified, which is not a claim the timestamps were written as UTC."
+          },
+          "component_field": {
+            "type": "string",
+            "description": "The field on the owning component or supplemental attribute whose value these values are the time-varying form of (e.g. max_active_power, rating). Free-form: it names a field in the consumer's own object model. Records what the values are for, where `name` only says which series they are."
+          },
+          "application_data": {
+            "type": "string",
+            "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. Element typing does not belong here — that is `element_type`."
+          },
+          "initial_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start of the first forecast window."
+          },
+          "resolution": {
+            "title": "Period",
+            "type": "string",
+            "description": "Cadence within a forecast window. Always present for a forecast, and part of the series' identity."
+          },
+          "horizon": {
+            "title": "Period",
+            "type": "string",
+            "description": "Length of one forecast window. Descriptive, not part of the series' identity."
+          },
+          "interval": {
+            "title": "Period",
+            "type": "string",
+            "description": "Step between the start of consecutive forecast windows. Part of the series' identity: two forecasts of one variable at the same resolution but different intervals — a day-ahead and a real-time forecast — are distinct series. `PT0S` is the canonical interval of a single-window forecast, which has no second window to step to."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of forecast windows. Descriptive, not part of the series' identity."
+          }
+        },
+        "required": [
+          "association_id",
+          "owner_id",
+          "owner_type",
+          "owner_category",
+          "time_series_type",
+          "name",
+          "features",
+          "uri",
+          "element_type",
+          "element_shape",
+          "initial_timestamp",
+          "resolution",
+          "horizon",
+          "interval",
+          "count"
+        ]
+      },
+      "DeterministicSingleTimeSeries": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "DeterministicSingleTimeSeries",
+        "type": "object",
+        "description": "A synthetic deterministic forecast derived from a SingleTimeSeries by `transform_single_time_series`. Field-identical to Deterministic, and it reads back as one; it stays a distinct type because the catalog records which rows are synthetic, and a request for Deterministic matches both while a request for this type narrows to the synthetic ones alone.",
+        "properties": {
+          "association_id": {
+            "type": "integer",
+            "description": "Surrogate id of this association, minted by the store that holds it. Assigned once when the association is created and never changed: renaming the series or reassigning its owner leaves it alone, so a consumer may persist it as a durable reference. Ids are never reused, and they are store-local — resolve one against the same store the document was exported from, not against an independently built store. Assigned by the store, never by a document author.",
+            "readOnly": true
+          },
+          "owner_id": {
+            "type": "integer",
+            "description": "ID of the owning component or supplemental attribute. The producing data layer allocates both from one id stream, so an `owner_id` never collides across the two categories; `owner_category` remains required because the store's catalog contract still supports independent streams from other producers, and it is still the store's disambiguator."
+          },
+          "owner_type": {
+            "type": "string",
+            "description": "Type name of the owning entity. Descriptive, not part of the series' identity."
+          },
+          "owner_category": {
+            "title": "OwnerCategory",
+            "type": "string",
+            "enum": [
+              "Component",
+              "SupplementalAttribute"
+            ],
+            "description": "Whether the owner is a component or a supplemental attribute."
+          },
+          "time_series_type": {
+            "const": "DeterministicSingleTimeSeries",
+            "type": "string",
+            "default": "DeterministicSingleTimeSeries",
+            "description": "Discriminator. Fixed to DeterministicSingleTimeSeries for this schema, pinned with `const` to match this repo's existing discriminators (Core/common.json's `curve_type`), which generate a plain string literal in both toolchains."
+          },
+          "name": {
+            "type": "string",
+            "description": "Time series name (e.g. max_active_power). Part of the series' identity, and often carrying a disambiguating suffix; `component_field` records what the values are for."
+          },
+          "features": {
+            "title": "TimeSeriesFeatures",
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/$defs/TimeSeriesFeatureValue"
+            },
+            "propertyNames": {
+              "not": {
+                "enum": [
+                  "application_data",
+                  "array_shape",
+                  "association_id",
+                  "component_field",
+                  "count",
+                  "data",
+                  "data_hash",
+                  "dtype",
+                  "element_shape",
+                  "element_type",
+                  "ext",
+                  "features",
+                  "horizon",
+                  "id",
+                  "initial_timestamp",
+                  "interval",
+                  "length",
+                  "name",
+                  "owner_category",
+                  "owner_id",
+                  "owner_type",
+                  "percentiles",
+                  "quantity_kind",
+                  "resolution",
+                  "scenario_count",
+                  "time_reference",
+                  "time_series_type",
+                  "timestamps",
+                  "timestamps_uri",
+                  "unit_system",
+                  "units",
+                  "uri"
+                ]
+              }
+            },
+            "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
+          },
+          "uri": {
+            "type": "string",
+            "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+          },
+          "data_hash": {
+            "type": "string",
+            "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
+          },
+          "element_type": {
+            "title": "ElementType",
+            "type": "string",
+            "description": "What one timestep's values mean and how they are laid out. The physical dtype of the stored bytes derives from this and is not recorded separately. Unlike `units` and `quantity_kind` this is not a user-facing label — the writing package derives it from the array."
+          },
+          "element_shape": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Per-step element shape: the trailing dims after time. An empty array means a scalar element."
+          },
+          "array_shape": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minItems": 1,
+            "description": "Full native shape of the stored array, in the order the store holds it: the first axis is the array's length and the trailing axes end with `element_shape`. Static types are `[length, *element_shape]`; a deterministic forecast stacks windows as `[horizon_count, count, *element_shape]`; probabilistic and scenarios forecasts add a percentile or scenario axis in front of that. Optional, and redundant for the static types, where it is exactly `[length] + element_shape`. It earns its place on the forecasts, whose array layout is a convention the producing package owns rather than a rule this layer enforces, so the stored geometry cannot be reconstructed from `horizon`, `count`, `percentiles`, and `scenario_count` alone. A consumer that has it should prefer it; one that does not falls back to those fields, which is exact for the static types and a best effort for the forecasts."
+          },
+          "units": {
+            "type": "string",
+            "description": "Unit label for the series values. Set by whoever creates the series and returned unchanged; not part of the series' identity, so two series differing only in this label are duplicates. Meaningless on its own when `unit_system` is a per-unit basis, where the values are dimensionless. By convention drawn from the unit vocabulary in Core/units.json, though this field is a free-text label the store does not validate against it."
+          },
+          "quantity_kind": {
+            "type": "string",
+            "description": "Kind of physical quantity the values measure (e.g. ActivePower, ReactivePower, ElectricalEnergy). Coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity kind can. It is also the only record of what the values measure when `unit_system` is a per-unit basis."
+          },
+          "unit_system": {
+            "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a COMPONENT_BASE series back to natural units needs the owning component's base_power. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS.",
+            "enum": [
+              "COMPONENT_BASE",
+              "NATURAL_UNITS"
+            ],
+            "title": "UnitSystem",
+            "type": "string"
+          },
+          "time_reference": {
+            "title": "TimeReference",
+            "type": "string",
+            "description": "How this series' timestamps were spelled, so a read hands back what the write declared instead of relabelling everything UTC. Absent means unspecified, which is not a claim the timestamps were written as UTC."
+          },
+          "component_field": {
+            "type": "string",
+            "description": "The field on the owning component or supplemental attribute whose value these values are the time-varying form of (e.g. max_active_power, rating). Free-form: it names a field in the consumer's own object model. Records what the values are for, where `name` only says which series they are."
+          },
+          "application_data": {
+            "type": "string",
+            "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. Element typing does not belong here — that is `element_type`."
+          },
+          "initial_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start of the first forecast window."
+          },
+          "resolution": {
+            "title": "Period",
+            "type": "string",
+            "description": "Cadence within a forecast window. Always present for a forecast, and part of the series' identity."
+          },
+          "horizon": {
+            "title": "Period",
+            "type": "string",
+            "description": "Length of one forecast window. Descriptive, not part of the series' identity."
+          },
+          "interval": {
+            "title": "Period",
+            "type": "string",
+            "description": "Step between the start of consecutive forecast windows. Part of the series' identity: two forecasts of one variable at the same resolution but different intervals — a day-ahead and a real-time forecast — are distinct series. `PT0S` is the canonical interval of a single-window forecast, which has no second window to step to."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of forecast windows. Descriptive, not part of the series' identity."
+          }
+        },
+        "required": [
+          "association_id",
+          "owner_id",
+          "owner_type",
+          "owner_category",
+          "time_series_type",
+          "name",
+          "features",
+          "uri",
+          "element_type",
+          "element_shape",
+          "initial_timestamp",
+          "resolution",
+          "horizon",
+          "interval",
+          "count"
+        ]
+      },
+      "Probabilistic": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "Probabilistic",
+        "type": "object",
+        "description": "A probabilistic forecast: per-percentile, per-window horizon arrays. Adds a percentile axis in front of the deterministic layout.",
+        "properties": {
+          "association_id": {
+            "type": "integer",
+            "description": "Surrogate id of this association, minted by the store that holds it. Assigned once when the association is created and never changed: renaming the series or reassigning its owner leaves it alone, so a consumer may persist it as a durable reference. Ids are never reused, and they are store-local — resolve one against the same store the document was exported from, not against an independently built store. Assigned by the store, never by a document author.",
+            "readOnly": true
+          },
+          "owner_id": {
+            "type": "integer",
+            "description": "ID of the owning component or supplemental attribute. The producing data layer allocates both from one id stream, so an `owner_id` never collides across the two categories; `owner_category` remains required because the store's catalog contract still supports independent streams from other producers, and it is still the store's disambiguator."
+          },
+          "owner_type": {
+            "type": "string",
+            "description": "Type name of the owning entity. Descriptive, not part of the series' identity."
+          },
+          "owner_category": {
+            "title": "OwnerCategory",
+            "type": "string",
+            "enum": [
+              "Component",
+              "SupplementalAttribute"
+            ],
+            "description": "Whether the owner is a component or a supplemental attribute."
+          },
+          "time_series_type": {
+            "const": "Probabilistic",
+            "type": "string",
+            "default": "Probabilistic",
+            "description": "Discriminator. Fixed to Probabilistic for this schema, pinned with `const` to match this repo's existing discriminators (Core/common.json's `curve_type`), which generate a plain string literal in both toolchains."
+          },
+          "name": {
+            "type": "string",
+            "description": "Time series name (e.g. max_active_power). Part of the series' identity, and often carrying a disambiguating suffix; `component_field` records what the values are for."
+          },
+          "features": {
+            "title": "TimeSeriesFeatures",
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/$defs/TimeSeriesFeatureValue"
+            },
+            "propertyNames": {
+              "not": {
+                "enum": [
+                  "application_data",
+                  "array_shape",
+                  "association_id",
+                  "component_field",
+                  "count",
+                  "data",
+                  "data_hash",
+                  "dtype",
+                  "element_shape",
+                  "element_type",
+                  "ext",
+                  "features",
+                  "horizon",
+                  "id",
+                  "initial_timestamp",
+                  "interval",
+                  "length",
+                  "name",
+                  "owner_category",
+                  "owner_id",
+                  "owner_type",
+                  "percentiles",
+                  "quantity_kind",
+                  "resolution",
+                  "scenario_count",
+                  "time_reference",
+                  "time_series_type",
+                  "timestamps",
+                  "timestamps_uri",
+                  "unit_system",
+                  "units",
+                  "uri"
+                ]
+              }
+            },
+            "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
+          },
+          "uri": {
+            "type": "string",
+            "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+          },
+          "data_hash": {
+            "type": "string",
+            "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
+          },
+          "element_type": {
+            "title": "ElementType",
+            "type": "string",
+            "description": "What one timestep's values mean and how they are laid out. The physical dtype of the stored bytes derives from this and is not recorded separately. Unlike `units` and `quantity_kind` this is not a user-facing label — the writing package derives it from the array."
+          },
+          "element_shape": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Per-step element shape: the trailing dims after time. An empty array means a scalar element."
+          },
+          "array_shape": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minItems": 1,
+            "description": "Full native shape of the stored array, in the order the store holds it: the first axis is the array's length and the trailing axes end with `element_shape`. Static types are `[length, *element_shape]`; a deterministic forecast stacks windows as `[horizon_count, count, *element_shape]`; probabilistic and scenarios forecasts add a percentile or scenario axis in front of that. Optional, and redundant for the static types, where it is exactly `[length] + element_shape`. It earns its place on the forecasts, whose array layout is a convention the producing package owns rather than a rule this layer enforces, so the stored geometry cannot be reconstructed from `horizon`, `count`, `percentiles`, and `scenario_count` alone. A consumer that has it should prefer it; one that does not falls back to those fields, which is exact for the static types and a best effort for the forecasts."
+          },
+          "units": {
+            "type": "string",
+            "description": "Unit label for the series values. Set by whoever creates the series and returned unchanged; not part of the series' identity, so two series differing only in this label are duplicates. Meaningless on its own when `unit_system` is a per-unit basis, where the values are dimensionless. By convention drawn from the unit vocabulary in Core/units.json, though this field is a free-text label the store does not validate against it."
+          },
+          "quantity_kind": {
+            "type": "string",
+            "description": "Kind of physical quantity the values measure (e.g. ActivePower, ReactivePower, ElectricalEnergy). Coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity kind can. It is also the only record of what the values measure when `unit_system` is a per-unit basis."
+          },
+          "unit_system": {
+            "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a COMPONENT_BASE series back to natural units needs the owning component's base_power. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS.",
+            "enum": [
+              "COMPONENT_BASE",
+              "NATURAL_UNITS"
+            ],
+            "title": "UnitSystem",
+            "type": "string"
+          },
+          "time_reference": {
+            "title": "TimeReference",
+            "type": "string",
+            "description": "How this series' timestamps were spelled, so a read hands back what the write declared instead of relabelling everything UTC. Absent means unspecified, which is not a claim the timestamps were written as UTC."
+          },
+          "component_field": {
+            "type": "string",
+            "description": "The field on the owning component or supplemental attribute whose value these values are the time-varying form of (e.g. max_active_power, rating). Free-form: it names a field in the consumer's own object model. Records what the values are for, where `name` only says which series they are."
+          },
+          "application_data": {
+            "type": "string",
+            "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. Element typing does not belong here — that is `element_type`."
+          },
+          "initial_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start of the first forecast window."
+          },
+          "resolution": {
+            "title": "Period",
+            "type": "string",
+            "description": "Cadence within a forecast window. Always present for a forecast, and part of the series' identity."
+          },
+          "horizon": {
+            "title": "Period",
+            "type": "string",
+            "description": "Length of one forecast window. Descriptive, not part of the series' identity."
+          },
+          "interval": {
+            "title": "Period",
+            "type": "string",
+            "description": "Step between the start of consecutive forecast windows. Part of the series' identity: two forecasts of one variable at the same resolution but different intervals — a day-ahead and a real-time forecast — are distinct series. `PT0S` is the canonical interval of a single-window forecast, which has no second window to step to."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of forecast windows. Descriptive, not part of the series' identity."
+          },
+          "percentiles": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1,
+            "description": "The percentiles this forecast carries, one per leading axis entry of the stored array."
+          }
+        },
+        "required": [
+          "association_id",
+          "owner_id",
+          "owner_type",
+          "owner_category",
+          "time_series_type",
+          "name",
+          "features",
+          "uri",
+          "element_type",
+          "element_shape",
+          "initial_timestamp",
+          "resolution",
+          "horizon",
+          "interval",
+          "count",
+          "percentiles"
+        ]
+      },
+      "Scenarios": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "Scenarios",
+        "type": "object",
+        "description": "A scenarios forecast: per-scenario, per-window horizon arrays. Adds a scenario axis in front of the deterministic layout.",
+        "properties": {
+          "association_id": {
+            "type": "integer",
+            "description": "Surrogate id of this association, minted by the store that holds it. Assigned once when the association is created and never changed: renaming the series or reassigning its owner leaves it alone, so a consumer may persist it as a durable reference. Ids are never reused, and they are store-local — resolve one against the same store the document was exported from, not against an independently built store. Assigned by the store, never by a document author.",
+            "readOnly": true
+          },
+          "owner_id": {
+            "type": "integer",
+            "description": "ID of the owning component or supplemental attribute. The producing data layer allocates both from one id stream, so an `owner_id` never collides across the two categories; `owner_category` remains required because the store's catalog contract still supports independent streams from other producers, and it is still the store's disambiguator."
+          },
+          "owner_type": {
+            "type": "string",
+            "description": "Type name of the owning entity. Descriptive, not part of the series' identity."
+          },
+          "owner_category": {
+            "title": "OwnerCategory",
+            "type": "string",
+            "enum": [
+              "Component",
+              "SupplementalAttribute"
+            ],
+            "description": "Whether the owner is a component or a supplemental attribute."
+          },
+          "time_series_type": {
+            "const": "Scenarios",
+            "type": "string",
+            "default": "Scenarios",
+            "description": "Discriminator. Fixed to Scenarios for this schema, pinned with `const` to match this repo's existing discriminators (Core/common.json's `curve_type`), which generate a plain string literal in both toolchains."
+          },
+          "name": {
+            "type": "string",
+            "description": "Time series name (e.g. max_active_power). Part of the series' identity, and often carrying a disambiguating suffix; `component_field` records what the values are for."
+          },
+          "features": {
+            "title": "TimeSeriesFeatures",
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/$defs/TimeSeriesFeatureValue"
+            },
+            "propertyNames": {
+              "not": {
+                "enum": [
+                  "application_data",
+                  "array_shape",
+                  "association_id",
+                  "component_field",
+                  "count",
+                  "data",
+                  "data_hash",
+                  "dtype",
+                  "element_shape",
+                  "element_type",
+                  "ext",
+                  "features",
+                  "horizon",
+                  "id",
+                  "initial_timestamp",
+                  "interval",
+                  "length",
+                  "name",
+                  "owner_category",
+                  "owner_id",
+                  "owner_type",
+                  "percentiles",
+                  "quantity_kind",
+                  "resolution",
+                  "scenario_count",
+                  "time_reference",
+                  "time_series_type",
+                  "timestamps",
+                  "timestamps_uri",
+                  "unit_system",
+                  "units",
+                  "uri"
+                ]
+              }
+            },
+            "description": "User-defined key/value tags that are part of the series' identity: two series differing only by a feature are distinct series. Feature names that collide with a field of a series or of the tuple addressing one are rejected."
+          },
+          "uri": {
+            "type": "string",
+            "description": "Locator for the dense data, unique within one store. No required format — typically a file path or an HDF5 dataset path; the backing store decides what it means and resolves it (infrastore uses its content hash as this value). Never parsed or interpreted here. This layer records where the values are, never the values."
+          },
+          "data_hash": {
+            "type": "string",
+            "description": "Content hash of the stored array: SHA-256, hex-encoded. Optional — not every producer computes it."
+          },
+          "element_type": {
+            "title": "ElementType",
+            "type": "string",
+            "description": "What one timestep's values mean and how they are laid out. The physical dtype of the stored bytes derives from this and is not recorded separately. Unlike `units` and `quantity_kind` this is not a user-facing label — the writing package derives it from the array."
+          },
+          "element_shape": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Per-step element shape: the trailing dims after time. An empty array means a scalar element."
+          },
+          "array_shape": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minItems": 1,
+            "description": "Full native shape of the stored array, in the order the store holds it: the first axis is the array's length and the trailing axes end with `element_shape`. Static types are `[length, *element_shape]`; a deterministic forecast stacks windows as `[horizon_count, count, *element_shape]`; probabilistic and scenarios forecasts add a percentile or scenario axis in front of that. Optional, and redundant for the static types, where it is exactly `[length] + element_shape`. It earns its place on the forecasts, whose array layout is a convention the producing package owns rather than a rule this layer enforces, so the stored geometry cannot be reconstructed from `horizon`, `count`, `percentiles`, and `scenario_count` alone. A consumer that has it should prefer it; one that does not falls back to those fields, which is exact for the static types and a best effort for the forecasts."
+          },
+          "units": {
+            "type": "string",
+            "description": "Unit label for the series values. Set by whoever creates the series and returned unchanged; not part of the series' identity, so two series differing only in this label are duplicates. Meaningless on its own when `unit_system` is a per-unit basis, where the values are dimensionless. By convention drawn from the unit vocabulary in Core/units.json, though this field is a free-text label the store does not validate against it."
+          },
+          "quantity_kind": {
+            "type": "string",
+            "description": "Kind of physical quantity the values measure (e.g. ActivePower, ReactivePower, ElectricalEnergy). Coarser than `units` but finer than a dimension: ActivePower, ReactivePower, and ApparentPower share the dimension {M:1,L:2,T:-3}, so a dimension cannot tell them apart and a quantity kind can. It is also the only record of what the values measure when `unit_system` is a per-unit basis."
+          },
+          "unit_system": {
+            "description": "Basis the series values are already expressed in. A declaration, not a conversion: nothing here rescales values, and converting a COMPONENT_BASE series back to natural units needs the owning component's base_power. Absent means unspecified, which is deliberately not the same as NATURAL_UNITS.",
+            "enum": [
+              "COMPONENT_BASE",
+              "NATURAL_UNITS"
+            ],
+            "title": "UnitSystem",
+            "type": "string"
+          },
+          "time_reference": {
+            "title": "TimeReference",
+            "type": "string",
+            "description": "How this series' timestamps were spelled, so a read hands back what the write declared instead of relabelling everything UTC. Absent means unspecified, which is not a claim the timestamps were written as UTC."
+          },
+          "component_field": {
+            "type": "string",
+            "description": "The field on the owning component or supplemental attribute whose value these values are the time-varying form of (e.g. max_active_power, rating). Free-form: it names a field in the consumer's own object model. Records what the values are for, where `name` only says which series they are."
+          },
+          "application_data": {
+            "type": "string",
+            "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. Element typing does not belong here — that is `element_type`."
+          },
+          "initial_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start of the first forecast window."
+          },
+          "resolution": {
+            "title": "Period",
+            "type": "string",
+            "description": "Cadence within a forecast window. Always present for a forecast, and part of the series' identity."
+          },
+          "horizon": {
+            "title": "Period",
+            "type": "string",
+            "description": "Length of one forecast window. Descriptive, not part of the series' identity."
+          },
+          "interval": {
+            "title": "Period",
+            "type": "string",
+            "description": "Step between the start of consecutive forecast windows. Part of the series' identity: two forecasts of one variable at the same resolution but different intervals — a day-ahead and a real-time forecast — are distinct series. `PT0S` is the canonical interval of a single-window forecast, which has no second window to step to."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of forecast windows. Descriptive, not part of the series' identity."
+          },
+          "scenario_count": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Number of scenarios, one per leading axis entry of the stored array. The store's catalog has no column for this and reads it off the array's shape; it is recorded explicitly here because this layer carries no array."
+          }
+        },
+        "required": [
+          "association_id",
+          "owner_id",
+          "owner_type",
+          "owner_category",
+          "time_series_type",
+          "name",
+          "features",
+          "uri",
+          "element_type",
+          "element_shape",
+          "initial_timestamp",
+          "resolution",
+          "horizon",
+          "interval",
+          "count",
+          "scenario_count"
+        ]
+      },
+      "OwnerCategory": {
+        "$ref": "#/$defs/OwnerCategory"
+      },
+      "TimeSeriesFeatures": {
+        "$ref": "#/$defs/TimeSeriesFeatures"
+      },
+      "TimeSeriesFeatureValue": {
+        "$ref": "#/$defs/TimeSeriesFeatureValue"
+      },
+      "ElementType": {
+        "$ref": "#/$defs/ElementType"
+      },
+      "Period": {
+        "$ref": "#/$defs/Period"
+      },
+      "UnitSystem": {
+        "$ref": "#/$defs/UnitSystem"
+      }
+    }
+  },
+  "$defs": {
+    "ElementType": {
+      "title": "ElementType",
+      "type": "string",
+      "description": "Canonical element type of the stored array: a dtype spelling (`f64`, `f32`, `i64`, `i32`, `u64`, `u32`, `u16`, `u8`, `i16`, `i8`, `bool`) for plain scalars, else `tuple(N,dtype)` or a function-data kind (`linear_function`, `quadratic_function`, `piecewise_linear`, `piecewise_step`). It says what one timestep's value means and how it is laid out; the physical dtype of the bytes derives from it rather than being recorded separately. `linear_function` occupies 2 slots, `quadratic_function` 3; the two piecewise kinds are ragged, with the used count in the row's leading element."
+    },
+    "OwnerCategory": {
+      "title": "OwnerCategory",
+      "type": "string",
+      "enum": [
+        "Component",
+        "SupplementalAttribute"
+      ],
+      "description": "Whether a time series' owner is a component or a supplemental attribute. The producing data layer allocates both kinds of id from one stream, so an owner_id never names one of each; the category is required regardless, because the store's catalog contract still supports independent streams from other producers and remains the store's disambiguator. These are the display and serde spellings; the store's catalog holds them as the integer codes 0 and 1."
+    },
+    "Period": {
+      "title": "Period",
+      "type": "string",
+      "description": "A time period as an ISO-8601 duration string, used for `resolution`, `horizon`, and `interval`. Two kinds, which are never equal even when their spans coincide: fixed spans (`PT1H`, `PT5M`, down to a one-millisecond floor of `PT0.001S`) and calendar spans (`P1M`, `P1Y`), whose length depends on the calendar. `PT0S` is the canonical interval of a single-window forecast. More than three fractional-second digits is rejected, so a series on a grid finer than a millisecond is not storable at all rather than storable and unreadable."
+    },
+    "TimeSeriesFeatureValue": {
+      "title": "TimeSeriesFeatureValue",
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "One feature value. Four kinds, matching the backing store's feature-value type: int, float, bool, str. `anyOf` rather than `oneOf` is required, not stylistic: JSON Schema's `integer` is a subset of `number`, so an integer instance matches both branches and `oneOf` — which demands exactly one match — would reject every integer feature. A float feature is compared and hashed by its bit pattern rather than by IEEE comparison, so 0.0 and -0.0 are two different series; NaN and negative zero are rejected on write because the catalog cannot store either faithfully."
+    },
+    "TimeSeriesFeatures": {
+      "title": "TimeSeriesFeatures",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/TimeSeriesFeatureValue"
+      },
+      "propertyNames": {
+        "not": {
+          "enum": [
+            "application_data",
+            "array_shape",
+            "association_id",
+            "component_field",
+            "count",
+            "data",
+            "data_hash",
+            "dtype",
+            "element_shape",
+            "element_type",
+            "ext",
+            "features",
+            "horizon",
+            "id",
+            "initial_timestamp",
+            "interval",
+            "length",
+            "name",
+            "owner_category",
+            "owner_id",
+            "owner_type",
+            "percentiles",
+            "quantity_kind",
+            "resolution",
+            "scenario_count",
+            "time_reference",
+            "time_series_type",
+            "timestamps",
+            "timestamps_uri",
+            "unit_system",
+            "units",
+            "uri"
+          ]
+        }
+      },
+      "description": "User-defined key/value tags forming part of a series' identity. A map, matching the backing store's feature-map type (a BTreeMap whose sort order is load-bearing, because the hash of the feature map keys the catalog's uniqueness index). The excluded property names each already name a field of a time series or of the tuple that addresses one: consumers routinely spread a feature map into keyword arguments, where a feature called `name` or `resolution` would shadow the real field and silently change what a query means. The comparison is exact and case-sensitive — `resolution` is reserved, `Resolution` is not."
+    },
+    "UnitSystem": {
+      "description": "Unit basis a stored value is expressed in. COMPONENT_BASE: per-unit against a base the component records itself. NATURAL_UNITS: the quantity's own physical unit. No system-wide option: a value per-unitized against a shared base records that base on the component and rides as COMPONENT_BASE. Used in three scopes, each read against its own record rather than a document-wide table: a component's own `power_units` (against that component's `base_power`), a cost payload's own `power_units` (e.g. `CostCurve`, against the owning component's `base_power`), and a time series association's own `unit_system` (governing only that one series).",
+      "enum": [
+        "COMPONENT_BASE",
+        "NATURAL_UNITS"
+      ],
+      "title": "UnitSystem",
+      "type": "string"
+    }
+  }
+}

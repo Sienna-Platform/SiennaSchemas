@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of Hybrid Current Controller Limiter. Regulates the magnitude of the inverter output current, but with a closed loop feedback regulated by a virtual impedance which provides ant-windup. Described in: Novel Hybrid Current Limiter for Grid-Forming Inverter Control During Unbalanced Faults by Baeckland and Seo, 2023",
+  "properties": {
+    "I_max": {
+      "description": "Maximum limit on current controller input current",
+      "type": "number"
+    },
+    "rv": {
+      "description": "Real part of the virtual impedance",
+      "type": "number"
+    },
+    "lv": {
+      "description": "Imaginary part of the virtual impedance",
+      "type": "number"
+    }
+  },
+  "required": [
+    "I_max",
+    "rv",
+    "lv"
+  ],
+  "title": "HybridOutputCurrentLimiter",
+  "type": "object"
+}

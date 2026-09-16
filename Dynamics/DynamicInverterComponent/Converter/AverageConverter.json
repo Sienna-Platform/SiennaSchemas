@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of an average converter model",
+  "properties": {
+    "rated_voltage": {
+      "description": "Rated voltage (V)",
+      "type": "number"
+    },
+    "rated_current": {
+      "description": "Rated current (A)",
+      "type": "number"
+    }
+  },
+  "required": [
+    "rated_voltage",
+    "rated_current"
+  ],
+  "title": "AverageConverter",
+  "type": "object"
+}

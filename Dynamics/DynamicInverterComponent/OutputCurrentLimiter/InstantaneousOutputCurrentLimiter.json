@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of Instantaneous (Square) Current Controller Limiter. Regulates inverter output current on the d and q axis separately",
+  "properties": {
+    "Id_max": {
+      "description": "Maximum limit on d-axis current controller input current",
+      "type": "number"
+    },
+    "Iq_max": {
+      "description": "Maximum limit on q-axis current controller input current",
+      "type": "number"
+    }
+  },
+  "required": [
+    "Id_max",
+    "Iq_max"
+  ],
+  "title": "InstantaneousOutputCurrentLimiter",
+  "type": "object"
+}

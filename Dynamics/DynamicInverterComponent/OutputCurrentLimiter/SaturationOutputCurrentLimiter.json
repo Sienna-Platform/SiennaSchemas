@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of Saturation Current Controller Limiter. Regulates the magnitude of the inverter output current, and applies a closed loop feedback regulated by a static gain which provides ant-windup",
+  "properties": {
+    "I_max": {
+      "description": "Maximum limit on current controller input current",
+      "type": "number"
+    },
+    "kw": {
+      "description": "Defined feedback gain",
+      "type": "number"
+    }
+  },
+  "required": [
+    "I_max",
+    "kw"
+  ],
+  "title": "SaturationOutputCurrentLimiter",
+  "type": "object"
+}

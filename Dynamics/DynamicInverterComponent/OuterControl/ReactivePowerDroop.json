@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "kq": {
+      "type": "number"
+    },
+    "omegaf": {
+      "type": "number"
+    },
+    "V_ref": {
+      "type": "number",
+      "default": 1.0
+    }
+  },
+  "required": [
+    "kq",
+    "omegaf"
+  ],
+  "title": "ReactivePowerDroop",
+  "type": "object"
+}

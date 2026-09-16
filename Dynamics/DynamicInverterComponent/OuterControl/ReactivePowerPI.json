@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "Kp_q": {
+      "type": "number"
+    },
+    "Ki_q": {
+      "type": "number"
+    },
+    "omegaf": {
+      "type": "number"
+    },
+    "V_ref": {
+      "type": "number",
+      "default": 1.0
+    },
+    "Q_ref": {
+      "type": "number",
+      "default": 1.0
+    }
+  },
+  "required": [
+    "Kp_q",
+    "Ki_q",
+    "omegaf"
+  ],
+  "title": "ReactivePowerPI",
+  "type": "object"
+}

@@ -8,17 +8,89 @@
   "paths": {},
   "components": {
     "schemas": {
-      "ActiveRenewableControllerAB": {
-        "$ref": "Dynamics/DynamicInverterComponent/ActiveRenewableControllerAB.json"
-      },
-      "RECurrentControlB": {
-        "$ref": "Dynamics/DynamicInverterComponent/RECurrentControlB.json"
-      },
-      "ReactiveRenewableControllerAB": {
-        "$ref": "Dynamics/DynamicInverterComponent/ReactiveRenewableControllerAB.json"
+      "AverageConverter": {
+        "$ref": "Dynamics/DynamicInverterComponent/Converter/AverageConverter.json"
       },
       "RenewableEnergyConverterTypeA": {
-        "$ref": "Dynamics/DynamicInverterComponent/RenewableEnergyConverterTypeA.json"
+        "$ref": "Dynamics/DynamicInverterComponent/Converter/RenewableEnergyConverterTypeA.json"
+      },
+      "RenewableEnergyVoltageConverterTypeA": {
+        "$ref": "Dynamics/DynamicInverterComponent/Converter/RenewableEnergyVoltageConverterTypeA.json"
+      },
+      "FixedDCSource": {
+        "$ref": "Dynamics/DynamicInverterComponent/DCSource/FixedDCSource.json"
+      },
+      "ZeroOrderBESS": {
+        "$ref": "Dynamics/DynamicInverterComponent/DCSource/ZeroOrderBESS.json"
+      },
+      "LCFilter": {
+        "$ref": "Dynamics/DynamicInverterComponent/Filter/LCFilter.json"
+      },
+      "LCLFilter": {
+        "$ref": "Dynamics/DynamicInverterComponent/Filter/LCLFilter.json"
+      },
+      "RLFilter": {
+        "$ref": "Dynamics/DynamicInverterComponent/Filter/RLFilter.json"
+      },
+      "FixedFrequency": {
+        "$ref": "Dynamics/DynamicInverterComponent/FrequencyEstimator/FixedFrequency.json"
+      },
+      "KauraPLL": {
+        "$ref": "Dynamics/DynamicInverterComponent/FrequencyEstimator/KauraPLL.json"
+      },
+      "ReducedOrderPLL": {
+        "$ref": "Dynamics/DynamicInverterComponent/FrequencyEstimator/ReducedOrderPLL.json"
+      },
+      "CurrentModeControl": {
+        "$ref": "Dynamics/DynamicInverterComponent/InnerControl/CurrentModeControl.json"
+      },
+      "RECurrentControlB": {
+        "$ref": "Dynamics/DynamicInverterComponent/InnerControl/RECurrentControlB.json"
+      },
+      "VoltageModeControl": {
+        "$ref": "Dynamics/DynamicInverterComponent/InnerControl/VoltageModeControl.json"
+      },
+      "ActivePowerDroop": {
+        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ActivePowerDroop.json"
+      },
+      "ActivePowerPI": {
+        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ActivePowerPI.json"
+      },
+      "ActiveRenewableControllerAB": {
+        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ActiveRenewableControllerAB.json"
+      },
+      "ActiveVirtualOscillator": {
+        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ActiveVirtualOscillator.json"
+      },
+      "ReactivePowerDroop": {
+        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ReactivePowerDroop.json"
+      },
+      "ReactivePowerPI": {
+        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ReactivePowerPI.json"
+      },
+      "ReactiveRenewableControllerAB": {
+        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ReactiveRenewableControllerAB.json"
+      },
+      "ReactiveVirtualOscillator": {
+        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ReactiveVirtualOscillator.json"
+      },
+      "VirtualInertia": {
+        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/VirtualInertia.json"
+      },
+      "HybridOutputCurrentLimiter": {
+        "$ref": "Dynamics/DynamicInverterComponent/OutputCurrentLimiter/HybridOutputCurrentLimiter.json"
+      },
+      "InstantaneousOutputCurrentLimiter": {
+        "$ref": "Dynamics/DynamicInverterComponent/OutputCurrentLimiter/InstantaneousOutputCurrentLimiter.json"
+      },
+      "MagnitudeOutputCurrentLimiter": {
+        "$ref": "Dynamics/DynamicInverterComponent/OutputCurrentLimiter/MagnitudeOutputCurrentLimiter.json"
+      },
+      "PriorityOutputCurrentLimiter": {
+        "$ref": "Dynamics/DynamicInverterComponent/OutputCurrentLimiter/PriorityOutputCurrentLimiter.json"
+      },
+      "SaturationOutputCurrentLimiter": {
+        "$ref": "Dynamics/DynamicInverterComponent/OutputCurrentLimiter/SaturationOutputCurrentLimiter.json"
       },
       "RoundRotorMachine": {
         "$ref": "Dynamics/DynamicGeneratorComponent/RoundRotorMachine.json"

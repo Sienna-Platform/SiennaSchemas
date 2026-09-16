@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "Kp_p": {
+      "type": "number"
+    },
+    "Ki_p": {
+      "type": "number"
+    },
+    "omegaz": {
+      "type": "number"
+    },
+    "P_ref": {
+      "type": "number",
+      "default": 1.0
+    }
+  },
+  "required": [
+    "Kp_p",
+    "Ki_p",
+    "omegaz"
+  ],
+  "title": "ActivePowerPI",
+  "type": "object"
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of a Phase-Locked Loop (PLL) based on 'Operation of a phase locked loop system under distorted utility conditions' by Vikram Kaura, and Vladimir Blasko",
+  "properties": {
+    "omega_lp": {
+      "description": "PLL low-pass filter frequency",
+      "type": "number"
+    },
+    "kp_pll": {
+      "description": "PLL proportional gain",
+      "type": "number"
+    },
+    "ki_pll": {
+      "description": "PLL integral gain",
+      "type": "number"
+    }
+  },
+  "required": [
+    "omega_lp",
+    "kp_pll",
+    "ki_pll"
+  ],
+  "title": "KauraPLL",
+  "type": "object"
+}
