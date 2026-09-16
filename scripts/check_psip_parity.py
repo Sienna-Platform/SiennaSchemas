@@ -48,7 +48,15 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # IS implementation details. PSIP declares them on every type; SiennaSchemas
 # stores `ext` separately and never serializes `internal`, so they appear in
 # zero schema files here. Excluded from both sides of every comparison.
-EXCLUDED_FIELDS = {"ext", "internal"}
+#
+# `requirements` joins them for the same reason: it is PSIP's *in-memory* view of a link the
+# document stores as a table. A technology holds `requirements::Vector{Requirement}`, and
+# `_export_requirements_associations!` turns that vector into
+# `PortfolioDocument.requirements_associations` rows on the way out, while
+# `load_requirements_associations!` reads the rows back and calls `set_requirements!`. So the
+# schema deliberately has no `requirements` property -- the membership is the association
+# table -- and the field is not drift.
+EXCLUDED_FIELDS = {"ext", "internal", "requirements"}
 
 # Schema components with no descriptor entry. These are plain Julia structs
 # (src/models/financial_data/, src/portfolio.jl) rather than descriptor-generated
