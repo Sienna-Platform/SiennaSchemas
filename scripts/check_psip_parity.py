@@ -48,7 +48,15 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # IS implementation details. PSIP declares them on every type; SiennaSchemas
 # stores `ext` separately and never serializes `internal`, so they appear in
 # zero schema files here. Excluded from both sides of every comparison.
-EXCLUDED_FIELDS = {"ext", "internal"}
+#
+# `requirements` joins them for the same reason: it is PSIP's *in-memory* view of a link the
+# document stores as a table. A technology holds `requirements::Vector{Requirement}`, and
+# `_export_requirements_associations!` turns that vector into
+# `PortfolioDocument.requirements_associations` rows on the way out, while
+# `load_requirements_associations!` reads the rows back and calls `set_requirements!`. So the
+# schema deliberately has no `requirements` property -- the membership is the association
+# table -- and the field is not drift.
+EXCLUDED_FIELDS = {"ext", "internal", "requirements"}
 
 # Schema components with no descriptor entry. These are plain Julia structs
 # (src/models/financial_data/, src/portfolio.jl) rather than descriptor-generated
@@ -70,6 +78,12 @@ FINANCIAL_FIELDS = {
         "tax_rate",
     ],
 }
+
+# Schema components that are association *rows* rather than components: they link two
+# entities and live in the document's own association tables, so PSIP carries them as
+# InfrastructureSystems-level rows rather than descriptor-generated structs. Absent from the
+# descriptor by design, exactly as the financial types above are.
+ASSOCIATION_ROWS = {"RequirementAssociation"}
 
 DESCRIPTOR_RELPATH = os.path.join("src", "descriptors", "SiennaInvestSchema.json")
 
@@ -161,9 +175,22 @@ def load_schema_components():
 DIMENSIONLESS_UNITS = {"1", ""}
 
 
+# PSIP suffixes a `conversion_unit` symbol to distinguish unit *categories* that share one
+# physical unit -- `:usd_per_mwh_scalar` is `ENERGY_COST_SCALAR` in PSIP's own
+# `_unit_category`, physically USD/MWh, as against the `:usd_per_mwh` used for curve-valued
+# fields. The category is a PSIP dispatch concern with no counterpart in `x-unit`, which
+# states the physical unit only, so it is stripped before comparing. Listed explicitly rather
+# than stripped by pattern: an unrecognized suffix is a real disagreement and must still fail.
+UNIT_CATEGORY_SUFFIXES = ("_scalar",)
+
+
 def normalize_unit(value):
     """Canonical form for comparing a `conversion_unit` symbol with an `x-unit` string."""
-    return value.lstrip(":").replace("_per_", "/").lower()
+    normalized = value.lstrip(":").replace("_per_", "/").lower()
+    for suffix in UNIT_CATEGORY_SUFFIXES:
+        if normalized.endswith(suffix):
+            return normalized[: -len(suffix)]
+    return normalized
 
 
 def check_unit_parity(name, psip_specs, schema_specs):
@@ -239,7 +266,7 @@ def main():
         missing_schemas += 1
 
     for title in sorted(set(components) - set(psip_types)):
-        if title in FINANCIAL_FIELDS:
+        if title in FINANCIAL_FIELDS or title in ASSOCIATION_ROWS:
             continue
         print(f"MISSING STRUCT {title}")
         drifts += 1

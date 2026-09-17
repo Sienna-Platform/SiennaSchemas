@@ -44,14 +44,14 @@
       }
     },
     "supplemental_attributes": {
-      "description": "Supplemental attributes in one flat array rather than bucketed by type: nothing iterates them per type, and `supplemental_attribute_associations` carries both the link and the `attribute_type` discriminator a consumer needs to pick a converter. Examples: RetirementPotential, RetrofitPotential, ExistingDevices, TopologyMapping.",
+      "description": "Supplemental attributes in one flat array rather than bucketed by type: nothing iterates them per type, and `supplemental_attribute_associations` carries both the link and the `attribute_type` discriminator a consumer needs to pick a converter. Examples: RetirementPotential, RetrofitPotential, ExistingDevices.",
       "type": "array",
       "items": {
         "type": "object"
       }
     },
     "supplemental_attribute_associations": {
-      "description": "Links each supplemental attribute (e.g. RetirementPotential, TopologyMapping) to the entity it describes. One row per (attribute, entity) pair.",
+      "description": "Links each supplemental attribute (e.g. RetirementPotential, ExistingDevices) to the entity it describes. One row per (attribute, entity) pair.",
       "type": "array",
       "items": {
         "$ref": "../Core/Associations/SupplementalAttributeAssociation.json"

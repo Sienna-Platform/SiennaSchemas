@@ -5,6 +5,29 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project is pre-1.0; any release may change schemas incompatibly.
 
+## [Unreleased]
+
+### Removed
+
+- `Investments/SupplementalAttributes/TopologyMapping.json`, and its entry in the
+  `openapi-investments` selector.
+
+  It stored "the mapping between a zone and the associated buses in the base system" — and
+  neither half of that is the portfolio's to record any more. A portfolio has no `Zone`: the
+  schema never defined one, and `PowerSystemsInvestmentsPortfolios.jl` is removing its own
+  `Node`/`Zone` in favour of using the base system's topology directly. The buses are in the
+  base system, where each `ACBus` already names its `area`, so a `TopologyMapping` restated
+  that membership in a second place nothing kept in sync.
+
+  It was also the only supplemental attribute that would have had to describe a component in
+  a *different* document. `PowerOpenAPIModels.jl`'s `add_supplemental_attribute!` rejects a
+  component id that is not in the document it is adding to, so the attribute had no
+  attachable target once `Zone` was gone.
+
+  Nothing produced it: the RTS-GMLC tutorials emit none in either language, and the PSIP
+  parity gate now reports `TopologyMapping` alongside `Node` and `Zone` as PSIP-side types
+  pending removal.
+
 ## [0.1.0] - 2026-09-12
 
 First release. Definitions for the power system data model, in six groups — grid topology and

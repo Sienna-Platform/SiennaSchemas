@@ -71,9 +71,6 @@
       "TechnologyFinancialData": {
         "$ref": "Investments/Financials/TechnologyFinancialData.json"
       },
-      "TopologyMapping": {
-        "$ref": "Investments/SupplementalAttributes/TopologyMapping.json"
-      },
       "AverageRateCurve": {
         "$ref": "Core/common.json#/$defs/AverageRateCurve"
       },
