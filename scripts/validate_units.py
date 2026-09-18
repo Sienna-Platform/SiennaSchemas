@@ -789,7 +789,15 @@ def check_metaschema(doc, source_file, failures):
 # ". " is deliberately NOT required: existing canonical descriptions run prose
 # straight into the sentence (".. to be nothing Units: MVAr."), so demanding a
 # boundary there would break idempotency of --fix-descriptions.
-_UNITS_SENTENCE_RE = re.compile(r"Units:(?:(?!\. ).)*\.\s*$", re.DOTALL)
+#
+# The terminal period is OPTIONAL for the same reason. A description ending
+# "Units: s" with no period is not canonical, but it is still a units sentence,
+# and requiring the period made the strip miss it: --fix-descriptions then
+# appended a second sentence instead of replacing the first, turning
+# "Lag time constant. Units: s" into "Lag time constant. Units: s Units: s.".
+# Running the documented repair made the file worse, and --check-descriptions
+# stayed red however many times it was run.
+_UNITS_SENTENCE_RE = re.compile(r"Units:(?:(?!\. ).)*?\.?\s*$", re.DOTALL)
 
 
 def _units_value(value):
