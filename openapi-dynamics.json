@@ -20,14 +20,182 @@
       "RenewableEnergyConverterTypeA": {
         "$ref": "Dynamics/DynamicInverterComponent/RenewableEnergyConverterTypeA.json"
       },
-      "RoundRotorMachine": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/RoundRotorMachine.json"
+      "AVRFixed": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/AVRFixed.json"
+      },
+      "AVRSimple": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/AVRSimple.json"
+      },
+      "AVRTypeI": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/AVRTypeI.json"
+      },
+      "AVRTypeII": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/AVRTypeII.json"
+      },
+      "ESAC1A": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ESAC1A.json"
+      },
+      "ESAC6A": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ESAC6A.json"
+      },
+      "ESAC8B": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ESAC8B.json"
+      },
+      "ESDC1A": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ESDC1A.json"
+      },
+      "ESDC2A": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ESDC2A.json"
+      },
+      "ESST1A": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ESST1A.json"
+      },
+      "ESST4B": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ESST4B.json"
+      },
+      "EX4VSA": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/EX4VSA.json"
+      },
+      "EXAC1": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/EXAC1.json"
+      },
+      "EXAC1A": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/EXAC1A.json"
+      },
+      "EXAC2": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/EXAC2.json"
+      },
+      "EXPIC1": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/EXPIC1.json"
+      },
+      "EXST1": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/EXST1.json"
+      },
+      "IEEET1": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/IEEET1.json"
+      },
+      "SCRX": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/SCRX.json"
       },
       "SEXS": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/SEXS.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/SEXS.json"
+      },
+      "ST6B": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ST6B.json"
+      },
+      "ST8C": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ST8C.json"
+      },
+      "AndersonFouadMachine": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/AndersonFouadMachine.json"
+      },
+      "BaseMachine": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/BaseMachine.json"
+      },
+      "FullMachine": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/FullMachine.json"
+      },
+      "MarconatoMachine": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/MarconatoMachine.json"
+      },
+      "OneDOneQMachine": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/OneDOneQMachine.json"
+      },
+      "RoundRotorExponential": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/RoundRotorExponential.json"
+      },
+      "RoundRotorMachine": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/RoundRotorMachine.json"
+      },
+      "RoundRotorQuadratic": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/RoundRotorQuadratic.json"
+      },
+      "SalientPoleExponential": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/SalientPoleExponential.json"
+      },
+      "SalientPoleMachine": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/SalientPoleMachine.json"
+      },
+      "SalientPoleQuadratic": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/SalientPoleQuadratic.json"
+      },
+      "SauerPaiMachine": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/SauerPaiMachine.json"
+      },
+      "SimpleAFMachine": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/SimpleAFMachine.json"
+      },
+      "SimpleFullMachine": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/SimpleFullMachine.json"
+      },
+      "SimpleMarconatoMachine": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/SimpleMarconatoMachine.json"
+      },
+      "IEEEST": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/PSS/IEEEST.json"
+      },
+      "PSS2A": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/PSS/PSS2A.json"
+      },
+      "PSS2B": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/PSS/PSS2B.json"
+      },
+      "PSS2C": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/PSS/PSS2C.json"
+      },
+      "PSSFixed": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/PSS/PSSFixed.json"
+      },
+      "PSSSimple": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/PSS/PSSSimple.json"
+      },
+      "STAB1": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/PSS/STAB1.json"
+      },
+      "FiveMassShaft": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Shaft/FiveMassShaft.json"
+      },
+      "SingleMass": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/Shaft/SingleMass.json"
+      },
+      "DEGOV": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/DEGOV.json"
+      },
+      "DEGOV1": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/DEGOV1.json"
+      },
+      "GasTG": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/GasTG.json"
+      },
+      "GeneralGovModel": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/GeneralGovModel.json"
+      },
+      "HydroTurbineGov": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/HydroTurbineGov.json"
+      },
+      "IEEETurbineGov1": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/IEEETurbineGov1.json"
+      },
+      "PIDGOV": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/PIDGOV.json"
       },
       "SteamTurbineGov1": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/SteamTurbineGov1.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/SteamTurbineGov1.json"
+      },
+      "TGFixed": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/TGFixed.json"
+      },
+      "TGSimple": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/TGSimple.json"
+      },
+      "TGTypeI": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/TGTypeI.json"
+      },
+      "TGTypeII": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/TGTypeII.json"
+      },
+      "WPIDHY": {
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/WPIDHY.json"
       },
       "DbdPnts": {
         "$ref": "Core/common.json#/$defs/DbdPnts"
@@ -37,6 +205,9 @@
       },
       "MinMax": {
         "$ref": "Core/common.json#/$defs/MinMax"
+      },
+      "UpDown": {
+        "$ref": "Core/common.json#/$defs/UpDown"
       }
     }
   }

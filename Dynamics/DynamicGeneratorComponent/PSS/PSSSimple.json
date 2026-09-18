@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameters of a PSS that returns a proportional droop voltage to add to the reference for the AVR",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "K_omega": {
+      "description": "Proportional gain for frequency",
+      "type": "number"
+    },
+    "K_p": {
+      "description": "Proportional gain for active power",
+      "type": "number"
+    } 
+  },
+  "required": [
+    "id",
+    "K_omega",
+    "K_p"
+  ],
+  "title": "PSSSimple",
+  "type": "object"
+}

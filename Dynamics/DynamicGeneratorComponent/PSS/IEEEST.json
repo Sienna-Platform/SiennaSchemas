@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "IEEE stabilizing model PSS",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "input_code": {
+      "description": "Code input for stabilizer",
+      "type": "integer"
+    },
+    "remote_bus_control": {
+      "description": "ACBus identification number for control. 0 identifies the bus connected to this component",
+      "type": "integer"
+    },
+    "A1": {
+      "description": "Filter coefficient",
+      "type": "number"
+    },
+    "A2": {
+      "description": "Filter coefficient",
+      "type": "number"
+    },
+    "A3": {
+      "description": "Filter coefficient",
+      "type": "number"
+    },
+    "A4": {
+      "description": "Filter coefficient",
+      "type": "number"
+    },
+    "A5": {
+      "description": "Filter coefficient",
+      "type": "number"
+    },
+    "A6": {
+      "description": "Filter coefficient",
+      "type": "number"
+    },
+    "T1": {
+      "description": "Time constant",
+      "type": "number"
+    },
+    "T2": {
+      "description": "Time constant",
+      "type": "number"
+    },
+    "T3": {
+      "description": "Time constant",
+      "type": "number"
+    },
+    "T4": {
+      "description": "Time constant",
+      "type": "number"
+    },
+    "T5": {
+      "description": "Time constant",
+      "type": "number"
+    },
+    "T6": {
+      "description": "Time constant",
+      "type": "number"
+    },
+    "Ks": {
+      "description": "Proportional gain",
+      "type": "number"
+    },
+    "Ls_lim": {
+      "type": "array",
+      "description": "PSS output limits for regulator output (Ls_min, Ls_max)",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "Vcu": {
+      "description": "Cutoff limiter upper bound",
+      "type": "number"
+    },
+    "Vcl": {
+      "description": "Cutoff limiter lower bound",
+      "type": "number"
+    }  
+  },
+  "required": [
+    "id",
+    "input_code",
+    "remote_bus_control",
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A5",
+    "A6",
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "Ks",
+    "Ls_lim",
+    "Vcu",
+    "Vcl"
+  ],
+  "title": "IEEEST",
+  "type": "object"
+}

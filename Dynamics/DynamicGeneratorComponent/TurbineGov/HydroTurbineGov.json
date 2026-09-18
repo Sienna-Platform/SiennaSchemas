@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Hydro turbine-governor",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "R": {
+      "description": "Permanent droop parameter",
+      "type": "number"
+    },
+    "r": {
+      "description": "Temporary droop",
+      "type": "number"
+    },
+    "Tr": {
+      "description": "Governor time constant",
+      "type": "number"
+    },
+    "Tf": {
+      "description": "Filter time constant",
+      "type": "number"
+    },
+    "Tg": {
+      "description": "Servo time constant",
+      "type": "number"
+    },
+    "VELM": {
+      "description": "Gate velocity limit",
+      "type": "number"
+    },
+    "gate_position_limits": {
+      "description": "Gate position limits",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "Tw": {
+      "description": "Water time constant",
+      "type": "number"
+    },
+    "At": {
+      "description": "Turbine gain",
+      "type": "number"
+    },
+    "D_T": {
+      "description": "Turbine damping",
+      "type": "number"
+    },
+    "q_nl": {
+      "description": "No power flow",
+      "type": "number"
+    },
+    "P_ref": {
+      "description": "Reference load set-point",
+      "default": "1.0",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "R",
+    "r",
+    "Tr",
+    "Tf",
+    "Tg",
+    "VELM",
+    "gate_position_limits",
+    "Tw",
+    "At",
+    "D_T",
+    "q_nl"
+  ],
+  "title": "HydroTurbineGov",
+  "type": "object"
+}

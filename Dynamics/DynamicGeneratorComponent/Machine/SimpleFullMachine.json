@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameter of a full order flux stator-rotor model without zero sequence flux in the stator. The derivative of stator fluxes (ψd and ψq) is neglected. This is standard when transmission network dynamics is neglected. Only one q-axis damping circuit is considered. All per unit are in machine per unit. Refer to Chapter 3 of Power System Stability and Control by P. Kundur or Chapter 11 of Power System Dynamics: Stability and Control, by J. Machowski, J. Bialek and J. Bumby, for more details. Note that the models are somewhat different (but equivalent) due to the different Park Transformation used in both books",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "R": {
+      "description": "Resistance after EMF",
+      "type": "number"
+    },
+    "R_f": {
+      "description": "Field motor winding resistance",
+      "type": "number"
+    },
+    "R_1d": {
+      "description": "Damping rotor winding resistance on d-axis, denoted as RD in Machowski",
+      "type": "number"
+    },
+    "R_1q": {
+      "description": "Damping rotor winding resistance on q-axis, denoted as RQ in Machowski",
+      "type": "number"
+    },
+    "L_d": {
+      "description": "Inductance of fictitious damping that represent the effect of the three-phase stator winding in the d-axis of the rotor, in per unit. This value is denoted as Lad + Ll in Kundur (and Ld in Machowski)",
+      "type": "number"
+    },
+    "L_q": {
+      "description": "Inductance of fictitious damping that represent the effect of the three-phase stator winding in the q-axis of the rotor, in per unit. This value is denoted as Laq + Ll in Kundur",
+      "type": "number"
+    },
+    "L_ad": {
+      "description": "Mutual inductance between stator winding and rotor field (and damping) winding inductance on d-axis",
+      "type": "number"
+    },
+    "L_aq": {
+      "description": "Mutual inductance between stator winding and rotor damping winding inductance on q-axi",
+      "type": "number"
+    },
+    "L_f1d": {
+      "description": "Mutual inductance between rotor field winding and rotor damping winding inductance on d-axis",
+      "type": "number"
+    },
+    "L_ff": {
+      "description": "Field rotor winding inductance",
+      "type": "number"
+    },
+    "L_1d": {
+      "description": "Inductance of the d-axis rotor damping circuit",
+      "type": "number"
+    },
+    "L_1q": {
+      "description": "Inductance of the q-axis rotor damping circuit",
+      "type": "number"
+    }  
+  },
+  "required": [
+    "id",
+    "R",
+    "R_f",
+    "R_1d",
+    "R_1q",
+    "L_d",
+    "L_q",
+    "L_ad",
+    "L_aq",
+    "L_f1d",
+    "L_ff",
+    "L_1d",
+    "L_1q"
+  ],
+  "title": "SimpleFullMachine",
+  "type": "object"
+}

@@ -1,0 +1,150 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "In these excitation systems, voltage (and also current in compounded systems) is transformed to an appropriate level. Rectifiers, either controlled or non-controlled, provide the necessary direct current for the generator field. Parameters of IEEE Std 421.5 Type ST8C Excitacion System. ST8C in PSSE and PSLF",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "OEL_Flag": {
+      "description": "OEL Flag for ST8C: <2: Summation at voltage error, 2: OEL takeover at gate",
+      "type": "integer"
+    },
+    "UEL_Flag": {
+      "description": "UEL Flag for ST8C: <2: Summation at voltage error, 2: UEL takeover at gate",
+      "type": "integer"
+    },
+    "SCL_Flag": {
+      "description": "SCL Flag for ST8C: <2: Summation at voltage error, 2: SCL takeover at UEL and OEL gates",
+      "type": "integer"
+    },
+    "SW1_Flag": {
+      "description": "SW1 Flag for power source selector for ST8C: <2: Source from generator terminal voltage, 2: Independent power source",
+      "type": "integer"
+    },
+    "Tr": {
+      "description": "Regulator input filter time constant",
+      "type": "number"
+    },
+    "K_pr": {
+      "description": "Regulator proportional gain",
+      "type": "number"
+    },
+    "K_ir": {
+      "description": "Regulator integral gain",
+      "type": "number"
+    },
+    "Vpi_lim": {
+      "description": "Regulator input limits",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "K_pa": {
+      "description": "Field current regulator proportional gain",
+      "type": "number"
+    },
+    "K_ia": {
+      "description": "Field current regulator integral gain",
+      "type": "number"
+    },
+    "Va_lim": {
+      "description": "Field current regulator output limits",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "K_a": {
+      "description": "Field current regulator proportional gain",
+      "type": "number"
+    },
+    "T_a": {
+      "description": "Controlled rectifier bridge equivalent time constant",
+      "type": "number"
+    },
+    "Vr_lim": {
+      "description": "Voltage regulator limits",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "K_f": {
+      "description": "Exciter field current feedback gain",
+      "type": "number"
+    },
+    "T_f": {
+      "description": "Field current feedback time constant",
+      "type": "number"
+    },
+    "K_c1": {
+      "description": "Rectifier loading factor proportional to commutating reactance",
+      "type": "number"
+    },
+    "K_p": {
+      "description": "Potential circuit (voltage) gain coefficient",
+      "type": "number"
+    },
+    "K_i1": {
+      "description": "Potential circuit (current) gain coefficient",
+      "type": "number"
+    },
+    "X_l": {
+      "description": "Reactance associated with potential source",
+      "type": "number"
+    },
+    "theta_p": {
+      "description": "Potential circuit phase angle (degrees)",
+      "type": "number"
+    },
+    "VB1_max": {
+      "description": "Maximum available exciter voltage",
+      "type": "number"
+    },
+    "K_c2": {
+      "description": "Rectifier loading factor proportional to commutating reactance",
+      "type": "number"
+    },
+    "K_i2": {
+      "description": "Potential circuit (current) gain coefficient",
+      "type": "number"
+    },
+    "VB2_max": {
+      "description": "Maximum available exciter voltage",
+      "type": "number"
+    },
+    "V_ref": {
+      "description": "Reference voltage set-point",
+      "default": 1.0,
+      "type": "number"
+    },
+    "Ifd_ref": {
+      "description": "Reference field current set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "OEL_Flag",
+    "UEL_Flag",
+    "SCL_Flag",
+    "SW1_Flag",
+    "Tr",
+    "K_pr",
+    "K_ir",
+    "Vpi_lim",
+    "K_pa",
+    "K_ia",
+    "Va_lim",
+    "K_a",
+    "T_a",
+    "Vr_lim",
+    "K_f",
+    "T_f",
+    "K_c1",
+    "K_p",
+    "K_i1",
+    "X_l",
+    "theta_p",
+    "VB1_max",
+    "K_c2",
+    "K_i2",
+    "VB2_max"
+  ],
+  "title": "ST8C",
+  "type": "object"
+}

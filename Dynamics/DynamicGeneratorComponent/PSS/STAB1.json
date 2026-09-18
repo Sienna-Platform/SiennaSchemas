@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Speed-sensitive stabilizing model",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "KT": {
+      "description": "K/T for washout filter",
+      "type": "number"
+    },
+    "T": {
+      "description": "Time constant for washout filter",
+      "type": "number"
+    },
+    "T1T3": {
+      "description": "Time constant division T1/T3",
+      "type": "number"
+    },
+    "T3": {
+      "description": "Time constant",
+      "type": "number"
+    },
+    "T2T4": {
+      "description": "Time constant division T2/T4",
+      "type": "number"
+    },
+    "T4": {
+      "description": "Time constant",
+      "type": "number"
+    },
+    "H_lim": {
+      "description": "PSS output limit",
+      "type": "number"
+    }  
+  },
+  "required": [
+    "id",
+    "KT",
+    "T",
+    "T1T3",
+    "T3",
+    "T2T4",
+    "T4",
+    "H_lim"
+  ],
+  "title": "STAB1",
+  "type": "object"
+}

@@ -1,0 +1,179 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "GE General Governor/Turbine Model. The GeneralGovModel (GGOV1) model is a general purpose governor model used for a variety of prime movers controlled by proportional-integral-derivative (PID) governors including gas turbines",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "R_select": {
+      "description": "Feedback signal for governor droop",
+      "type": "integer"
+    },
+    "fuel_flag": {
+      "description": "Flag switch for fuel source characteristic",
+      "type": "integer"
+    },
+    "R": {
+      "description": "Speed droop parameter",
+      "type": "number"
+    },
+    "Tpelec": {
+      "description": "Electrical power transducer time constant",
+      "type": "number"
+    },
+    "speed_error_signal": {
+      "description": "Speed error signal limits",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "Kp_gov": {
+      "description": "Governor proportional gain",
+      "type": "number"
+    },
+    "Ki_gov": {
+      "description": "Governor integral gain",
+      "type": "number"
+    },
+    "Kd_gov": {
+      "description": "Governor derivative gain",
+      "type": "number"
+    },
+    "Td_gov": {
+      "description": "Governor derivative time constant",
+      "type": "number"
+    },
+    "valve_position_limits": {
+      "description": "Valve position limits",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "T_act": {
+      "description": "Actuator time constant",
+      "type": "number"
+    },
+    "K_turb": {
+      "description": "Turbine gain",
+      "type": "number"
+    },
+    "Wf_nl": {
+      "description": "No load fuel flow",
+      "type": "number"
+    },
+    "Tb": {
+      "description": "Turbine lag time constant",
+      "type": "number"
+    },
+    "Tc": {
+      "description": "Turbine lead time constant",
+      "type": "number"
+    },
+    "T_eng": {
+      "description": "Transport lag time constant for diesel engine",
+      "type": "number"
+    },
+    "Tf_load": {
+      "description": "Load limiter time constant",
+      "type": "number"
+    },
+    "Kp_load": {
+      "description": "Load limiter proportional gain for PI controller",
+      "type": "number"
+    },
+    "Ki_load": {
+      "description": "Load integral gain for PI controller",
+      "type": "number"
+    },
+    "Ld_ref": {
+      "description": "Load limiter integral gain for PI controller",
+      "type": "number"
+    },
+    "Dm": {
+      "description": "Mechanical damping coefficient",
+      "type": "number"
+    },
+    "R_open": {
+      "description": "Maximum valve opening rate",
+      "type": "number"
+    },
+    "R_close": {
+      "description": "Maximum valve closing rate",
+      "type": "number"
+    },
+    "Ki_mw": {
+      "description": "Power controller (reset) gain",
+      "type": "number"
+    },
+    "A_set": {
+      "description": "Acceleration limiter setpoint",
+      "type": "number"
+    },
+    "Ka": {
+      "description": "Acceleration limiter gain",
+      "type": "number"
+    },
+    "Ta": {
+      "description": "Acceleration limiter time constant",
+      "type": "number"
+    },
+    "T_rate": {
+      "description": "Turbine rating",
+      "type": "number"
+    },
+    "db": {
+      "description": "Speed governor deadband",
+      "type": "number"
+    },
+    "Tsa": {
+      "description": "Temperature detection lead time constant",
+      "type": "number"
+    },
+    "Tsb": {
+      "description": "Temperature detection lag time constant",
+      "type": "number"
+    },
+    "R_lim": {
+      "description": "Maximum rate of load increase",
+      "$ref": "../../../Core/common.json#/$defs/UpDown"
+    },
+    "P_ref": {
+      "description": "Reference power set-point",
+      "default": "1.0",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "Rselect",
+    "fuel_flag",
+    "Tpelec",
+    "speed_error_signal",
+    "Kp_gov",
+    "Ki_gov",
+    "Kd_gov",
+    "Td_gov",
+    "valve_position_limits",
+    "T_act",
+    "K_turb",
+    "Wf_nl",
+    "Tb",
+    "Tc",
+    "T_eng",
+    "Tf_load",
+    "Kp_load",
+    "Ki_load",
+    "Ld_ref",
+    "Dm",
+    "R_open",
+    "R_close",
+    "Ki_mw",
+    "A_set",
+    "Ka",
+    "Ta",
+    "T_rate",
+    "db",
+    "Tsa",
+    "Tsb",
+    "R_lim"
+  ],
+  "title": "GeneralGovModel",
+  "type": "object"
+}

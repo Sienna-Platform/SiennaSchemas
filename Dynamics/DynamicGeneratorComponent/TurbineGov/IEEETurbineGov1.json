@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "IEEE Type 1 Speed-Governing Model",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "K": {
+      "description": "Governor gain",
+      "type": "integer"
+    },
+    "T1": {
+      "description": "Input filter lag",
+      "type": "integer"
+    },
+    "T2": {
+      "description": "Input filter lead",
+      "type": "number"
+    },
+    "T3": {
+      "description": "Valve position time constant",
+      "type": "number"
+    },
+    "U0": {
+      "description": "Maximum valve opening rate",
+      "type": "number"
+    },
+    "U_c": {
+      "description": "Maximum valve closing rate",
+      "type": "number"
+    },
+    "valve_position_limits": {
+      "description": "Valve position limits",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "T4": {
+      "description": "Time constant inlet steam",
+      "type": "number"
+    },
+    "K1": {
+      "description": "Fraction of high pressure shaft power",
+      "type": "number"
+    },
+    "K2": {
+      "description": "Fraction of low pressure shaft power",
+      "type": "number"
+    },
+    "T5": {
+      "description": "Time constant for second boiler pass",
+      "type": "number"
+    },
+    "K3": {
+      "description": "Fraction of high pressure shaft power second boiler pass",
+      "type": "number"
+    },
+    "K4": {
+      "description": "Fraction of low pressure shaft power second boiler pass",
+      "type": "number"
+    },
+    "T6": {
+      "description": "Time constant for third boiler pass",
+      "type": "number"
+    },
+    "K5": {
+      "description": "Fraction of high pressure shaft power third boiler pass",
+      "type": "number"
+    },
+    "K6": {
+      "description": "Fraction of low pressure shaft power third boiler pass",
+      "type": "number"
+    },
+    "T7": {
+      "description": "Time constant for fourth boiler pass",
+      "type": "number"
+    },
+    "K7": {
+      "description": "Fraction of high pressure shaft power fourth boiler pass",
+      "type": "number"
+    },
+    "K8": {
+      "description": "Fraction of low pressure shaft power fourth boiler pass",
+      "type": "number"
+    },
+    "P_ref": {
+      "description": "Reference power set-point",
+      "default": "1.0",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "K",
+    "T1",
+    "T2",
+    "T3",
+    "U0",
+    "U_c",
+    "valve_position_limits",
+    "T4",
+    "K1",
+    "K2",
+    "T5",
+    "K3",
+    "K4",
+    "T6",
+    "K5",
+    "K6",
+    "T7",
+    "K7",
+    "K8"
+  ],
+  "title": "IEEETurbineGov1",
+  "type": "object"
+}

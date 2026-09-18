@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parameters of synchronous machine: Sauer Pai model",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "R": {
+      "description": "Resistance after EMF",
+      "type": "number"
+    },
+    "Xd": {
+      "description": "Reactance after EMF in d-axis",
+      "type": "number"
+    },
+    "Xq": {
+      "description": "Reactance after EMF in q-axis",
+      "type": "number"
+    },
+    "Xd_p": {
+      "description": "Transient reactance after EMF in d-axis",
+      "type": "number"
+    },
+    "Xq_p": {
+      "description": "Transient reactance after EMF in q-axis",
+      "type": "number"
+    },
+    "Xd_pp": {
+      "description": "Sub-Transient reactance after EMF in d-axis",
+      "type": "number"
+    },
+    "Xq_pp": {
+      "description": "Sub-Transient reactance after EMF in q-axis",
+      "type": "number"
+    },
+    "Xl": {
+      "description": "Stator leakage reactance",
+      "type": "number"
+    },
+    "Td0_p": {
+      "description": "Time constant of transient d-axis voltage",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "Tq0_p": {
+      "description": "Time constant of transient q-axis voltage",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "Td0_pp": {
+      "description": "Time constant of sub-transient d-axis voltage",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "Tq0_pp": {
+      "description": "Time constant of sub-transient q-axis voltage",
+      "type": "number",
+      "x-unit": "s"
+    }  
+  },
+  "required": [
+    "id",
+    "R",
+    "Xd",
+    "Xq",
+    "Xd_p",
+    "Xq_p",
+    "Xd_pp",
+    "Xq_pp",
+    "Xl",
+    "Td0_p",
+    "Tq0_p",
+    "Td0_pp",
+    "Tq0_pp"
+  ],
+  "title": "SauerPaiMachine",
+  "type": "object"
+}
