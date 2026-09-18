@@ -39,10 +39,20 @@
           ]
         },
         "initial_input": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the curve's y-axis unit."
         },
         "input_at_zero": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the curve's y-axis unit."
         }
       },
       "required": [
@@ -499,10 +509,20 @@
           ]
         },
         "initial_input": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the curve's y-axis unit."
         },
         "input_at_zero": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the curve's y-axis unit."
         }
       },
       "required": [
@@ -581,7 +601,12 @@
           ]
         },
         "input_at_zero": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the curve's y-axis unit."
         }
       },
       "required": [
@@ -596,7 +621,12 @@
       "description": "Data for a linear function `f(x) = proportional_term * x + constant_term`.",
       "properties": {
         "constant_term": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the wrapped function's output unit."
         },
         "function_type": {
           "const": "LINEAR",
@@ -604,7 +634,12 @@
           "default": "LINEAR"
         },
         "proportional_term": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            -1
+          ],
+          "description": "Units: the wrapped function's output unit per unit of its input."
         }
       },
       "required": [
@@ -939,13 +974,23 @@
         },
         "x_coords": {
           "items": {
-            "type": "number"
+            "type": "number",
+            "x-curve-dimension": [
+              0,
+              1
+            ],
+            "description": "Units: the wrapped function's input unit."
           },
           "type": "array"
         },
         "y_coords": {
           "items": {
-            "type": "number"
+            "type": "number",
+            "x-curve-dimension": [
+              1,
+              0
+            ],
+            "description": "Units: the wrapped function's output unit."
           },
           "type": "array"
         }
@@ -1032,7 +1077,12 @@
       "description": "Data for a quadratic function `f(x) = quadratic_term * x^2 + proportional_term * x + constant_term`. A non-negative `quadratic_term` makes the function convex.",
       "properties": {
         "constant_term": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the wrapped function's output unit."
         },
         "function_type": {
           "const": "QUADRATIC",
@@ -1040,10 +1090,20 @@
           "default": "QUADRATIC"
         },
         "proportional_term": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            -1
+          ],
+          "description": "Units: the wrapped function's output unit per unit of its input."
         },
         "quadratic_term": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            -2
+          ],
+          "description": "Units: the wrapped function's output unit per unit of its input squared."
         }
       },
       "required": [
@@ -1607,10 +1667,20 @@
       "description": "A single point, given as its `x` and `y` coordinates.",
       "properties": {
         "x": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            0,
+            1
+          ],
+          "description": "Units: the wrapped function's input unit."
         },
         "y": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the wrapped function's output unit."
         }
       },
       "required": [

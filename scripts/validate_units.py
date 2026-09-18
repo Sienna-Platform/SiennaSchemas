@@ -716,6 +716,43 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
                             repr(k), "an integer exponent")
                 )
 
+        # Rule 10: x-curve-dimension is a pair of integers [p, q], the
+        # exponents of F^p * U^q. A non-integer makes composition unresolvable.
+        if "x-curve-dimension" in node:
+            dim = node["x-curve-dimension"]
+            if (not isinstance(dim, list) or len(dim) != 2
+                    or not all(isinstance(e, int) and not isinstance(e, bool)
+                               for e in dim)):
+                failures.append(
+                    Failure(source_file, path + "/x-curve-dimension",
+                            "x-curve-dimension-shape", repr(dim),
+                            "a 2-element array of integers [p, q]")
+                )
+
+        # Rule 11: a definition that annotates any numeric property with
+        # x-curve-dimension annotates ALL of them. This is what stops a new
+        # coefficient being added to a function-data definition unannotated,
+        # which would otherwise compose to nothing and pass silently.
+        if sibling_props is not None:
+            numeric = {}
+            for pname, pnode in sibling_props.items():
+                if not isinstance(pnode, dict):
+                    continue
+                # an array of numbers carries the annotation on its items,
+                # where the number itself lives
+                target = pnode.get("items") if pnode.get("type") == "array" else pnode
+                if isinstance(target, dict) and target.get("type") in ("number", "integer"):
+                    numeric[pname] = target
+            annotated = {n for n, tgt in numeric.items() if "x-curve-dimension" in tgt}
+            if annotated:
+                for pname in sorted(set(numeric) - annotated):
+                    failures.append(
+                        Failure(source_file, f"{path}/properties/{pname}",
+                                "x-curve-dimension-complete", "no x-curve-dimension",
+                                f"an x-curve-dimension, as its sibling(s) "
+                                f"{sorted(annotated)} carry one")
+                    )
+
         # Rule 3: x-unit-base names an existing sibling property.
         if "x-unit-base" in node:
             base = node["x-unit-base"]
@@ -872,8 +909,41 @@ def curve_axes_sentence(node, source_path):
     return f"Units: x-axis per power_units — {x_parts} ; y-axis {y_unit} ."
 
 
-def units_sentence(node, source_path=None):
+def curve_dimension_sentence(dim, is_form_scalar):
+    """Return the 'Units: ...' sentence for an x-curve-dimension property.
+
+    The vocabulary follows the composition class. A function-data leaf knows
+    only its own function, so it is stated as that function's output and input;
+    naming the curve's axes there would be true only under an input-output
+    curve. A form scalar is an absolute y-quantity, so it names the axis.
+    """
+    p, q = dim
+    if is_form_scalar:
+        whole = "the curve's y-axis"
+        part = inline = "the curve's x-axis"
+    else:
+        whole = "the wrapped function's output"
+        part, inline = "the wrapped function's input", "its input"
+
+    if (p, q) == (1, 0):
+        return f"Units: {whole} unit."
+    if (p, q) == (0, 1):
+        return f"Units: {part} unit."
+    if p == 1 and q < 0:
+        power = {-1: "", -2: " squared", -3: " cubed"}.get(q)
+        if power is not None:
+            return f"Units: {whole} unit per unit of {inline}{power}."
+    raise SystemExit(
+        f"validate_units.py: no Units: sentence defined for x-curve-dimension "
+        f"{dim}; add one to curve_dimension_sentence rather than letting the "
+        f"property go undescribed"
+    )
+
+
+def units_sentence(node, source_path=None, is_form_scalar=False):
     """Return the canonical 'Units: ...' sentence for an annotated node."""
+    if "x-curve-dimension" in node:
+        return curve_dimension_sentence(node["x-curve-dimension"], is_form_scalar)
     if "x-curve-axes" in node:
         return curve_axes_sentence(node, source_path)
     if "x-units" in node and isinstance(node["x-units"], dict):
@@ -888,9 +958,9 @@ def strip_units_sentence(desc):
     return _UNITS_SENTENCE_RE.sub("", desc)
 
 
-def desired_description(node, source_path=None):
+def desired_description(node, source_path=None, is_form_scalar=False):
     """Return the description this annotated node should carry."""
-    sentence = units_sentence(node, source_path)
+    sentence = units_sentence(node, source_path, is_form_scalar)
     desc = node.get("description")
     if not isinstance(desc, str) or desc == "":
         return sentence
@@ -902,31 +972,34 @@ def desired_description(node, source_path=None):
 
 def has_unit_annotation(node):
     return isinstance(node, dict) and any(
-        k in node for k in ("x-unit", "x-units", "x-curve-axes")
+        k in node for k in ("x-unit", "x-units", "x-curve-axes", "x-curve-dimension")
     )
 
 
-def fix_descriptions_in_node(node, source_path=None):
+def fix_descriptions_in_node(node, source_path=None, is_form_scalar=False):
     """Rewrite descriptions in place. Returns count of nodes changed."""
     changed = 0
     if isinstance(node, dict):
+        is_form_scalar = is_form_scalar or "x-curve-output" in node
         if has_unit_annotation(node):
-            want = desired_description(node, source_path)
+            want = desired_description(node, source_path, is_form_scalar)
             if node.get("description") != want:
                 node["description"] = want
                 changed += 1
         for v in node.values():
-            changed += fix_descriptions_in_node(v, source_path)
+            changed += fix_descriptions_in_node(v, source_path, is_form_scalar)
     elif isinstance(node, list):
         for v in node:
-            changed += fix_descriptions_in_node(v, source_path)
+            changed += fix_descriptions_in_node(v, source_path, is_form_scalar)
     return changed
 
 
-def check_descriptions_in_node(node, path, source_file, failures, source_path=None):
+def check_descriptions_in_node(node, path, source_file, failures, source_path=None,
+                               is_form_scalar=False):
     if isinstance(node, dict):
+        is_form_scalar = is_form_scalar or "x-curve-output" in node
         if has_unit_annotation(node):
-            want = desired_description(node, source_path)
+            want = desired_description(node, source_path, is_form_scalar)
             if node.get("description") != want:
                 failures.append(
                     Failure(source_file, path + "/description",
@@ -935,11 +1008,11 @@ def check_descriptions_in_node(node, path, source_file, failures, source_path=No
                 )
         for k, v in node.items():
             check_descriptions_in_node(v, f"{path}/{k}", source_file, failures,
-                                       source_path)
+                                       source_path, is_form_scalar)
     elif isinstance(node, list):
         for i, v in enumerate(node):
             check_descriptions_in_node(v, f"{path}/{i}", source_file, failures,
-                                       source_path)
+                                       source_path, is_form_scalar)
 
 
 def detect_indent(text):
