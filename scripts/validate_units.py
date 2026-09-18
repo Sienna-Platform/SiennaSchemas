@@ -136,6 +136,16 @@ def load_quantity_units():
     return q2u
 
 
+def load_quantity_defaults():
+    """Map quantity_kind -> its default_unit (from units.json).
+
+    Rules 8 and 9 use the key set to check that an x-curve-axes value names a
+    real quantity kind, and the values to render the curve's Units: sentence.
+    """
+    units = load_json_cached(UNITS_JSON)
+    return {q["name"]: q["default_unit"] for q in units["quantity_kinds"]}
+
+
 def load_unit_quantities():
     """Map unit -> sorted quantity types registered for it in units.json.
 
@@ -671,6 +681,41 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
                                  enclosing_props, source_path, source_file,
                                  failures, allowed_units)
 
+        # Rule 8: x-curve-axes names two registered quantity kinds, on a
+        # definition that has the power_units property its sentence reads.
+        if "x-curve-axes" in node:
+            axes = node["x-curve-axes"]
+            defaults = load_quantity_defaults()
+            if not isinstance(axes, dict) or set(axes) != {"x", "y"}:
+                failures.append(
+                    Failure(source_file, path + "/x-curve-axes", "x-curve-axes-shape",
+                            repr(axes), "an object with exactly the keys 'x' and 'y'")
+                )
+            else:
+                for axis, quantity in sorted(axes.items()):
+                    if quantity not in defaults:
+                        failures.append(
+                            Failure(source_file, f"{path}/x-curve-axes/{axis}",
+                                    "x-curve-axes-quantity", quantity,
+                                    "a quantity_kind registered in Core/units.json")
+                        )
+                if sibling_props is None or "power_units" not in sibling_props:
+                    failures.append(
+                        Failure(source_file, path + "/x-curve-axes",
+                                "x-curve-axes-power-units", "no power_units property",
+                                "a sibling 'power_units' property giving the x-axis basis")
+                    )
+
+        # Rule 9: x-curve-output is an integer -- the exponent k in F = Y * X^k,
+        # so a float or a string would make the composition unresolvable.
+        if "x-curve-output" in node:
+            k = node["x-curve-output"]
+            if not isinstance(k, int) or isinstance(k, bool):
+                failures.append(
+                    Failure(source_file, path + "/x-curve-output", "x-curve-output-integer",
+                            repr(k), "an integer exponent")
+                )
+
         # Rule 3: x-unit-base names an existing sibling property.
         if "x-unit-base" in node:
             base = node["x-unit-base"]
@@ -802,8 +847,35 @@ def _units_value(value):
     return value
 
 
-def units_sentence(node):
+def curve_axes_sentence(node, source_path):
+    """Return the 'Units: ...' sentence for a curve family carrying x-curve-axes.
+
+    The family knows both axis quantity kinds; the x axis is discriminated by
+    its own power_units, exactly as an x-units map would be. Where the y axis
+    IS the x quantity (a loss curve), power_units governs both and the sentence
+    says so rather than repeating the same discriminated list twice.
+    """
+    axes = node["x-curve-axes"]
+    defaults = load_quantity_defaults()
+    power_units = node.get("properties", {}).get("power_units", {})
+    enum = discriminator_enum(power_units, source_path) or set()
+    order = [v for v in ("NATURAL_UNITS", "COMPONENT_BASE") if v in enum]
+    order += sorted(enum.difference(order))
+
+    x_parts = ", ".join(
+        f"{v}: {defaults.get(axes['x'], '?') if v == 'NATURAL_UNITS' else 'pu'}"
+        for v in order
+    )
+    if axes["x"] == axes["y"]:
+        return f"Units: both axes per power_units — {x_parts} ."
+    y_unit = defaults.get(axes["y"], "?")
+    return f"Units: x-axis per power_units — {x_parts} ; y-axis {y_unit} ."
+
+
+def units_sentence(node, source_path=None):
     """Return the canonical 'Units: ...' sentence for an annotated node."""
+    if "x-curve-axes" in node:
+        return curve_axes_sentence(node, source_path)
     if "x-units" in node and isinstance(node["x-units"], dict):
         disc = node.get("x-unit-discriminator", "value")
         parts = ", ".join(f"{k}: {_units_value(v)}" for k, v in node["x-units"].items())
@@ -816,9 +888,9 @@ def strip_units_sentence(desc):
     return _UNITS_SENTENCE_RE.sub("", desc)
 
 
-def desired_description(node):
+def desired_description(node, source_path=None):
     """Return the description this annotated node should carry."""
-    sentence = units_sentence(node)
+    sentence = units_sentence(node, source_path)
     desc = node.get("description")
     if not isinstance(desc, str) or desc == "":
         return sentence
@@ -829,30 +901,32 @@ def desired_description(node):
 
 
 def has_unit_annotation(node):
-    return isinstance(node, dict) and ("x-unit" in node or "x-units" in node)
+    return isinstance(node, dict) and any(
+        k in node for k in ("x-unit", "x-units", "x-curve-axes")
+    )
 
 
-def fix_descriptions_in_node(node):
+def fix_descriptions_in_node(node, source_path=None):
     """Rewrite descriptions in place. Returns count of nodes changed."""
     changed = 0
     if isinstance(node, dict):
         if has_unit_annotation(node):
-            want = desired_description(node)
+            want = desired_description(node, source_path)
             if node.get("description") != want:
                 node["description"] = want
                 changed += 1
         for v in node.values():
-            changed += fix_descriptions_in_node(v)
+            changed += fix_descriptions_in_node(v, source_path)
     elif isinstance(node, list):
         for v in node:
-            changed += fix_descriptions_in_node(v)
+            changed += fix_descriptions_in_node(v, source_path)
     return changed
 
 
-def check_descriptions_in_node(node, path, source_file, failures):
+def check_descriptions_in_node(node, path, source_file, failures, source_path=None):
     if isinstance(node, dict):
         if has_unit_annotation(node):
-            want = desired_description(node)
+            want = desired_description(node, source_path)
             if node.get("description") != want:
                 failures.append(
                     Failure(source_file, path + "/description",
@@ -860,10 +934,12 @@ def check_descriptions_in_node(node, path, source_file, failures):
                             repr(node.get("description")), repr(want))
                 )
         for k, v in node.items():
-            check_descriptions_in_node(v, f"{path}/{k}", source_file, failures)
+            check_descriptions_in_node(v, f"{path}/{k}", source_file, failures,
+                                       source_path)
     elif isinstance(node, list):
         for i, v in enumerate(node):
-            check_descriptions_in_node(v, f"{path}/{i}", source_file, failures)
+            check_descriptions_in_node(v, f"{path}/{i}", source_file, failures,
+                                       source_path)
 
 
 def detect_indent(text):
@@ -882,7 +958,7 @@ def run_fix_descriptions(files):
         text = path.read_text()
         indent = detect_indent(text)
         doc = json.loads(text)
-        n = fix_descriptions_in_node(doc)
+        n = fix_descriptions_in_node(doc, path)
         if n:
             with open(path, "w") as fh:
                 json.dump(doc, fh, indent=indent, ensure_ascii=False)
@@ -903,7 +979,7 @@ def run_check_descriptions(files):
         except json.JSONDecodeError as exc:
             failures.append(Failure(str(rel), "/", "json-parse", str(exc), "valid JSON"))
             continue
-        check_descriptions_in_node(doc, "", str(rel), failures)
+        check_descriptions_in_node(doc, "", str(rel), failures, path)
     print(f"Checked description sentences over {len(files)} schema file(s).")
     if failures:
         print(f"\n{len(failures)} failure(s):\n")
