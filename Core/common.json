@@ -1439,7 +1439,8 @@
       ],
       "title": "TimeSeriesAverageRateCurve",
       "description": "A time-series-backed average rate curve. The static counterpart is AverageRateCurve.",
-      "type": "object"
+      "type": "object",
+      "x-curve-output": -1
     },
     "TimeSeriesIncrementalCurve": {
       "properties": {
@@ -1473,7 +1474,8 @@
       ],
       "title": "TimeSeriesIncrementalCurve",
       "description": "A time-series-backed incremental curve. The static counterpart is IncrementalCurve.",
-      "type": "object"
+      "type": "object",
+      "x-curve-output": -1
     },
     "TimeSeriesInputOutputCurve": {
       "properties": {
@@ -1500,7 +1502,8 @@
       ],
       "title": "TimeSeriesInputOutputCurve",
       "description": "A time-series-backed input-output curve. The static counterpart is InputOutputCurve.",
-      "type": "object"
+      "type": "object",
+      "x-curve-output": 0
     },
     "TimeSeriesLinearFunctionData": {
       "description": "Time-series-backed variant of `LinearFunctionData`. In place of inline coefficients it carries `association_id`, referencing a stored series that supplies them at each step; use it when the coefficients change over time.",

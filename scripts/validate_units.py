@@ -333,6 +333,32 @@ def load_column_allowed_units(griddb_path=None):
     return col_allowed
 
 
+def numeric_annotation_target(pnode):
+    """The node a numeric property's x-curve-dimension belongs on: the property
+    itself, or an array's items, where the number actually lives. None when the
+    property is not numeric."""
+    if not isinstance(pnode, dict):
+        return None
+    target = pnode.get("items") if pnode.get("type") == "array" else pnode
+    if isinstance(target, dict) and target.get("type") == "number":
+        return target
+    return None
+
+
+def function_data_variants(source_path):
+    """The definition names listed in FunctionData's discriminator mapping.
+
+    One lookup, not a traversal: membership of that mapping is the schema's own
+    statement of what a function data IS, so rule 13 can require annotation of
+    a variant without walking anything.
+    """
+    node = resolve_ref_node("#/$defs/FunctionData", source_path)
+    if not isinstance(node, dict):
+        return set()
+    mapping = node.get("discriminator", {}).get("mapping", {})
+    return {ref.rsplit("/", 1)[-1] for ref in mapping.values()}
+
+
 def resolve_ref_node(ref, source_path):
     """Resolve a local-or-cross-file $ref to its target node, or None if it
     doesn't resolve (missing file, missing fragment path)."""
@@ -626,8 +652,8 @@ def validate_x_units_map(x_units, path, enclosing_props, source_path,
 
 def check_annotations(node, path, source_file, source_path, properties_stack,
                       failures, allowed_units, col_allowed=None, prop_name=None,
-                      unit_quantities=None):
-    """Walk the schema recursively enforcing rules 2, 3, 4, 5, 6."""
+                      unit_quantities=None, fd_variants=frozenset()):
+    """Walk the schema recursively enforcing rules 2, 3, 4, 5, 6, 8-13."""
     if col_allowed is None:
         col_allowed = {}
     if isinstance(node, dict):
@@ -736,12 +762,8 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
         if sibling_props is not None:
             numeric = {}
             for pname, pnode in sibling_props.items():
-                if not isinstance(pnode, dict):
-                    continue
-                # an array of numbers carries the annotation on its items,
-                # where the number itself lives
-                target = pnode.get("items") if pnode.get("type") == "array" else pnode
-                if isinstance(target, dict) and target.get("type") in ("number", "integer"):
+                target = numeric_annotation_target(pnode)
+                if target is not None:
                     numeric[pname] = target
             annotated = {n for n, tgt in numeric.items() if "x-curve-dimension" in tgt}
             if annotated:
@@ -751,6 +773,36 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
                                 "x-curve-dimension-complete", "no x-curve-dimension",
                                 f"an x-curve-dimension, as its sibling(s) "
                                 f"{sorted(annotated)} carry one")
+                    )
+
+        # Rule 12: a curve form -- any definition wrapping a function -- carries
+        # x-curve-output. Having a function_data property IS being a form, so
+        # the key's presence is structural rather than assumed: without it the
+        # exponent k is undefined and the leaf units under it cannot be read.
+        if sibling_props is not None and "function_data" in sibling_props:
+            if "x-curve-output" not in node:
+                failures.append(
+                    Failure(source_file, path, "x-curve-output-required",
+                            "no x-curve-output",
+                            "an x-curve-output: a definition with function_data "
+                            "is a curve form, and its exponent k must be declared")
+                )
+
+        # Rule 13: every variant of FunctionData annotates all of its numeric
+        # properties. Rule 11 only fires where an annotated sibling exists, so
+        # a WHOLLY unannotated function data passes it; membership of
+        # FunctionData's discriminator mapping is what makes the requirement
+        # unconditional.
+        if sibling_props is not None and node.get("title") in fd_variants:
+            for pname, pnode in sorted(sibling_props.items()):
+                target = numeric_annotation_target(pnode)
+                if target is not None and "x-curve-dimension" not in target:
+                    failures.append(
+                        Failure(source_file, f"{path}/properties/{pname}",
+                                "x-curve-dimension-required", "no x-curve-dimension",
+                                f"an x-curve-dimension: {node['title']} is a "
+                                "FunctionData variant, so its numerics must be "
+                                "annotated")
                     )
 
         # Rule 3: x-unit-base names an existing sibling property.
@@ -820,17 +872,19 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
                     check_annotations(pschema, f"{child_path}/{pname}", source_file,
                                       source_path, properties_stack + [v], failures,
                                       allowed_units, col_allowed, pname,
-                                      unit_quantities)
+                                      unit_quantities, fd_variants)
             else:
                 check_annotations(v, child_path, source_file, source_path,
                                   properties_stack, failures, allowed_units,
-                                  col_allowed, prop_name, unit_quantities)
+                                  col_allowed, prop_name, unit_quantities,
+                                  fd_variants)
 
     elif isinstance(node, list):
         for i, item in enumerate(node):
             check_annotations(item, f"{path}/{i}", source_file, source_path,
                               properties_stack, failures, allowed_units,
-                              col_allowed, prop_name, unit_quantities)
+                              col_allowed, prop_name, unit_quantities,
+                              fd_variants)
 
 
 def check_metaschema(doc, source_file, failures):
@@ -1065,225 +1119,6 @@ def run_check_descriptions(files):
     return 0
 
 
-# --------------------------------------------------------------------------- #
-# Rule 12: curve unit composition.
-#
-# Rules 8-11 each check one annotation against its own definition. Nothing
-# local can check that a whole path composes, because the three annotations sit
-# on three different definitions joined only by $ref:
-#
-#   CostCurve  --value_curve-->  ValueCurve  --oneOf-->  IncrementalCurve
-#     x-curve-axes                (inert alias)            x-curve-output
-#        --function_data-->  FunctionData  --oneOf-->  LinearFunctionData
-#                            (inert alias)               x-curve-dimension
-#
-# This walk follows that chain from every family and composes
-#
-#     unit = Y^p * X^(k*p + q)        for a function-data leaf
-#     unit = Y^p * X^q                for a form scalar (absolute y-quantity)
-#
-# It fails when a link on a REACHABLE path carries no annotation -- a form with
-# no x-curve-output, or a numeric leaf with no x-curve-dimension. Rule 11 only
-# sees a definition in isolation, so an entirely unannotated function data
-# passes it and is caught here instead.
-#
-# The composed unit itself is not checked against the vocabulary: deriving
-# units that units.json deliberately does not name (USD/(MW2.h) and friends) is
-# the point of the scheme, so a composition that renders is a composition that
-# resolves.
-# --------------------------------------------------------------------------- #
-
-
-def parse_unit_exponents(text):
-    """'USD/MWh' -> {'USD': 1, 'MW': -1, 'h': -1}."""
-    num, _, den = text.partition("/")
-    exps = {}
-    for part, sign in ((num, 1), (den, -1)):
-        for sym in _split_unit_atoms(part):
-            exps[sym] = exps.get(sym, 0) + sign
-    return exps
-
-
-def _split_unit_atoms(text):
-    """Split a compound unit spelling into atoms: 'MWh' -> ['MW', 'h']."""
-    text = text.strip()
-    if not text or text == "1":
-        return []
-    for head in ("MWh", "MVAr", "MW", "USD"):
-        if text.startswith(head):
-            rest = text[len(head):]
-            return [head] + _split_unit_atoms(rest) if rest else [head]
-    return [text]
-
-
-def render_unit_exponents(exps):
-    exps = {k: v for k, v in exps.items() if v != 0}
-    if not exps:
-        return "1"
-    def term(sym):
-        e = exps[sym]
-        return sym if abs(e) == 1 else f"{sym}{abs(e)}"
-    num = sorted(s for s in exps if exps[s] > 0)
-    den = sorted(s for s in exps if exps[s] < 0)
-    top = ".".join(term(s) for s in num) or "1"
-    if not den:
-        return top
-    bot = ".".join(term(s) for s in den)
-    return f"{top}/{bot}" if len(den) == 1 else f"{top}/({bot})"
-
-
-def compose_unit(y_exps, x_exps, p, q):
-    out = {}
-    for src, n in ((y_exps, p), (x_exps, q)):
-        for k, v in src.items():
-            out[k] = out.get(k, 0) + v * n
-    return out
-
-
-def _numeric_target(pnode):
-    """The node a numeric property's annotation belongs on: the property
-    itself, or an array's items, where the number actually lives."""
-    if not isinstance(pnode, dict):
-        return None
-    target = pnode.get("items") if pnode.get("type") == "array" else pnode
-    if isinstance(target, dict) and target.get("type") in ("number", "integer"):
-        return target
-    return None
-
-
-def _follow(node, source_path, predicate, seen=None):
-    """Resolve a property node through $ref and oneOf aliases to every target
-    satisfying `predicate`. This is what makes ValueCurve and FunctionData
-    inert: they match nothing themselves, so the walk passes straight through."""
-    if not isinstance(node, dict):
-        return []
-    seen = seen if seen is not None else set()
-    out = []
-    refs = []
-    if "$ref" in node:
-        refs.append(node["$ref"])
-    for branch in node.get("oneOf", []):
-        if isinstance(branch, dict) and "$ref" in branch:
-            refs.append(branch["$ref"])
-    if not refs and predicate(node):
-        return [node]
-    for ref in refs:
-        if ref in seen:
-            continue
-        seen.add(ref)
-        target = resolve_ref_node(ref, source_path)
-        if target is None:
-            continue
-        if predicate(target):
-            out.append(target)
-        else:
-            out.extend(_follow(target, source_path, predicate, seen))
-    return out
-
-
-def check_curve_composition(doc, source_file, source_path, failures, defaults):
-    """Walk every family-to-leaf path and compose. Returns the rendered
-    compositions as (path_label, unit) pairs."""
-    defs = doc.get("$defs") or doc.get("definitions") or {}
-    composed = []
-    # One unannotated property is reachable by many paths; report it once.
-    reported = set()
-
-    def report(defn, prop, fam_name):
-        where = f"/$defs/{defn}/properties/{prop}"
-        if where in reported:
-            return
-        reported.add(where)
-        failures.append(
-            Failure(source_file, where, "curve-composition-unannotated",
-                    "no x-curve-dimension",
-                    f"an x-curve-dimension: reached from {fam_name}, "
-                    f"so its unit must compose")
-        )
-
-    is_form = lambda n: isinstance(n, dict) and "x-curve-output" in n
-
-    for fam_name, fam in sorted(defs.items()):
-        if not isinstance(fam, dict) or "x-curve-axes" not in fam:
-            continue
-        axes = fam["x-curve-axes"]
-        if not isinstance(axes, dict) or set(axes) != {"x", "y"}:
-            continue  # rule 8 already reported the shape
-        if axes["x"] not in defaults or axes["y"] not in defaults:
-            continue  # rule 8 already reported the quantity
-        X = parse_unit_exponents(defaults[axes["x"]])
-        Y = parse_unit_exponents(defaults[axes["y"]])
-
-        for prop_name, prop in sorted(fam.get("properties", {}).items()):
-            for form in _follow(prop, source_path, is_form):
-                form_name = form.get("title", "?")
-                k = form.get("x-curve-output")
-                if not isinstance(k, int) or isinstance(k, bool):
-                    continue  # rule 9 already reported it
-                label = f"{fam_name}.{prop_name} -> {form_name}"
-
-                # form scalars: absolute y-quantities, so no k offset
-                for sname, snode in sorted(form.get("properties", {}).items()):
-                    target = _numeric_target(snode)
-                    if target is None:
-                        continue
-                    dim = target.get("x-curve-dimension")
-                    if dim is None:
-                        report(form_name, sname, fam_name)
-                        continue
-                    p, q = dim
-                    composed.append((f"{label}.{sname}",
-                                     render_unit_exponents(compose_unit(Y, X, p, q))))
-
-                fd = form.get("properties", {}).get("function_data")
-                if fd is None:
-                    continue
-                # A concrete function data is anything with its own
-                # properties; FunctionData itself is a bare oneOf, so it has
-                # none and the walk passes through it. Requiring a numeric
-                # property here would drop PiecewiseLinearData, whose numbers
-                # live one hop further down in XY_Coords.
-                leaves = _follow(fd, source_path,
-                                 lambda n: isinstance(n, dict) and "properties" in n)
-                for leaf in leaves:
-                    leaf_name = leaf.get("title", "?")
-                    for lname, lnode in sorted(leaf["properties"].items()):
-                        # a property whose items are objects (XY_Coords) is
-                        # followed one more hop to the point's own coordinates
-                        inner = _follow(lnode.get("items", {}), source_path,
-                                        lambda n: isinstance(n, dict)
-                                        and "properties" in n) if isinstance(
-                                            lnode, dict) and "items" in lnode else []
-                        for point in inner:
-                            for cname, cnode in sorted(point["properties"].items()):
-                                target = _numeric_target(cnode)
-                                if target is None:
-                                    continue
-                                dim = target.get("x-curve-dimension")
-                                if dim is None:
-                                    report(point.get("title", "?"), cname, fam_name)
-                                    continue
-                                p, q = dim
-                                composed.append(
-                                    (f"{label}.{leaf_name}.{lname}[].{cname}",
-                                     render_unit_exponents(
-                                         compose_unit(Y, X, p, k * p + q))))
-                        if inner:
-                            continue
-                        target = _numeric_target(lnode)
-                        if target is None:
-                            continue
-                        dim = target.get("x-curve-dimension")
-                        if dim is None:
-                            report(leaf_name, lname, fam_name)
-                            continue
-                        p, q = dim
-                        composed.append((f"{label}.{leaf_name}.{lname}",
-                                         render_unit_exponents(
-                                             compose_unit(Y, X, p, k * p + q))))
-    return composed
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     group = parser.add_mutually_exclusive_group()
@@ -1313,8 +1148,7 @@ def run_validation(files, griddb_path=None):
     col_allowed = load_column_allowed_units(griddb_path)
     unit_quantities = load_unit_quantities()
     variant_titles = collect_polymorphic_variant_titles(files)
-    quantity_defaults = load_quantity_defaults()
-    compositions = []
+    fd_variants = function_data_variants(REPO_ROOT / "Core" / "common.json")
     failures = []
 
     for path in files:
@@ -1328,20 +1162,14 @@ def run_validation(files, griddb_path=None):
             continue
         check_metaschema(doc, str(rel), failures)
         check_annotations(doc, "", str(rel), path, [], failures, allowed_units,
-                          col_allowed, None, unit_quantities)
+                          col_allowed, None, unit_quantities, fd_variants)
         find_composite_defaults(doc, "", path, str(rel), failures, variant_titles)
-        compositions.extend(
-            check_curve_composition(doc, str(rel), path, failures, quantity_defaults)
-        )
 
     print(f"Scanned {len(files)} schema file(s) under {', '.join(SCAN_DIRS)}.")
     print(f"Vocabulary: {len(allowed_units) - 1} allowed units + 'pu' from Core/units.json.")
     ambiguous = sum(1 for q in unit_quantities.values() if len(q) > 1)
     print(f"Quantity declarations: {ambiguous} ambiguous unit(s) in the vocabulary "
           "require x-quantity where inference cannot resolve them.")
-    if compositions:
-        print(f"Curve composition: {len(compositions)} family-to-leaf path(s) compose "
-              f"to {len(set(u for _, u in compositions))} distinct unit(s).")
     if col_allowed is None:
         print("Quantity pairing: SiennaGridDB checkout absent -- flat check only.")
     else:
