@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of RL series filter in algebraic representation",
+  "properties": {
+    "rf": {
+      "description": "Series resistance in p.u. of converter filter to the grid",
+      "type": "number"
+    },
+    "lf": {
+      "description": "Series inductance in p.u. of converter filter to the grid",
+      "type": "number"
+    }
+  },
+  "required": [
+    "rf",
+    "lf"
+  ],
+  "title": "RLFilter",
+  "type": "object"
+}

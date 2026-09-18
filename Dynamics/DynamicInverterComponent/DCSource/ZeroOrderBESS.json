@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters for the DC-side with a Battery Energy Storage System from 'Grid-Coupled Dynamic Response of Battery-Driven Voltage Source Converters'",
+  "properties": {
+    "rated_voltage": {
+      "description": "Rated voltage (V)",
+      "type": "number"
+    },
+    "rated_current": {
+      "description": "Rated current (A)",
+      "type": "number"
+    },
+    "battery_voltage": {
+      "description": "Battery voltage",
+      "type": "number"
+    },
+    "battery_resistance": {
+      "description": "Rated current (A)",
+      "type": "number"
+    },
+    "dc_dc_inductor": {
+      "description": "DC/DC inductance",
+      "type": "number"
+    },
+    "dc_link_capacitance": {
+      "description": "DC-link capacitance",
+      "type": "number"
+    },
+    "fs": {
+      "description": "DC/DC converter switching frequency",
+      "type": "number"
+    },
+    "kpv": {
+      "description": "Voltage controller proportional gain",
+      "type": "number"
+    },
+    "kiv": {
+      "description": "Voltage controller integral gain",
+      "type": "number"
+    },
+    "kpi": {
+      "description": "Current controller proportional gain",
+      "type": "number"
+    },
+    "kii": {
+      "description": "Current controller integral gain",
+      "type": "number"
+    },
+    "Vdc_ref": {
+      "description": "Reference DC-voltage set-point",
+      "default": 1.1,
+      "type": "number"
+    }
+  },
+  "required": [
+    "rated_voltage",
+    "rated_current",
+    "battery_voltage",
+    "battery_resistance",
+    "dc_dc_inductor",
+    "dc_link_capacitance",
+    "fs",
+    "kpv",
+    "kiv",
+    "kpi",
+    "kii"
+  ],
+  "title": "ZeroOrderBESS",
+  "type": "object"
+}

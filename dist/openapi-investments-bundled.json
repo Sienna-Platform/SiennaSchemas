@@ -1,0 +1,2923 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "PowerInvestmentsOpenAPIModels",
+    "version": "1.0.0",
+    "description": "Power system investments models: Technologies, Financials, Requirements, SupplementalAttributes, and Portfolio components"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "AggregateTransportTechnology": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "An aggregated representation of a transmission interchange between two regions. Capacity is added in discrete units of `unit_size`, priced by a capital cost curve, and derated by a proportional line loss.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean"
+          },
+          "power_systems_type": {
+            "description": "Corresponding type to be used in PCM modeling.",
+            "type": "string"
+          },
+          "start_region": {
+            "description": "Start region for transport technology.",
+            "type": "integer"
+          },
+          "end_region": {
+            "description": "End region for transport technology.",
+            "type": "integer"
+          },
+          "capacity_limits": {
+            "description": "Allowable capacity for a transmission line. Units: MW.",
+            "properties": {
+              "max": {
+                "title": "Max",
+                "type": "number"
+              },
+              "min": {
+                "title": "Min",
+                "type": "number"
+              }
+            },
+            "title": "MinMax",
+            "type": "object",
+            "x-unit": "MW"
+          },
+          "capital_costs": {
+            "description": "Capital and interconnection cost of adding new capacity to the transmission line (capital cost in USD/MW).",
+            "properties": {
+              "capital_cost": {
+                "$ref": "#/$defs/ValueCurve"
+              },
+              "interconnection_cost": {
+                "type": "number",
+                "default": 0.0
+              }
+            },
+            "required": [
+              "capital_cost"
+            ],
+            "title": "CapitalCost",
+            "type": "object"
+          },
+          "line_loss": {
+            "description": "Transmission loss for each transport technology. Units: 1.",
+            "type": "number",
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "unit_size": {
+            "description": "Used for integer investment decisions. Represents the rating capacity of individual new lines. Units: MW.",
+            "type": "number",
+            "x-unit": "MW"
+          },
+          "requirements": {
+            "description": "List of requirement IDs associated with the component.",
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "integer"
+            }
+          },
+          "financial_data": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "description": "Struct containing relevant financial information for a technology.",
+            "properties": {
+              "capital_recovery_period": {
+                "description": "Period over which capital costs are recovered for net present value calculations. Units: yr.",
+                "type": "integer",
+                "x-unit": "yr"
+              },
+              "technology_base_year": {
+                "description": "Base year for technology cost data used in NPV calculations.",
+                "type": "integer"
+              },
+              "debt_fraction": {
+                "description": "Fraction of capital costs financed through debt. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "debt_rate": {
+                "description": "Interest rate on debt financing. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "return_on_equity": {
+                "description": "Required rate of return on equity financing. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "tax_rate": {
+                "description": "Tax rate applied to equity returns. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              }
+            },
+            "required": [
+              "capital_recovery_period",
+              "technology_base_year",
+              "debt_fraction",
+              "debt_rate",
+              "return_on_equity",
+              "tax_rate"
+            ],
+            "title": "TechnologyFinancialData",
+            "type": "object"
+          }
+        },
+        "required": [
+          "available",
+          "end_region",
+          "financial_data",
+          "id",
+          "name",
+          "power_systems_type",
+          "start_region"
+        ],
+        "title": "AggregateTransportTechnology",
+        "type": "object"
+      },
+      "CapacityReserveMargin": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Policy requirement enforcing a minimum capacity reserve margin in the target year, such that `(total_capacity - peak_demand) / peak_demand >= capacity_reserve_fraction`.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean"
+          },
+          "target_year": {
+            "description": "Year in which this requirement is applied.",
+            "type": "integer"
+          },
+          "capacity_reserve_fraction": {
+            "description": "Capacity reserve requirements, represented as a fraction of peak demand in a region. Units: 1.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          }
+        },
+        "required": [
+          "name",
+          "id",
+          "available"
+        ],
+        "title": "CapacityReserveMargin",
+        "type": "object"
+      },
+      "CarbonCaps": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Policy requirement limiting the amount of carbon produced in the target year. The limit can be given either as a total mass of CO2 or as the carbon intensity of the portfolio, in mass of CO2 per MWh of electricity.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean"
+          },
+          "target_year": {
+            "description": "Year in which this requirement is applied.",
+            "type": "integer"
+          },
+          "max_tons_mwh": {
+            "description": "Emission limit in terms of rate. Units: Mt/MWh.",
+            "type": "number",
+            "default": 100000000,
+            "x-unit": "Mt/MWh"
+          },
+          "max_mtons": {
+            "description": "Emission limit in absolute values (million tonnes). Units: Mt.",
+            "type": "number",
+            "x-unit": "Mt"
+          }
+        },
+        "required": [
+          "name",
+          "id",
+          "available"
+        ],
+        "title": "CarbonCaps",
+        "type": "object"
+      },
+      "CarbonTax": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Policy requirement defining an additional cost penalty per ton of CO2 produced in the eligible regions during the target year.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean"
+          },
+          "target_year": {
+            "description": "Year in which this requirement is applied.",
+            "type": "integer"
+          },
+          "tax_dollars_per_ton": {
+            "description": "Cost penalty per ton of CO2 emitted by technologies in the eligible regions during the target year. Units: USD/t.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "USD/t"
+          }
+        },
+        "required": [
+          "name",
+          "id",
+          "available"
+        ],
+        "title": "CarbonTax",
+        "type": "object"
+      },
+      "ColocatedSupplyStorageTechnology": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Supply technology co-located with storage behind a shared grid connection. The generation and storage portions are referenced by id (`supply_technology` and `storage_technology`); the inverter that couples them to the grid carries its own capacity limits, capital and operating costs, and efficiency.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean"
+          },
+          "power_systems_type": {
+            "description": "Corresponding type to be used in PCM modeling.",
+            "type": "string"
+          },
+          "region": {
+            "description": "Location where the component applies. Can be a zone or node.",
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "financial_data": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "description": "Struct containing relevant financial information for a technology.",
+            "properties": {
+              "capital_recovery_period": {
+                "description": "Period over which capital costs are recovered for net present value calculations. Units: yr.",
+                "type": "integer",
+                "x-unit": "yr"
+              },
+              "technology_base_year": {
+                "description": "Base year for technology cost data used in NPV calculations.",
+                "type": "integer"
+              },
+              "debt_fraction": {
+                "description": "Fraction of capital costs financed through debt. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "debt_rate": {
+                "description": "Interest rate on debt financing. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "return_on_equity": {
+                "description": "Required rate of return on equity financing. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "tax_rate": {
+                "description": "Tax rate applied to equity returns. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              }
+            },
+            "required": [
+              "capital_recovery_period",
+              "technology_base_year",
+              "debt_fraction",
+              "debt_rate",
+              "return_on_equity",
+              "tax_rate"
+            ],
+            "title": "TechnologyFinancialData",
+            "type": "object"
+          },
+          "supply_technology": {
+            "description": "The ID of the underlying supply technology (e.g., wind or solar) co-located with storage.",
+            "type": "integer"
+          },
+          "storage_technology": {
+            "description": "The ID of the underlying storage technology co-located with the supply technology.",
+            "type": "integer"
+          },
+          "inverter_capacity_limits": {
+            "description": "Limits on inverter capacity. Units: MW.",
+            "properties": {
+              "max": {
+                "title": "Max",
+                "type": "number"
+              },
+              "min": {
+                "title": "Min",
+                "type": "number"
+              }
+            },
+            "title": "MinMax",
+            "type": "object",
+            "x-unit": "MW"
+          },
+          "capital_costs_inverter": {
+            "description": "Capital and interconnection cost for investing in inverter capacity (capital cost in USD/MW).",
+            "properties": {
+              "capital_cost": {
+                "$ref": "#/$defs/ValueCurve"
+              },
+              "interconnection_cost": {
+                "type": "number",
+                "default": 0.0
+              }
+            },
+            "required": [
+              "capital_cost"
+            ],
+            "title": "CapitalCost",
+            "type": "object"
+          },
+          "operation_costs_inverter": {
+            "description": "Operational costs for using inverter in co-located systems. Units: USD/MWh.",
+            "title": "ProductionVariableCostCurve",
+            "discriminator": {
+              "mapping": {
+                "COST": "#/$defs/CostCurve",
+                "FUEL": "#/$defs/FuelCurve"
+              },
+              "propertyName": "variable_cost_type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/CostCurve"
+              },
+              {
+                "$ref": "#/$defs/FuelCurve"
+              }
+            ],
+            "type": "object",
+            "x-unit": "USD/MWh"
+          },
+          "inverter_efficiency": {
+            "description": "Efficiency of AC to DC conversion of inverter. Units: 1.",
+            "type": "number",
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "inverter_supply_ratio": {
+            "description": "Ratio of generation capacity to grid connection capacity. Units: 1.",
+            "type": "number",
+            "x-unit": "1",
+            "x-quantity": "Dimensionless"
+          },
+          "requirements": {
+            "description": "List of requirement IDs associated with the component.",
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "integer"
+            }
+          }
+        },
+        "required": [
+          "capital_costs_inverter",
+          "financial_data",
+          "id",
+          "inverter_efficiency",
+          "inverter_supply_ratio",
+          "name",
+          "operation_costs_inverter",
+          "power_systems_type",
+          "storage_technology",
+          "supply_technology"
+        ],
+        "title": "ColocatedSupplyStorageTechnology",
+        "type": "object"
+      },
+      "DemandRequirement": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Demand requirements for a region. New demand enters at a stated peak in its construction year and scales forward by a growth rate; `value_of_lost_load` and `unserved_demand_curve` price whatever portion goes unserved.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean",
+            "default": true
+          },
+          "power_systems_type": {
+            "description": "Corresponding type to be used in PCM modeling.",
+            "type": "string"
+          },
+          "conformity": {
+            "description": "Indicator of how the demand requirement should conform to the load profile of existing technologies in the system. Should only be used for new demand requirements.",
+            "type": "string",
+            "default": "UNDEFINED"
+          },
+          "growth_rate": {
+            "description": "The annual growth rate of the demand requirement, used to scale present-day loads into future projections. Should only be used for conforming loads. Units: 1.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "new_demand_mw": {
+            "description": "The value of the peak demand to be used for new DemandRequirements. Units: MW.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "MW"
+          },
+          "new_construction_year": {
+            "description": "The year in which the new demand requirement will be installed. Should only be used for new demand requirements.",
+            "type": "integer",
+            "default": 2020
+          },
+          "region": {
+            "description": "Location where the component applies. Can be a zone or node.",
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "value_of_lost_load": {
+            "description": "Value of unserved load. Units: USD/MWh.",
+            "type": "number",
+            "x-unit": "USD/MWh"
+          },
+          "unserved_demand_curve": {
+            "description": "Piecewise curve to scale the cost of unserved load based on the value of lost load. Units: USD/MWh.",
+            "discriminator": {
+              "mapping": {
+                "AVERAGE_RATE": "#/$defs/AverageRateCurve",
+                "INCREMENTAL": "#/$defs/IncrementalCurve",
+                "INPUT_OUTPUT": "#/$defs/InputOutputCurve",
+                "TIME_SERIES_INPUT_OUTPUT": "#/$defs/TimeSeriesInputOutputCurve",
+                "TIME_SERIES_INCREMENTAL": "#/$defs/TimeSeriesIncrementalCurve",
+                "TIME_SERIES_AVERAGE_RATE": "#/$defs/TimeSeriesAverageRateCurve"
+              },
+              "propertyName": "curve_type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/InputOutputCurve"
+              },
+              {
+                "$ref": "#/$defs/IncrementalCurve"
+              },
+              {
+                "$ref": "#/$defs/AverageRateCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesInputOutputCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesIncrementalCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesAverageRateCurve"
+              }
+            ],
+            "title": "ValueCurve",
+            "type": "object",
+            "x-unit": "USD/MWh"
+          },
+          "requirements": {
+            "description": "List of requirement IDs associated with the component.",
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "integer"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "power_systems_type"
+        ],
+        "title": "DemandRequirement",
+        "type": "object"
+      },
+      "DemandSideTechnology": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Demand-side technology such as an electric vehicle fleet or a hydrogen electrolyzer. Its flexibility is described by how far demand may be delayed or advanced, how much of it may be curtailed, and the cost and energy losses of doing either.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean"
+          },
+          "region": {
+            "description": "Location where the component applies. Can be a zone or node.",
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "power_systems_type": {
+            "description": "Corresponding type to be used in PCM modeling.",
+            "type": "string"
+          },
+          "technology_efficiency": {
+            "description": "MWh of electricity per unit of output. Ex: MWh per ton of hydrogen for electrolyzers. Units: 1.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "price_per_unit": {
+            "description": "Price or value per unit of output. Ex: USD per ton of hydrogen for electrolyzers. Units: USD/t.",
+            "discriminator": {
+              "mapping": {
+                "AVERAGE_RATE": "#/$defs/AverageRateCurve",
+                "INCREMENTAL": "#/$defs/IncrementalCurve",
+                "INPUT_OUTPUT": "#/$defs/InputOutputCurve",
+                "TIME_SERIES_INPUT_OUTPUT": "#/$defs/TimeSeriesInputOutputCurve",
+                "TIME_SERIES_INCREMENTAL": "#/$defs/TimeSeriesIncrementalCurve",
+                "TIME_SERIES_AVERAGE_RATE": "#/$defs/TimeSeriesAverageRateCurve"
+              },
+              "propertyName": "curve_type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/InputOutputCurve"
+              },
+              {
+                "$ref": "#/$defs/IncrementalCurve"
+              },
+              {
+                "$ref": "#/$defs/AverageRateCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesInputOutputCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesIncrementalCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesAverageRateCurve"
+              }
+            ],
+            "title": "ValueCurve",
+            "type": "object",
+            "x-unit": "USD/t"
+          },
+          "min_power": {
+            "description": "Minimum operation of demandside unit as a fraction of peak demand. Units: 1.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "peak_demand_mw": {
+            "description": "Peak demand value in MW. Units: MW.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "MW"
+          },
+          "max_demand_delay": {
+            "description": "Maximum number of minutes that demand can be deferred or delayed (minutes). Units: min.",
+            "type": "number",
+            "x-unit": "min"
+          },
+          "max_demand_advance": {
+            "description": "Maximum number of minutes that demand can be scheduled in advance of the original schedule (minutes). Units: min.",
+            "type": "number",
+            "x-unit": "min"
+          },
+          "demand_energy_efficiency": {
+            "description": "Energy efficiency associated with time shifting demand. Represents energy losses due to time shifting. Units: 1.",
+            "type": "number",
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "shift_variable_cost": {
+            "description": "Variable operation and maintenance costs associated with flexible demand deferral/advancement. Units: USD/MWh.",
+            "discriminator": {
+              "mapping": {
+                "AVERAGE_RATE": "#/$defs/AverageRateCurve",
+                "INCREMENTAL": "#/$defs/IncrementalCurve",
+                "INPUT_OUTPUT": "#/$defs/InputOutputCurve",
+                "TIME_SERIES_INPUT_OUTPUT": "#/$defs/TimeSeriesInputOutputCurve",
+                "TIME_SERIES_INCREMENTAL": "#/$defs/TimeSeriesIncrementalCurve",
+                "TIME_SERIES_AVERAGE_RATE": "#/$defs/TimeSeriesAverageRateCurve"
+              },
+              "propertyName": "curve_type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/InputOutputCurve"
+              },
+              {
+                "$ref": "#/$defs/IncrementalCurve"
+              },
+              {
+                "$ref": "#/$defs/AverageRateCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesInputOutputCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesIncrementalCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesAverageRateCurve"
+              }
+            ],
+            "title": "ValueCurve",
+            "type": "object",
+            "x-unit": "USD/MWh"
+          },
+          "curtailment_cost": {
+            "description": "Energy cost of curtailed demand, USD per MWh. Units: USD/MWh.",
+            "discriminator": {
+              "mapping": {
+                "AVERAGE_RATE": "#/$defs/AverageRateCurve",
+                "INCREMENTAL": "#/$defs/IncrementalCurve",
+                "INPUT_OUTPUT": "#/$defs/InputOutputCurve",
+                "TIME_SERIES_INPUT_OUTPUT": "#/$defs/TimeSeriesInputOutputCurve",
+                "TIME_SERIES_INCREMENTAL": "#/$defs/TimeSeriesIncrementalCurve",
+                "TIME_SERIES_AVERAGE_RATE": "#/$defs/TimeSeriesAverageRateCurve"
+              },
+              "propertyName": "curve_type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/InputOutputCurve"
+              },
+              {
+                "$ref": "#/$defs/IncrementalCurve"
+              },
+              {
+                "$ref": "#/$defs/AverageRateCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesInputOutputCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesIncrementalCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesAverageRateCurve"
+              }
+            ],
+            "title": "ValueCurve",
+            "type": "object",
+            "x-unit": "USD/MWh"
+          },
+          "max_demand_curtailment": {
+            "description": "Maximum fraction of demand that can be curtailed. Units: 1.",
+            "type": "number",
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "requirements": {
+            "description": "List of requirement IDs associated with the component.",
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "integer"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "id",
+          "available",
+          "power_systems_type"
+        ],
+        "title": "DemandSideTechnology",
+        "type": "object"
+      },
+      "EnergyShareRequirements": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Policy requirement that the total generation of the eligible technologies be at least a pre-determined fraction of the total annual demand across the eligible zones in the target year.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean"
+          },
+          "target_year": {
+            "description": "Year in which this requirement is applied.",
+            "type": "integer"
+          },
+          "generation_fraction_requirement": {
+            "description": "Fraction of total annual demand across all eligible zones that needs to be met by eligible resources. Units: 1.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          }
+        },
+        "required": [
+          "name",
+          "id",
+          "available"
+        ],
+        "title": "EnergyShareRequirements",
+        "type": "object"
+      },
+      "ExistingDevices": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Supplemental attribute mapping a technology in the portfolio to the existing system — for example, the list of existing generators that correspond to one supply technology.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "existing_devices": {
+            "description": "List of individual existing devices to map to a specific technology in the portfolio.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "ExistingDevices",
+        "type": "object"
+      },
+      "HourlyMatching": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Policy requirement that the qualified demand-side technologies have their demand met by an equal amount of generation from qualified supply in every hour, such that `sum(P)_qualified_supply >= sum(D)_qualified_demand`.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "id",
+          "available"
+        ],
+        "title": "HourlyMatching",
+        "type": "object"
+      },
+      "MaximumCapacityRequirements": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Policy requirement that the total capacity of all eligible technologies in the target year be less than the specified limit in MW.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean"
+          },
+          "target_year": {
+            "description": "Year in which this requirement is applied.",
+            "type": "integer"
+          },
+          "max_capacity_mw": {
+            "description": "Maximum total capacity across all eligible resources. Units: MW.",
+            "type": "number",
+            "x-unit": "MW"
+          }
+        },
+        "required": [
+          "name",
+          "id",
+          "available"
+        ],
+        "title": "MaximumCapacityRequirements",
+        "type": "object"
+      },
+      "MinimumCapacityRequirements": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Policy requirement that the total capacity of all eligible technologies in the target year be greater than or equal to the specified minimum in MW.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean"
+          },
+          "target_year": {
+            "description": "Year in which this requirement is applied.",
+            "type": "integer"
+          },
+          "min_capacity_mw": {
+            "description": "Minimum total capacity across all eligible resources. Units: MW.",
+            "type": "number",
+            "x-unit": "MW"
+          }
+        },
+        "required": [
+          "name",
+          "id",
+          "available"
+        ],
+        "title": "MinimumCapacityRequirements",
+        "type": "object"
+      },
+      "NodalACTransportTechnology": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Nodal representation of candidate AC transmission lines between two regions. Alongside capacity limits and a capital cost curve it carries the electrical characteristics of the line — resistance, series reactance, and voltage rating — and is added in discrete units of `unit_size`.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean"
+          },
+          "power_systems_type": {
+            "description": "Corresponding type to be used in PCM modeling.",
+            "type": "string"
+          },
+          "start_node": {
+            "description": "Start node for transport technology.",
+            "type": "integer"
+          },
+          "end_node": {
+            "description": "End node for transport technology.",
+            "type": "integer"
+          },
+          "capacity_limits": {
+            "description": "Allowable capacity for a transmission line. Units: MW.",
+            "properties": {
+              "max": {
+                "title": "Max",
+                "type": "number"
+              },
+              "min": {
+                "title": "Min",
+                "type": "number"
+              }
+            },
+            "title": "MinMax",
+            "type": "object",
+            "x-unit": "MW"
+          },
+          "capital_costs": {
+            "description": "Capital and interconnection cost of adding new capacity to the nodal transmission line (capital cost in USD/MW).",
+            "properties": {
+              "capital_cost": {
+                "$ref": "#/$defs/ValueCurve"
+              },
+              "interconnection_cost": {
+                "type": "number",
+                "default": 0.0
+              }
+            },
+            "required": [
+              "capital_cost"
+            ],
+            "title": "CapitalCost",
+            "type": "object"
+          },
+          "resistance": {
+            "description": "Technology resistance in Ohms. Units: ohm.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "ohm",
+            "x-quantity": "Resistance"
+          },
+          "voltage": {
+            "description": "Voltage rating of transmission line. Units: kV.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "kV"
+          },
+          "unit_size": {
+            "description": "Used for integer investment decisions. Represents the rating capacity of individual new lines. Units: MW.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "MW"
+          },
+          "reactance": {
+            "description": "Series reactance for a line. Units: ohm.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "ohm",
+            "x-quantity": "Reactance"
+          },
+          "requirements": {
+            "description": "List of requirement IDs associated with the component.",
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "integer"
+            }
+          },
+          "financial_data": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "description": "Struct containing relevant financial information for a technology.",
+            "properties": {
+              "capital_recovery_period": {
+                "description": "Period over which capital costs are recovered for net present value calculations. Units: yr.",
+                "type": "integer",
+                "x-unit": "yr"
+              },
+              "technology_base_year": {
+                "description": "Base year for technology cost data used in NPV calculations.",
+                "type": "integer"
+              },
+              "debt_fraction": {
+                "description": "Fraction of capital costs financed through debt. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "debt_rate": {
+                "description": "Interest rate on debt financing. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "return_on_equity": {
+                "description": "Required rate of return on equity financing. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "tax_rate": {
+                "description": "Tax rate applied to equity returns. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              }
+            },
+            "required": [
+              "capital_recovery_period",
+              "technology_base_year",
+              "debt_fraction",
+              "debt_rate",
+              "return_on_equity",
+              "tax_rate"
+            ],
+            "title": "TechnologyFinancialData",
+            "type": "object"
+          }
+        },
+        "required": [
+          "available",
+          "end_node",
+          "financial_data",
+          "id",
+          "name",
+          "power_systems_type",
+          "start_node"
+        ],
+        "title": "NodalACTransportTechnology",
+        "type": "object"
+      },
+      "NodalHVDCTransportTechnology": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "A nodal representation of candidate HVDC transmission lines between two regions, added in discrete units of `unit_size` and characterized by capacity limits, a capital cost curve, and a loss model expressed as a fraction of installed nameplate capacity.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean"
+          },
+          "power_systems_type": {
+            "description": "Corresponding type to be used in PCM modeling.",
+            "type": "string"
+          },
+          "start_node": {
+            "description": "Start node for transport technology.",
+            "type": "integer"
+          },
+          "end_node": {
+            "description": "End node for transport technology.",
+            "type": "integer"
+          },
+          "capacity_limits": {
+            "description": "Allowable capacity for a transmission line. Units: MW.",
+            "properties": {
+              "max": {
+                "title": "Max",
+                "type": "number"
+              },
+              "min": {
+                "title": "Min",
+                "type": "number"
+              }
+            },
+            "title": "MinMax",
+            "type": "object",
+            "x-unit": "MW"
+          },
+          "capital_costs": {
+            "description": "Capital and interconnection cost of adding new capacity to the nodal transmission line (capital cost in USD/MW).",
+            "properties": {
+              "capital_cost": {
+                "$ref": "#/$defs/ValueCurve"
+              },
+              "interconnection_cost": {
+                "type": "number",
+                "default": 0.0
+              }
+            },
+            "required": [
+              "capital_cost"
+            ],
+            "title": "CapitalCost",
+            "type": "object"
+          },
+          "line_loss": {
+            "description": "Loss model coefficients. Accepts a linear model with a constant loss and a proportional loss rate, or a Piecewise loss with N segments for different proportional losses. All terms are defined as fraction of installed nameplate capacity. Units: 1.",
+            "discriminator": {
+              "mapping": {
+                "AVERAGE_RATE": "#/$defs/AverageRateCurve",
+                "INCREMENTAL": "#/$defs/IncrementalCurve",
+                "INPUT_OUTPUT": "#/$defs/InputOutputCurve",
+                "TIME_SERIES_INPUT_OUTPUT": "#/$defs/TimeSeriesInputOutputCurve",
+                "TIME_SERIES_INCREMENTAL": "#/$defs/TimeSeriesIncrementalCurve",
+                "TIME_SERIES_AVERAGE_RATE": "#/$defs/TimeSeriesAverageRateCurve"
+              },
+              "propertyName": "curve_type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/InputOutputCurve"
+              },
+              {
+                "$ref": "#/$defs/IncrementalCurve"
+              },
+              {
+                "$ref": "#/$defs/AverageRateCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesInputOutputCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesIncrementalCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesAverageRateCurve"
+              }
+            ],
+            "title": "ValueCurve",
+            "type": "object",
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "unit_size": {
+            "description": "Used for integer investment decisions. Represents the rating capacity of individual new lines. Units: MW.",
+            "type": "number",
+            "x-unit": "MW"
+          },
+          "requirements": {
+            "description": "List of requirement IDs associated with the component.",
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "integer"
+            }
+          },
+          "financial_data": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "description": "Struct containing relevant financial information for a technology.",
+            "properties": {
+              "capital_recovery_period": {
+                "description": "Period over which capital costs are recovered for net present value calculations. Units: yr.",
+                "type": "integer",
+                "x-unit": "yr"
+              },
+              "technology_base_year": {
+                "description": "Base year for technology cost data used in NPV calculations.",
+                "type": "integer"
+              },
+              "debt_fraction": {
+                "description": "Fraction of capital costs financed through debt. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "debt_rate": {
+                "description": "Interest rate on debt financing. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "return_on_equity": {
+                "description": "Required rate of return on equity financing. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "tax_rate": {
+                "description": "Tax rate applied to equity returns. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              }
+            },
+            "required": [
+              "capital_recovery_period",
+              "technology_base_year",
+              "debt_fraction",
+              "debt_rate",
+              "return_on_equity",
+              "tax_rate"
+            ],
+            "title": "TechnologyFinancialData",
+            "type": "object"
+          }
+        },
+        "required": [
+          "available",
+          "end_node",
+          "financial_data",
+          "id",
+          "name",
+          "power_systems_type",
+          "start_node"
+        ],
+        "title": "NodalHVDCTransportTechnology",
+        "type": "object"
+      },
+      "PortfolioFinancialData": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Financial data for the portfolio as a whole: the base economic year that all costs are converted to a net present value in, and the discount, inflation, and interest rates used in that conversion.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "discount_rate": {
+            "description": "Discount rate for financial calculations. Units: 1.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "inflation_rate": {
+            "description": "Inflation rate for cost adjustments. Units: 1.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "interest_rate": {
+            "description": "Interest rate for financing calculations. Units: 1.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "base_year": {
+            "description": "Base economic year. All costs will be converted to a net present value in this year.",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "discount_rate",
+          "inflation_rate",
+          "interest_rate",
+          "base_year"
+        ],
+        "title": "PortfolioFinancialData",
+        "type": "object"
+      },
+      "RetirementPotential": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Supplemental attribute defining which existing generators mapped to a supply technology are eligible for retirement, optionally with the year each was built and the year each is already scheduled to retire.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "eligible_generators": {
+            "description": "Names of individual generation units mapped to a technology that are eligible for retirement.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "planned_retirement_year": {
+            "description": "Optional dictionary to indicate the year in which the forced/planned retirement will occur.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer"
+            }
+          },
+          "build_year": {
+            "description": "Optional dictionary to indicate the year in which existing generators in the base system were built.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer"
+            }
+          },
+          "retirement_cost": {
+            "description": "Cost associated with retiring the eligible generators. Units: USD/MW.",
+            "discriminator": {
+              "mapping": {
+                "AVERAGE_RATE": "#/$defs/AverageRateCurve",
+                "INCREMENTAL": "#/$defs/IncrementalCurve",
+                "INPUT_OUTPUT": "#/$defs/InputOutputCurve",
+                "TIME_SERIES_INPUT_OUTPUT": "#/$defs/TimeSeriesInputOutputCurve",
+                "TIME_SERIES_INCREMENTAL": "#/$defs/TimeSeriesIncrementalCurve",
+                "TIME_SERIES_AVERAGE_RATE": "#/$defs/TimeSeriesAverageRateCurve"
+              },
+              "propertyName": "curve_type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/InputOutputCurve"
+              },
+              {
+                "$ref": "#/$defs/IncrementalCurve"
+              },
+              {
+                "$ref": "#/$defs/AverageRateCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesInputOutputCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesIncrementalCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesAverageRateCurve"
+              }
+            ],
+            "title": "ValueCurve",
+            "type": "object",
+            "x-unit": "USD/MW"
+          }
+        },
+        "required": [
+          "id",
+          "eligible_generators",
+          "retirement_cost"
+        ],
+        "title": "RetirementPotential",
+        "type": "object"
+      },
+      "RetrofitPotential": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Supplemental attribute defining which existing generators mapped to a supply technology are eligible for retrofit.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "eligible_generators": {
+            "description": "Names of individual generation units mapped to this technology that can be retrofitted.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "retrofit_fraction": {
+            "description": "Fraction of existing capacity that is eligible for retrofits. Units: 1.",
+            "type": "number",
+            "default": 1.0,
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "retrofit_cost": {
+            "description": "Cost associated with retrofitting the eligible generators. Units: USD/MW.",
+            "discriminator": {
+              "mapping": {
+                "AVERAGE_RATE": "#/$defs/AverageRateCurve",
+                "INCREMENTAL": "#/$defs/IncrementalCurve",
+                "INPUT_OUTPUT": "#/$defs/InputOutputCurve",
+                "TIME_SERIES_INPUT_OUTPUT": "#/$defs/TimeSeriesInputOutputCurve",
+                "TIME_SERIES_INCREMENTAL": "#/$defs/TimeSeriesIncrementalCurve",
+                "TIME_SERIES_AVERAGE_RATE": "#/$defs/TimeSeriesAverageRateCurve"
+              },
+              "propertyName": "curve_type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/InputOutputCurve"
+              },
+              {
+                "$ref": "#/$defs/IncrementalCurve"
+              },
+              {
+                "$ref": "#/$defs/AverageRateCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesInputOutputCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesIncrementalCurve"
+              },
+              {
+                "$ref": "#/$defs/TimeSeriesAverageRateCurve"
+              }
+            ],
+            "title": "ValueCurve",
+            "type": "object",
+            "x-unit": "USD/MW"
+          }
+        },
+        "required": [
+          "id",
+          "eligible_generators",
+          "retrofit_cost"
+        ],
+        "title": "RetrofitPotential",
+        "type": "object"
+      },
+      "StorageTechnology": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Candidate storage technology in a region. Charge capacity, discharge capacity, and energy capacity are added independently, each with its own capital cost, unit size, and capacity limits; charge and discharge efficiency, self-discharge losses, and limits on the ratio of energy to discharge capacity complete the description.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean"
+          },
+          "region": {
+            "description": "Location where the component applies. Can be a zone or node.",
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "power_systems_type": {
+            "description": "Corresponding type to be used in PCM modeling.",
+            "type": "string"
+          },
+          "min_discharge_fraction": {
+            "description": "Minimum discharge as a fraction of total discharge capacity. Units: 1.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "prime_mover_type": {
+            "description": "Prime mover for generator.",
+            "enum": [
+              "BA",
+              "BT",
+              "CA",
+              "CC",
+              "CE",
+              "CP",
+              "CS",
+              "CT",
+              "ES",
+              "FC",
+              "FW",
+              "GT",
+              "HA",
+              "HB",
+              "HK",
+              "HY",
+              "IC",
+              "PS",
+              "OT",
+              "ST",
+              "PVe",
+              "WT",
+              "WS"
+            ],
+            "title": "PrimeMovers",
+            "type": "string",
+            "default": "OT"
+          },
+          "storage_tech": {
+            "description": "Storage Technology Type.",
+            "enum": [
+              "PTES",
+              "LIB",
+              "LAB",
+              "FLWB",
+              "SIB",
+              "ZIB",
+              "HGS",
+              "LAES",
+              "OTHER_CHEM",
+              "OTHER_MECH",
+              "OTHER_THERM"
+            ],
+            "title": "StorageTech",
+            "type": "string"
+          },
+          "capital_costs": {
+            "description": "Capital and interconnection cost for investing in a storage technology's charge, discharge, and energy capacity (charge and discharge in USD/MW, energy in USD/MWh).",
+            "properties": {
+              "charge_capital_cost": {
+                "$ref": "#/$defs/ValueCurve"
+              },
+              "discharge_capital_cost": {
+                "$ref": "#/$defs/ValueCurve"
+              },
+              "energy_capital_cost": {
+                "$ref": "#/$defs/ValueCurve"
+              },
+              "interconnection_cost": {
+                "type": "number",
+                "default": 0.0
+              }
+            },
+            "required": [
+              "charge_capital_cost",
+              "discharge_capital_cost",
+              "energy_capital_cost",
+              "interconnection_cost"
+            ],
+            "title": "StorageCapitalCost",
+            "type": "object"
+          },
+          "operation_costs": {
+            "description": "Fixed and variable O&M costs for a storage technology. Units: USD/MWh.",
+            "properties": {
+              "cost_type": {
+                "const": "STORAGE",
+                "type": "string",
+                "default": "STORAGE"
+              },
+              "charge_variable_cost": {
+                "$ref": "#/$defs/CostCurve"
+              },
+              "discharge_variable_cost": {
+                "$ref": "#/$defs/CostCurve"
+              },
+              "fixed": {
+                "default": 0.0,
+                "type": "number"
+              },
+              "shut_down": {
+                "default": 0.0,
+                "type": "number"
+              },
+              "start_up": {
+                "default": 0.0,
+                "oneOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "properties": {
+                      "charge": {
+                        "type": "number"
+                      },
+                      "discharge": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  }
+                ]
+              },
+              "energy_shortage_cost": {
+                "default": 0.0,
+                "type": "number"
+              },
+              "energy_surplus_cost": {
+                "default": 0.0,
+                "type": "number"
+              }
+            },
+            "required": [
+              "fixed",
+              "start_up",
+              "shut_down"
+            ],
+            "title": "StorageCost",
+            "type": "object",
+            "x-unit": "USD/MWh"
+          },
+          "unit_size_discharge": {
+            "description": "Used for discrete investment decisions. Size of each unit of discharging capacity being built. Units: MW.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "MW"
+          },
+          "unit_size_charge": {
+            "description": "Used for discrete investment decisions. Unit size of charging capacity. Units: MW.",
+            "type": "number",
+            "x-unit": "MW"
+          },
+          "unit_size_energy": {
+            "description": "Used for discrete investment decisions. Size of each unit of energy capacity being built. Units: MWh.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "MWh"
+          },
+          "capacity_limits_charge": {
+            "description": "Allowable installed power capacity for charging of a storage technology, given either as a single bound applied to all capacity or as a mapping from a float key (stringified) to the bound that applies at that key. Units: MW.",
+            "x-unit": "MW",
+            "anyOf": [
+              {
+                "$ref": "#/$defs/MinMax"
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/$defs/MinMax"
+                }
+              }
+            ]
+          },
+          "capacity_limits_discharge": {
+            "description": "Allowable installed power capacity for discharging of a storage technology, given either as a single bound applied to all capacity or as a mapping from a float key (stringified) to the bound that applies at that key. Units: MW.",
+            "x-unit": "MW",
+            "anyOf": [
+              {
+                "$ref": "#/$defs/MinMax"
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/$defs/MinMax"
+                }
+              }
+            ]
+          },
+          "capacity_limits_energy": {
+            "description": "Allowable installed energy capacity for a storage technology, given either as a single bound applied to all capacity or as a mapping from a float key (stringified) to the bound that applies at that key. Units: MWh.",
+            "x-unit": "MWh",
+            "anyOf": [
+              {
+                "$ref": "#/$defs/MinMax"
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/$defs/MinMax"
+                }
+              }
+            ]
+          },
+          "duration_limits": {
+            "description": "Minimum and maximum duration limits (energy to discharge capacity ratio) for a storage technology (minutes). Units: min.",
+            "properties": {
+              "max": {
+                "title": "Max",
+                "type": "number"
+              },
+              "min": {
+                "title": "Min",
+                "type": "number"
+              }
+            },
+            "title": "MinMax",
+            "type": "object",
+            "x-unit": "min"
+          },
+          "efficiency": {
+            "description": "Efficiency of charging storage, fraction of total charge (in) and discharge (out) capacity. Units: 1.",
+            "properties": {
+              "in": {
+                "type": "number"
+              },
+              "out": {
+                "type": "number"
+              }
+            },
+            "title": "InOut",
+            "type": "object",
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "losses": {
+            "description": "Self-discharge of storage (fraction of energy stored per hour). Units: 1.",
+            "type": "number",
+            "default": 1.0,
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "lifetime": {
+            "description": "Maximum number of years a technology can be active once installed. Units: yr.",
+            "type": "integer",
+            "default": 100,
+            "x-unit": "yr"
+          },
+          "requirements": {
+            "description": "List of requirement IDs associated with the component.",
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "integer"
+            }
+          },
+          "financial_data": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "description": "Struct containing relevant financial information for a technology.",
+            "properties": {
+              "capital_recovery_period": {
+                "description": "Period over which capital costs are recovered for net present value calculations. Units: yr.",
+                "type": "integer",
+                "x-unit": "yr"
+              },
+              "technology_base_year": {
+                "description": "Base year for technology cost data used in NPV calculations.",
+                "type": "integer"
+              },
+              "debt_fraction": {
+                "description": "Fraction of capital costs financed through debt. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "debt_rate": {
+                "description": "Interest rate on debt financing. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "return_on_equity": {
+                "description": "Required rate of return on equity financing. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "tax_rate": {
+                "description": "Tax rate applied to equity returns. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              }
+            },
+            "required": [
+              "capital_recovery_period",
+              "technology_base_year",
+              "debt_fraction",
+              "debt_rate",
+              "return_on_equity",
+              "tax_rate"
+            ],
+            "title": "TechnologyFinancialData",
+            "type": "object"
+          }
+        },
+        "required": [
+          "available",
+          "financial_data",
+          "id",
+          "name",
+          "power_systems_type",
+          "storage_tech"
+        ],
+        "title": "StorageTechnology",
+        "type": "object"
+      },
+      "SupplyTechnology": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Candidate generation technology for a region, representing either a thermal or a renewable generation technology. It carries the capital and operating cost of new capacity together with the operating characteristics the added units take on — capacity limits, ramp and time limits, outage derating, fuel, and start-up fuel use.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the component.",
+            "type": "string"
+          },
+          "available": {
+            "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+            "type": "boolean"
+          },
+          "power_systems_type": {
+            "description": "Corresponding type to be used in PCM modeling.",
+            "type": "string"
+          },
+          "region": {
+            "description": "Location where the component applies. Can be a zone or node.",
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "prime_mover_type": {
+            "description": "Prime mover for generator.",
+            "enum": [
+              "BA",
+              "BT",
+              "CA",
+              "CC",
+              "CE",
+              "CP",
+              "CS",
+              "CT",
+              "ES",
+              "FC",
+              "FW",
+              "GT",
+              "HA",
+              "HB",
+              "HK",
+              "HY",
+              "IC",
+              "PS",
+              "OT",
+              "ST",
+              "PVe",
+              "WT",
+              "WS"
+            ],
+            "title": "PrimeMovers",
+            "type": "string",
+            "default": "OT"
+          },
+          "fuel": {
+            "description": "Fuel type according to IEA.",
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/ThermalFuels"
+            }
+          },
+          "cofire_start_limits": {
+            "description": "Minimum and maximum blending level of each fuel during start-up process for multi-fuel generator. Units: 1.",
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/$defs/MinMax"
+            },
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "cofire_level_limits": {
+            "description": "Minimum and maximum blending level of each fuel during normal generation process for multi-fuel generator. Units: 1.",
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/$defs/MinMax"
+            },
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "capital_costs": {
+            "description": "Capital and interconnection cost for investing in a technology (capital cost in USD/MW).",
+            "properties": {
+              "capital_cost": {
+                "$ref": "#/$defs/ValueCurve"
+              },
+              "interconnection_cost": {
+                "type": "number",
+                "default": 0.0
+              }
+            },
+            "required": [
+              "capital_cost"
+            ],
+            "title": "CapitalCost",
+            "type": "object"
+          },
+          "operation_costs": {
+            "description": "Fixed and variable O&M costs for a technology. Units: USD/MWh.",
+            "discriminator": {
+              "mapping": {
+                "RENEWABLE": "#/$defs/RenewableGenerationCost",
+                "THERMAL": "#/$defs/ThermalGenerationCost",
+                "HYDRO_GEN": "#/$defs/HydroGenerationCost"
+              },
+              "propertyName": "cost_type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/ThermalGenerationCost"
+              },
+              {
+                "$ref": "#/$defs/RenewableGenerationCost"
+              },
+              {
+                "$ref": "#/$defs/HydroGenerationCost"
+              }
+            ],
+            "title": "GenericOperationCost",
+            "type": "object",
+            "x-unit": "USD/MWh"
+          },
+          "unit_size": {
+            "description": "Used for discrete investment decisions. Size of each unit being built. Units: MW.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "MW"
+          },
+          "capacity_limits": {
+            "description": "Minimum and maximum allowable installed capacity for a technology, given either as a single bound applied to all capacity or as a mapping from a float key (stringified) to the bound that applies at that key. Units: MW.",
+            "x-unit": "MW",
+            "anyOf": [
+              {
+                "$ref": "#/$defs/MinMax"
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/$defs/MinMax"
+                }
+              }
+            ]
+          },
+          "outage_factor": {
+            "description": "Planned and forced outage factors for a technology, each a fraction of total availability (the fraction of hours in a year the technology is unavailable).",
+            "properties": {
+              "planned": {
+                "title": "Planned",
+                "type": "number"
+              },
+              "forced": {
+                "title": "Forced",
+                "type": "number"
+              }
+            },
+            "title": "OutageFactors",
+            "type": "object"
+          },
+          "min_generation_fraction": {
+            "description": "Minimum generation as a fraction of total capacity. Units: 1.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "ramp_limits": {
+            "description": "Maximum decrease and increase in output between operation periods. Units: MW/min.",
+            "properties": {
+              "down": {
+                "title": "Down",
+                "type": "number"
+              },
+              "up": {
+                "title": "Up",
+                "type": "number"
+              }
+            },
+            "required": [
+              "up",
+              "down"
+            ],
+            "title": "UpDown",
+            "type": "object",
+            "x-unit": "MW/min"
+          },
+          "time_limits": {
+            "description": "Minimum amount of time a resource has to stay in the committed or shutdown state (minutes). Units: min.",
+            "properties": {
+              "down": {
+                "title": "Down",
+                "type": "number"
+              },
+              "up": {
+                "title": "Up",
+                "type": "number"
+              }
+            },
+            "required": [
+              "up",
+              "down"
+            ],
+            "title": "UpDown",
+            "type": "object",
+            "x-unit": "min"
+          },
+          "start_fuel_mmbtu_per_mw": {
+            "description": "Startup fuel use per MW of nameplate capacity of each generator. Units: MMBtu/MW.",
+            "type": "number",
+            "default": 0.0,
+            "x-unit": "MMBtu/MW"
+          },
+          "lifetime": {
+            "description": "Maximum number of years a technology can be active once installed. Units: yr.",
+            "type": "integer",
+            "default": 100,
+            "x-unit": "yr"
+          },
+          "requirements": {
+            "description": "List of requirement IDs associated with the component.",
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "integer"
+            }
+          },
+          "financial_data": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "description": "Struct containing relevant financial information for a technology.",
+            "properties": {
+              "capital_recovery_period": {
+                "description": "Period over which capital costs are recovered for net present value calculations. Units: yr.",
+                "type": "integer",
+                "x-unit": "yr"
+              },
+              "technology_base_year": {
+                "description": "Base year for technology cost data used in NPV calculations.",
+                "type": "integer"
+              },
+              "debt_fraction": {
+                "description": "Fraction of capital costs financed through debt. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "debt_rate": {
+                "description": "Interest rate on debt financing. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "return_on_equity": {
+                "description": "Required rate of return on equity financing. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              },
+              "tax_rate": {
+                "description": "Tax rate applied to equity returns. Units: 1.",
+                "type": "number",
+                "x-unit": "1",
+                "x-quantity": "Fraction"
+              }
+            },
+            "required": [
+              "capital_recovery_period",
+              "technology_base_year",
+              "debt_fraction",
+              "debt_rate",
+              "return_on_equity",
+              "tax_rate"
+            ],
+            "title": "TechnologyFinancialData",
+            "type": "object"
+          }
+        },
+        "required": [
+          "financial_data",
+          "id",
+          "name",
+          "power_systems_type"
+        ],
+        "title": "SupplyTechnology",
+        "type": "object"
+      },
+      "TechnologyFinancialData": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Financial data for a candidate technology: the capital recovery period used to derive overnight capital cost from annualized investment cost, the dollar-year its cost data is reported in, and the debt fraction, debt rate, return on equity, and tax rate that together set its cost of capital.",
+        "properties": {
+          "capital_recovery_period": {
+            "description": "Period over which capital costs are recovered for net present value calculations. Units: yr.",
+            "type": "integer",
+            "x-unit": "yr"
+          },
+          "technology_base_year": {
+            "description": "Base year for technology cost data used in NPV calculations.",
+            "type": "integer"
+          },
+          "debt_fraction": {
+            "description": "Fraction of capital costs financed through debt. Units: 1.",
+            "type": "number",
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "debt_rate": {
+            "description": "Interest rate on debt financing. Units: 1.",
+            "type": "number",
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "return_on_equity": {
+            "description": "Required rate of return on equity financing. Units: 1.",
+            "type": "number",
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          },
+          "tax_rate": {
+            "description": "Tax rate applied to equity returns. Units: 1.",
+            "type": "number",
+            "x-unit": "1",
+            "x-quantity": "Fraction"
+          }
+        },
+        "required": [
+          "capital_recovery_period",
+          "technology_base_year",
+          "debt_fraction",
+          "debt_rate",
+          "return_on_equity",
+          "tax_rate"
+        ],
+        "title": "TechnologyFinancialData",
+        "type": "object"
+      },
+      "TopologyMapping": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "description": "Supplemental attribute storing the mapping between a zone and the associated buses in the base system.",
+        "properties": {
+          "id": {
+            "description": "ID for individual component.",
+            "type": "integer"
+          },
+          "buses": {
+            "description": "List of buses in the base system that are associated with a zone.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "TopologyMapping",
+        "type": "object"
+      }
+    }
+  },
+  "$defs": {
+    "AverageRateCurve": {
+      "description": "A curve whose y values are the average rate `f(x)/x` at production level `x` — total cost or fuel divided by output, the form heat rate tables use when they report MBTU/MWh against MW. `initial_input` records the total input at the minimum production point and is what makes conversion to an `InputOutputCurve` possible. Use `IncrementalCurve` when the data gives marginal rather than average rates.",
+      "properties": {
+        "curve_type": {
+          "const": "AVERAGE_RATE",
+          "type": "string",
+          "default": "AVERAGE_RATE"
+        },
+        "function_data": {
+          "discriminator": {
+            "mapping": {
+              "LINEAR": "#/$defs/LinearFunctionData",
+              "PIECEWISE_STEP": "#/$defs/PiecewiseStepData"
+            },
+            "propertyName": "function_type"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/LinearFunctionData"
+            },
+            {
+              "$ref": "#/$defs/PiecewiseStepData"
+            }
+          ]
+        },
+        "initial_input": {
+          "type": "number"
+        },
+        "input_at_zero": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "function_data",
+        "curve_type"
+      ],
+      "title": "AverageRateCurve",
+      "type": "object"
+    },
+    "CostCurve": {
+      "description": "Variable operation cost of a device expressed directly in currency. Wraps a `ValueCurve` that may be in input-output, incremental, or average-rate form, with `power_units` declaring the basis of the x axis and `vom_cost` adding a proportional variable operation and maintenance term.",
+      "properties": {
+        "power_units": {
+          "default": "NATURAL_UNITS",
+          "$ref": "#/$defs/UnitSystem"
+        },
+        "value_curve": {
+          "$ref": "#/$defs/ValueCurve"
+        },
+        "variable_cost_type": {
+          "const": "COST",
+          "type": "string",
+          "default": "COST"
+        },
+        "vom_cost": {
+          "default": {
+            "curve_type": "INPUT_OUTPUT",
+            "function_data": {
+              "function_type": "LINEAR",
+              "constant_term": 0,
+              "proportional_term": 0
+            }
+          },
+          "$ref": "#/$defs/InputOutputCurve"
+        }
+      },
+      "required": [
+        "value_curve",
+        "power_units",
+        "vom_cost",
+        "variable_cost_type"
+      ],
+      "title": "CostCurve",
+      "type": "object"
+    },
+    "FuelCurve": {
+      "description": "Variable operation cost of a device expressed in fuel consumed — MBTU, liters, m^3 — together with the price that converts fuel to currency. Wraps a `ValueCurve` in input-output, incremental, or average-rate form; exactly one of `fuel_cost` and `fuel_cost_time_series` supplies the price.",
+      "properties": {
+        "fuel_cost": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Fixed fuel cost per unit of fuel, or null when fuel_cost_time_series names a time-varying one. Exactly one of the two is set; producers and consumers enforce it."
+        },
+        "fuel_cost_time_series": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Store-minted id of the fuel-cost time series association, or null when fuel_cost carries a fixed value. Exactly one of the two is set."
+        },
+        "power_units": {
+          "$ref": "#/$defs/UnitSystem"
+        },
+        "startup_fuel_offtake": {
+          "description": "Fuel consumed during startup, as a curve in the unit's fuel units.",
+          "$ref": "#/$defs/InputOutputCurve"
+        },
+        "value_curve": {
+          "$ref": "#/$defs/ValueCurve"
+        },
+        "variable_cost_type": {
+          "const": "FUEL",
+          "type": "string",
+          "default": "FUEL"
+        },
+        "vom_cost": {
+          "$ref": "#/$defs/InputOutputCurve"
+        }
+      },
+      "required": [
+        "value_curve",
+        "power_units",
+        "vom_cost",
+        "variable_cost_type"
+      ],
+      "title": "FuelCurve",
+      "type": "object"
+    },
+    "FunctionData": {
+      "description": "Raw mathematical data defining a function `f(x)` — coefficients or point tables with no units or interpretation attached. `function_type` selects the shape: linear, quadratic, piecewise linear through (x, y) points, or piecewise constant between x endpoints. What `x` and `y` stand for is supplied by whatever wraps this, and the `TIME_SERIES_*` variants hold a reference to a stored series in place of the numbers.",
+      "discriminator": {
+        "mapping": {
+          "LINEAR": "#/$defs/LinearFunctionData",
+          "PIECEWISE_LINEAR": "#/$defs/PiecewiseLinearData",
+          "PIECEWISE_STEP": "#/$defs/PiecewiseStepData",
+          "QUADRATIC": "#/$defs/QuadraticFunctionData",
+          "TIME_SERIES_LINEAR": "#/$defs/TimeSeriesLinearFunctionData",
+          "TIME_SERIES_QUADRATIC": "#/$defs/TimeSeriesQuadraticFunctionData",
+          "TIME_SERIES_PIECEWISE_LINEAR": "#/$defs/TimeSeriesPiecewiseLinearData",
+          "TIME_SERIES_PIECEWISE_STEP": "#/$defs/TimeSeriesPiecewiseStepData"
+        },
+        "propertyName": "function_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/LinearFunctionData"
+        },
+        {
+          "$ref": "#/$defs/QuadraticFunctionData"
+        },
+        {
+          "$ref": "#/$defs/PiecewiseLinearData"
+        },
+        {
+          "$ref": "#/$defs/PiecewiseStepData"
+        },
+        {
+          "$ref": "#/$defs/TimeSeriesLinearFunctionData"
+        },
+        {
+          "$ref": "#/$defs/TimeSeriesQuadraticFunctionData"
+        },
+        {
+          "$ref": "#/$defs/TimeSeriesPiecewiseLinearData"
+        },
+        {
+          "$ref": "#/$defs/TimeSeriesPiecewiseStepData"
+        }
+      ],
+      "title": "FunctionData",
+      "type": "object"
+    },
+    "HydroGenerationCost": {
+      "description": "Cost representation for hydro gen units",
+      "properties": {
+        "cost_type": {
+          "const": "HYDRO_GEN",
+          "type": "string",
+          "default": "HYDRO_GEN"
+        },
+        "fixed": {
+          "default": 0.0,
+          "type": "number"
+        },
+        "variable_operation_cost": {
+          "$ref": "#/$defs/ProductionVariableCostCurve"
+        }
+      },
+      "required": [
+        "variable_operation_cost"
+      ],
+      "title": "HydroGenerationCost",
+      "type": "object"
+    },
+    "IncrementalCurve": {
+      "description": "A curve whose y values are the marginal rate `f'(x)` at production level `x` — the native form for market bid stacks and incremental heat rate data. `initial_input` records the total input at the minimum production point, anchoring the absolute level and enabling conversion to an `InputOutputCurve`. Use `InputOutputCurve` when the data gives total cost at each output level.",
+      "properties": {
+        "curve_type": {
+          "const": "INCREMENTAL",
+          "type": "string",
+          "default": "INCREMENTAL"
+        },
+        "function_data": {
+          "discriminator": {
+            "mapping": {
+              "LINEAR": "#/$defs/LinearFunctionData",
+              "PIECEWISE_STEP": "#/$defs/PiecewiseStepData"
+            },
+            "propertyName": "function_type"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/LinearFunctionData"
+            },
+            {
+              "$ref": "#/$defs/PiecewiseStepData"
+            }
+          ]
+        },
+        "initial_input": {
+          "type": "number"
+        },
+        "input_at_zero": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "function_data",
+        "curve_type"
+      ],
+      "title": "IncrementalCurve",
+      "type": "object"
+    },
+    "InputOutputCurve": {
+      "description": "A curve whose y values are the total input `f(x)` at production level `x` — currency per hour against MW in a cost curve, fuel per hour against MW in a fuel curve. The y axis is an absolute quantity, not a rate; use `IncrementalCurve` for marginal-rate data.",
+      "default": {
+        "curve_type": "INPUT_OUTPUT",
+        "function_data": {
+          "function_type": "LINEAR",
+          "constant_term": 0,
+          "proportional_term": 0
+        }
+      },
+      "properties": {
+        "curve_type": {
+          "const": "INPUT_OUTPUT",
+          "type": "string",
+          "default": "INPUT_OUTPUT"
+        },
+        "function_data": {
+          "discriminator": {
+            "mapping": {
+              "LINEAR": "#/$defs/LinearFunctionData",
+              "PIECEWISE_LINEAR": "#/$defs/PiecewiseLinearData",
+              "QUADRATIC": "#/$defs/QuadraticFunctionData"
+            },
+            "propertyName": "function_type"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/QuadraticFunctionData"
+            },
+            {
+              "$ref": "#/$defs/LinearFunctionData"
+            },
+            {
+              "$ref": "#/$defs/PiecewiseLinearData"
+            }
+          ]
+        },
+        "input_at_zero": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "function_data",
+        "curve_type"
+      ],
+      "title": "InputOutputCurve",
+      "type": "object"
+    },
+    "LinearFunctionData": {
+      "description": "Data for a linear function `f(x) = proportional_term * x + constant_term`.",
+      "properties": {
+        "constant_term": {
+          "type": "number"
+        },
+        "function_type": {
+          "const": "LINEAR",
+          "type": "string",
+          "default": "LINEAR"
+        },
+        "proportional_term": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "proportional_term",
+        "constant_term",
+        "function_type"
+      ],
+      "title": "LinearFunctionData",
+      "type": "object"
+    },
+    "MinMax": {
+      "description": "A pair of values bounding a quantity from below (`min`) and from above (`max`).",
+      "properties": {
+        "max": {
+          "title": "Max",
+          "type": "number"
+        },
+        "min": {
+          "title": "Min",
+          "type": "number"
+        }
+      },
+      "title": "MinMax",
+      "type": "object"
+    },
+    "PiecewiseLinearData": {
+      "description": "Data for a piecewise linear function defined by (x, y) points and interpolated linearly between consecutive ones. The y values are absolute values at each x, not per-segment slopes; use `PiecewiseStepData` when the data gives per-segment rates. Points run in ascending x order, and two of them define one segment.",
+      "properties": {
+        "function_type": {
+          "const": "PIECEWISE_LINEAR",
+          "type": "string",
+          "default": "PIECEWISE_LINEAR"
+        },
+        "points": {
+          "items": {
+            "$ref": "#/$defs/XY_Coords"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "points",
+        "function_type"
+      ],
+      "title": "PiecewiseLinearData",
+      "type": "object"
+    },
+    "PiecewiseStepData": {
+      "description": "Data for a step function, constant on each segment, defined by the x coordinates of the segment endpoints and one y value per segment. The y values are per-segment rates, not absolute values; use `PiecewiseLinearData` when the data gives a value at each point. `x_coords` ascends and holds at least two entries, and `y_coords` holds exactly one fewer.",
+      "properties": {
+        "function_type": {
+          "const": "PIECEWISE_STEP",
+          "type": "string",
+          "default": "PIECEWISE_STEP"
+        },
+        "x_coords": {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "y_coords": {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "x_coords",
+        "y_coords",
+        "function_type"
+      ],
+      "title": "PiecewiseStepData",
+      "type": "object"
+    },
+    "ProductionVariableCostCurve": {
+      "description": "Variable production cost of a device, selected by `variable_cost_type` between a curve denominated directly in currency (`COST`) and one denominated in fuel with a separate fuel price (`FUEL`).",
+      "title": "ProductionVariableCostCurve",
+      "discriminator": {
+        "mapping": {
+          "COST": "#/$defs/CostCurve",
+          "FUEL": "#/$defs/FuelCurve"
+        },
+        "propertyName": "variable_cost_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/CostCurve"
+        },
+        {
+          "$ref": "#/$defs/FuelCurve"
+        }
+      ],
+      "type": "object"
+    },
+    "QuadraticFunctionData": {
+      "description": "Data for a quadratic function `f(x) = quadratic_term * x^2 + proportional_term * x + constant_term`. A non-negative `quadratic_term` makes the function convex.",
+      "properties": {
+        "constant_term": {
+          "type": "number"
+        },
+        "function_type": {
+          "const": "QUADRATIC",
+          "type": "string",
+          "default": "QUADRATIC"
+        },
+        "proportional_term": {
+          "type": "number"
+        },
+        "quadratic_term": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "quadratic_term",
+        "proportional_term",
+        "constant_term",
+        "function_type"
+      ],
+      "title": "QuadraticFunctionData",
+      "type": "object"
+    },
+    "RenewableGenerationCost": {
+      "description": "Cost representation for renewable generation units",
+      "properties": {
+        "cost_type": {
+          "const": "RENEWABLE",
+          "type": "string",
+          "default": "RENEWABLE"
+        },
+        "curtailment_cost": {
+          "default": {
+            "variable_cost_type": "COST",
+            "value_curve": {
+              "curve_type": "INPUT_OUTPUT",
+              "function_data": {
+                "function_type": "LINEAR",
+                "constant_term": 0,
+                "proportional_term": 0
+              }
+            },
+            "vom_cost": {
+              "curve_type": "INPUT_OUTPUT",
+              "function_data": {
+                "function_type": "LINEAR",
+                "constant_term": 0,
+                "proportional_term": 0
+              }
+            }
+          },
+          "$ref": "#/$defs/CostCurve"
+        },
+        "variable_operation_cost": {
+          "$ref": "#/$defs/CostCurve"
+        },
+        "fixed": {
+          "type": "number",
+          "default": 0.0
+        }
+      },
+      "required": [
+        "variable_operation_cost"
+      ],
+      "title": "RenewableGenerationCost",
+      "type": "object"
+    },
+    "StartUpStages": {
+      "description": "A triple of values, one for each stage of a thermal unit's start-up: `hot`, `warm`, and `cold`.",
+      "properties": {
+        "startup_stages_type": {
+          "const": "STAGES",
+          "type": "string",
+          "default": "STAGES"
+        },
+        "cold": {
+          "type": "number"
+        },
+        "hot": {
+          "type": "number"
+        },
+        "warm": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "hot",
+        "warm",
+        "cold"
+      ],
+      "title": "StartUpStages",
+      "type": "object"
+    },
+    "ThermalFuels": {
+      "description": "Thermal fuels that reflect options in the EIA annual energy review.",
+      "enum": [
+        "ANTHRACITE_COAL",
+        "BITUMINOUS_COAL",
+        "LIGNITE_COAL",
+        "SUBBITUMINOUS_COAL",
+        "WASTE_COAL",
+        "REFINED_COAL",
+        "SYNTHESIS_GAS_COAL",
+        "DISTILLATE_FUEL_OIL",
+        "JET_FUEL",
+        "KEROSENE",
+        "PETROLEUM_COKE",
+        "RESIDUAL_FUEL_OIL",
+        "PROPANE",
+        "SYNTHESIS_GAS_PETROLEUM_COKE",
+        "WASTE_OIL",
+        "BLAST_FURNACE_GAS",
+        "NATURAL_GAS",
+        "OTHER_GAS",
+        "AG_BYPRODUCT",
+        "MUNICIPAL_WASTE",
+        "OTHER_BIOMASS_SOLIDS",
+        "WOOD_WASTE_SOLIDS",
+        "OTHER_BIOMASS_LIQUIDS",
+        "SLUDGE_WASTE",
+        "BLACK_LIQUOR",
+        "WOOD_WASTE_LIQUIDS",
+        "LANDFILL_GAS",
+        "OTHER_BIOMASS_GAS",
+        "NUCLEAR",
+        "WASTE_HEAT",
+        "TIRE_DERIVED_FUEL",
+        "COAL",
+        "GEOTHERMAL",
+        "OTHER"
+      ],
+      "title": "ThermalFuels",
+      "type": "string"
+    },
+    "ThermalGenerationCost": {
+      "title": "ThermalGenerationCost",
+      "description": "Cost representation for thermal generation units",
+      "properties": {
+        "cost_type": {
+          "const": "THERMAL",
+          "type": "string",
+          "default": "THERMAL"
+        },
+        "fixed": {
+          "description": "Fixed cost of keeping the unit online. For some cost represenations this field can be duplicative",
+          "type": "number"
+        },
+        "shut_down": {
+          "description": "Cost to turn the unit off",
+          "type": "number"
+        },
+        "start_up": {
+          "discriminator": {
+            "mapping": {
+              "STAGES": "#/$defs/StartUpStages"
+            },
+            "propertyName": "startup_stages_type"
+          },
+          "description": "Start-up cost can take linear or multi-stage cost",
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/StartUpStages"
+            }
+          ]
+        },
+        "variable_operation_cost": {
+          "$ref": "#/$defs/ProductionVariableCostCurve"
+        }
+      },
+      "required": [
+        "variable_operation_cost",
+        "fixed",
+        "start_up",
+        "shut_down"
+      ],
+      "type": "object"
+    },
+    "TimeSeriesAverageRateCurve": {
+      "properties": {
+        "curve_type": {
+          "const": "TIME_SERIES_AVERAGE_RATE",
+          "type": "string",
+          "default": "TIME_SERIES_AVERAGE_RATE"
+        },
+        "function_data": {
+          "$ref": "#/$defs/FunctionData",
+          "description": "Only TIME_SERIES_LINEAR or TIME_SERIES_PIECEWISE_STEP is admissible here; all other FunctionData variants, static or time-series-backed, are rejected by the consuming constructor."
+        },
+        "initial_input_association_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Store-minted id of the time series supplying the initial input value, or null."
+        },
+        "input_at_zero_association_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Store-minted id of the time series supplying the input at zero output, or null."
+        }
+      },
+      "required": [
+        "function_data",
+        "curve_type"
+      ],
+      "title": "TimeSeriesAverageRateCurve",
+      "description": "A time-series-backed average rate curve. The static counterpart is AverageRateCurve.",
+      "type": "object"
+    },
+    "TimeSeriesIncrementalCurve": {
+      "properties": {
+        "curve_type": {
+          "const": "TIME_SERIES_INCREMENTAL",
+          "type": "string",
+          "default": "TIME_SERIES_INCREMENTAL"
+        },
+        "function_data": {
+          "$ref": "#/$defs/FunctionData",
+          "description": "Only TIME_SERIES_LINEAR or TIME_SERIES_PIECEWISE_STEP is admissible here; all other FunctionData variants, static or time-series-backed, are rejected by the consuming constructor."
+        },
+        "initial_input_association_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Store-minted id of the time series supplying the initial input value, or null."
+        },
+        "input_at_zero_association_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Store-minted id of the time series supplying the input at zero output, or null."
+        }
+      },
+      "required": [
+        "function_data",
+        "curve_type"
+      ],
+      "title": "TimeSeriesIncrementalCurve",
+      "description": "A time-series-backed incremental curve. The static counterpart is IncrementalCurve.",
+      "type": "object"
+    },
+    "TimeSeriesInputOutputCurve": {
+      "properties": {
+        "curve_type": {
+          "const": "TIME_SERIES_INPUT_OUTPUT",
+          "type": "string",
+          "default": "TIME_SERIES_INPUT_OUTPUT"
+        },
+        "function_data": {
+          "$ref": "#/$defs/FunctionData",
+          "description": "Only TIME_SERIES_LINEAR, TIME_SERIES_QUADRATIC, or TIME_SERIES_PIECEWISE_LINEAR is admissible here; the static variants and TIME_SERIES_PIECEWISE_STEP are invalid and rejected by the consuming constructor."
+        },
+        "input_at_zero": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Optional explicit input value at zero output. A number here, unlike the incremental and average-rate variants, where it is a time series reference."
+        }
+      },
+      "required": [
+        "function_data",
+        "curve_type"
+      ],
+      "title": "TimeSeriesInputOutputCurve",
+      "description": "A time-series-backed input-output curve. The static counterpart is InputOutputCurve.",
+      "type": "object"
+    },
+    "TimeSeriesLinearFunctionData": {
+      "description": "Time-series-backed variant of `LinearFunctionData`. In place of inline coefficients it carries `association_id`, referencing a stored series that supplies them at each step; use it when the coefficients change over time.",
+      "properties": {
+        "function_type": {
+          "const": "TIME_SERIES_LINEAR",
+          "type": "string",
+          "default": "TIME_SERIES_LINEAR"
+        },
+        "association_id": {
+          "type": "integer",
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
+        }
+      },
+      "required": [
+        "function_type",
+        "association_id"
+      ],
+      "title": "TimeSeriesLinearFunctionData",
+      "type": "object"
+    },
+    "TimeSeriesPiecewiseLinearData": {
+      "description": "Time-series-backed variant of `PiecewiseLinearData`. In place of an inline point table it carries `association_id`, referencing a stored series that supplies one at each step; use it when the points change over time.",
+      "properties": {
+        "function_type": {
+          "const": "TIME_SERIES_PIECEWISE_LINEAR",
+          "type": "string",
+          "default": "TIME_SERIES_PIECEWISE_LINEAR"
+        },
+        "association_id": {
+          "type": "integer",
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
+        }
+      },
+      "required": [
+        "function_type",
+        "association_id"
+      ],
+      "title": "TimeSeriesPiecewiseLinearData",
+      "type": "object"
+    },
+    "TimeSeriesPiecewiseStepData": {
+      "description": "Time-series-backed variant of `PiecewiseStepData`. In place of inline coordinate vectors it carries `association_id`, referencing a stored series that supplies them at each step; use it when the segments change over time.",
+      "properties": {
+        "function_type": {
+          "const": "TIME_SERIES_PIECEWISE_STEP",
+          "type": "string",
+          "default": "TIME_SERIES_PIECEWISE_STEP"
+        },
+        "association_id": {
+          "type": "integer",
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
+        }
+      },
+      "required": [
+        "function_type",
+        "association_id"
+      ],
+      "title": "TimeSeriesPiecewiseStepData",
+      "type": "object"
+    },
+    "TimeSeriesQuadraticFunctionData": {
+      "description": "Time-series-backed variant of `QuadraticFunctionData`. In place of inline coefficients it carries `association_id`, referencing a stored series that supplies them at each step; use it when the coefficients change over time.",
+      "properties": {
+        "function_type": {
+          "const": "TIME_SERIES_QUADRATIC",
+          "type": "string",
+          "default": "TIME_SERIES_QUADRATIC"
+        },
+        "association_id": {
+          "type": "integer",
+          "description": "Store-minted id of the time series association whose values supply this function data over time. Resolved against the accompanying time series store on read; minted by that store and meaningful only against it, never assigned by a document producer."
+        }
+      },
+      "required": [
+        "function_type",
+        "association_id"
+      ],
+      "title": "TimeSeriesQuadraticFunctionData",
+      "type": "object"
+    },
+    "UnitSystem": {
+      "description": "Unit basis a stored value is expressed in. COMPONENT_BASE: per-unit against a base the component records itself. NATURAL_UNITS: the quantity's own physical unit. No system-wide option: a value per-unitized against a shared base records that base on the component and rides as COMPONENT_BASE. Used in three scopes, each read against its own record rather than a document-wide table: a component's own `power_units` (against that component's `base_power`), a cost payload's own `power_units` (e.g. `CostCurve`, against the owning component's `base_power`), and a time series association's own `unit_system` (governing only that one series).",
+      "enum": [
+        "COMPONENT_BASE",
+        "NATURAL_UNITS"
+      ],
+      "title": "UnitSystem",
+      "type": "string"
+    },
+    "ValueCurve": {
+      "description": "A cost or fuel curve: function data plus a declaration of how to read its y axis. `INPUT_OUTPUT` reads y as the total `f(x)`, `INCREMENTAL` as the marginal rate `f'(x)`, and `AVERAGE_RATE` as the average `f(x)/x`; the three can express the same underlying function and are inter-convertible given `initial_input`. The `TIME_SERIES_*` variants are the time-varying equivalents. Which form to use follows the data source: bid stacks are incremental, total cost tables input-output, efficiency tables average rate.",
+      "discriminator": {
+        "mapping": {
+          "AVERAGE_RATE": "#/$defs/AverageRateCurve",
+          "INCREMENTAL": "#/$defs/IncrementalCurve",
+          "INPUT_OUTPUT": "#/$defs/InputOutputCurve",
+          "TIME_SERIES_INPUT_OUTPUT": "#/$defs/TimeSeriesInputOutputCurve",
+          "TIME_SERIES_INCREMENTAL": "#/$defs/TimeSeriesIncrementalCurve",
+          "TIME_SERIES_AVERAGE_RATE": "#/$defs/TimeSeriesAverageRateCurve"
+        },
+        "propertyName": "curve_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/InputOutputCurve"
+        },
+        {
+          "$ref": "#/$defs/IncrementalCurve"
+        },
+        {
+          "$ref": "#/$defs/AverageRateCurve"
+        },
+        {
+          "$ref": "#/$defs/TimeSeriesInputOutputCurve"
+        },
+        {
+          "$ref": "#/$defs/TimeSeriesIncrementalCurve"
+        },
+        {
+          "$ref": "#/$defs/TimeSeriesAverageRateCurve"
+        }
+      ],
+      "title": "ValueCurve",
+      "type": "object"
+    },
+    "XY_Coords": {
+      "description": "A single point, given as its `x` and `y` coordinates.",
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "x",
+        "y"
+      ],
+      "title": "XY_Coords",
+      "type": "object"
+    }
+  }
+}

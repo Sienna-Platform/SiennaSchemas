@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of a Fixed Frequency Estimator (i.e. no PLL)",
+  "properties": {
+    "frequency": {
+      "description": "Reference frequency",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "title": "FixedFrequency",
+  "type": "object"
+}

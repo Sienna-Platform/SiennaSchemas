@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "Ta": {
+      "type": "number"
+    },
+    "kd": {
+      "type": "number"
+    },
+    "komega": {
+      "type": "number"
+    },
+    "P_ref": {
+      "type": "number",
+      "default": 1.0
+    }
+  },
+  "required": [
+    "Ta",
+    "kd",
+    "komega"
+  ],
+  "title": "VirtualInertia",
+  "type": "object"
+}
