@@ -165,6 +165,11 @@
         "integer",
         "null"
       ]
+    },
+    "switching_times": {
+      "description": "Time it takes the unit to switch ONLINE (`up`) or OFFLINE (`down`) after a start or shut-down is initiated. Set to `null` if not modeled. Units: min.",
+      "$ref": "../../Core/common.json#/$defs/UpDown",
+      "x-unit": "min"
     }
   },
   "required": [
