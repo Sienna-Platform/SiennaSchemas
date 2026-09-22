@@ -11,17 +11,17 @@
       "type": "number"
     },
     "Td0_p": {
-      "description": "Time constant of transient d-axis voltage",
+      "description": "Time constant of transient d-axis voltage Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Td0_pp": {
-      "description": "Time constant of sub-transient d-axis voltage",
+      "description": "Time constant of sub-transient d-axis voltage Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tq0_pp": {
-      "description": "Time constant of sub-transient q-axis voltage",
+      "description": "Time constant of sub-transient q-axis voltage Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -53,7 +53,7 @@
       },
       "minItems": 2,
       "maxItems": 2
-    }  
+    }
   },
   "required": [
     "id",
