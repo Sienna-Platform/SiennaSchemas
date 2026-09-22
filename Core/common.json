@@ -39,10 +39,20 @@
           ]
         },
         "initial_input": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the curve's y-axis unit."
         },
         "input_at_zero": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the curve's y-axis unit."
         }
       },
       "required": [
@@ -50,7 +60,8 @@
         "curve_type"
       ],
       "title": "AverageRateCurve",
-      "type": "object"
+      "type": "object",
+      "x-curve-output": -1
     },
     "ComplexNumber": {
       "description": "A complex number, given as its `real` and `imag` parts.",
@@ -66,7 +77,7 @@
       "type": "object"
     },
     "CostCurve": {
-      "description": "Variable operation cost of a device expressed directly in currency. Wraps a `ValueCurve` that may be in input-output, incremental, or average-rate form, with `power_units` declaring the basis of the x axis and `vom_cost` adding a proportional variable operation and maintenance term.",
+      "description": "Variable operation cost of a device expressed directly in currency. Wraps a `ValueCurve` that may be in input-output, incremental, or average-rate form, with `power_units` declaring the basis of the x axis and `vom_cost` adding a proportional variable operation and maintenance term. Units: x-axis per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu ; y-axis USD/h .",
       "properties": {
         "power_units": {
           "default": "NATURAL_UNITS",
@@ -99,7 +110,11 @@
         "variable_cost_type"
       ],
       "title": "CostCurve",
-      "type": "object"
+      "type": "object",
+      "x-curve-axes": {
+        "x": "ActivePower",
+        "y": "CostPerTime"
+      }
     },
     "DbdPnts": {
       "description": "A pair of deadband thresholds `(dbd1, dbd2)` on a voltage or reactive-power error signal, inside which the controller does not act.",
@@ -494,10 +509,20 @@
           ]
         },
         "initial_input": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the curve's y-axis unit."
         },
         "input_at_zero": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the curve's y-axis unit."
         }
       },
       "required": [
@@ -505,7 +530,8 @@
         "curve_type"
       ],
       "title": "IncrementalCurve",
-      "type": "object"
+      "type": "object",
+      "x-curve-output": -1
     },
     "ChargeDischarge": {
       "description": "A pair of values, one for the charging (`charge`) and one for the discharging (`discharge`) direction of a quantity.",
@@ -575,7 +601,12 @@
           ]
         },
         "input_at_zero": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the curve's y-axis unit."
         }
       },
       "required": [
@@ -583,13 +614,19 @@
         "curve_type"
       ],
       "title": "InputOutputCurve",
-      "type": "object"
+      "type": "object",
+      "x-curve-output": 0
     },
     "LinearFunctionData": {
       "description": "Data for a linear function `f(x) = proportional_term * x + constant_term`.",
       "properties": {
         "constant_term": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the wrapped function's output unit."
         },
         "function_type": {
           "const": "LINEAR",
@@ -597,7 +634,12 @@
           "default": "LINEAR"
         },
         "proportional_term": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            -1
+          ],
+          "description": "Units: the wrapped function's output unit per unit of its input."
         }
       },
       "required": [
@@ -631,7 +673,7 @@
       "type": "object"
     },
     "LossCurve": {
-      "description": "Losses of a device as a function of the flow through it, together with the power basis the curve is expressed in. `power_units` governs BOTH axes: a loss curve's y values are power in the same base as its x values, so a change of base rescales both. This is what separates it from a cost curve, whose y axis is currency and so rides through a change of base untouched.",
+      "description": "Losses of a device as a function of the flow through it, together with the power basis the curve is expressed in. `power_units` governs BOTH axes: a loss curve's y values are power in the same base as its x values, so a change of base rescales both. This is what separates it from a cost curve, whose y axis is currency and so rides through a change of base untouched. Units: both axes per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "properties": {
         "power_units": {
           "default": "NATURAL_UNITS",
@@ -646,7 +688,11 @@
         "power_units"
       ],
       "title": "LossCurve",
-      "type": "object"
+      "type": "object",
+      "x-curve-axes": {
+        "x": "ActivePower",
+        "y": "ActivePower"
+      }
     },
     "LossValueCurve": {
       "description": "The shape of a loss curve, selected by `curve_type`. `INPUT_OUTPUT` gives the total loss at each flow level -- a constant loss plus a proportional loss rate, in MW of loss per MW of flow. `INCREMENTAL` gives the marginal loss rate instead, the form a piecewise model uses to give different proportional losses on different flow segments. Individual loss fields accept narrower sets of shapes than this union admits; the consuming data layer enforces that, not this schema.",
@@ -928,13 +974,23 @@
         },
         "x_coords": {
           "items": {
-            "type": "number"
+            "type": "number",
+            "x-curve-dimension": [
+              0,
+              1
+            ],
+            "description": "Units: the wrapped function's input unit."
           },
           "type": "array"
         },
         "y_coords": {
           "items": {
-            "type": "number"
+            "type": "number",
+            "x-curve-dimension": [
+              1,
+              0
+            ],
+            "description": "Units: the wrapped function's output unit."
           },
           "type": "array"
         }
@@ -1021,7 +1077,12 @@
       "description": "Data for a quadratic function `f(x) = quadratic_term * x^2 + proportional_term * x + constant_term`. A non-negative `quadratic_term` makes the function convex.",
       "properties": {
         "constant_term": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the wrapped function's output unit."
         },
         "function_type": {
           "const": "QUADRATIC",
@@ -1029,10 +1090,20 @@
           "default": "QUADRATIC"
         },
         "proportional_term": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            -1
+          ],
+          "description": "Units: the wrapped function's output unit per unit of its input."
         },
         "quadratic_term": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            -2
+          ],
+          "description": "Units: the wrapped function's output unit per unit of its input squared."
         }
       },
       "required": [
@@ -1368,7 +1439,8 @@
       ],
       "title": "TimeSeriesAverageRateCurve",
       "description": "A time-series-backed average rate curve. The static counterpart is AverageRateCurve.",
-      "type": "object"
+      "type": "object",
+      "x-curve-output": -1
     },
     "TimeSeriesIncrementalCurve": {
       "properties": {
@@ -1402,7 +1474,8 @@
       ],
       "title": "TimeSeriesIncrementalCurve",
       "description": "A time-series-backed incremental curve. The static counterpart is IncrementalCurve.",
-      "type": "object"
+      "type": "object",
+      "x-curve-output": -1
     },
     "TimeSeriesInputOutputCurve": {
       "properties": {
@@ -1429,7 +1502,8 @@
       ],
       "title": "TimeSeriesInputOutputCurve",
       "description": "A time-series-backed input-output curve. The static counterpart is InputOutputCurve.",
-      "type": "object"
+      "type": "object",
+      "x-curve-output": 0
     },
     "TimeSeriesLinearFunctionData": {
       "description": "Time-series-backed variant of `LinearFunctionData`. In place of inline coefficients it carries `association_id`, referencing a stored series that supplies them at each step; use it when the coefficients change over time.",
@@ -1596,10 +1670,20 @@
       "description": "A single point, given as its `x` and `y` coordinates.",
       "properties": {
         "x": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            0,
+            1
+          ],
+          "description": "Units: the wrapped function's input unit."
         },
         "y": {
-          "type": "number"
+          "type": "number",
+          "x-curve-dimension": [
+            1,
+            0
+          ],
+          "description": "Units: the wrapped function's output unit."
         }
       },
       "required": [

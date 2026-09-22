@@ -136,6 +136,16 @@ def load_quantity_units():
     return q2u
 
 
+def load_quantity_defaults():
+    """Map quantity_kind -> its default_unit (from units.json).
+
+    Rules 8 and 9 use the key set to check that an x-curve-axes value names a
+    real quantity kind, and the values to render the curve's Units: sentence.
+    """
+    units = load_json_cached(UNITS_JSON)
+    return {q["name"]: q["default_unit"] for q in units["quantity_kinds"]}
+
+
 def load_unit_quantities():
     """Map unit -> sorted quantity types registered for it in units.json.
 
@@ -321,6 +331,32 @@ def load_column_allowed_units(griddb_path=None):
             allowed |= q2u.get(quantity, set())
         col_allowed[column] = allowed
     return col_allowed
+
+
+def numeric_annotation_target(pnode):
+    """The node a numeric property's x-curve-dimension belongs on: the property
+    itself, or an array's items, where the number actually lives. None when the
+    property is not numeric."""
+    if not isinstance(pnode, dict):
+        return None
+    target = pnode.get("items") if pnode.get("type") == "array" else pnode
+    if isinstance(target, dict) and target.get("type") == "number":
+        return target
+    return None
+
+
+def function_data_variants(source_path):
+    """The definition names listed in FunctionData's discriminator mapping.
+
+    One lookup, not a traversal: membership of that mapping is the schema's own
+    statement of what a function data IS, so rule 13 can require annotation of
+    a variant without walking anything.
+    """
+    node = resolve_ref_node("#/$defs/FunctionData", source_path)
+    if not isinstance(node, dict):
+        return set()
+    mapping = node.get("discriminator", {}).get("mapping", {})
+    return {ref.rsplit("/", 1)[-1] for ref in mapping.values()}
 
 
 def resolve_ref_node(ref, source_path):
@@ -616,8 +652,8 @@ def validate_x_units_map(x_units, path, enclosing_props, source_path,
 
 def check_annotations(node, path, source_file, source_path, properties_stack,
                       failures, allowed_units, col_allowed=None, prop_name=None,
-                      unit_quantities=None):
-    """Walk the schema recursively enforcing rules 2, 3, 4, 5, 6."""
+                      unit_quantities=None, fd_variants=frozenset()):
+    """Walk the schema recursively enforcing rules 2, 3, 4, 5, 6, 8-13."""
     if col_allowed is None:
         col_allowed = {}
     if isinstance(node, dict):
@@ -670,6 +706,104 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
             validate_x_units_map(node["x-units"], f"{path}/x-units",
                                  enclosing_props, source_path, source_file,
                                  failures, allowed_units)
+
+        # Rule 8: x-curve-axes names two registered quantity kinds, on a
+        # definition that has the power_units property its sentence reads.
+        if "x-curve-axes" in node:
+            axes = node["x-curve-axes"]
+            defaults = load_quantity_defaults()
+            if not isinstance(axes, dict) or set(axes) != {"x", "y"}:
+                failures.append(
+                    Failure(source_file, path + "/x-curve-axes", "x-curve-axes-shape",
+                            repr(axes), "an object with exactly the keys 'x' and 'y'")
+                )
+            else:
+                for axis, quantity in sorted(axes.items()):
+                    if quantity not in defaults:
+                        failures.append(
+                            Failure(source_file, f"{path}/x-curve-axes/{axis}",
+                                    "x-curve-axes-quantity", quantity,
+                                    "a quantity_kind registered in Core/units.json")
+                        )
+                if sibling_props is None or "power_units" not in sibling_props:
+                    failures.append(
+                        Failure(source_file, path + "/x-curve-axes",
+                                "x-curve-axes-power-units", "no power_units property",
+                                "a sibling 'power_units' property giving the x-axis basis")
+                    )
+
+        # Rule 9: x-curve-output is an integer -- the exponent k in F = Y * X^k,
+        # so a float or a string would make the composition unresolvable.
+        if "x-curve-output" in node:
+            k = node["x-curve-output"]
+            if not isinstance(k, int) or isinstance(k, bool):
+                failures.append(
+                    Failure(source_file, path + "/x-curve-output", "x-curve-output-integer",
+                            repr(k), "an integer exponent")
+                )
+
+        # Rule 10: x-curve-dimension is a pair of integers [p, q], the
+        # exponents of F^p * U^q. A non-integer makes composition unresolvable.
+        if "x-curve-dimension" in node:
+            dim = node["x-curve-dimension"]
+            if (not isinstance(dim, list) or len(dim) != 2
+                    or not all(isinstance(e, int) and not isinstance(e, bool)
+                               for e in dim)):
+                failures.append(
+                    Failure(source_file, path + "/x-curve-dimension",
+                            "x-curve-dimension-shape", repr(dim),
+                            "a 2-element array of integers [p, q]")
+                )
+
+        # Rule 11: a definition that annotates any numeric property with
+        # x-curve-dimension annotates ALL of them. This is what stops a new
+        # coefficient being added to a function-data definition unannotated,
+        # which would otherwise compose to nothing and pass silently.
+        if sibling_props is not None:
+            numeric = {}
+            for pname, pnode in sibling_props.items():
+                target = numeric_annotation_target(pnode)
+                if target is not None:
+                    numeric[pname] = target
+            annotated = {n for n, tgt in numeric.items() if "x-curve-dimension" in tgt}
+            if annotated:
+                for pname in sorted(set(numeric) - annotated):
+                    failures.append(
+                        Failure(source_file, f"{path}/properties/{pname}",
+                                "x-curve-dimension-complete", "no x-curve-dimension",
+                                f"an x-curve-dimension, as its sibling(s) "
+                                f"{sorted(annotated)} carry one")
+                    )
+
+        # Rule 12: a curve form -- any definition wrapping a function -- carries
+        # x-curve-output. Having a function_data property IS being a form, so
+        # the key's presence is structural rather than assumed: without it the
+        # exponent k is undefined and the leaf units under it cannot be read.
+        if sibling_props is not None and "function_data" in sibling_props:
+            if "x-curve-output" not in node:
+                failures.append(
+                    Failure(source_file, path, "x-curve-output-required",
+                            "no x-curve-output",
+                            "an x-curve-output: a definition with function_data "
+                            "is a curve form, and its exponent k must be declared")
+                )
+
+        # Rule 13: every variant of FunctionData annotates all of its numeric
+        # properties. Rule 11 only fires where an annotated sibling exists, so
+        # a WHOLLY unannotated function data passes it; membership of
+        # FunctionData's discriminator mapping is what makes the requirement
+        # unconditional.
+        if sibling_props is not None and node.get("title") in fd_variants:
+            for pname, pnode in sorted(sibling_props.items()):
+                target = numeric_annotation_target(pnode)
+                if target is not None and "x-curve-dimension" not in target:
+                    failures.append(
+                        Failure(source_file, f"{path}/properties/{pname}",
+                                "x-curve-dimension-required", "no x-curve-dimension",
+                                f"an x-curve-dimension: {node['title']} is a "
+                                "FunctionData variant, so its numerics must be "
+                                "annotated")
+                    )
 
         # Rule 3: x-unit-base names an existing sibling property.
         if "x-unit-base" in node:
@@ -738,17 +872,19 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
                     check_annotations(pschema, f"{child_path}/{pname}", source_file,
                                       source_path, properties_stack + [v], failures,
                                       allowed_units, col_allowed, pname,
-                                      unit_quantities)
+                                      unit_quantities, fd_variants)
             else:
                 check_annotations(v, child_path, source_file, source_path,
                                   properties_stack, failures, allowed_units,
-                                  col_allowed, prop_name, unit_quantities)
+                                  col_allowed, prop_name, unit_quantities,
+                                  fd_variants)
 
     elif isinstance(node, list):
         for i, item in enumerate(node):
             check_annotations(item, f"{path}/{i}", source_file, source_path,
                               properties_stack, failures, allowed_units,
-                              col_allowed, prop_name, unit_quantities)
+                              col_allowed, prop_name, unit_quantities,
+                              fd_variants)
 
 
 def check_metaschema(doc, source_file, failures):
@@ -810,8 +946,68 @@ def _units_value(value):
     return value
 
 
-def units_sentence(node):
+def curve_axes_sentence(node, source_path):
+    """Return the 'Units: ...' sentence for a curve family carrying x-curve-axes.
+
+    The family knows both axis quantity kinds; the x axis is discriminated by
+    its own power_units, exactly as an x-units map would be. Where the y axis
+    IS the x quantity (a loss curve), power_units governs both and the sentence
+    says so rather than repeating the same discriminated list twice.
+    """
+    axes = node["x-curve-axes"]
+    defaults = load_quantity_defaults()
+    power_units = node.get("properties", {}).get("power_units", {})
+    enum = discriminator_enum(power_units, source_path) or set()
+    order = [v for v in ("NATURAL_UNITS", "COMPONENT_BASE") if v in enum]
+    order += sorted(enum.difference(order))
+
+    x_parts = ", ".join(
+        f"{v}: {defaults.get(axes['x'], '?') if v == 'NATURAL_UNITS' else 'pu'}"
+        for v in order
+    )
+    if axes["x"] == axes["y"]:
+        return f"Units: both axes per power_units — {x_parts} ."
+    y_unit = defaults.get(axes["y"], "?")
+    return f"Units: x-axis per power_units — {x_parts} ; y-axis {y_unit} ."
+
+
+def curve_dimension_sentence(dim, is_form_scalar):
+    """Return the 'Units: ...' sentence for an x-curve-dimension property.
+
+    The vocabulary follows the composition class. A function-data leaf knows
+    only its own function, so it is stated as that function's output and input;
+    naming the curve's axes there would be true only under an input-output
+    curve. A form scalar is an absolute y-quantity, so it names the axis.
+    """
+    p, q = dim
+    if is_form_scalar:
+        whole = "the curve's y-axis"
+        part = inline = "the curve's x-axis"
+    else:
+        whole = "the wrapped function's output"
+        part, inline = "the wrapped function's input", "its input"
+
+    if (p, q) == (1, 0):
+        return f"Units: {whole} unit."
+    if (p, q) == (0, 1):
+        return f"Units: {part} unit."
+    if p == 1 and q < 0:
+        power = {-1: "", -2: " squared", -3: " cubed"}.get(q)
+        if power is not None:
+            return f"Units: {whole} unit per unit of {inline}{power}."
+    raise SystemExit(
+        f"validate_units.py: no Units: sentence defined for x-curve-dimension "
+        f"{dim}; add one to curve_dimension_sentence rather than letting the "
+        f"property go undescribed"
+    )
+
+
+def units_sentence(node, source_path=None, is_form_scalar=False):
     """Return the canonical 'Units: ...' sentence for an annotated node."""
+    if "x-curve-dimension" in node:
+        return curve_dimension_sentence(node["x-curve-dimension"], is_form_scalar)
+    if "x-curve-axes" in node:
+        return curve_axes_sentence(node, source_path)
     if "x-units" in node and isinstance(node["x-units"], dict):
         disc = node.get("x-unit-discriminator", "value")
         parts = ", ".join(f"{k}: {_units_value(v)}" for k, v in node["x-units"].items())
@@ -824,9 +1020,9 @@ def strip_units_sentence(desc):
     return _UNITS_SENTENCE_RE.sub("", desc)
 
 
-def desired_description(node):
+def desired_description(node, source_path=None, is_form_scalar=False):
     """Return the description this annotated node should carry."""
-    sentence = units_sentence(node)
+    sentence = units_sentence(node, source_path, is_form_scalar)
     desc = node.get("description")
     if not isinstance(desc, str) or desc == "":
         return sentence
@@ -837,30 +1033,35 @@ def desired_description(node):
 
 
 def has_unit_annotation(node):
-    return isinstance(node, dict) and ("x-unit" in node or "x-units" in node)
+    return isinstance(node, dict) and any(
+        k in node for k in ("x-unit", "x-units", "x-curve-axes", "x-curve-dimension")
+    )
 
 
-def fix_descriptions_in_node(node):
+def fix_descriptions_in_node(node, source_path=None, is_form_scalar=False):
     """Rewrite descriptions in place. Returns count of nodes changed."""
     changed = 0
     if isinstance(node, dict):
+        is_form_scalar = is_form_scalar or "x-curve-output" in node
         if has_unit_annotation(node):
-            want = desired_description(node)
+            want = desired_description(node, source_path, is_form_scalar)
             if node.get("description") != want:
                 node["description"] = want
                 changed += 1
         for v in node.values():
-            changed += fix_descriptions_in_node(v)
+            changed += fix_descriptions_in_node(v, source_path, is_form_scalar)
     elif isinstance(node, list):
         for v in node:
-            changed += fix_descriptions_in_node(v)
+            changed += fix_descriptions_in_node(v, source_path, is_form_scalar)
     return changed
 
 
-def check_descriptions_in_node(node, path, source_file, failures):
+def check_descriptions_in_node(node, path, source_file, failures, source_path=None,
+                               is_form_scalar=False):
     if isinstance(node, dict):
+        is_form_scalar = is_form_scalar or "x-curve-output" in node
         if has_unit_annotation(node):
-            want = desired_description(node)
+            want = desired_description(node, source_path, is_form_scalar)
             if node.get("description") != want:
                 failures.append(
                     Failure(source_file, path + "/description",
@@ -868,10 +1069,12 @@ def check_descriptions_in_node(node, path, source_file, failures):
                             repr(node.get("description")), repr(want))
                 )
         for k, v in node.items():
-            check_descriptions_in_node(v, f"{path}/{k}", source_file, failures)
+            check_descriptions_in_node(v, f"{path}/{k}", source_file, failures,
+                                       source_path, is_form_scalar)
     elif isinstance(node, list):
         for i, v in enumerate(node):
-            check_descriptions_in_node(v, f"{path}/{i}", source_file, failures)
+            check_descriptions_in_node(v, f"{path}/{i}", source_file, failures,
+                                       source_path, is_form_scalar)
 
 
 def detect_indent(text):
@@ -890,7 +1093,7 @@ def run_fix_descriptions(files):
         text = path.read_text()
         indent = detect_indent(text)
         doc = json.loads(text)
-        n = fix_descriptions_in_node(doc)
+        n = fix_descriptions_in_node(doc, path)
         if n:
             with open(path, "w") as fh:
                 json.dump(doc, fh, indent=indent, ensure_ascii=False)
@@ -911,7 +1114,7 @@ def run_check_descriptions(files):
         except json.JSONDecodeError as exc:
             failures.append(Failure(str(rel), "/", "json-parse", str(exc), "valid JSON"))
             continue
-        check_descriptions_in_node(doc, "", str(rel), failures)
+        check_descriptions_in_node(doc, "", str(rel), failures, path)
     print(f"Checked description sentences over {len(files)} schema file(s).")
     if failures:
         print(f"\n{len(failures)} failure(s):\n")
@@ -953,6 +1156,7 @@ def run_validation(files, griddb_path=None):
     col_allowed = load_column_allowed_units(griddb_path)
     unit_quantities = load_unit_quantities()
     variant_titles = collect_polymorphic_variant_titles(files)
+    fd_variants = function_data_variants(REPO_ROOT / "Core" / "common.json")
     failures = []
 
     for path in files:
@@ -966,7 +1170,7 @@ def run_validation(files, griddb_path=None):
             continue
         check_metaschema(doc, str(rel), failures)
         check_annotations(doc, "", str(rel), path, [], failures, allowed_units,
-                          col_allowed, None, unit_quantities)
+                          col_allowed, None, unit_quantities, fd_variants)
         find_composite_defaults(doc, "", path, str(rel), failures, variant_titles)
 
     print(f"Scanned {len(files)} schema file(s) under {', '.join(SCAN_DIRS)}.")
