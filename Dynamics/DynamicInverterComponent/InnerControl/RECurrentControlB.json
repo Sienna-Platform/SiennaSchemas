@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "Q_Flag": {
+      "type": "boolean"
+    },
+    "PQ_Flag": {
+      "type": "boolean"
+    },
+    "Vdip_lim": {
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "T_rv": {
+      "type": "number"
+    },
+    "dbd_pnts": {
+      "$ref": "../../../Core/common.json#/$defs/DbdPnts"
+    },
+    "K_qv": {
+      "type": "number"
+    },
+    "Iqinj_lim": {
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "V_ref0": {
+      "type": "number"
+    },
+    "K_vp": {
+      "type": "number"
+    },
+    "K_vi": {
+      "type": "number"
+    },
+    "T_iq": {
+      "type": "number"
+    },
+    "I_max": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "Q_Flag",
+    "PQ_Flag",
+    "Vdip_lim",
+    "T_rv",
+    "dbd_pnts",
+    "K_qv",
+    "Iqinj_lim",
+    "V_ref0",
+    "K_vp",
+    "K_vi",
+    "T_iq",
+    "I_max"
+  ],
+  "title": "RECurrentControlB",
+  "type": "object"
+}

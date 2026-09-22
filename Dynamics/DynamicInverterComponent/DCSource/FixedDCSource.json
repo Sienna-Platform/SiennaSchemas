@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of a Fixed DC Source that returns a fixed DC voltage",
+  "properties": {
+    "voltage": {
+      "description": "Voltage (V)",
+      "type": "number"
+    }
+  },
+  "required": [
+    "voltage"
+  ],
+  "title": "FixedDCSource",
+  "type": "object"
+}

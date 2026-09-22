@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of a Phase-Locked Loop (PLL) based on 'Reduced-order Structure-preserving Model for Parallel-connected Three-phase Grid-tied Inverters'",
+  "properties": {
+    "omega_lp": {
+      "description": "PLL low-pass filter frequency",
+      "type": "number"
+    },
+    "kp_pll": {
+      "description": "PLL proportional gain",
+      "type": "number"
+    },
+    "ki_pll": {
+      "description": "PLL integral gain",
+      "type": "number"
+    }
+  },
+  "required": [
+    "omega_lp",
+    "kp_pll",
+    "ki_pll"
+  ],
+  "title": "ReducedOrderPLL",
+  "type": "object"
+}

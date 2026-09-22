@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of a LCL filter outside the converter, the states are in the grid's reference frame",
+  "properties": {
+    "lf": {
+      "description": "Series inductance of converter filter",
+      "type": "number"
+    },
+    "rf": {
+      "description": "Series resistance of converter filter",
+      "type": "number"
+    },
+    "cf": {
+      "description": "Shunt capacitance of converter filter",
+      "type": "number"
+    },
+    "lg": {
+      "description": "Series inductance of converter filter to the grid",
+      "type": "number"
+    },
+    "rg": {
+      "description": "Series resistance of converter filter to the grid",
+      "type": "number"
+    }
+  },
+  "required": [
+    "lf",
+    "rf",
+    "cf",
+    "lg",
+    "rg"
+  ],
+  "title": "LCLFilter",
+  "type": "object"
+}

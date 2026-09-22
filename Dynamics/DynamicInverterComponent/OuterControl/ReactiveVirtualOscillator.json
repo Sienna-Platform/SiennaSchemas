@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "k2": {
+      "type": "number"
+    },
+    "V_ref": {
+      "type": "number",
+      "default": 1.0
+    },
+    "Q_ref": {
+      "type": "number",
+      "default": 1.0
+    }
+  },
+  "required": [
+    "k2"
+  ],
+  "title": "ReactiveVirtualOscillator",
+  "type": "object"
+}

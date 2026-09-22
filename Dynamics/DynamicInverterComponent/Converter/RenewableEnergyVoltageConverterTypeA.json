@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of a renewable energy generator/converter model, this model corresponds to REGCA1 in PSSE, but to be interfaced using a Voltage Source instead of a Current Source",
+  "properties": {
+    "T_g": {
+      "description": "Converter time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "Rrpwr": {
+      "description": "Low Voltage Power Logic (LVPL) ramp rate limit.",
+      "type": "number"
+    },
+    "Brkpt": {
+      "description": "LVPL characteristic voltage 2.",
+      "type": "number"
+    },
+    "Zerox": {
+      "description": "LVPL characteristic voltage 1.",
+      "type": "number"
+    },
+    "Lvpl1": {
+      "description": "LVPL gain.",
+      "type": "number"
+    },
+    "Vo_lim": {
+      "description": "Voltage limit for high voltage reactive current management.",
+      "type": "number"
+    },
+    "Lv_pnts": {
+      "description": "Voltage points for low voltage active current management",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "Io_lim": {
+      "description": "Current limit for high voltage reactive current management (specified as a negative value).",
+      "type": "number"
+    },
+    "T_fltr": {
+      "description": "Voltage filter time constant for low voltage active current management. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "K_hv": {
+      "description": "Overvoltage compensation gain used in the high voltage reactive current management.",
+      "type": "number"
+    },
+    "Iqr_lims": {
+      "description": "Limit on rate of change for reactive current",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "Accel": {
+      "description": "Acceleration factor.",
+      "type": "number"
+    },
+    "Lvpl_sw": {
+      "description": "Low voltage power logic (LVPL) switch. (0: LVPL not present, 1: LVPL present).",
+      "type": "integer"
+    },
+    "Q_ref": {
+      "description": "Initial condition of reactive power from power flow.",
+      "type": "number",
+      "default": 1.0
+    }
+  },
+  "required": [
+    "T_g",
+    "Rrpwr",
+    "Brkpt",
+    "Zerox",
+    "Lvpl1",
+    "Vo_lim",
+    "Lv_pnts",
+    "Io_lim",
+    "T_fltr",
+    "K_hv",
+    "Iqr_lims",
+    "Accel",
+    "Lvpl_sw"
+  ],
+  "title": "RenewableEnergyVoltageConverterTypeA",
+  "type": "object"
+}

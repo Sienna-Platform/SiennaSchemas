@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "k1": {
+      "type": "number"
+    },
+    "psi": {
+      "type": "number"
+    },
+    "P_ref": {
+      "type": "number",
+      "default": 1.0
+    }
+  },
+  "required": [
+    "k1",
+    "phi"
+  ],
+  "title": "ActiveVirtualOscillator",
+  "type": "object"
+}

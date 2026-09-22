@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "kpv": {
+      "type": "number"
+    },
+    "kiv": {
+      "type": "number"
+    },
+    "kffv": {
+      "type": "number"
+    },
+    "rv": {
+      "type": "number"
+    },
+    "lv": {
+      "type": "number"
+    },
+    "kpc": {
+      "type": "number"
+    },
+    "kic": {
+      "type": "number"
+    },
+    "kffi": {
+      "type": "number"
+    },
+    "omegaad": {
+      "type": "number"
+    },
+    "kad": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "kpv",
+    "kiv",
+    "kffv",
+    "rv",
+    "lv",
+    "kpc",
+    "kic",
+    "kffi",
+    "omegaad",
+    "kad"
+  ],
+  "title": "VoltageModeControl",
+  "type": "object"
+}

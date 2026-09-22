@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of a LCL filter outside the converter",
+  "properties": {
+    "lf": {
+      "description": "Filter inductance",
+      "type": "number"
+    },
+    "rf": {
+      "description": "Filter resistance",
+      "type": "number"
+    },
+    "cf": {
+      "description": "Filter capacitance",
+      "type": "number"
+    }
+  },
+  "required": [
+    "lf",
+    "rf",
+    "cf"
+  ],
+  "title": "LCFilter",
+  "type": "object"
+}
