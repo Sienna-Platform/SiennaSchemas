@@ -79,19 +79,27 @@
         }
       ]
     },
-    "load_drop_compensation": {
-      "description": "Load drop compensation impedance for voltage control (PSS/E CR + jCX): the regulated voltage is compensated by this impedance times the circuit current. Zero means no compensation. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
-      "default": {
-        "real": 0.0,
-        "imag": 0.0
-      },
-      "$ref": "../../Core/common.json#/$defs/ComplexNumber",
+    "load_drop_compensation_r": {
+      "description": "Resistive part of the load drop compensation impedance for voltage control (PSS/E CR): the regulated voltage is compensated by `load_drop_compensation_r + j load_drop_compensation_x` times the circuit current. Zero means no compensation. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "default": 0.0,
+      "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
         "NATURAL_UNITS": "ohm",
         "COMPONENT_BASE": "pu"
       },
-      "x-quantity": "Impedance"
+      "x-quantity": "Resistance"
+    },
+    "load_drop_compensation_x": {
+      "description": "Reactive part of the load drop compensation impedance for voltage control (PSS/E CX). Zero means no compensation. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "default": 0.0,
+      "type": "number",
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "ohm",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "Reactance"
     },
     "control_limits": {
       "description": "Control band (PSS/E RMA/RMI), per `control_objective`. Units: per control_objective — UNDEFINED: 1, VOLTAGE_DISABLED: 1, REACTIVE_POWER_FLOW_DISABLED: 1, ACTIVE_POWER_FLOW_DISABLED: rad, CONTROL_OF_DC_LINE_DISABLED: 1, ASYMMETRIC_ACTIVE_POWER_FLOW_DISABLED: rad, FIXED: 1, VOLTAGE: 1, REACTIVE_POWER_FLOW: 1, ACTIVE_POWER_FLOW: rad, CONTROL_OF_DC_LINE: 1, ASYMMETRIC_ACTIVE_POWER_FLOW: rad .",
