@@ -48,7 +48,7 @@
         "NATURAL_UNITS": "S",
         "COMPONENT_MVAR": "MVAr"
       },
-      "x-quantity": "Susceptance"
+      "x-quantity": "Admittance"
     },
     "solved_admittance": {
       "description": "Solved-case switched shunt admittance (PSS/E BINIT); when present it is the shunt's effective admittance, used in place of `number_engaged` * `Y_increase`. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",

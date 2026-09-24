@@ -359,7 +359,7 @@ CONVERSION_UNIT_QUANTITY_KINDS = {
     ":mva": {"ApparentPower"},
     ":mw_per_minute": {"ActivePowerChangeRate"},
     ":ohm": {"Resistance", "Reactance", "Impedance"},
-    ":siemens": {"Conductance", "Susceptance"},
+    ":siemens": {"Conductance", "Susceptance", "Admittance"},
 }
 
 
