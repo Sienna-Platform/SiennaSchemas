@@ -269,6 +269,38 @@
       },
       "x-quantity": "Reactance"
     },
+    "rectifier_commutating_bus_id": {
+      "description": "ID of the bus whose voltage angle the rectifier firing angle is measured against (PSS/E ICR). Null means the rectifier's own bus. Must be null for a capacitor-commutated line.",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "inverter_commutating_bus_id": {
+      "description": "ID of the bus whose voltage angle the inverter extinction angle is measured against (PSS/E ICI). Null means the inverter's own bus. Must be null for a capacitor-commutated line.",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "rectifier_tap_transformer_id": {
+      "description": "ID of the TwoWindingTransformer whose tap this line adjusts on the rectifier side (PSS/E IFR, ITR, IDR). Null means the line's own rectifier tap fields describe the tap. The referenced circuit's `control_objective` must be `CONTROL_OF_DC_LINE`. Must be null for a capacitor-commutated line.",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "inverter_tap_transformer_id": {
+      "description": "ID of the TwoWindingTransformer whose tap this line adjusts on the inverter side (PSS/E IFI, ITI, IDI). Null means the line's own inverter tap fields describe the tap. The referenced circuit's `control_objective` must be `CONTROL_OF_DC_LINE`. Must be null for a capacitor-commutated line.",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
     "active_power_limits_from": {
       "description": "Minimum and maximum active power flows to the FROM node. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "default": {

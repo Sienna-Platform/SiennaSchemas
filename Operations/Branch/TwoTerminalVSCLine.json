@@ -393,35 +393,21 @@
       "type": "number",
       "x-unit": "kV"
     },
-    "remote_bus_control_from": {
-      "description": "Number of the AC bus whose voltage the `from` converter regulates when `ac_control_from` is `AC_VOLTAGE`; null regulates its own terminal bus.",
+    "remote_regulated_bus_id_from": {
+      "description": "ID of the AC bus whose voltage the `from` converter regulates when `ac_control_from` is `AC_VOLTAGE` and that bus is not its own terminal bus. Null means the `from` terminal bus; a value equal to that bus is invalid.",
       "default": null,
       "type": [
         "integer",
         "null"
       ]
     },
-    "remote_bus_control_to": {
-      "description": "Number of the AC bus whose voltage the `to` converter regulates when `ac_control_to` is `AC_VOLTAGE`; null regulates its own terminal bus.",
+    "remote_regulated_bus_id_to": {
+      "description": "ID of the AC bus whose voltage the `to` converter regulates when `ac_control_to` is `AC_VOLTAGE` and that bus is not its own terminal bus. Null means the `to` terminal bus; a value equal to that bus is invalid.",
       "default": null,
       "type": [
         "integer",
         "null"
       ]
-    },
-    "rmpct_from": {
-      "description": "Percent of the total Mvar required to hold the voltage at the bus regulated by the `from` converter that is contributed by this converter. Units: 1.",
-      "default": 100.0,
-      "type": "number",
-      "x-unit": "1",
-      "x-quantity": "Fraction"
-    },
-    "rmpct_to": {
-      "description": "Percent of the total Mvar required to hold the voltage at the bus regulated by the `to` converter that is contributed by this converter. Units: 1.",
-      "default": 100.0,
-      "type": "number",
-      "x-unit": "1",
-      "x-quantity": "Fraction"
     },
     "base_power": {
       "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",

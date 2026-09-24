@@ -28,7 +28,7 @@
       "$ref": "../../Operations/common.json#/$defs/VoltageUnitBasis"
     },
     "voltage_setpoint": {
-      "description": "Voltage setpoint at the sending end bus in kV, it has to be a `PV` bus. Units: kV. Units: per voltage_setpoint_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "description": "Voltage setpoint at the regulated bus: the remote regulated bus when one is set, otherwise the sending end bus (PSS/E VSET). Units: per voltage_setpoint_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "voltage_setpoint_units",
       "x-units": {
@@ -48,10 +48,15 @@
       "x-quantity": "ApparentPower"
     },
     "reactive_power_required": {
-      "description": "Total reactive power required to hold voltage at sending bus, as a fraction in the range 0-1. Units: 1.",
+      "description": "Delivered reactive power after a solve, written by the power flow (an output, not parsed from input). Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
+      "default": 0.0,
       "type": "number",
-      "x-unit": "1",
-      "x-quantity": "Fraction"
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ReactivePower"
     },
     "max_reactive_power": {
       "description": "Independent maximum reactive power ceiling; the device reactive limit is min(the current/susceptance law on max_shunt_current, this value). Non-binding at the 9999.0 default. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
@@ -73,12 +78,13 @@
         "STATCOM"
       ]
     },
-    "regulated_bus_number": {
-      "description": "Bus whose voltage this device regulates; 0 means local (sending) bus (PSS/E FCREG). Units: 1.",
-      "default": 0,
-      "type": "integer",
-      "x-unit": "1",
-      "x-quantity": "Dimensionless"
+    "remote_regulated_bus_id": {
+      "description": "ID of the bus whose voltage this device regulates when that bus is not its sending end bus (PSS/E FCREG). Null means the sending end bus; a value equal to that bus is invalid.",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ]
     },
     "base_power": {
       "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",
@@ -103,7 +109,6 @@
     "available",
     "bus",
     "max_shunt_current",
-    "reactive_power_required",
     "voltage_setpoint",
     "base_power",
     "power_units"

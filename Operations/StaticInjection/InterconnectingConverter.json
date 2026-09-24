@@ -156,20 +156,13 @@
       "x-unit": "pu",
       "x-quantity": "Resistance"
     },
-    "remote_bus_control": {
-      "description": "Number of the AC bus whose voltage the converter regulates when `ac_control` is `AC_VOLTAGE`; null regulates its own terminal bus.",
+    "remote_regulated_bus_id": {
+      "description": "ID of the AC bus whose voltage the converter regulates when `ac_control` is `AC_VOLTAGE` and that bus is not its own terminal bus. Null means the converter's own AC bus; a value equal to that bus is invalid.",
       "default": null,
       "type": [
         "integer",
         "null"
       ]
-    },
-    "rmpct": {
-      "description": "Percent of the total Mvar required to hold the voltage at the bus regulated by this converter that is contributed by this converter. Units: 1.",
-      "default": 100.0,
-      "type": "number",
-      "x-unit": "1",
-      "x-quantity": "Fraction"
     },
     "power_factor_weighting_fraction": {
       "description": "Power weighting factor fraction used in reducing the active power order and either the reactive power order when the converter rating is violated. When is 0.0, only the active power is reduced; when is 1.0, only the reactive power is reduced; otherwise, a weighted reduction of both active and reactive power is applied. Units: 1.",

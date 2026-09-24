@@ -87,7 +87,7 @@
       "description": "Impedance between the hybrid system and the grid interconnection. Per-unit on `base_power`. Units: pu.",
       "$ref": "../../Core/common.json#/$defs/ComplexNumber",
       "x-unit": "pu",
-      "x-quantity": "Reactance"
+      "x-quantity": "Impedance"
     },
     "interconnection_rating": {
       "description": "Maximum rating of the hybrid system's interconnection with the transmission network. Set to `null` if not applicable. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",

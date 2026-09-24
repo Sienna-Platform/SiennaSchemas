@@ -16,7 +16,7 @@
     },
     "P_ref": {
       "description": "Reference power set-point",
-      "default": "1.0",
+      "default": 1.0,
       "type": "number"
     }
   },

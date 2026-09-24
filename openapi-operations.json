@@ -104,6 +104,9 @@
       "PlantAssociation": {
         "$ref": "Operations/Associations/PlantAssociation.json"
       },
+      "ReactivePowerSharing": {
+        "$ref": "Operations/SupplementalAttributes/ReactivePowerSharing.json"
+      },
       "PointToPointBid": {
         "$ref": "Operations/Market/PointToPointBid.json"
       },
@@ -182,6 +185,12 @@
       "VirtualParticipant": {
         "$ref": "Operations/Market/VirtualParticipant.json"
       },
+      "VoltageControlAssociation": {
+        "$ref": "Operations/Associations/VoltageControlAssociation.json"
+      },
+      "VoltageDroopControl": {
+        "$ref": "Operations/SupplementalAttributes/VoltageDroopControl.json"
+      },
       "VSCACControlModes": {
         "$ref": "Operations/common.json#/$defs/VSCACControlModes"
       },
@@ -203,6 +212,9 @@
       "TransformerControlObjective": {
         "$ref": "Operations/common.json#/$defs/TransformerControlObjective"
       },
+      "TransformerRegulatedBusSide": {
+        "$ref": "Operations/common.json#/$defs/TransformerRegulatedBusSide"
+      },
       "TwoWindingTransformerShuntLocation": {
         "$ref": "Operations/common.json#/$defs/TwoWindingTransformerShuntLocation"
       },
@@ -211,6 +223,9 @@
       },
       "VoltageUnitBasis": {
         "$ref": "Operations/common.json#/$defs/VoltageUnitBasis"
+      },
+      "VoltageControlTerminal": {
+        "$ref": "Operations/common.json#/$defs/VoltageControlTerminal"
       },
       "LoadConformity": {
         "$ref": "Operations/common.json#/$defs/LoadConformity"

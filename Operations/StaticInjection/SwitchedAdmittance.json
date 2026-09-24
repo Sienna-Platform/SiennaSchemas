@@ -48,7 +48,7 @@
         "NATURAL_UNITS": "S",
         "COMPONENT_MVAR": "MVAr"
       },
-      "x-quantity": "Susceptance"
+      "x-quantity": "Admittance"
     },
     "solved_admittance": {
       "description": "Solved-case switched shunt admittance (PSS/E BINIT); when present it is the shunt's effective admittance, used in place of `number_engaged` * `Y_increase`. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MVAr .",
@@ -82,12 +82,13 @@
       "default": "FIXED",
       "$ref": "../../Operations/common.json#/$defs/SwitchedAdmittanceControlMode"
     },
-    "regulated_bus_number": {
-      "description": "Bus number whose voltage/quantity this shunt regulates; 0 means local bus (PSS/E SWREM/NREG). Units: 1.",
-      "default": 0,
-      "type": "integer",
-      "x-unit": "1",
-      "x-quantity": "Dimensionless"
+    "remote_regulated_bus_id": {
+      "description": "ID of the bus this shunt regulates in every control mode (PSS/E SWREG): the bus whose voltage it holds in the voltage modes, or the bus of the device whose reactive power it tracks in the other modes, which downstream modeling interprets per mode. Null means the shunt's own bus; a value equal to that bus is invalid.",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ]
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection model for admittance, if any.",
