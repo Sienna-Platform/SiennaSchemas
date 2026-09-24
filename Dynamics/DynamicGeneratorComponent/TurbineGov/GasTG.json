@@ -45,7 +45,7 @@
     },
     "P_ref": {
       "description": "Reference load set-point",
-      "default": "1.0",
+      "default": 1.0,
       "type": "number"
     }
   },

@@ -152,7 +152,7 @@
     },
     "hysteresis_binary_logic": {
       "description": "Hysteresis memory variable",
-      "default": "1.0",
+      "default": 1,
       "type": "integer"
     }
   },
