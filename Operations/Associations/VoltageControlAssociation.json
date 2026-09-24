@@ -21,16 +21,9 @@
       "x-quantity": "Dimensionless"
     },
     "terminal": {
-      "description": "Converter of a two-terminal member this row refers to; required for a TwoTerminalVSCLine member and null for every other member.",
-      "default": null,
-      "oneOf": [
-        {
-          "$ref": "../../Operations/common.json#/$defs/VoltageControlTerminal"
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "description": "Converter of a two-terminal member this row refers to; required for a TwoTerminalVSCLine member and UNDEFINED for every other member.",
+      "default": "UNDEFINED",
+      "$ref": "../../Operations/common.json#/$defs/VoltageControlTerminal"
     }
   },
   "required": [

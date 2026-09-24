@@ -68,16 +68,9 @@
       ]
     },
     "regulated_bus_side": {
-      "description": "Side of the controlling winding on which the regulated bus lies, replacing the sign of PSS/E CONT. Set only when the regulated bus is not one of the transformer's own terminal buses; when it is, the side follows from the connections and this must be null.",
-      "default": null,
-      "oneOf": [
-        {
-          "$ref": "../../Operations/common.json#/$defs/TransformerRegulatedBusSide"
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "description": "Side of the controlling winding on which the regulated bus lies, replacing the sign of PSS/E CONT. Set only when the regulated bus is not one of the transformer's own terminal buses; when it is, the side follows from the connections and this must be UNDEFINED.",
+      "default": "UNDEFINED",
+      "$ref": "../../Operations/common.json#/$defs/TransformerRegulatedBusSide"
     },
     "load_drop_compensation_r": {
       "description": "Resistive part of the load drop compensation impedance for voltage control (PSS/E CR): the regulated voltage is compensated by `load_drop_compensation_r + j load_drop_compensation_x` times the circuit current. Zero means no compensation. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
