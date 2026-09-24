@@ -71,12 +71,16 @@ jobs:
       - name: Check infrastore field parity
         run: python scripts/check_infrastore_parity.py
 
+      # The remote voltage control fields land in PowerSystems on mb/remote-control, which
+      # pins the model packages generated from these schemas, so the parity gate reads
+      # that branch while both are open.
+      # TODO after mb/remote-control merges to PowerSystems psy6: set `ref` back to psy6.
       # TODO after psy6 merges to PowerSystems main: drop `ref`
-      - name: Checkout PowerSystems (psy6) for parity gate
+      - name: Checkout PowerSystems (mb/remote-control) for parity gate
         uses: actions/checkout@v4
         with:
           repository: Sienna-Platform/PowerSystems.jl
-          ref: psy6
+          ref: mb/remote-control
           path: PowerSystems.jl
           fetch-depth: 1
 
