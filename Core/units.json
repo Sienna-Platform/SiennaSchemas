@@ -106,6 +106,7 @@
     {"quantity_kind": "Mass", "unit": "ston", "to_default": 0.90718474},
     {"quantity_kind": "Resistance", "unit": "pu", "to_default": null},
     {"quantity_kind": "Reactance", "unit": "pu", "to_default": null},
+    {"quantity_kind": "Impedance", "unit": "pu", "to_default": null},
     {"quantity_kind": "Susceptance", "unit": "pu", "to_default": null},
     {"quantity_kind": "Conductance", "unit": "pu", "to_default": null},
     {"quantity_kind": "ActivePower", "unit": "pu", "to_default": null},

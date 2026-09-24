@@ -111,6 +111,16 @@ TRANSLITERATION = {
     "from": "from_id",
     "to": "to_id",
     "settlement_point": "settlement_point_id",
+    # Regulated-bus and tap-transformer references: PSY holds the component, the
+    # schema its id.
+    "remote_regulated_bus": "remote_regulated_bus_id",
+    "remote_regulated_bus_from": "remote_regulated_bus_id_from",
+    "remote_regulated_bus_to": "remote_regulated_bus_id_to",
+    "regulated_bus": "regulated_bus_id",
+    "rectifier_commutating_bus": "rectifier_commutating_bus_id",
+    "inverter_commutating_bus": "inverter_commutating_bus_id",
+    "rectifier_tap_transformer": "rectifier_tap_transformer_id",
+    "inverter_tap_transformer": "inverter_tap_transformer_id",
 }
 
 # PSY encodes reserve direction in the Reserve{T} type parameter; schemas
@@ -131,6 +141,10 @@ ASSOCIATION_NORMALIZED = {
     "TradingHub": {"buses"},
     # Same hub-membership normalization, on the participant side.
     "VirtualParticipant": {"trading_hubs"},
+    # Voltage control membership, weights and terminals are rows in
+    # voltage_control_associations, not maps on the attribute.
+    "VoltageDroopControl": {"weights", "terminals"},
+    "ReactivePowerSharing": {"weights", "terminals"},
 }
 PLANT_SA_STRUCTS = {
     "ThermalPowerPlant",
@@ -201,6 +215,9 @@ SCHEMA_ONLY_COMPONENTS = {
     # Hub membership normalized to (trading_hub_id, entity_id) rows, same as
     # ServiceAssociation above -- no PSY struct to match.
     "TradingHubAssociation",
+    # Voltage control membership normalized to (control_id, entity_id, weight,
+    # terminal) rows; PSY keeps the weights and terminals as maps on the attribute.
+    "VoltageControlAssociation",
     # Bilateral-transaction settlement ledger: schema-only by design, no
     # power-balance impact and no PSY struct to match.
     "BilateralTransaction",
@@ -238,6 +255,8 @@ HAND_WRITTEN = {
     "HydroPowerPlant": "src/plant_attribute.jl",
     "RenewablePowerPlant": "src/plant_attribute.jl",
     "Substation": "src/substation.jl",
+    "VoltageDroopControl": "src/voltage_control.jl",
+    "ReactivePowerSharing": "src/voltage_control.jl",
     # OnlineReserve/OfflineReserve/GroupReserve are parametric (ReserveDirection,
     # and for OnlineReserve/OfflineReserve also the cost-curve unit type), so the
     # struct entry the descriptor carries lives under `struct_validation_descriptors`

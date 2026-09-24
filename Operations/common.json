@@ -178,6 +178,24 @@
       ],
       "title": "BilateralConfirmation",
       "type": "string"
+    },
+    "TransformerRegulatedBusSide": {
+      "description": "Side of a transformer circuit's controlling winding on which the regulated bus lies, stated when the regulated bus is not one of the transformer's own terminal buses. CONTROLLING_WINDING: the regulated bus lies beyond the tapped (controlling) winding's terminal, PSS/E's negative CONT. OPPOSITE_WINDING: the regulated bus lies beyond the other winding's terminal, PSS/E's positive CONT.",
+      "enum": [
+        "CONTROLLING_WINDING",
+        "OPPOSITE_WINDING"
+      ],
+      "title": "TransformerRegulatedBusSide",
+      "type": "string"
+    },
+    "VoltageControlTerminal": {
+      "description": "Which converter of a two-terminal line a voltage control membership refers to. FROM: the converter at the arc's `from` bus. TO: the converter at the arc's `to` bus.",
+      "enum": [
+        "FROM",
+        "TO"
+      ],
+      "title": "VoltageControlTerminal",
+      "type": "string"
     }
   }
 }

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "VoltageControlAssociation",
+  "description": "Links a voltage control group (a VoltageDroopControl or a ReactivePowerSharing attribute) to one member device and records the member's relative reactive power weight. One row per (control, member). `entity_id` names a device that regulates voltage to a setpoint; `terminal` picks the converter for a two-terminal member (a TwoTerminalVSCLine) and is null for every other member. A device, or a two-terminal line's converter, belongs to at most one group of either kind. PSS/E RMPCT imports as weight = RMPCT / 100, so the PSS/E default of 100 is the default weight of 1.0.",
+  "type": "object",
+  "properties": {
+    "control_id": {
+      "description": "ID of the VoltageDroopControl or ReactivePowerSharing attribute the member belongs to.",
+      "type": "integer"
+    },
+    "entity_id": {
+      "description": "ID of the member device.",
+      "type": "integer"
+    },
+    "weight": {
+      "description": "Positive relative weight of this member. Its share of the reactive power required at the regulated bus is weight divided by the sum of the weights of the members in service. Units: 1.",
+      "default": 1.0,
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "1",
+      "x-quantity": "Dimensionless"
+    },
+    "terminal": {
+      "description": "Converter of a two-terminal member this row refers to; required for a TwoTerminalVSCLine member and null for every other member.",
+      "default": null,
+      "oneOf": [
+        {
+          "$ref": "../../Operations/common.json#/$defs/VoltageControlTerminal"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "control_id",
+    "entity_id"
+  ]
+}

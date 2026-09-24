@@ -77,6 +77,14 @@
         "$ref": "../Operations/Associations/TradingHubAssociation.json"
       }
     },
+    "voltage_control_associations": {
+      "description": "Links a voltage control group (VoltageDroopControl or ReactivePowerSharing) to one member device with its relative reactive power weight and, for a two-terminal member, the converter terminal. One row per (control, member). Optional, defaulting to empty, like `trading_hub_associations`: documents written before it exist and omit it.",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "../Operations/Associations/VoltageControlAssociation.json"
+      }
+    },
     "time_series_associations": {
       "description": "Time series metadata rows, one per (series, owner) association. Each row names the store holding its values in its own `address`; `time_series_storage_file` remains the document-level sidecar name.",
       "type": "array",

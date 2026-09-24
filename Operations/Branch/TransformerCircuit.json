@@ -59,10 +59,39 @@
       "default": "UNDEFINED",
       "$ref": "../../Operations/common.json#/$defs/TransformerControlObjective"
     },
-    "regulated_bus_number": {
-      "description": "Controlled bus number (PSS/E CONT; sign = regulation side).",
-      "default": 0,
-      "type": "integer"
+    "regulated_bus_id": {
+      "description": "ID of the bus whose voltage this circuit's tap changer regulates (PSS/E CONT). Set exactly when `control_objective` is `VOLTAGE` or `VOLTAGE_DISABLED`, null otherwise.",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "regulated_bus_side": {
+      "description": "Side of the controlling winding on which the regulated bus lies, replacing the sign of PSS/E CONT. Set only when the regulated bus is not one of the transformer's own terminal buses; when it is, the side follows from the connections and this must be null.",
+      "default": null,
+      "oneOf": [
+        {
+          "$ref": "../../Operations/common.json#/$defs/TransformerRegulatedBusSide"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "load_drop_compensation": {
+      "description": "Load drop compensation impedance for voltage control (PSS/E CR + jCX): the regulated voltage is compensated by this impedance times the circuit current. Zero means no compensation. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "default": {
+        "real": 0.0,
+        "imag": 0.0
+      },
+      "$ref": "../../Core/common.json#/$defs/ComplexNumber",
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "ohm",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "Impedance"
     },
     "control_limits": {
       "description": "Control band (PSS/E RMA/RMI), per `control_objective`. Units: per control_objective — UNDEFINED: 1, VOLTAGE_DISABLED: 1, REACTIVE_POWER_FLOW_DISABLED: 1, ACTIVE_POWER_FLOW_DISABLED: rad, CONTROL_OF_DC_LINE_DISABLED: 1, ASYMMETRIC_ACTIVE_POWER_FLOW_DISABLED: rad, FIXED: 1, VOLTAGE: 1, REACTIVE_POWER_FLOW: 1, ACTIVE_POWER_FLOW: rad, CONTROL_OF_DC_LINE: 1, ASYMMETRIC_ACTIVE_POWER_FLOW: rad .",
