@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Supplemental attribute carrying one row of an impedance correction table, linked to a transformer. The correction curve defines intervals over tap ratio or angle shift, and the accompanying fields name which winding the row applies to and whether the controlled quantity is an off-nominal turns ratio or a phase angle shift.",
+  "description": "Supplemental attribute carrying one row of an impedance correction table, linked to a transformer. Exactly one correction curve is present, selected by `transformer_control_mode`: `tap_ratio_correction_curve` spans off-nominal turns ratio and `phase_angle_correction_curve` spans phase-shift angle. `transformer_winding` names the winding the row applies to.",
   "title": "ImpedanceCorrectionData",
   "type": "object",
   "properties": {
@@ -10,8 +10,16 @@
     "table_number": {
       "type": "integer"
     },
-    "impedance_correction_curve": {
-      "$ref": "../../Core/common.json#/$defs/PiecewiseLinearData"
+    "tap_ratio_correction_curve": {
+      "description": "Impedance correction factor as a function of off-nominal tap ratio (x axis in tap ratio, y axis a multiplier on the winding impedance). Present only when `transformer_control_mode` is `TAP_RATIO`. Units: 1.",
+      "$ref": "../../Core/common.json#/$defs/PiecewiseLinearData",
+      "x-unit": "1",
+      "x-quantity": "Dimensionless"
+    },
+    "phase_angle_correction_curve": {
+      "description": "Impedance correction factor as a function of phase-shift angle (x axis in radians, y axis a multiplier on the winding impedance). Present only when `transformer_control_mode` is `PHASE_SHIFT_ANGLE`. Units: rad.",
+      "$ref": "../../Core/common.json#/$defs/PiecewiseLinearData",
+      "x-unit": "rad"
     },
     "transformer_winding": {
       "type": "string",
@@ -33,8 +41,53 @@
   "required": [
     "id",
     "table_number",
-    "impedance_correction_curve",
     "transformer_winding",
     "transformer_control_mode"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "transformer_control_mode": {
+            "const": "TAP_RATIO"
+          }
+        },
+        "required": [
+          "transformer_control_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "tap_ratio_correction_curve"
+        ],
+        "properties": {
+          "tap_ratio_correction_curve": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "transformer_control_mode": {
+            "const": "PHASE_SHIFT_ANGLE"
+          }
+        },
+        "required": [
+          "transformer_control_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "phase_angle_correction_curve"
+        ],
+        "properties": {
+          "phase_angle_correction_curve": {
+            "type": "object"
+          }
+        }
+      }
+    }
   ]
 }
