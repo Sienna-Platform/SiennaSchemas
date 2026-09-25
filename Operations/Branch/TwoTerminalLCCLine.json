@@ -43,14 +43,26 @@
       },
       "x-quantity": "Resistance"
     },
-    "transfer_setpoint": {
-      "description": "Desired set-point of power. If `power_mode = true` this value is in MW units, and if `power_mode = false` is in Amperes units. This parameter must not be specified in per-unit. A positive value represents the desired consumed power at the rectifier bus, while a negative value represents the desired power at the inverter bus (i.e. the absolute value of `transfer_setpoint` is the generated power at the inverter bus). Units: per power_mode — true: MW, false: A .",
-      "type": "number",
-      "x-unit-discriminator": "power_mode",
+    "power_transfer_setpoint": {
+      "description": "Scheduled power transfer, used when `control_mode` is `POWER`; `null` otherwise. Must not be specified in per-unit. A positive value is the power consumed at the rectifier bus; a negative value is the power delivered at the inverter bus (its absolute value is the generated power at the inverter bus). Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "type": [
+        "number",
+        "null"
+      ],
+      "x-unit-discriminator": "power_units",
       "x-units": {
-        "true": "MW",
-        "false": "A"
-      }
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ActivePower"
+    },
+    "current_transfer_setpoint": {
+      "description": "Scheduled current transfer, used when `control_mode` is `CURRENT`; `null` otherwise. Units: A.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "x-unit": "A"
     },
     "dc_voltage_units": {
       "description": "Unit basis for the DC voltage fields (scheduled_dc_voltage, switch_mode_voltage, min_compounding_voltage).",
@@ -135,13 +147,13 @@
       "type": "number",
       "x-unit": "kV"
     },
-    "power_mode": {
-      "description": "Boolean flag to identify if the LCC line is in power mode or current mode. If `power_mode = true`, setpoint values must be specified in MW, and if `power_mode = false` setpoint values must be specified in Amperes.",
-      "default": true,
-      "type": "boolean"
+    "control_mode": {
+      "description": "Control mode of the line (PSS/E MDC). `BLOCKED` holds no schedule, `POWER` holds `power_transfer_setpoint`, `CURRENT` holds `current_transfer_setpoint`.",
+      "default": "BLOCKED",
+      "$ref": "../../Operations/common.json#/$defs/LCCControlMode"
     },
     "switch_mode_voltage": {
-      "description": "Mode switch DC voltage. This parameter must not be added in per-unit. If LCC line is in power mode control, and DC voltage falls below this value, the line switch to current mode control. Units: kV. Units: per dc_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "description": "Mode switch DC voltage. This parameter must not be added in per-unit. If `control_mode` is `POWER` and the DC voltage falls below this value, the line switches to current control. Units: kV. Units: per dc_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
       "default": 0.0,
       "type": "number",
       "x-unit-discriminator": "dc_voltage_units",
@@ -357,7 +369,6 @@
     "arc",
     "active_power_flow",
     "r",
-    "transfer_setpoint",
     "scheduled_dc_voltage",
     "rectifier_bridges",
     "rectifier_delay_angle_limits",
@@ -373,5 +384,51 @@
     "power_units"
   ],
   "title": "TwoTerminalLCCLine",
-  "type": "object"
+  "type": "object",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "control_mode": {
+            "const": "POWER"
+          }
+        },
+        "required": [
+          "control_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "power_transfer_setpoint"
+        ],
+        "properties": {
+          "power_transfer_setpoint": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "control_mode": {
+            "const": "CURRENT"
+          }
+        },
+        "required": [
+          "control_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "current_transfer_setpoint"
+        ],
+        "properties": {
+          "current_transfer_setpoint": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  ]
 }

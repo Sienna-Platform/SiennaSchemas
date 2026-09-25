@@ -17,6 +17,7 @@ Output contract:
   MISSING STRUCT <Title>        schema component with no PSY struct
   FIELD DRIFT <Name>: psy_only=[...] schema_only=[...]
   DEFAULT DRIFT <Name>.<field>: psy=<v> schema=<v>   numeric default mismatch
+  DEFAULT DRIFT <Name>.<field>: psy=<v> schema=absent   default declared on one side only
   CONVERTER DRIFT missing <Type>       registered hand-written but no from_openapi found
   CONVERTER DRIFT unregistered <Type>  from_openapi found but not registered anywhere
   CONVERTER DRIFT overlap <Type>       both openapi_type-annotated and hand-written registered
@@ -183,6 +184,49 @@ SCHEMA_ONLY_ALWAYS = {"power_units"}
 # schemas never represent them. TransformerCircuit.base_value is repopulated by
 # add_component! and explicitly skipped by PSY's hand-written IS.serialize
 # (src/models/transformer_circuits.jl). Reviewable per type, like SCHEMA_AHEAD.
+# One-sided defaults present on psy6 when the one-sided comparison was added
+# (2026-09-23). Each is real drift the previous both-sides-numeric rule never
+# compared. Frozen so the gate is green while every new one-sided default fails.
+# Reconcile an entry (align the PSY descriptor and the schema) and delete it;
+# never add to this table.
+PREEXISTING_DEFAULT_DRIFT = {
+    "Area": {'base_power'},
+    "AreaInterchange": {'base_power'},
+    "CombinedCycleBlock": {'heat_recovery_to_steam_factor'},
+    "DiscreteControlledACBranch": {'base_power'},
+    "EmissionsData": {'available', 'gwp', 'mass_unit', 'start_up_adder'},
+    "EnergyReservoirStorage": {'operation_cost'},
+    "FACTSControlDevice": {'base_power', 'max_shunt_current', 'reactive_power_required', 'voltage_setpoint'},
+    "FixedAdmittance": {'base_power'},
+    "FixedForcedOutage": {'identifier', 'monitored_components'},
+    "GenericArcImpedance": {'base_power'},
+    "GeometricDistributionForcedOutage": {'identifier', 'mean_time_to_recovery', 'monitored_components', 'outage_transition_probability'},
+    "HybridSystem": {'active_power', 'base_power', 'interconnection_impedance', 'operation_cost', 'reactive_power'},
+    "HydroDispatch": {'operation_cost', 'time_at_status'},
+    "HydroPumpTurbine": {'operation_cost', 'time_at_status'},
+    "HydroReservoir": {'downstream_turbines', 'operation_cost', 'upstream_reservoirs', 'upstream_turbines'},
+    "HydroTurbine": {'operation_cost', 'time_at_status'},
+    "InterconnectingConverter": {'loss_function'},
+    "Line": {'base_power'},
+    "LoadZone": {'base_power'},
+    "MonitoredLine": {'base_power'},
+    "OfflineReserve": {'deployed_fraction', 'max_output_fraction', 'max_participation_factor', 'requirement', 'sustained_time'},
+    "OnlineReserve": {'deployed_fraction', 'max_output_fraction', 'max_participation_factor', 'requirement', 'sustained_time'},
+    "PlannedOutage": {'identifier', 'monitored_components'},
+    "PointToPointBid": {'spread_bid'},
+    "Substation": {'grounding_resistance'},
+    "SwitchedAdmittance": {'Y_increase', 'number_engaged', 'number_of_steps'},
+    "ThermalMultiStart": {'time_at_status'},
+    "ThermalStandard": {'time_at_status'},
+    "ThreeWindingTransformer": {'magnetizing_shunt'},
+    "TransmissionInterface": {'base_power', 'direction_mapping', 'violation_penalty'},
+    "TwoTerminalGenericHVDCLine": {'base_power', 'loss'},
+    "TwoTerminalLCCLine": {'base_power'},
+    "TwoTerminalVSCLine": {'base_power'},
+    "TwoWindingTransformer": {'magnetizing_shunt'},
+    "VirtualParticipant": {'operation_cost'},
+}
+
 PSY_INTERNAL = {
     "TransformerCircuit": {"base_value"},
 }
@@ -502,7 +546,7 @@ def as_number(value):
     """Return value as a float, or None if it is not a scalar number. Booleans
     are treated as non-numeric so a JSON `true`/`false` default is never coerced.
     PSY descriptor defaults are strings ("1.0", "1e8"); schema defaults are typed
-    JSON. Only pairs where BOTH sides are numeric are compared."""
+    JSON."""
     if isinstance(value, bool):
         return None
     try:
@@ -779,25 +823,46 @@ def main():
             print(f"FIELD DRIFT {name}: psy_only={psy_only} schema_only={schema_only}")
             drifts += 1
 
-        # Default drift: for every field where BOTH the PSY descriptor and the
-        # schema property declare a numeric default, the values must agree
-        # (1.0 == 1). Non-numeric or one-sided defaults are not compared.
-        psy_field_defaults = psy_defaults.get(name, {})
+        # Default drift over fields present on both sides. Two numeric defaults
+        # must agree (1.0 == 1). A default declared on one side only is drift:
+        # a PSY constructor and a schema instance would build different
+        # components from the same input. PSY `nothing` against a schema
+        # property with no default (or `default: null`) is the one equivalence,
+        # since a non-required nullable property already defaults to null.
+        # Pairs that are both non-numeric (enum members, composites) are not
+        # compared; a numeric default against `nothing`/`null` is drift.
+        psy_field_defaults = {
+            TRANSLITERATION.get(field, field): raw
+            for field, raw in psy_defaults.get(name, {}).items()
+        }
         schema_prop_defaults = schema_defaults.get(name, {})
-        for field, psy_raw in sorted(psy_field_defaults.items()):
-            prop = TRANSLITERATION.get(field, field)
-            if prop not in schema_prop_defaults:
+        frozen = PREEXISTING_DEFAULT_DRIFT.get(name, set())
+        for prop in sorted(psy_fields & set(props)):
+            if prop in frozen:
                 continue
-            psy_num = as_number(psy_raw)
-            schema_num = as_number(schema_prop_defaults[prop])
-            if psy_num is None or schema_num is None:
+            psy_has = prop in psy_field_defaults
+            schema_has = prop in schema_prop_defaults
+            if not psy_has and not schema_has:
                 continue
-            if psy_num != schema_num:
-                print(
-                    f"DEFAULT DRIFT {name}.{prop}: "
-                    f"psy={psy_raw} schema={schema_prop_defaults[prop]}"
-                )
-                drifts += 1
+            psy_raw = psy_field_defaults.get(prop)
+            schema_raw = schema_prop_defaults.get(prop)
+            psy_null = psy_has and psy_raw == "nothing"
+            schema_null = (not schema_has) or schema_raw is None
+            if psy_null and schema_null:
+                continue
+            psy_num = as_number(psy_raw) if psy_has else None
+            schema_num = as_number(schema_raw) if schema_has else None
+            if psy_has and schema_has and psy_num is None and schema_num is None:
+                if not (psy_null or schema_raw is None):
+                    continue
+            if psy_num is not None and schema_num is not None and psy_num == schema_num:
+                continue
+            print(
+                f"DEFAULT DRIFT {name}.{prop}: "
+                f"psy={psy_raw if psy_has else 'absent'} "
+                f"schema={schema_raw if schema_has else 'absent'}"
+            )
+            drifts += 1
 
     print(f"SUMMARY: {missing_schemas} missing schemas, {drifts} unexplained drifts")
     return 1 if (missing_schemas + drifts) > 0 else 0
