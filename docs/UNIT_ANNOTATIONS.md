@@ -40,6 +40,10 @@ parameter in either per-unit or natural units and records which per row via
 `transmission_lines.parameter_units` (`COMPONENT_BASE` → `pu`; `NATURAL_UNITS` → `ohm`/`S`).
 The power-family quantities are discriminated the same way at the schema layer, via each
 component's own `power_units`.
+Cost curves carry the same option through their own `power_units` (`CostCurve`, `FuelCurve`,
+and every offer curve): on `COMPONENT_BASE` the x axis is `pu`, and a y axis that is a rate
+per unit of power is `USD/pu*h` (CostPerEnergy) or `MMBtu/pu*h` (HeatRate), both registered
+with `to_default: null`. An input-output y axis (`USD/h`) does not depend on the basis.
 Elsewhere, `"pu"` remains purely an annotation channel; no other quantity registers `pu`.
 
 ```json
@@ -267,7 +271,7 @@ annotated property's description is not exactly the canonical form.
 
 ## Conventions this vocabulary encodes
 
-- **Interchange carries natural units by default, with two deliberate per-unit
+- **Interchange carries natural units by default, with three deliberate per-unit
   exceptions.** Branch electrical parameters (`r`/`x`/`b`/`g`) may be stored in
   per-unit *or* natural units, and the storage layer records which per row
   (GridDB `transmission_lines.parameter_units`: `COMPONENT_BASE` → `pu`,
@@ -277,9 +281,11 @@ annotated property's description is not exactly the canonical form.
   `pu` (`COMPONENT_BASE`, against that component's `base_power`) or the
   physical unit (`NATURAL_UNITS`) for every power-family field it has.
   `Core/units.json` carries the `pu` rows for `ActivePower`, `ReactivePower`,
-  `ApparentPower`, and `pu/min` for `ActivePowerChangeRate` that back this. For
-  every other quantity, natural units only, and `"pu"` is a model-layer
-  annotation, not a stored unit.
+  `ApparentPower`, and `pu/min` for `ActivePowerChangeRate` that back this.
+  Cost curves are the third: each curve's own `power_units` selects `pu` for its
+  x axis, and `USD/pu*h` or `MMBtu/pu*h` for a per-power-rate y axis, against the
+  owning component's `base_power`. For every other quantity, natural units only,
+  and `"pu"` is a model-layer annotation, not a stored unit.
 - **Percent is banned.** Fractions and dimensionless quantities use the unit
   `"1"` and are stored as fractions (`0.95`, not `95`). There is no `"%"` unit.
 - **`unit` / `units` string properties.** Any property literally named `unit`

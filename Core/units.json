@@ -111,6 +111,8 @@
     {"quantity_kind": "ActivePower", "unit": "pu", "to_default": null},
     {"quantity_kind": "ReactivePower", "unit": "pu", "to_default": null},
     {"quantity_kind": "ApparentPower", "unit": "pu", "to_default": null},
-    {"quantity_kind": "ActivePowerChangeRate", "unit": "pu/min", "to_default": null}
+    {"quantity_kind": "ActivePowerChangeRate", "unit": "pu/min", "to_default": null},
+    {"quantity_kind": "CostPerEnergy", "unit": "USD/pu*h", "to_default": null},
+    {"quantity_kind": "HeatRate", "unit": "MMBtu/pu*h", "to_default": null}
   ]
 }
