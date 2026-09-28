@@ -277,7 +277,8 @@ annotated property's description is not exactly the canonical form.
 ## Conventions this vocabulary encodes
 
 - **Interchange carries natural units by default, with three deliberate per-unit
-  exceptions (branch electrical parameters, power-family fields, and cost curves).** Branch electrical parameters (`r`/`x`/`b`/`g`) may be stored in
+  exceptions (branch electrical parameters, power-family fields, and cost curves).**
+  Branch electrical parameters (`r`/`x`/`b`/`g`) may be stored in
   per-unit *or* natural units, and the storage layer records which per row
   (GridDB `transmission_lines.parameter_units`: `COMPONENT_BASE` → `pu`,
   `NATURAL_UNITS` → `ohm`/`S`). Every component's power-family fields
