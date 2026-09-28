@@ -21,6 +21,16 @@
       "title": "VSCDCControlModes",
       "type": "string"
     },
+    "LCCControlMode": {
+      "description": "Control mode of an LCC-HVDC line (PSS/E MDC). BLOCKED: the line is blocked and holds no schedule. POWER: the line holds a power schedule (power_transfer_setpoint, MW). CURRENT: the line holds a current schedule (current_transfer_setpoint, A).",
+      "enum": [
+        "BLOCKED",
+        "POWER",
+        "CURRENT"
+      ],
+      "title": "LCCControlMode",
+      "type": "string"
+    },
     "FACTSControlDeviceControlMode": {
       "description": "Operating mode of a FACTS control device. `OOS` (out-of-service): both series and shunt links are open. `NML` (normal): both series and shunt links are operating. `BYP` (bypass): the series link is bypassed (acts as a zero-impedance line) and the shunt link operates as a STATCOM (reactive-only).",
       "enum": [
@@ -32,7 +42,7 @@
       "type": "string"
     },
     "SwitchedAdmittanceControlMode": {
-      "description": "Control mode of a switched shunt admittance. `UNDEFINED` leaves the mode unspecified; `FIXED` holds the admittance at a constant value; `CONTINUOUS_VOLTAGE` adjusts it continuously to control voltage. The `DISCRETE_*` modes switch blocks in discrete steps to control voltage, a plant's reactive power, a voltage-source-converter terminal's reactive power, or a remote bus's admittance, respectively.",
+      "description": "Control mode of a switched shunt admittance (PSS/E MODSW). `UNDEFINED` leaves the mode unspecified; `FIXED` holds the admittance constant. `DISCRETE_VOLTAGE` and `CONTINUOUS_VOLTAGE` regulate voltage in steps or continuously and use `voltage_limits`. `DISCRETE_REACTIVE_PLANT`, `DISCRETE_REACTIVE_VSC`, `DISCRETE_ADMITTANCE_REMOTE` and `DISCRETE_REACTIVE_FACTS` regulate a plant's, a voltage-source-converter terminal's, a remote bus's, or a FACTS device's reactive quantity in steps and use `reactive_power_range_limits`.",
       "enum": [
         "UNDEFINED",
         "FIXED",
@@ -40,7 +50,8 @@
         "CONTINUOUS_VOLTAGE",
         "DISCRETE_REACTIVE_PLANT",
         "DISCRETE_REACTIVE_VSC",
-        "DISCRETE_ADMITTANCE_REMOTE"
+        "DISCRETE_ADMITTANCE_REMOTE",
+        "DISCRETE_REACTIVE_FACTS"
       ],
       "title": "SwitchedAdmittanceControlMode",
       "type": "string"

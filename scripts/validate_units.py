@@ -9,11 +9,14 @@ enforces:
   2. Every x-unit / x-units value is a unit string in Core/units.json
      allowed_units, or the literal "pu".
   3. Every x-unit-base and x-unit-discriminator names an existing sibling
-     property in the same object's "properties".
+     property in the same object's "properties", and every x-unit-discriminator
+     is a unit-basis tag listed in UNIT_BASIS_DISCRIMINATORS: a sibling that
+     selects the unit of measure of a fixed quantity, never a modeling enum
+     that changes which quantity the field holds.
   4. Every x-units key set exactly equals the enum of the property named by the
      sibling x-unit-discriminator. A $ref discriminator is resolved into
-     Core/common.json (e.g. ReservoirDataType); a boolean discriminator has the
-     effective enum {"true", "false"}.
+     Core/common.json (e.g. VoltageUnitBasis). Every x-units value is a unit
+     string; x-units maps do not nest.
   5. No "descriptor" keys anywhere; no "type": null anywhere.
   6. Any property literally named "unit" or "units" typed "string" must have a
      description mentioning units.json or the unit vocabulary.
@@ -50,6 +53,29 @@ from jsonschema import Draft202012Validator
 REPO_ROOT = Path(__file__).resolve().parent.parent
 UNITS_JSON = REPO_ROOT / "Core" / "units.json"
 SCAN_DIRS = ["Core", "Operations", "Investments", "Dynamics", "TimeSeries"]
+
+# Rule 3b. The only siblings allowed to discriminate a unit. Each is a unit-basis
+# tag: the annotated field's quantity is fixed and the tag picks its unit of
+# measure. A modeling enum as discriminator makes a field's quantity depend on
+# a sibling's value, which is the pattern the fixed-quantity split removed.
+UNIT_BASIS_DISCRIMINATORS = frozenset({
+    "power_units",
+    "parameter_units",
+    "admittance_units",
+    "voltage_units",
+    "dc_voltage_units",
+    "voltage_setpoint_units",
+    "setpoint_voltage_units",
+    "energy_units",
+    "mass_unit",
+})
+
+# Remaining modeling-enum discriminators, keyed (schema file, sibling). Each
+# entry is scheduled for removal; do not add to this table.
+DEFERRED_DISCRIMINATORS = frozenset({
+    # HydroReservoir wave: six fields on level_data_type need canonicalization.
+    ("Operations/StaticInjection/HydroReservoir.json", "level_data_type"),
+})
 
 _ref_doc_cache = {}
 
@@ -162,16 +188,9 @@ def load_unit_quantities():
 
 
 def annotated_units(spec, unit_quantities):
-    """Every leaf unit an annotated property declares, x-units nesting included."""
-    def leaves(xunits):
-        for value in xunits.values():
-            if isinstance(value, dict) and "x-units" in value:
-                yield from leaves(value["x-units"])
-            elif isinstance(value, str):
-                yield value
-
+    """Every unit an annotated property declares."""
     if isinstance(spec.get("x-units"), dict):
-        return sorted(set(leaves(spec["x-units"])))
+        return sorted({v for v in spec["x-units"].values() if isinstance(v, str)})
     if isinstance(spec.get("x-unit"), str):
         return [spec["x-unit"]]
     return []
@@ -196,9 +215,7 @@ def infer_quantity(xunits, unit_quantities):
     usable = len(pins) == 1 and all(
         next(iter(pins)) in unit_quantities[v] for v in ambiguous)
     for value in xunits.values():
-        if isinstance(value, dict) and "x-units" in value:
-            resolved.update(infer_quantity(value["x-units"], unit_quantities))
-        elif isinstance(value, str) and len(unit_quantities.get(value, [])) > 1 and usable:
+        if isinstance(value, str) and len(unit_quantities.get(value, [])) > 1 and usable:
             resolved[value] = next(iter(pins))
     return resolved
 
@@ -585,68 +602,24 @@ def find_composite_defaults(node, path, source_path, source_file, failures,
                                     failures, variant_titles)
 
 
-def validate_x_units_map(x_units, path, enclosing_props, source_path,
-                         source_file, failures, allowed_units):
-    """Validate an ``x-units`` map.
+def validate_x_units_map(x_units, path, source_file, failures, allowed_units):
+    """Validate an ``x-units`` map: every value is a vocabulary unit string.
 
-    Each value is either a unit string (leaf) or a nested discriminator object
-    ``{"x-unit-discriminator": <sibling>, "x-units": {...}}`` for a
-    multi-dimensional unit (e.g. a VSC setpoint whose quantity depends on the
-    control mode and whose basis then depends on a unit-basis sibling). Nested
-    objects are validated recursively: the nested discriminator must name an
-    existing sibling whose enum equals the nested ``x-units`` keys, and the
-    nested leaves must be vocabulary units.
+    A unit-basis discriminator selects one unit per basis, so the map is one
+    level deep by construction. A field whose unit would need a second
+    discriminator is a field carrying more than one quantity; split it instead.
     """
     for key, val in x_units.items():
         subpath = f"{path}/{key}"
-        if isinstance(val, str):
-            if val not in allowed_units:
-                failures.append(
-                    Failure(source_file, subpath, "x-unit-vocabulary",
-                            val, "a unit in Core/units.json allowed_units or 'pu'")
-                )
-        elif isinstance(val, dict):
-            nested_disc = val.get("x-unit-discriminator")
-            nested_units = val.get("x-units")
-            if nested_disc is None or not isinstance(nested_units, dict):
-                failures.append(
-                    Failure(source_file, subpath, "x-units-nested-shape",
-                            "nested value",
-                            "a unit string or a nested "
-                            "{x-unit-discriminator, x-units} object")
-                )
-                continue
-            if enclosing_props is None or nested_disc not in enclosing_props:
-                failures.append(
-                    Failure(source_file, f"{subpath}/x-unit-discriminator",
-                            "x-unit-discriminator-sibling", nested_disc,
-                            "an existing sibling property name")
-                )
-            else:
-                enum = discriminator_enum(enclosing_props[nested_disc], source_path)
-                keys = set(nested_units.keys())
-                if enum is None:
-                    failures.append(
-                        Failure(source_file, f"{subpath}/x-unit-discriminator",
-                                "x-units-keys-equal-enum",
-                                f"discriminator '{nested_disc}'",
-                                "a discriminator with a resolvable enum "
-                                "(enum, boolean, or $ref to an enum)")
-                    )
-                elif keys != enum:
-                    failures.append(
-                        Failure(source_file, f"{subpath}/x-units",
-                                "x-units-keys-equal-enum", sorted(keys),
-                                sorted(enum))
-                    )
-            validate_x_units_map(nested_units, f"{subpath}/x-units",
-                                 enclosing_props, source_path, source_file,
-                                 failures, allowed_units)
-        else:
+        if not isinstance(val, str):
             failures.append(
                 Failure(source_file, subpath, "x-units-value-type",
-                        type(val).__name__,
-                        "a unit string or a nested discriminator object")
+                        type(val).__name__, "a unit string (x-units do not nest)")
+            )
+        elif val not in allowed_units:
+            failures.append(
+                Failure(source_file, subpath, "x-unit-vocabulary",
+                        val, "a unit in Core/units.json allowed_units or 'pu'")
             )
 
 
@@ -700,12 +673,10 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
         # sibling set is the enclosing "properties" map (properties_stack top).
         enclosing_props = properties_stack[-1] if properties_stack else None
 
-        # Rule 2: x-units values (recursive — supports nested discriminators for
-        # multi-dimensional units).
+        # Rule 2: x-units values.
         if "x-units" in node and isinstance(node["x-units"], dict):
             validate_x_units_map(node["x-units"], f"{path}/x-units",
-                                 enclosing_props, source_path, source_file,
-                                 failures, allowed_units)
+                                 source_file, failures, allowed_units)
 
         # Rule 8: x-curve-axes names two registered quantity kinds, on a
         # definition that has the power_units property its sentence reads.
@@ -817,6 +788,15 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
         # Rules 3 & 4: x-unit-discriminator.
         if "x-unit-discriminator" in node:
             disc = node["x-unit-discriminator"]
+            if (disc not in UNIT_BASIS_DISCRIMINATORS
+                    and (source_file, disc) not in DEFERRED_DISCRIMINATORS):
+                failures.append(
+                    Failure(source_file, path + "/x-unit-discriminator",
+                            "x-unit-discriminator-basis", disc,
+                            "a unit-basis tag in UNIT_BASIS_DISCRIMINATORS; a "
+                            "modeling enum may not switch a field's quantity, "
+                            "split the field per quantity instead")
+                )
             if enclosing_props is None or disc not in enclosing_props:
                 failures.append(
                     Failure(source_file, path + "/x-unit-discriminator",
@@ -911,8 +891,6 @@ def check_metaschema(doc, source_file, failures):
 #   * plain x-unit:   "Units: <x-unit>."
 #   * discriminated:  "Units: per <discriminator> — <VAL>: <unit>, ... ."
 #                     (x-units entries in insertion order; em dash separator).
-#   * nested:         a discriminated value may itself be discriminated; it
-#                     renders parenthesized: "<VAL>: (per <discriminator> — ...)".
 # The sentence is applied idempotently: a stale trailing "Units: ..." sentence
 # is replaced, never duplicated.
 # --------------------------------------------------------------------------- #
@@ -934,16 +912,6 @@ def check_metaschema(doc, source_file, failures):
 # Running the documented repair made the file worse, and --check-descriptions
 # stayed red however many times it was run.
 _UNITS_SENTENCE_RE = re.compile(r"Units:(?:(?!\. ).)*?\.?\s*$", re.DOTALL)
-
-
-def _units_value(value):
-    """Render one x-units map value: a plain unit string, or a nested
-    discriminated map rendered parenthesized as '(per <disc> — K: v, ...)'."""
-    if isinstance(value, dict):
-        disc = value.get("x-unit-discriminator", "value")
-        parts = ", ".join(f"{k}: {_units_value(v)}" for k, v in value["x-units"].items())
-        return f"(per {disc} — {parts})"
-    return value
 
 
 def curve_axes_sentence(node, source_path):
@@ -1010,7 +978,7 @@ def units_sentence(node, source_path=None, is_form_scalar=False):
         return curve_axes_sentence(node, source_path)
     if "x-units" in node and isinstance(node["x-units"], dict):
         disc = node.get("x-unit-discriminator", "value")
-        parts = ", ".join(f"{k}: {_units_value(v)}" for k, v in node["x-units"].items())
+        parts = ", ".join(f"{k}: {v}" for k, v in node["x-units"].items())
         return f"Units: per {disc} — {parts} ."
     return f"Units: {node['x-unit']}."
 

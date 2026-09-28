@@ -62,9 +62,9 @@ The named property must exist in the same object's `properties`.
 
 ### `x-unit-discriminator` + `x-units`
 
-For a property whose unit depends on the value of another (sibling)
-property, `x-unit-discriminator` names that sibling and `x-units` maps each
-discriminator value to its unit.
+For a property whose unit of measure depends on a sibling **unit-basis tag**,
+`x-unit-discriminator` names that sibling and `x-units` maps each of its values
+to a unit.
 
 The most common discriminator is `power_units`: every component with a power-family field
 (active/reactive/apparent power, ratings, limits, ramp rates) carries a `power_units`
@@ -76,69 +76,44 @@ always set it explicitly. A new component with power-family fields needs both: t
 governs.
 
 ```json
-"level_data_type": { "$ref": "../../Core/common.json#/definitions/ReservoirDataType" },
-"inflow": {
-  "$ref": "../../Core/common.json#/definitions/MinMax",
-  "x-unit-discriminator": "level_data_type",
+"setpoint_voltage_units": { "$ref": "../../Operations/common.json#/$defs/VoltageUnitBasis" },
+"dc_voltage_setpoint_from": {
+  "type": ["number", "null"],
+  "x-unit-discriminator": "setpoint_voltage_units",
   "x-units": {
-    "USABLE_VOLUME": "m3/s",
-    "TOTAL_VOLUME":  "m3/s",
-    "HEAD":          "m/s",
-    "ENERGY":        "MW"
-  }
+    "NATURAL_UNITS":  "kV",
+    "COMPONENT_BASE": "pu"
+  },
+  "x-quantity": "Voltage"
 }
 ```
 
 Rules:
 
 - `x-unit-discriminator` must name an existing sibling property.
-- The `x-units` **key set must exactly equal the discriminator's enum**. The
-  discriminator may be:
-  - an inline `enum`,
-  - a `$ref` to an enum definition (resolved into `Core/common.json`, e.g.
-    `ReservoirDataType`), or
-  - a `boolean` — whose effective key set is `"true"` and `"false"`:
+- The discriminator must be one of the **unit-basis tags** the validator lists in
+  `UNIT_BASIS_DISCRIMINATORS`: `power_units`, `parameter_units`, `admittance_units`,
+  `voltage_units`, `dc_voltage_units`, `voltage_setpoint_units`, `setpoint_voltage_units`,
+  `energy_units`, `mass_unit`. Each selects the unit of measure of a quantity that is
+  fixed for the property's lifetime.
+- The `x-units` **key set must exactly equal the discriminator's enum**, whether the
+  enum is inline or a `$ref` to a definition (resolved into the `common.json` files).
+- Every value in `x-units` must be in the vocabulary (or `"pu"`). Values are unit
+  strings only; `x-units` maps do not nest.
 
-    ```json
-    "power_mode":       { "type": "boolean" },
-    "transfer_setpoint": {
-      "x-unit-discriminator": "power_mode",
-      "x-units": { "true": "MW", "false": "A" }
-    }
-    ```
+#### Why a modeling enum may not discriminate a unit
 
-- Every value in `x-units` must be in the vocabulary (or `"pu"`).
-
-#### Nested discriminators (multi-dimensional units)
-
-A property's unit sometimes depends on **two** siblings. The canonical case is a
-VSC converter setpoint: the control mode selects the *quantity* (power vs
-voltage), and for the voltage modes a unit-basis sibling then selects pu vs kV.
-An `x-units` **value** may therefore be either a unit string (leaf) or a nested
-`{ "x-unit-discriminator": <sibling>, "x-units": { ... } }` object:
-
-```json
-"dc_control_from": { "$ref": "../../Core/common.json#/definitions/VSCDCControlModes" },
-"voltage_units":   { "$ref": "../../Core/common.json#/definitions/VoltageUnitBasis" },
-"dc_setpoint_from": {
-  "type": "number",
-  "x-unit-discriminator": "dc_control_from",
-  "x-units": {
-    "DC_POWER": "MW",
-    "DC_VOLTAGE":       { "x-unit-discriminator": "voltage_units",
-                          "x-units": { "COMPONENT_BASE": "pu", "NATURAL_UNITS": "kV" } },
-    "DC_VOLTAGE_DROOP": { "x-unit-discriminator": "voltage_units",
-                          "x-units": { "COMPONENT_BASE": "pu", "NATURAL_UNITS": "kV" } }
-  }
-}
-```
-
-Rules (applied recursively to every nesting level):
-
-- Each nested object must have both `x-unit-discriminator` and `x-units`.
-- The nested discriminator must name an existing sibling of the annotated
-  property, and its `x-units` key set must exactly equal that sibling's enum.
-- Leaf values must be vocabulary units (or `"pu"`).
+A control mode or data-type enum that switches a field between MW and A, or between
+a tap ratio and radians, makes the field's *quantity* depend on a sibling. The
+explicit-units engine attaches a conversion to a field, not to a field-plus-mode
+pair, so such a field can never be converted consistently, and changing the mode
+silently reinterprets the stored number. The remedy is structural: one field per
+quantity, each nullable, with the mode selecting which one is populated (see the
+`if`/`then` blocks on `TransformerCircuit`, `TwoTerminalLCCLine`, `TwoTerminalVSCLine`,
+`InterconnectingConverter` and `ImpedanceCorrectionData`). The validator rejects any
+`x-unit-discriminator` outside the unit-basis list so the pattern cannot return one
+field at a time. `HydroReservoir.level_data_type` is the one remaining exception,
+carried in `DEFERRED_DISCRIMINATORS` until that component is reworked.
 
 ### `x-quantity`
 
@@ -314,10 +289,11 @@ schema JSON under `Core/`, `Operations/`, `Investments/`, `Dynamics/`
 2. Every `x-unit` / `x-units` value is in `Core/units.json` `allowed_units`, or
    `"pu"`.
 3. Every `x-unit-base` and `x-unit-discriminator` names an existing sibling
-   property.
+   property, and every `x-unit-discriminator` is a unit-basis tag from
+   `UNIT_BASIS_DISCRIMINATORS`.
 4. Every `x-units` key set exactly equals the discriminator's enum (resolving a
-   `$ref` discriminator into `Core/common.json`; a boolean discriminator has
-   keys `"true"` / `"false"`).
+   `$ref` discriminator into the `common.json` files), and every value is a
+   unit string; maps do not nest.
 5. No `"descriptor"` keys and no `"type": null` anywhere.
 6. Every `unit` / `units` string property has a description mentioning
    `Core/units.json` or the vocabulary.

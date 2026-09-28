@@ -188,6 +188,9 @@
       "VSCDCControlModes": {
         "$ref": "Operations/common.json#/$defs/VSCDCControlModes"
       },
+      "LCCControlMode": {
+        "$ref": "Operations/common.json#/$defs/LCCControlMode"
+      },
       "CombinedCycleConfiguration": {
         "$ref": "Operations/common.json#/$defs/CombinedCycleConfiguration"
       },

@@ -88,69 +88,70 @@
       "$ref": "../../Core/common.json#/$defs/LossCurve"
     },
     "dc_control": {
-      "description": "DC-side control mode of the converter.",
-      "default": "DC_VOLTAGE",
+      "description": "DC-side control mode of the converter. No default: an in-service converter always controls something on each side, so the mode is supplied explicitly.",
       "$ref": "../../Operations/common.json#/$defs/VSCDCControlModes"
     },
     "ac_control": {
-      "description": "AC-side control mode of the converter.",
-      "default": "AC_REACTIVE_POWER",
+      "description": "AC-side control mode of the converter. No default: an in-service converter always controls something on each side, so the mode is supplied explicitly.",
       "$ref": "../../Operations/common.json#/$defs/VSCACControlModes"
     },
     "voltage_setpoint_units": {
-      "description": "Unit basis for the DC/AC voltage setpoints.",
+      "description": "Unit basis for dc_voltage_setpoint and ac_voltage_setpoint.",
       "default": "COMPONENT_BASE",
       "$ref": "../../Operations/common.json#/$defs/VoltageUnitBasis"
     },
-    "dc_setpoint": {
-      "description": "DC-voltage target (when `dc_control` regulates DC voltage) or active-power order (otherwise). Units: per dc_control — DC_POWER: MW, DC_VOLTAGE: (per voltage_setpoint_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu), DC_VOLTAGE_DROOP: (per voltage_setpoint_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu) .",
-      "default": 0.0,
-      "type": "number",
-      "x-unit-discriminator": "dc_control",
+    "dc_power_setpoint": {
+      "description": "Active-power order of the converter, used when `dc_control` is `DC_POWER`; `null` otherwise. Positive means the converter supplies power to the AC network; negative means it withdraws power from it. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "type": [
+        "number",
+        "null"
+      ],
+      "x-unit-discriminator": "power_units",
       "x-units": {
-        "DC_POWER": "MW",
-        "DC_VOLTAGE": {
-          "x-unit-discriminator": "voltage_setpoint_units",
-          "x-units": {
-            "NATURAL_UNITS": "kV",
-            "COMPONENT_BASE": "pu"
-          },
-          "description": "Units: per voltage_setpoint_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu ."
-        },
-        "DC_VOLTAGE_DROOP": {
-          "x-unit-discriminator": "voltage_setpoint_units",
-          "x-units": {
-            "NATURAL_UNITS": "kV",
-            "COMPONENT_BASE": "pu"
-          },
-          "description": "Units: per voltage_setpoint_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu ."
-        }
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ActivePower"
+    },
+    "dc_voltage_setpoint": {
+      "description": "DC-side voltage target of the converter, used when `dc_control` is `DC_VOLTAGE` or `DC_VOLTAGE_DROOP`; `null` otherwise. Units: per voltage_setpoint_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "type": [
+        "number",
+        "null"
+      ],
+      "x-unit-discriminator": "voltage_setpoint_units",
+      "x-units": {
+        "NATURAL_UNITS": "kV",
+        "COMPONENT_BASE": "pu"
       },
       "x-quantity": "Voltage"
     },
-    "ac_setpoint": {
-      "description": "AC-voltage magnitude target (when `ac_control` regulates AC voltage) or power factor setpoint (otherwise). Units: per ac_control — AC_REACTIVE_POWER: 1, AC_VOLTAGE: (per voltage_setpoint_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu) .",
-      "default": 1.0,
-      "type": "number",
-      "x-unit-discriminator": "ac_control",
+    "power_factor_setpoint": {
+      "description": "Power-factor setpoint of the converter, used when `ac_control` is `AC_REACTIVE_POWER`; `null` otherwise. Units: 1.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": -1.0,
+      "maximum": 1.0,
+      "x-unit": "1",
+      "x-quantity": "PowerFactor"
+    },
+    "ac_voltage_setpoint": {
+      "description": "AC-side voltage magnitude target of the converter, used when `ac_control` is `AC_VOLTAGE`; `null` otherwise. Units: per voltage_setpoint_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "type": [
+        "number",
+        "null"
+      ],
+      "x-unit-discriminator": "voltage_setpoint_units",
       "x-units": {
-        "AC_REACTIVE_POWER": "1",
-        "AC_VOLTAGE": {
-          "x-unit-discriminator": "voltage_setpoint_units",
-          "x-units": {
-            "NATURAL_UNITS": "kV",
-            "COMPONENT_BASE": "pu"
-          },
-          "description": "Units: per voltage_setpoint_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu ."
-        }
+        "NATURAL_UNITS": "kV",
+        "COMPONENT_BASE": "pu"
       },
-      "x-quantity": {
-        "1": "PowerFactor",
-        "pu": "Voltage"
-      }
+      "x-quantity": "Voltage"
     },
     "dc_voltage_droop": {
-      "description": "DC-voltage droop gain relating DC voltage to converter active power as `V_dc = dc_setpoint - dc_voltage_droop * P_c`. A value of 0.0 disables droop. Units: pu.",
+      "description": "DC-voltage droop gain relating DC voltage to converter active power as `V_dc = dc_voltage_setpoint - dc_voltage_droop * P_c`. A value of 0.0 disables droop. Units: pu.",
       "default": 0.0,
       "type": "number",
       "x-unit": "pu",
@@ -209,5 +210,98 @@
     "active_power_limits"
   ],
   "title": "InterconnectingConverter",
-  "type": "object"
+  "type": "object",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "dc_control": {
+            "const": "DC_POWER"
+          }
+        },
+        "required": [
+          "dc_control"
+        ]
+      },
+      "then": {
+        "required": [
+          "dc_power_setpoint"
+        ],
+        "properties": {
+          "dc_power_setpoint": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "dc_control": {
+            "enum": [
+              "DC_VOLTAGE",
+              "DC_VOLTAGE_DROOP"
+            ]
+          }
+        },
+        "required": [
+          "dc_control"
+        ]
+      },
+      "then": {
+        "required": [
+          "dc_voltage_setpoint"
+        ],
+        "properties": {
+          "dc_voltage_setpoint": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "ac_control": {
+            "const": "AC_REACTIVE_POWER"
+          }
+        },
+        "required": [
+          "ac_control"
+        ]
+      },
+      "then": {
+        "required": [
+          "power_factor_setpoint"
+        ],
+        "properties": {
+          "power_factor_setpoint": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "ac_control": {
+            "const": "AC_VOLTAGE"
+          }
+        },
+        "required": [
+          "ac_control"
+        ]
+      },
+      "then": {
+        "required": [
+          "ac_voltage_setpoint"
+        ],
+        "properties": {
+          "ac_voltage_setpoint": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  ]
 }
