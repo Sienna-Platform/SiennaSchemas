@@ -40,10 +40,15 @@ parameter in either per-unit or natural units and records which per row via
 `transmission_lines.parameter_units` (`COMPONENT_BASE` → `pu`; `NATURAL_UNITS` → `ohm`/`S`).
 The power-family quantities are discriminated the same way at the schema layer, via each
 component's own `power_units`.
-Cost curves carry the same option through their own `power_units` (`CostCurve`, `FuelCurve`,
-and every offer curve): on `COMPONENT_BASE` the x axis is `pu`, and a y axis that is a rate
-per unit of power is `USD/pu*h` (CostPerEnergy) or `MMBtu/pu*h` (HeatRate), both registered
-with `to_default: null`. An input-output y axis (`USD/h`) does not depend on the basis.
+Cost curves carry the same option through their own `power_units`, both production costs
+(`CostCurve`, `FuelCurve`) and the offer curves of market-bid and import/export costs: on
+`COMPONENT_BASE` the x axis is `pu`, and a y axis that is a rate per unit of power is
+`USD/pu*h` (CostPerEnergy) or `MMBtu/pu*h` (HeatRate), both registered with
+`to_default: null`. An input-output y axis (`USD/h`) does not depend on the basis. An offer
+curve whose owner records no `base_power` (a virtual participant, a point-to-point bid) has
+nothing to be per-unit against and stays in natural units, as do bids placed on a service or
+a trading hub. A cost's paired offer curves (sell and buy, import and export) are meant to
+share one basis; the schemas do not enforce it.
 Elsewhere, `"pu"` remains purely an annotation channel; no other quantity registers `pu`.
 
 ```json
@@ -272,7 +277,7 @@ annotated property's description is not exactly the canonical form.
 ## Conventions this vocabulary encodes
 
 - **Interchange carries natural units by default, with three deliberate per-unit
-  exceptions.** Branch electrical parameters (`r`/`x`/`b`/`g`) may be stored in
+  exceptions (branch electrical parameters, power-family fields, and cost curves).** Branch electrical parameters (`r`/`x`/`b`/`g`) may be stored in
   per-unit *or* natural units, and the storage layer records which per row
   (GridDB `transmission_lines.parameter_units`: `COMPONENT_BASE` → `pu`,
   `NATURAL_UNITS` → `ohm`/`S`). Every component's power-family fields
@@ -282,9 +287,10 @@ annotated property's description is not exactly the canonical form.
   physical unit (`NATURAL_UNITS`) for every power-family field it has.
   `Core/units.json` carries the `pu` rows for `ActivePower`, `ReactivePower`,
   `ApparentPower`, and `pu/min` for `ActivePowerChangeRate` that back this.
-  Cost curves are the third: each curve's own `power_units` selects `pu` for its
-  x axis, and `USD/pu*h` or `MMBtu/pu*h` for a per-power-rate y axis, against the
-  owning component's `base_power`. For every other quantity, natural units only,
+  Cost curves are the third, production costs and market-bid and import/export
+  offer curves alike: each curve's own `power_units` selects `pu` for its x axis,
+  and `USD/pu*h` or `MMBtu/pu*h` for a per-power-rate y axis, against the owning
+  component's `base_power`. For every other quantity, natural units only,
   and `"pu"` is a model-layer annotation, not a stored unit.
 - **Percent is banned.** Fractions and dimensionless quantities use the unit
   `"1"` and are stored as fractions (`0.95`, not `95`). There is no `"%"` unit.
