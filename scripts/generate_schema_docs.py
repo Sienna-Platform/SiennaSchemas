@@ -557,15 +557,14 @@ exactly three scopes, each read against its own record rather than anything docu
 
 - **A component's own `power_units`.** Governs that component's power-family fields, read
   against that component's own `base_power`. Required, no default.
-- **A cost payload's own `power_units`.** The x-axis basis of a `CostCurve` or `FuelCurve` —
-  the value curves wrapped by a generation cost's `variable_operation_cost` member (renamed
-  from `variable` in this design pass). Read against the *owning component's* `base_power`,
-  same as any other `COMPONENT_BASE` reading. Note the field-level asymmetry here:
-  `CostCurve.power_units` does carry a default (`NATURAL_UNITS`) even though it stays in the
-  schema's `required` list, while `FuelCurve.power_units` — like every component-level
-  `power_units` — has none.
+- **A loss curve's own `power_units`.** The basis of both axes of a `LossCurve`, read against
+  the *owning component's* `base_power`, same as any other `COMPONENT_BASE` reading.
 - **A time series association's own `unit_system`.** Governs only that one series; it says
   nothing about the component it is attached to, or any other series.
+
+Cost curves are not among them. A `CostCurve` or `FuelCurve`, including the offer curves of
+market-bid and import/export costs, carries no basis field and is always in natural units:
+its x axis is power in MW, whatever the owning component's `power_units`.
 
 There is deliberately **no system-wide basis**. Data that was historically per-unitized
 against a system base records that base in the component's own `base_power` and rides as
@@ -742,8 +741,8 @@ Walking the decision procedure on three of these fields:
 def validate_worked_example():
     """Raise loudly if the schema facts UNITS_WORKED_EXAMPLE and UNITS_MODEL
     narrate in prose (rather than render from a table) have drifted: which
-    fields exist on ThermalStandard and what discriminates them, and the
-    CostCurve-vs-FuelCurve `power_units` default asymmetry."""
+    fields exist on ThermalStandard and what discriminates them, and that cost
+    curves carry no `power_units` basis."""
     bundled, _ = load_domain(UNITS_WORKED_EXAMPLE_DOMAIN)
     definitions = bundled["components"]["schemas"]
     schema = resolve(bundled["components"]["schemas"][UNITS_WORKED_EXAMPLE_TYPE], definitions)
@@ -778,17 +777,12 @@ def validate_worked_example():
     ]
     core_bundled, _ = load_domain("core")
     core_defs = core_bundled["components"]["schemas"]
-    cost_curve_power_units = core_defs.get("CostCurve", {}).get("properties", {}).get("power_units", {})
-    fuel_curve_power_units = core_defs.get("FuelCurve", {}).get("properties", {}).get("power_units", {})
     checks += [
         (
-            cost_curve_power_units.get("default") == "NATURAL_UNITS",
-            "CostCurve.power_units no longer defaults to NATURAL_UNITS",
-        ),
-        (
-            "default" not in fuel_curve_power_units,
-            "FuelCurve.power_units unexpectedly gained a default",
-        ),
+            "power_units" not in core_defs.get(curve, {}).get("properties", {}),
+            f"{curve} gained a power_units basis; cost curves are natural units only",
+        )
+        for curve in ("CostCurve", "FuelCurve")
     ]
     for ok, message in checks:
         if not ok:

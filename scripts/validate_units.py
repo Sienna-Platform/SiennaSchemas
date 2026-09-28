@@ -678,8 +678,9 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
             validate_x_units_map(node["x-units"], f"{path}/x-units",
                                  source_file, failures, allowed_units)
 
-        # Rule 8: x-curve-axes names two registered quantity kinds, on a
-        # definition that has the power_units property its sentence reads.
+        # Rule 8: x-curve-axes names two registered quantity kinds. A sibling
+        # power_units, when present, gives the power axes' basis; without one
+        # (cost curves) the axes are in natural units.
         if "x-curve-axes" in node:
             axes = node["x-curve-axes"]
             defaults = load_quantity_defaults()
@@ -696,12 +697,6 @@ def check_annotations(node, path, source_file, source_path, properties_stack,
                                     "x-curve-axes-quantity", quantity,
                                     "a quantity_kind registered in Core/units.json")
                         )
-                if sibling_props is None or "power_units" not in sibling_props:
-                    failures.append(
-                        Failure(source_file, path + "/x-curve-axes",
-                                "x-curve-axes-power-units", "no power_units property",
-                                "a sibling 'power_units' property giving the x-axis basis")
-                    )
 
         # Rule 9: x-curve-output is an integer -- the exponent k in F = Y * X^k,
         # so a float or a string would make the composition unresolvable.
@@ -920,11 +915,17 @@ def curve_axes_sentence(node, source_path):
     The family knows both axis quantity kinds; the x axis is discriminated by
     its own power_units, exactly as an x-units map would be. Where the y axis
     IS the x quantity (a loss curve), power_units governs both and the sentence
-    says so rather than repeating the same discriminated list twice.
+    says so rather than repeating the same discriminated list twice. A family
+    with no power_units (a cost curve) is in natural units.
     """
     axes = node["x-curve-axes"]
     defaults = load_quantity_defaults()
-    power_units = node.get("properties", {}).get("power_units", {})
+    power_units = node.get("properties", {}).get("power_units")
+    if power_units is None:
+        x_unit, y_unit = defaults.get(axes["x"], "?"), defaults.get(axes["y"], "?")
+        if axes["x"] == axes["y"]:
+            return f"Units: both axes {x_unit} ."
+        return f"Units: x-axis {x_unit} ; y-axis {y_unit} ."
     enum = discriminator_enum(power_units, source_path) or set()
     order = [v for v in ("NATURAL_UNITS", "COMPONENT_BASE") if v in enum]
     order += sorted(enum.difference(order))

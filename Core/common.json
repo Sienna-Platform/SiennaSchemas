@@ -77,12 +77,8 @@
       "type": "object"
     },
     "CostCurve": {
-      "description": "Variable operation cost of a device expressed directly in currency. Wraps a `ValueCurve` that may be in input-output, incremental, or average-rate form, with `power_units` declaring the basis of the x axis and `vom_cost` adding a proportional variable operation and maintenance term. Units: x-axis per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu ; y-axis USD/h .",
+      "description": "Variable operation cost of a device expressed directly in currency. Wraps a `ValueCurve` that may be in input-output, incremental, or average-rate form, with `vom_cost` adding a proportional variable operation and maintenance term. A cost curve is always in natural units: its x axis is power in MW, never per-unit. Units: x-axis MW ; y-axis USD/h .",
       "properties": {
-        "power_units": {
-          "default": "NATURAL_UNITS",
-          "$ref": "#/$defs/UnitSystem"
-        },
         "value_curve": {
           "$ref": "#/$defs/ValueCurve"
         },
@@ -105,7 +101,6 @@
       },
       "required": [
         "value_curve",
-        "power_units",
         "vom_cost",
         "variable_cost_type"
       ],
@@ -201,7 +196,7 @@
       "type": "object"
     },
     "FuelCurve": {
-      "description": "Variable operation cost of a device expressed in fuel consumed — MBTU, liters, m^3 — together with the price that converts fuel to currency. Wraps a `ValueCurve` in input-output, incremental, or average-rate form; exactly one of `fuel_cost` and `fuel_cost_time_series` supplies the price.",
+      "description": "Variable operation cost of a device expressed in fuel consumed — MBTU, liters, m^3 — together with the price that converts fuel to currency. Wraps a `ValueCurve` in input-output, incremental, or average-rate form; exactly one of `fuel_cost` and `fuel_cost_time_series` supplies the price. A fuel curve is always in natural units: its x axis is power in MW, never per-unit.",
       "properties": {
         "fuel_cost": {
           "type": [
@@ -216,9 +211,6 @@
             "null"
           ],
           "description": "Store-minted id of the fuel-cost time series association, or null when fuel_cost carries a fixed value. Exactly one of the two is set."
-        },
-        "power_units": {
-          "$ref": "#/$defs/UnitSystem"
         },
         "startup_fuel_offtake": {
           "description": "Fuel consumed during startup, as a curve in the unit's fuel units.",
@@ -238,7 +230,6 @@
       },
       "required": [
         "value_curve",
-        "power_units",
         "vom_cost",
         "variable_cost_type"
       ],
@@ -673,7 +664,7 @@
       "type": "object"
     },
     "LossCurve": {
-      "description": "Losses of a device as a function of the flow through it, together with the power basis the curve is expressed in. `power_units` governs BOTH axes: a loss curve's y values are power in the same base as its x values, so a change of base rescales both. This is what separates it from a cost curve, whose y axis is currency and so rides through a change of base untouched. Units: both axes per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "description": "Losses of a device as a function of the flow through it, together with the power basis the curve is expressed in. `power_units` governs BOTH axes: a loss curve's y values are power in the same base as its x values, so a change of base rescales both. Cost curves carry no such basis: they are always in natural units. Units: both axes per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "properties": {
         "power_units": {
           "default": "NATURAL_UNITS",
@@ -1603,7 +1594,7 @@
       "type": "object"
     },
     "UnitSystem": {
-      "description": "Unit basis a stored value is expressed in. COMPONENT_BASE: per-unit against a base the component records itself. NATURAL_UNITS: the quantity's own physical unit. No system-wide option: a value per-unitized against a shared base records that base on the component and rides as COMPONENT_BASE. Used in three scopes, each read against its own record rather than a document-wide table: a component's own `power_units` (against that component's `base_power`), a cost payload's own `power_units` (e.g. `CostCurve`, against the owning component's `base_power`), and a time series association's own `unit_system` (governing only that one series).",
+      "description": "Unit basis a stored value is expressed in. COMPONENT_BASE: per-unit against a base the component records itself. NATURAL_UNITS: the quantity's own physical unit. No system-wide option: a value per-unitized against a shared base records that base on the component and rides as COMPONENT_BASE. Used in three scopes, each read against its own record rather than a document-wide table: a component's own `power_units` (against that component's `base_power`), a loss curve's own `power_units` (`LossCurve`, against the owning component's `base_power`), and a time series association's own `unit_system` (governing only that one series). Cost curves have no basis: they are always in natural units.",
       "enum": [
         "COMPONENT_BASE",
         "NATURAL_UNITS"

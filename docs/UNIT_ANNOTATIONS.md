@@ -247,7 +247,7 @@ annotated property's description is not exactly the canonical form.
 ## Conventions this vocabulary encodes
 
 - **Interchange carries natural units by default, with two deliberate per-unit
-  exceptions.** Branch electrical parameters (`r`/`x`/`b`/`g`) may be stored in
+  exceptions (branch electrical parameters and power-family fields).** Branch electrical parameters (`r`/`x`/`b`/`g`) may be stored in
   per-unit *or* natural units (HVDC components excepted — natural units only), and the
   storage layer records which per row
   (GridDB `transmission_lines.parameter_units`: `COMPONENT_BASE` → `pu`,
@@ -260,6 +260,10 @@ annotated property's description is not exactly the canonical form.
   `ApparentPower`, and `pu/min` for `ActivePowerChangeRate` that back this. For
   every other quantity, natural units only, and `"pu"` is a model-layer
   annotation, not a stored unit.
+- **Cost curves are always in natural units.** `CostCurve` and `FuelCurve`,
+  including the offer curves of market-bid and import/export costs, carry no
+  basis field: the x axis is power in MW, whatever the owning component's
+  `power_units`. A `LossCurve` is not a cost curve and keeps its own `power_units`.
 - **Percent is banned.** Fractions and dimensionless quantities use the unit
   `"1"` and are stored as fractions (`0.95`, not `95`). There is no `"%"` unit.
 - **`unit` / `units` string properties.** Any property literally named `unit`
