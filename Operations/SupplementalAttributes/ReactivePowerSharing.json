@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ReactivePowerSharing",
+  "description": "Supplemental attribute grouping the setpoint voltage regulating devices that hold the voltage at one bus, so the reactive power required there can be split between them. The members' shares are their VoltageControlAssociation weights, each divided by the sum over the members in service (PSS/E RMPCT). The regulated bus is not stored: every member already resolves to the same bus. A bus regulated by two or more setpoint devices has exactly one sharing group containing all of them; a lone device has none.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this supplemental attribute.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the sharing group.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "name"
+  ]
+}

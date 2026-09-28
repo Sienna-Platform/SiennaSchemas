@@ -132,6 +132,10 @@ ASSOCIATION_NORMALIZED = {
     "TradingHub": {"buses"},
     # Same hub-membership normalization, on the participant side.
     "VirtualParticipant": {"trading_hubs"},
+    # Voltage control membership, weights and terminals are rows in
+    # voltage_control_associations, not maps on the attribute.
+    "VoltageDroopControl": {"weights", "terminals"},
+    "ReactivePowerSharing": {"weights", "terminals"},
 }
 PLANT_SA_STRUCTS = {
     "ThermalPowerPlant",
@@ -245,6 +249,9 @@ SCHEMA_ONLY_COMPONENTS = {
     # Hub membership normalized to (trading_hub_id, entity_id) rows, same as
     # ServiceAssociation above -- no PSY struct to match.
     "TradingHubAssociation",
+    # Voltage control membership normalized to (control_id, entity_id, weight,
+    # terminal) rows; PSY keeps the weights and terminals as maps on the attribute.
+    "VoltageControlAssociation",
     # Bilateral-transaction settlement ledger: schema-only by design, no
     # power-balance impact and no PSY struct to match.
     "BilateralTransaction",
@@ -282,6 +289,8 @@ HAND_WRITTEN = {
     "HydroPowerPlant": "src/plant_attribute.jl",
     "RenewablePowerPlant": "src/plant_attribute.jl",
     "Substation": "src/substation.jl",
+    "VoltageDroopControl": "src/voltage_control.jl",
+    "ReactivePowerSharing": "src/voltage_control.jl",
     # OnlineReserve/OfflineReserve/GroupReserve are parametric (ReserveDirection,
     # and for OnlineReserve/OfflineReserve also the cost-curve unit type), so the
     # struct entry the descriptor carries lives under `struct_validation_descriptors`
