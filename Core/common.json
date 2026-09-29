@@ -200,6 +200,24 @@
       "title": "FromTo_ToFrom",
       "type": "object"
     },
+    "OperationalFlowLimit": {
+      "description": "An operator-set flow limit on a directed branch, one value per direction, applied in addition to the branch's thermal rating.",
+      "properties": {
+        "from_to": {
+          "title": "FromTo",
+          "type": "number",
+          "minimum": 0
+        },
+        "to_from": {
+          "title": "ToFrom",
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": ["from_to", "to_from"],
+      "title": "OperationalFlowLimit",
+      "type": "object"
+    },
     "FuelCurve": {
       "description": "Variable operation cost of a device expressed in fuel consumed — MBTU, liters, m^3 — together with the price that converts fuel to currency. Wraps a `ValueCurve` in input-output, incremental, or average-rate form; exactly one of `fuel_cost` and `fuel_cost_time_series` supplies the price.",
       "properties": {

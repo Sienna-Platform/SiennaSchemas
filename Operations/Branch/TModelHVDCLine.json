@@ -43,16 +43,6 @@
       "description": "Shunt capacitance. Units: F.",
       "type": "number",
       "x-unit": "F"
-    },
-    "active_power_limits_from": {
-      "description": "Minimum and maximum active power flows to the FROM node. Units: MW.",
-      "$ref": "../../Core/common.json#/$defs/MinMax",
-      "x-unit": "MW"
-    },
-    "active_power_limits_to": {
-      "description": "Minimum and maximum active power flows to the TO node. Units: MW.",
-      "$ref": "../../Core/common.json#/$defs/MinMax",
-      "x-unit": "MW"
     }
   },
   "required": [
@@ -64,9 +54,7 @@
     "r",
     "base_current",
     "l",
-    "c",
-    "active_power_limits_from",
-    "active_power_limits_to"
+    "c"
   ],
   "title": "TModelHVDCLine",
   "type": "object"

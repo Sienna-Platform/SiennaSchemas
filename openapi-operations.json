@@ -86,9 +86,6 @@
       "Line": {
         "$ref": "Operations/Branch/Line.json"
       },
-      "MonitoredLine": {
-        "$ref": "Operations/Branch/MonitoredLine.json"
-      },
       "MotorLoad": {
         "$ref": "Operations/StaticInjection/MotorLoad.json"
       },
@@ -97,6 +94,9 @@
       },
       "OnlineReserve": {
         "$ref": "Operations/Service/OnlineReserve.json"
+      },
+      "OperationalFlowLimit": {
+        "$ref": "Core/common.json#/$defs/OperationalFlowLimit"
       },
       "PlannedOutage": {
         "$ref": "Operations/SupplementalAttributes/PlannedOutage.json"

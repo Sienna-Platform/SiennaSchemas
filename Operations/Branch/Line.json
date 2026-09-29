@@ -112,6 +112,16 @@
       },
       "x-quantity": "ApparentPower"
     },
+    "operational_flow_limit": {
+      "description": "Operator-set flow limit in each direction, applied in addition to `rating`. Absent means no operational limit. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "$ref": "../../Core/common.json#/$defs/OperationalFlowLimit",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ActivePower"
+    },
     "angle_limits": {
       "description": "Minimum and maximum angle limits. Units: rad.",
       "$ref": "../../Core/common.json#/$defs/MinMax",

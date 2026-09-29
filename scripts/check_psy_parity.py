@@ -171,10 +171,26 @@ PLANT_SA_STRUCTS = {
 # so it no longer needs an entry here.
 SCHEMA_AHEAD = {
     "Source": {"base_voltage"},
-    "Line": {"base_power"},
+    "Line": {"base_power", "operational_flow_limit"},
     "MonitoredLine": {"base_power"},
-    "GenericArcImpedance": {"base_power"},
-    "DiscreteControlledACBranch": {"base_power"},
+    "GenericArcImpedance": {"base_power", "operational_flow_limit"},
+    "DiscreteControlledACBranch": {"base_power", "operational_flow_limit"},
+    "TransformerCircuit": {"operational_flow_limit"},
+    "TwoTerminalGenericHVDCLine": {"rating", "rating_from", "rating_to", "operational_flow_limit"},
+    "TwoTerminalLCCLine": {"rating", "rating_from", "rating_to", "operational_flow_limit"},
+    "TwoTerminalVSCLine": {"operational_flow_limit"},
+}
+
+# PSY still carries these fields, but the schema dropped them on purpose:
+# operational_flow_limit replaces the active_power_limits pair on the HVDC
+# lines and GenericArcImpedance.max_flow. Delete entries when PSY drops the
+# fields.
+PSY_AHEAD = {
+    "TModelHVDCLine": {"active_power_limits_from", "active_power_limits_to"},
+    "GenericArcImpedance": {"max_flow"},
+    "TwoTerminalGenericHVDCLine": {"active_power_limits_from", "active_power_limits_to"},
+    "TwoTerminalLCCLine": {"active_power_limits_from", "active_power_limits_to"},
+    "TwoTerminalVSCLine": {"active_power_limits_from", "active_power_limits_to"},
 }
 
 # Schema-only fields allowed on EVERY component, not just a specific struct
@@ -543,6 +559,8 @@ def load_schema_components():
 
 def explained_psy_only(name, field):
     if field in DROPPED_FIELDS:
+        return True
+    if field in PSY_AHEAD.get(name, set()):
         return True
     if field in ASSOCIATION_NORMALIZED.get(name, set()):
         return True
