@@ -29,7 +29,7 @@
       "x-quantity": "ActivePower"
     },
     "rating": {
-      "description": "Maximum output power rating of the converter. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
+      "description": "Transfer rating of the DC line, independent of the converter ratings at each end. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -138,8 +138,7 @@
       "x-unit": "A"
     },
     "rating_from": {
-      "description": "Converter rating in the `from` bus. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
-      "default": 100000000.0,
+      "description": "Converter rating in the `from` bus. Absent means the converter imposes no limit beyond `rating`. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -271,8 +270,7 @@
       "x-unit": "A"
     },
     "rating_to": {
-      "description": "Converter rating in the `to` bus. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
-      "default": 100000000.0,
+      "description": "Converter rating in the `to` bus. Absent means the converter imposes no limit beyond `rating`. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
