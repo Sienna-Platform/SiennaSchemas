@@ -189,6 +189,16 @@
       ],
       "title": "BilateralConfirmation",
       "type": "string"
+    },
+    "VoltageControlTerminal": {
+      "description": "Which converter of a two-terminal line a voltage control membership refers to. UNDEFINED: the member is a single-bus device, so no converter is named. FROM: the converter at the arc's `from` bus. TO: the converter at the arc's `to` bus.",
+      "enum": [
+        "UNDEFINED",
+        "FROM",
+        "TO"
+      ],
+      "title": "VoltageControlTerminal",
+      "type": "string"
     }
   }
 }
