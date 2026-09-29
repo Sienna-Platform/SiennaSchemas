@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A Non-Capacitor Line Commutated Converter (LCC)-HVDC transmission line. As implemented in PSS/E.",
+  "description": "A Non-Capacitor Line Commutated Converter (LCC)-HVDC transmission line. As implemented in PSS/E. Impedance, voltage, and voltage-droop fields are natural units only: there is no conventional DC base voltage from which to per-unitize them.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -28,19 +28,10 @@
       },
       "x-quantity": "ActivePower"
     },
-    "parameter_units": {
-      "description": "Unit basis for this line's impedance fields (r, rectifier/inverter rc/xc, capacitor reactances, compounding_resistance).",
-      "default": "NATURAL_UNITS",
-      "$ref": "../../Core/common.json#/$defs/ImpedanceUnitBasis"
-    },
     "r": {
-      "description": "Series resistance of the DC line. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "description": "Series resistance of the DC line. Units: ohm.",
       "type": "number",
-      "x-unit-discriminator": "parameter_units",
-      "x-units": {
-        "NATURAL_UNITS": "ohm",
-        "COMPONENT_BASE": "pu"
-      },
+      "x-unit": "ohm",
       "x-quantity": "Resistance"
     },
     "power_transfer_setpoint": {
@@ -64,20 +55,10 @@
       ],
       "x-unit": "A"
     },
-    "dc_voltage_units": {
-      "description": "Unit basis for the DC voltage fields (scheduled_dc_voltage, switch_mode_voltage, min_compounding_voltage).",
-      "default": "NATURAL_UNITS",
-      "$ref": "../../Operations/common.json#/$defs/VoltageUnitBasis"
-    },
     "scheduled_dc_voltage": {
-      "description": "Scheduled compounded DC voltage. By default this parameter is the scheduled DC voltage in the inverter bus. This parameter must not be specified in per-unit. Units: kV. Units: per dc_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "description": "Scheduled compounded DC voltage. By default this parameter is the scheduled DC voltage in the inverter bus. Units: kV.",
       "type": "number",
-      "x-unit-discriminator": "dc_voltage_units",
-      "x-units": {
-        "NATURAL_UNITS": "kV",
-        "COMPONENT_BASE": "pu"
-      },
-      "x-quantity": "Voltage"
+      "x-unit": "kV"
     },
     "rectifier_bridges": {
       "description": "Number of bridges in series in the rectifier side.",
@@ -89,23 +70,15 @@
       "x-unit": "rad"
     },
     "rectifier_rc": {
-      "description": "Rectifier commutating transformer resistance per bridge. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "description": "Rectifier commutating transformer resistance per bridge. Units: ohm.",
       "type": "number",
-      "x-unit-discriminator": "parameter_units",
-      "x-units": {
-        "NATURAL_UNITS": "ohm",
-        "COMPONENT_BASE": "pu"
-      },
+      "x-unit": "ohm",
       "x-quantity": "Resistance"
     },
     "rectifier_xc": {
-      "description": "Rectifier commutating transformer reactance per bridge. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "description": "Rectifier commutating transformer reactance per bridge. Units: ohm.",
       "type": "number",
-      "x-unit-discriminator": "parameter_units",
-      "x-units": {
-        "NATURAL_UNITS": "ohm",
-        "COMPONENT_BASE": "pu"
-      },
+      "x-unit": "ohm",
       "x-quantity": "Reactance"
     },
     "rectifier_base_voltage": {
@@ -123,23 +96,15 @@
       "x-unit": "rad"
     },
     "inverter_rc": {
-      "description": "Inverter commutating transformer resistance per bridge. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "description": "Inverter commutating transformer resistance per bridge. Units: ohm.",
       "type": "number",
-      "x-unit-discriminator": "parameter_units",
-      "x-units": {
-        "NATURAL_UNITS": "ohm",
-        "COMPONENT_BASE": "pu"
-      },
+      "x-unit": "ohm",
       "x-quantity": "Resistance"
     },
     "inverter_xc": {
-      "description": "Inverter commutating transformer reactance per bridge. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "description": "Inverter commutating transformer reactance per bridge. Units: ohm.",
       "type": "number",
-      "x-unit-discriminator": "parameter_units",
-      "x-units": {
-        "NATURAL_UNITS": "ohm",
-        "COMPONENT_BASE": "pu"
-      },
+      "x-unit": "ohm",
       "x-quantity": "Reactance"
     },
     "inverter_base_voltage": {
@@ -153,37 +118,23 @@
       "$ref": "../../Operations/common.json#/$defs/LCCControlMode"
     },
     "switch_mode_voltage": {
-      "description": "Mode switch DC voltage. This parameter must not be added in per-unit. If `control_mode` is `POWER` and the DC voltage falls below this value, the line switches to current control. Units: kV. Units: per dc_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "description": "Mode switch DC voltage. If `control_mode` is `POWER` and the DC voltage falls below this value, the line switches to current control. Units: kV.",
       "default": 0.0,
       "type": "number",
-      "x-unit-discriminator": "dc_voltage_units",
-      "x-units": {
-        "NATURAL_UNITS": "kV",
-        "COMPONENT_BASE": "pu"
-      },
-      "x-quantity": "Voltage"
+      "x-unit": "kV"
     },
     "compounding_resistance": {
-      "description": "Compounding Resistance. This parameter is for control of the DC voltage in the rectifier or inverter end. For inverter DC voltage control, the parameter is set to zero; for rectifier DC voltage control, the parameter is set to the DC line resistance; otherwise, set to a fraction of the DC line resistance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "description": "Compounding Resistance. This parameter is for control of the DC voltage in the rectifier or inverter end. For inverter DC voltage control, the parameter is set to zero; for rectifier DC voltage control, the parameter is set to the DC line resistance; otherwise, set to a fraction of the DC line resistance. Units: ohm.",
       "default": 0.0,
       "type": "number",
-      "x-unit-discriminator": "parameter_units",
-      "x-units": {
-        "NATURAL_UNITS": "ohm",
-        "COMPONENT_BASE": "pu"
-      },
+      "x-unit": "ohm",
       "x-quantity": "Resistance"
     },
     "min_compounding_voltage": {
-      "description": "Minimum compounded voltage. This parameter must not be added in per-unit. Only used in constant gamma operation (gamma_min = gamma_max), and the AC transformer is used to control the DC voltage. Units: kV. Units: per dc_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "description": "Minimum compounded voltage. Only used in constant gamma operation (gamma_min = gamma_max), and the AC transformer is used to control the DC voltage. Units: kV.",
       "default": 0.0,
       "type": "number",
-      "x-unit-discriminator": "dc_voltage_units",
-      "x-units": {
-        "NATURAL_UNITS": "kV",
-        "COMPONENT_BASE": "pu"
-      },
-      "x-quantity": "Voltage"
+      "x-unit": "kV"
     },
     "rectifier_transformer_ratio": {
       "description": "Rectifier transformer ratio between the primary and secondary side AC voltages. Units: 1.",
@@ -223,14 +174,10 @@
       "x-unit": "rad"
     },
     "rectifier_capacitor_reactance": {
-      "description": "Commutating rectifier capacitor reactance magnitude per bridge. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "description": "Commutating rectifier capacitor reactance magnitude per bridge. Units: ohm.",
       "default": 0.0,
       "type": "number",
-      "x-unit-discriminator": "parameter_units",
-      "x-units": {
-        "NATURAL_UNITS": "ohm",
-        "COMPONENT_BASE": "pu"
-      },
+      "x-unit": "ohm",
       "x-quantity": "Reactance"
     },
     "inverter_transformer_ratio": {
@@ -271,14 +218,10 @@
       "x-unit": "rad"
     },
     "inverter_capacitor_reactance": {
-      "description": "Commutating inverter capacitor reactance magnitude per bridge. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "description": "Commutating inverter capacitor reactance magnitude per bridge. Units: ohm.",
       "default": 0.0,
       "type": "number",
-      "x-unit-discriminator": "parameter_units",
-      "x-units": {
-        "NATURAL_UNITS": "ohm",
-        "COMPONENT_BASE": "pu"
-      },
+      "x-unit": "ohm",
       "x-quantity": "Reactance"
     },
     "active_power_limits_from": {

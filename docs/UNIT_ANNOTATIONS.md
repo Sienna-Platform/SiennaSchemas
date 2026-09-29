@@ -28,7 +28,7 @@ A single unit string for a numeric property. The value is either:
 - the literal `"pu"` (per-unit).
 
 A bare `"pu"` with no `x-unit-base` means the value is per-unit on the component's
-own recorded base (`base_power`, or `base_current` for `TModelHVDCLine`); there is no
+own recorded base (`base_power`); there is no
 system-base option — components whose per-unit data was historically on the system base
 record that base in `base_power`. For the four branch-impedance quantities (Resistance,
 Reactance, Susceptance, Conductance) and for the power-family quantities (ActivePower,
@@ -38,6 +38,10 @@ on the recorded base rather than a fixed factor). Branch impedance is one of two
 discriminated storage options in the downstream registry: GridDB stores each branch
 parameter in either per-unit or natural units and records which per row via
 `transmission_lines.parameter_units` (`COMPONENT_BASE` → `pu`; `NATURAL_UNITS` → `ohm`/`S`).
+HVDC components (`TModelHVDCLine`, `TwoTerminalLCCLine`, `TwoTerminalVSCLine`,
+`InterconnectingConverter`) are excluded: their impedance, voltage, and voltage-droop
+fields are natural units only, because no conventional DC base voltage exists to
+per-unitize them against.
 The power-family quantities are discriminated the same way at the schema layer, via each
 component's own `power_units`.
 Elsewhere, `"pu"` remains purely an annotation channel; no other quantity registers `pu`.
@@ -244,7 +248,8 @@ annotated property's description is not exactly the canonical form.
 
 - **Interchange carries natural units by default, with two deliberate per-unit
   exceptions.** Branch electrical parameters (`r`/`x`/`b`/`g`) may be stored in
-  per-unit *or* natural units, and the storage layer records which per row
+  per-unit *or* natural units (HVDC components excepted — natural units only), and the
+  storage layer records which per row
   (GridDB `transmission_lines.parameter_units`: `COMPONENT_BASE` → `pu`,
   `NATURAL_UNITS` → `ohm`/`S`). Every component's power-family fields
   (active/reactive/apparent power, ratings, limits, ramp rates) carry the same

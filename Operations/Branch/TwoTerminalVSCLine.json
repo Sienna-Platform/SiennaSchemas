@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A High Voltage Voltage-Source Converter DC line, which must be connected to an ACBus on each end. This model is appropriate for operational simulations with a linearized DC power flow approximation with losses using a voltage-current model. For modeling a DC network, see TModelHVDCLine.",
+  "description": "A High Voltage Voltage-Source Converter DC line, which must be connected to an ACBus on each end. This model is appropriate for operational simulations with a linearized DC power flow approximation with losses using a voltage-current model. For modeling a DC network, see TModelHVDCLine. Impedance, voltage, and voltage-droop fields are natural units only: there is no conventional DC base voltage from which to per-unitize them.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -58,21 +58,11 @@
       },
       "x-quantity": "ActivePower"
     },
-    "admittance_units": {
-      "description": "Unit basis for the series conductance g.",
-      "default": "NATURAL_UNITS",
-      "$ref": "../../Core/common.json#/$defs/AdmittanceUnitBasis"
-    },
     "g": {
-      "description": "Series conductance of the DC line. Units: per admittance_units — NATURAL_UNITS: S, COMPONENT_MVAR: MW, COMPONENT_BASE: pu .",
+      "description": "Series conductance of the DC line. Units: S.",
       "default": 0.0,
       "type": "number",
-      "x-unit-discriminator": "admittance_units",
-      "x-units": {
-        "NATURAL_UNITS": "S",
-        "COMPONENT_MVAR": "MW",
-        "COMPONENT_BASE": "pu"
-      },
+      "x-unit": "S",
       "x-quantity": "Conductance"
     },
     "dc_current": {
@@ -100,11 +90,6 @@
       "description": "AC-side control mode of the `from` converter. No default: an in-service converter always controls something on each side, so the mode is supplied explicitly.",
       "$ref": "../../Operations/common.json#/$defs/VSCACControlModes"
     },
-    "setpoint_voltage_units": {
-      "description": "Unit basis for dc_voltage_setpoint_from/to and ac_voltage_setpoint_from/to. Independent of voltage_units, which covers voltage_limits_from/to only.",
-      "default": "NATURAL_UNITS",
-      "$ref": "../../Operations/common.json#/$defs/VoltageUnitBasis"
-    },
     "dc_power_setpoint_from": {
       "description": "Active-power order of the `from` bus converter, used when `dc_control_from` is `DC_POWER`; `null` otherwise. Positive means the converter supplies power to the AC network; negative means it withdraws power from it. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": [
@@ -119,17 +104,12 @@
       "x-quantity": "ActivePower"
     },
     "dc_voltage_setpoint_from": {
-      "description": "DC-side voltage target of the `from` bus converter, used when `dc_control_from` is `DC_VOLTAGE` or `DC_VOLTAGE_DROOP`; `null` otherwise. Units: per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "description": "DC-side voltage target of the `from` bus converter, used when `dc_control_from` is `DC_VOLTAGE` or `DC_VOLTAGE_DROOP`; `null` otherwise. Units: kV.",
       "type": [
         "number",
         "null"
       ],
-      "x-unit-discriminator": "setpoint_voltage_units",
-      "x-units": {
-        "NATURAL_UNITS": "kV",
-        "COMPONENT_BASE": "pu"
-      },
-      "x-quantity": "Voltage"
+      "x-unit": "kV"
     },
     "power_factor_setpoint_from": {
       "description": "Power-factor setpoint of the `from` bus converter, used when `ac_control_from` is `AC_REACTIVE_POWER`; `null` otherwise. Units: 1.",
@@ -143,20 +123,15 @@
       "x-quantity": "PowerFactor"
     },
     "ac_voltage_setpoint_from": {
-      "description": "AC-side voltage magnitude target of the `from` bus converter, used when `ac_control_from` is `AC_VOLTAGE`; `null` otherwise. Units: per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "description": "AC-side voltage magnitude target of the `from` bus converter, used when `ac_control_from` is `AC_VOLTAGE`; `null` otherwise. Units: kV.",
       "type": [
         "number",
         "null"
       ],
-      "x-unit-discriminator": "setpoint_voltage_units",
-      "x-units": {
-        "NATURAL_UNITS": "kV",
-        "COMPONENT_BASE": "pu"
-      },
-      "x-quantity": "Voltage"
+      "x-unit": "kV"
     },
     "rated_ac_voltage_from": {
-      "description": "Rated (base) AC voltage at the `from` converter's AC terminal in kV. Used as the AC voltage base for interpreting ac_voltage_setpoint_from when ac_control_from is AC_VOLTAGE; 0.0 means unspecified (the setpoint is taken as per-unit directly). Units: kV.",
+      "description": "Rated AC voltage at the `from` converter's AC terminal; 0.0 means unspecified. Units: kV.",
       "default": 0.0,
       "type": "number",
       "x-unit": "kV"
@@ -214,31 +189,20 @@
       "x-unit": "1",
       "x-quantity": "Fraction"
     },
-    "voltage_units": {
-      "description": "Unit basis for the DC bus voltage limits (voltage_limits_from/to only). Independent of setpoint_voltage_units, which covers dc_voltage_setpoint_from/to and ac_voltage_setpoint_from/to.",
-      "default": "NATURAL_UNITS",
-      "$ref": "../../Operations/common.json#/$defs/VoltageUnitBasis"
-    },
     "voltage_limits_from": {
-      "description": "Limits on the Voltage at the DC `from` Bus in kV. The DC base voltage is the `dc_voltage_setpoint` of the converter whose `dc_control` regulates DC voltage; exactly one converter must control the DC voltage. Units: kV. Units: per voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "description": "Minimum and maximum voltage at the DC `from` bus. Units: kV.",
       "default": {
         "min": 0.0,
         "max": 999.9
       },
       "$ref": "../../Core/common.json#/$defs/MinMax",
-      "x-unit-discriminator": "voltage_units",
-      "x-units": {
-        "NATURAL_UNITS": "kV",
-        "COMPONENT_BASE": "pu"
-      },
-      "x-quantity": "Voltage"
+      "x-unit": "kV"
     },
     "dc_voltage_droop_from": {
-      "description": "DC-voltage droop gain on the `from` converter, used when `dc_control_from` is `DC_VOLTAGE_DROOP`: `V_dc = dc_voltage_setpoint_from - dc_voltage_droop_from * P_c`. Units: pu.",
+      "description": "DC-voltage droop gain on the `from` converter, used when `dc_control_from` is `DC_VOLTAGE_DROOP`: `V_dc = dc_voltage_setpoint_from - dc_voltage_droop_from * P_c`, with `V_dc` in kV and `P_c` in MW regardless of `power_units`. A value of 0.0 disables droop. Units: kV/MW.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "pu",
-      "x-quantity": "Resistance"
+      "x-unit": "kV/MW"
     },
     "reactive_power_to": {
       "description": "Initial condition of reactive power flowing into the to-bus. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
@@ -273,17 +237,12 @@
       "x-quantity": "ActivePower"
     },
     "dc_voltage_setpoint_to": {
-      "description": "DC-side voltage target of the `to` bus converter, used when `dc_control_to` is `DC_VOLTAGE` or `DC_VOLTAGE_DROOP`; `null` otherwise. Units: per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "description": "DC-side voltage target of the `to` bus converter, used when `dc_control_to` is `DC_VOLTAGE` or `DC_VOLTAGE_DROOP`; `null` otherwise. Units: kV.",
       "type": [
         "number",
         "null"
       ],
-      "x-unit-discriminator": "setpoint_voltage_units",
-      "x-units": {
-        "NATURAL_UNITS": "kV",
-        "COMPONENT_BASE": "pu"
-      },
-      "x-quantity": "Voltage"
+      "x-unit": "kV"
     },
     "power_factor_setpoint_to": {
       "description": "Power-factor setpoint of the `to` bus converter, used when `ac_control_to` is `AC_REACTIVE_POWER`; `null` otherwise. Units: 1.",
@@ -297,20 +256,15 @@
       "x-quantity": "PowerFactor"
     },
     "ac_voltage_setpoint_to": {
-      "description": "AC-side voltage magnitude target of the `to` bus converter, used when `ac_control_to` is `AC_VOLTAGE`; `null` otherwise. Units: per setpoint_voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "description": "AC-side voltage magnitude target of the `to` bus converter, used when `ac_control_to` is `AC_VOLTAGE`; `null` otherwise. Units: kV.",
       "type": [
         "number",
         "null"
       ],
-      "x-unit-discriminator": "setpoint_voltage_units",
-      "x-units": {
-        "NATURAL_UNITS": "kV",
-        "COMPONENT_BASE": "pu"
-      },
-      "x-quantity": "Voltage"
+      "x-unit": "kV"
     },
     "rated_ac_voltage_to": {
-      "description": "Rated (base) AC voltage at the `to` converter's AC terminal in kV. Used as the AC voltage base for interpreting ac_voltage_setpoint_to when ac_control_to is AC_VOLTAGE; 0.0 means unspecified (the setpoint is taken as per-unit directly). Units: kV.",
+      "description": "Rated AC voltage at the `to` converter's AC terminal; 0.0 means unspecified. Units: kV.",
       "default": 0.0,
       "type": "number",
       "x-unit": "kV"
@@ -369,28 +323,22 @@
       "x-quantity": "Fraction"
     },
     "voltage_limits_to": {
-      "description": "Limits on the Voltage at the DC `to` Bus in kV. The DC base voltage is the `dc_voltage_setpoint` of the converter whose `dc_control` regulates DC voltage; exactly one converter must control the DC voltage. Units: kV. Units: per voltage_units — NATURAL_UNITS: kV, COMPONENT_BASE: pu .",
+      "description": "Minimum and maximum voltage at the DC `to` bus. Units: kV.",
       "default": {
         "min": 0.0,
         "max": 999.9
       },
       "$ref": "../../Core/common.json#/$defs/MinMax",
-      "x-unit-discriminator": "voltage_units",
-      "x-units": {
-        "NATURAL_UNITS": "kV",
-        "COMPONENT_BASE": "pu"
-      },
-      "x-quantity": "Voltage"
+      "x-unit": "kV"
     },
     "dc_voltage_droop_to": {
-      "description": "DC-voltage droop gain on the `to` converter, used when `dc_control_to` is `DC_VOLTAGE_DROOP`: `V_dc = dc_voltage_setpoint_to - dc_voltage_droop_to * P_c`. Units: pu.",
+      "description": "DC-voltage droop gain on the `to` converter, used when `dc_control_to` is `DC_VOLTAGE_DROOP`: `V_dc = dc_voltage_setpoint_to - dc_voltage_droop_to * P_c`, with `V_dc` in kV and `P_c` in MW regardless of `power_units`. A value of 0.0 disables droop. Units: kV/MW.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "pu",
-      "x-quantity": "Resistance"
+      "x-unit": "kV/MW"
     },
     "rated_dc_voltage": {
-      "description": "Rated (base) DC voltage of the link in kV. Used as the DC voltage base for interpreting DC-voltage setpoints; 0.0 means unspecified (DC-voltage setpoints are taken as per-unit directly). Units: kV.",
+      "description": "Rated DC voltage of the link; 0.0 means unspecified. Units: kV.",
       "default": 0.0,
       "type": "number",
       "x-unit": "kV"
