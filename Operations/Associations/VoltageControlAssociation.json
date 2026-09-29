@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "VoltageControlAssociation",
-  "description": "Links a voltage control group (a VoltageDroopControl or a ReactivePowerSharing attribute) to one member device and records the member's relative reactive power weight. One row per (control, member). `entity_id` names a device that regulates voltage to a setpoint; `terminal` picks the converter for a two-terminal member (a TwoTerminalVSCLine) and is null for every other member. A device, or a two-terminal line's converter, belongs to at most one group of either kind. PSS/E RMPCT imports as weight = RMPCT / 100, so the PSS/E default of 100 is the default weight of 1.0.",
+  "description": "Links a voltage control group (a VoltageDroopControl or a ReactivePowerSharing attribute) to one member device and records the member's relative reactive power weight. One row per (control, member). `entity_id` names a device that regulates voltage to a setpoint; `terminal` picks the converter for a two-terminal member (a TwoTerminalVSCLine) and is UNDEFINED for every other member. A device, or a two-terminal line's converter, belongs to at most one group of either kind. PSS/E RMPCT imports as weight = RMPCT / 100, so the PSS/E default of 100 is the default weight of 1.0.",
   "type": "object",
   "properties": {
     "control_id": {
