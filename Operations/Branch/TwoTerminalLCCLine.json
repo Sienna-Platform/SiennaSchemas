@@ -225,7 +225,7 @@
       "x-quantity": "Reactance"
     },
     "rating": {
-      "description": "Maximum output power rating of the converter. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
+      "description": "Transfer rating of the DC line, independent of the converter ratings at each end. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -235,8 +235,7 @@
       "x-quantity": "ApparentPower"
     },
     "rating_from": {
-      "description": "Converter rating in the `from` bus. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
-      "default": 100000000.0,
+      "description": "Converter rating in the `from` bus. Absent means the converter imposes no limit beyond `rating`. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -246,8 +245,7 @@
       "x-quantity": "ApparentPower"
     },
     "rating_to": {
-      "description": "Converter rating in the `to` bus. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
-      "default": 100000000.0,
+      "description": "Converter rating in the `to` bus. Absent means the converter imposes no limit beyond `rating`. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -257,7 +255,7 @@
       "x-quantity": "ApparentPower"
     },
     "operational_flow_limit": {
-      "description": "Operator-set flow limit in each direction, applied in addition to `rating`. Absent means no operational limit. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "description": "Operator-set minimum and maximum flow in each direction, applied in addition to `rating`. Absent means no operational limit. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "$ref": "../../Core/common.json#/$defs/OperationalFlowLimit",
       "x-unit-discriminator": "power_units",
       "x-units": {

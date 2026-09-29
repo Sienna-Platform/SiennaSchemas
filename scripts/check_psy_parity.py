@@ -179,6 +179,7 @@ SCHEMA_AHEAD = {
     "TwoTerminalGenericHVDCLine": {"rating", "rating_from", "rating_to", "operational_flow_limit"},
     "TwoTerminalLCCLine": {"rating", "rating_from", "rating_to", "operational_flow_limit"},
     "TwoTerminalVSCLine": {"operational_flow_limit"},
+    "TModelHVDCLine": {"operational_flow_limit"},
 }
 
 # PSY still carries these fields, but the schema dropped them on purpose:

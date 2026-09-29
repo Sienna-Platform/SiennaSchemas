@@ -11,11 +11,13 @@
   "power_units": "NATURAL_UNITS",
   "rating": 990.0,
   "angle_limits": {
-    "min": -36.0,
-    "max": 36.0
+    "min": -0.6283,
+    "max": 0.6283
   },
   "operational_flow_limit": {
-    "from_to": 100.0,
-    "to_from": 80.0
+    "from_to_min": 0.0,
+    "from_to_max": 100.0,
+    "to_from_min": 0.0,
+    "to_from_max": 80.0
   }
 }

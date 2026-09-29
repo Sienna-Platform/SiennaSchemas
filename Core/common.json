@@ -201,20 +201,30 @@
       "type": "object"
     },
     "OperationalFlowLimit": {
-      "description": "An operator-set flow limit on a directed branch, one value per direction, applied in addition to the branch's thermal rating.",
+      "description": "Operator-set flow limits on a directed branch: a minimum and a maximum flow in each direction, applied in addition to the branch's thermal rating.",
       "properties": {
-        "from_to": {
-          "title": "FromTo",
+        "from_to_min": {
+          "title": "FromToMin",
           "type": "number",
           "minimum": 0
         },
-        "to_from": {
-          "title": "ToFrom",
+        "from_to_max": {
+          "title": "FromToMax",
+          "type": "number",
+          "minimum": 0
+        },
+        "to_from_min": {
+          "title": "ToFromMin",
+          "type": "number",
+          "minimum": 0
+        },
+        "to_from_max": {
+          "title": "ToFromMax",
           "type": "number",
           "minimum": 0
         }
       },
-      "required": ["from_to", "to_from"],
+      "required": ["from_to_min", "from_to_max", "to_from_min", "to_from_max"],
       "title": "OperationalFlowLimit",
       "type": "object"
     },

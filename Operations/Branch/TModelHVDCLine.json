@@ -43,6 +43,11 @@
       "description": "Shunt capacitance. Units: F.",
       "type": "number",
       "x-unit": "F"
+    },
+    "operational_flow_limit": {
+      "description": "Operator-set minimum and maximum flow in each direction. Absent means no operational limit. Units: MW.",
+      "$ref": "../../Core/common.json#/$defs/OperationalFlowLimit",
+      "x-unit": "MW"
     }
   },
   "required": [

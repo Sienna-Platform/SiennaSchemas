@@ -11,7 +11,7 @@
   "power_units": "NATURAL_UNITS",
   "rating": 990.0,
   "angle_limits": {
-    "min": -36.0,
-    "max": 36.0
+    "min": -0.6283,
+    "max": 0.6283
   }
 }

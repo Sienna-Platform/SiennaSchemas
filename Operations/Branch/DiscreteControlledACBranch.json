@@ -70,7 +70,7 @@
       "x-quantity": "ApparentPower"
     },
     "operational_flow_limit": {
-      "description": "Operator-set flow limit in each direction, applied in addition to `rating`. Absent means no operational limit. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "description": "Operator-set minimum and maximum flow in each direction, applied in addition to `rating`. Absent means no operational limit. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "$ref": "../../Core/common.json#/$defs/OperationalFlowLimit",
       "x-unit-discriminator": "power_units",
       "x-units": {

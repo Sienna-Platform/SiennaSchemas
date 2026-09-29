@@ -1,4 +1,6 @@
 {
-  "from_to": 100.0,
-  "to_from": 80.0
+  "from_to_min": 0.0,
+  "from_to_max": 100.0,
+  "to_from_min": 10.0,
+  "to_from_max": 80.0
 }
