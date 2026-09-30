@@ -146,8 +146,9 @@ git push origin v0.1.0
 ```
 
 This triggers the release workflow, which publishes the schema
-tarball as a GitHub Release. Downstream repos pick up the new tag on their next polling cycle
-or via manual workflow dispatch. SiennaSchemas tags first — see "Release order" in
+tarball as a GitHub Release, then dispatches `schema-release` to the two model-package repos.
+Each regenerates, bumps its version, and opens a PR; merging that PR publishes the packages,
+with no other manual step. A 6-hourly poll in each repo catches a missed dispatch. SiennaSchemas tags first — see "Release order" in
 `docs/PIPELINE.md` for why the other repos must not release ahead of it.
 
 ## License
