@@ -224,27 +224,39 @@
       "x-unit": "ohm",
       "x-quantity": "Reactance"
     },
-    "active_power_limits_from": {
-      "description": "Minimum and maximum active power flows to the FROM node. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
-      "default": {
-        "min": 0.0,
-        "max": 0.0
-      },
-      "$ref": "../../Core/common.json#/$defs/MinMax",
+    "rating": {
+      "description": "Transfer rating of the DC line, independent of the converter ratings at each end. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
+      "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
-        "NATURAL_UNITS": "MW",
+        "NATURAL_UNITS": "MVA",
         "COMPONENT_BASE": "pu"
       },
-      "x-quantity": "ActivePower"
+      "x-quantity": "ApparentPower"
     },
-    "active_power_limits_to": {
-      "description": "Minimum and maximum active power flows to the TO node. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
-      "default": {
-        "min": 0.0,
-        "max": 0.0
+    "rating_from": {
+      "description": "Converter rating in the `from` bus. Absent means the converter imposes no limit beyond `rating`. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
+      "type": "number",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
       },
-      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-quantity": "ApparentPower"
+    },
+    "rating_to": {
+      "description": "Converter rating in the `to` bus. Absent means the converter imposes no limit beyond `rating`. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
+      "type": "number",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ApparentPower"
+    },
+    "operational_flow_limit": {
+      "description": "Operator-set minimum and maximum flow in each direction, applied in addition to `rating`. Absent means no operational limit. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "$ref": "../../Core/common.json#/$defs/OperationalFlowLimit",
       "x-unit-discriminator": "power_units",
       "x-units": {
         "NATURAL_UNITS": "MW",
@@ -311,6 +323,7 @@
     "available",
     "arc",
     "active_power_flow",
+    "rating",
     "r",
     "scheduled_dc_voltage",
     "rectifier_bridges",

@@ -34,9 +34,9 @@
       },
       "x-quantity": "ReactivePower"
     },
-    "max_flow": {
-      "description": "Maximum allowable flow on the generic impedance. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
-      "type": "number",
+    "operational_flow_limit": {
+      "description": "Operator-set minimum and maximum flow in each direction. Absent means no operational limit. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "$ref": "../../Core/common.json#/$defs/OperationalFlowLimit",
       "x-unit-discriminator": "power_units",
       "x-units": {
         "NATURAL_UNITS": "MW",
@@ -89,7 +89,6 @@
     "available",
     "active_power_flow",
     "reactive_power_flow",
-    "max_flow",
     "arc",
     "base_power",
     "power_units",

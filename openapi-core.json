@@ -26,6 +26,9 @@
       "StorageCapitalCost": {
         "$ref": "Core/common.json#/$defs/StorageCapitalCost"
       },
+      "OperationalFlowLimit": {
+        "$ref": "Core/common.json#/$defs/OperationalFlowLimit"
+      },
       "OutageFactors": {
         "$ref": "Core/common.json#/$defs/OutageFactors"
       },

@@ -1,0 +1,17 @@
+{
+  "id": 1,
+  "name": "LINE-1",
+  "available": true,
+  "active_power_flow": 10.0,
+  "reactive_power_flow": 5.0,
+  "arc": 1,
+  "r": 0.01,
+  "x": 0.1,
+  "base_power": 100.0,
+  "power_units": "NATURAL_UNITS",
+  "rating": 990.0,
+  "angle_limits": {
+    "min": -0.6283,
+    "max": 0.6283
+  }
+}
