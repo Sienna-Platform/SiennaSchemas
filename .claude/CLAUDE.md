@@ -118,7 +118,7 @@ git tag v0.1.0
 git push origin v0.1.0
 ```
 
-The tag push triggers the GH Actions release workflow (schema tarball → GitHub Release). Downstream repos poll for releases and record the consumed tag in their `.schema-version` — check a downstream repo to see whether the loop has fired for a given tag.
+The tag push triggers the GH Actions release workflow (schema tarball → GitHub Release). It then dispatches `schema-release` to PowerOpenAPIModels and power-openapi-models. Each regenerates, bumps its version, and opens a PR, and merging that PR is their release (`release-on-merge.yml`). The consumed tag lands in their `.schema-version` — check a downstream repo to see whether the loop has fired for a given tag. SiennaGridDB is not wired in yet.
 
 <tone_preference>
 Keep outputs reasonably concise. Lead with the outcome, and let the pipeline gates stand in for extra verification passes.
