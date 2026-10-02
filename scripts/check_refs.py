@@ -148,10 +148,17 @@ def check_tagged_oneofs(file_path, errors):
         extra = sorted(k for k in node if k not in TAGGED_ONEOF_KEYS and not k.startswith("x-"))
         if extra:
             errors.append(f"{where}: tagged oneOf carries extra keywords {extra}")
-        prop = disc["propertyName"]
+        prop = disc.get("propertyName")
+        if prop is None:
+            errors.append(f"{where}: discriminator has no propertyName")
+            continue
         for key, body in bodies.items():
             if body.get("properties", {}).get(prop, {}).get("const") != key:
                 errors.append(f"{where}: variant {key!r} does not pin {prop} with const {key!r}")
+        branch_targets = [target for target, _ in branches]
+        for key, target in targets.items():
+            if target not in branch_targets:
+                errors.append(f"{where}: mapping {key!r} names a schema that is not a oneOf branch")
         for index, (target, _) in enumerate(branches):
             if target not in targets.values():
                 errors.append(f"{where}/oneOf[{index}] is not reachable through the discriminator mapping")
