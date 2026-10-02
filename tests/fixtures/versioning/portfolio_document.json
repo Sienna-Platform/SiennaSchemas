@@ -1,0 +1,29 @@
+{
+  "schema_version": "0.2.0",
+  "aggregation": "Area",
+  "components": {
+    "Area": [
+      {
+        "id": 1,
+        "name": "area1",
+        "base_power": 100.0,
+        "power_units": "NATURAL_UNITS"
+      }
+    ]
+  },
+  "supplemental_attributes": [
+    {
+      "id": 20
+    }
+  ],
+  "supplemental_attribute_associations": [],
+  "requirements_associations": [],
+  "time_series_associations": [],
+  "base_system_file": "system.json",
+  "time_series_storage_file": "ts.h5",
+  "ext": {
+    "producer": {
+      "note": "free-form"
+    }
+  }
+}

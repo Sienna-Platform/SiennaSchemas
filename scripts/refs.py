@@ -131,18 +131,18 @@ def walk_refs(node, path=""):
             yield from walk_refs(value, f"{path}[{index}]")
 
 
-def selector_path(domain):
-    return REPO_ROOT / f"openapi-{domain}.json"
+def selector_path(domain, root=REPO_ROOT):
+    return Path(root) / f"openapi-{domain}.json"
 
 
-def selector_entries(domain):
+def selector_entries(domain, root=REPO_ROOT):
     """The domain's declared components as ``name -> target``.
 
     Every entry must be a bare external ``$ref``: the selector selects, it does
     not define. A name claimed by two targets, or a target claimed under two
     names, is an error rather than something to pick a winner for.
     """
-    path = selector_path(domain)
+    path = selector_path(domain, root)
     schemas = load_json(path).get("components", {}).get("schemas", {})
     entries = {}
     seen = {}
@@ -167,20 +167,20 @@ def selector_entries(domain):
     return entries
 
 
-def definitions(domain):
+def definitions(domain, root=REPO_ROOT):
     """The domain's declared components as ``name -> schema body``, each body read
     from the file that authors it, with its references left as written."""
     result = {}
-    for name, (path, fragment) in selector_entries(domain).items():
+    for name, (path, fragment) in selector_entries(domain, root).items():
         result[name] = resolve_fragment(load_json(path), fragment)
     return result
 
 
-def target_names(domain):
+def target_names(domain, root=REPO_ROOT):
     """``target -> component name`` for the domain, the inverse of
     :func:`selector_entries`. Resolving a reference to a type name is a lookup
     here."""
-    return {target: name for name, target in selector_entries(domain).items()}
+    return {target: name for name, target in selector_entries(domain, root).items()}
 
 
 def _repoint(node, base_path, names):
@@ -212,7 +212,7 @@ def _repoint(node, base_path, names):
     return node
 
 
-def resolved_document(domain):
+def resolved_document(domain, root=REPO_ROOT):
     """The domain as one self-contained document, in memory.
 
     Every declared schema under ``components.schemas``, each reference repointed
@@ -224,12 +224,12 @@ def resolved_document(domain):
     schema tree themselves, and read the selectors directly. Requires the
     selector to declare everything it reaches, which ``check_refs.py`` gates.
     """
-    names = target_names(domain)
-    doc = dict(load_json(selector_path(domain)))
+    names = target_names(domain, root)
+    doc = dict(load_json(selector_path(domain, root)))
     components = dict(doc.get("components", {}))
     components["schemas"] = {
         name: _repoint(resolve_fragment(load_json(path), fragment), path, names)
-        for name, (path, fragment) in selector_entries(domain).items()
+        for name, (path, fragment) in selector_entries(domain, root).items()
     }
     doc["components"] = components
     return doc

@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -45,6 +47,11 @@ jobs:
       - name: Check package layering
         run: python scripts/check_layering.py
 
+      # Reports (version unbumped) or enforces (version bumped) the release level
+      # the schema diff since the last tag requires. Needs tags: fetch-depth 0.
+      - name: Check version compatibility
+        run: python scripts/check_compat.py
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -61,8 +68,10 @@ jobs:
 
       # Instance-level gate: the checks above validate annotations and $ref
       # structure, not whether a real association row validates. This catches a
-      # oneOf matching two branches and a wrong `required` list.
-      - name: Validate time series fixtures
+      # oneOf matching two branches and a wrong `required` list. It also builds
+      # the strict document bundles and checks them, so a build_bundles.py
+      # regression fails here rather than after the release tag is pushed.
+      - name: Validate fixtures and strict bundles
         run: python scripts/validate_fixtures.py
 
       # Field-name parity against infrastore's catalog row. SKIPs cleanly when
