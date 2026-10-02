@@ -166,6 +166,8 @@ SCHEMA_AHEAD = {
     "MonitoredLine": {"base_power"},
     "GenericArcImpedance": {"base_power"},
     "DiscreteControlledACBranch": {"base_power"},
+    # PSY adds both in its participation-bounds PR; drop this entry once psy6 has them.
+    "GroupReserve": {"max_requirement", "participation_bounds"},
 }
 
 # Schema-only fields allowed on EVERY component, not just a specific struct

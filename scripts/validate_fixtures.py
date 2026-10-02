@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate example time series association instances against their schemas.
+"""Validate example time series associations and component instances against their schemas.
 
 The other gates check annotations and $ref structure; none of them validates an
 instance. This one does, which is what catches a oneOf matching two branches, a
@@ -47,6 +47,16 @@ NEGATIVE = {
     "invalid_reserved_feature_name": False,
     # See the module docstring: accepted, because additionalProperties is open.
     "invalid_nonsequential_with_resolution": True,
+}
+
+# Component fixtures, in tests/fixtures/components: fixture stem ->
+# (schema file relative to the repo root, JSON pointer within it or None,
+# expected acceptance)
+COMPONENT = {
+    "group_reserve_bounds": ("Operations/Service/GroupReserve.json", None, True),
+    "group_reserve_without_bounds": ("Operations/Service/GroupReserve.json", None, True),
+    "group_reserve_bound_short": ("Operations/Service/GroupReserve.json", None, False),
+    "group_reserve_negative_cap": ("Operations/Service/GroupReserve.json", None, False),
 }
 
 
@@ -101,13 +111,28 @@ def main():
             want = "accept" if should_pass else "reject"
             failures.append(f"{stem}: was {verb}, expected the schema to {want} it")
 
+    for stem, (schema_rel, pointer, should_pass) in COMPONENT.items():
+        schema_path = REPO_ROOT / schema_rel
+        schema = load(schema_path)
+        node = schema
+        if pointer:
+            for part in pointer.split("/"):
+                if part:
+                    node = node[part]
+        v = Draft202012Validator(node, resolver=RefResolver(schema_path.parent.as_uri() + "/", schema))
+        accepted = v.is_valid(load(FIXTURE_DIR / "components" / f"{stem}.json"))
+        if accepted != should_pass:
+            verb = "accepted" if accepted else "rejected"
+            want = "accept" if should_pass else "reject"
+            failures.append(f"{stem}: was {verb}, expected the schema to {want} it")
+
     if failures:
         print(f"FAIL: {len(failures)} fixture check(s) failed:", file=sys.stderr)
         for line in failures:
             print(f"  - {line}", file=sys.stderr)
         return 1
 
-    total = len(POSITIVE) + len(NEGATIVE)
+    total = len(POSITIVE) + len(NEGATIVE) + len(COMPONENT)
     print(f"OK: {total} fixture(s) validate as expected.")
     return 0
 
