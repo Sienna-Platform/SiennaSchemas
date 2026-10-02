@@ -104,6 +104,32 @@ def check_selector(domain, errors):
 TAGGED_ONEOF_KEYS = {"oneOf", "discriminator", "type", "title", "description", "default", "$schema", "$id"}
 
 
+SCALAR_TYPES = {"number", "integer", "string", "boolean"}
+REF_ANNOTATIONS = {"$ref", "description", "title", "default", "$comment", "examples", "deprecated"}
+
+
+def _is_tagged_oneof(node):
+    return isinstance(node, dict) and isinstance(node.get("discriminator"), dict) and isinstance(node.get("oneOf"), list)
+
+
+def check_tagged_oneof_refs(file_path, errors):
+    """A `$ref` to a tagged oneOf may carry only annotations: generators copy the wrapper to
+    that site, and any other sibling would be an assertion the selected-variant check skips."""
+    for path, node in _nodes(load_json(file_path)):
+        ref = node.get("$ref")
+        extra = sorted(k for k in node if k not in REF_ANNOTATIONS and not k.startswith("x-"))
+        if not (isinstance(ref, str) and extra):
+            continue
+        try:
+            target, fragment = resolve_ref_path(file_path, ref)
+            body = resolve_fragment(load_json(target), fragment)
+        except (RefError, KeyError):
+            continue  # reported by check_source
+        if _is_tagged_oneof(body):
+            where = f"{file_path.relative_to(REPO_ROOT).as_posix()}#{path}"
+            errors.append(f"{where}: $ref to a tagged oneOf carries extra keywords {extra}")
+
+
 def _deref(path, node):
     """Follow a branch's `$ref` chain to (target, body); target is None for an inline body."""
     target = None
@@ -142,9 +168,14 @@ def check_tagged_oneofs(file_path, errors):
             bodies = {key: resolve_fragment(load_json(t[0]), t[1]) for key, t in targets.items()}
         except (RefError, KeyError):
             continue
-        if any(body.get("type") not in (None, "object") for _, body in branches):
-            continue  # a primitive branch: decoded by shape, not by tag
         where = f"{file_path.relative_to(REPO_ROOT).as_posix()}#{path}"
+        non_objects = [body for _, body in branches if body.get("type") not in (None, "object")]
+        if non_objects:
+            # The generator decodes one scalar branch by shape and the rest by tag.
+            if len(non_objects) == 1 and non_objects[0].get("type") in SCALAR_TYPES:
+                continue
+            errors.append(f"{where}: tagged oneOf branch shape the generator cannot decode by tag")
+            continue
         extra = sorted(k for k in node if k not in TAGGED_ONEOF_KEYS and not k.startswith("x-"))
         if extra:
             errors.append(f"{where}: tagged oneOf carries extra keywords {extra}")
@@ -171,6 +202,7 @@ def main():
     for f in source_files:
         check_source(f, errors)
         check_tagged_oneofs(f, errors)
+        check_tagged_oneof_refs(f, errors)
 
     for domain in DOMAINS:
         check_selector(domain, errors)
