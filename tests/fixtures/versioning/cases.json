@@ -1,0 +1,284 @@
+{
+  "description": "Reader-rule vectors (docs/VERSIONING.md). For each case, a reader at version `reader` given the raw parsed `document`, before decode, must return `outcome`: missing|malformed|incompatible|newer|upgradable|current. Rows are checked first-match in that table order; only `schema_version` of the document is inspected. Error rows carry `expected_message`, the exact text the reader must raise.",
+  "cases": [
+    {
+      "reader": "0.1.0",
+      "document": {
+        "schema_version": "0.1.0"
+      },
+      "outcome": "current"
+    },
+    {
+      "reader": "1.2.0",
+      "document": {
+        "schema_version": "1.2.0"
+      },
+      "outcome": "current"
+    },
+    {
+      "reader": "0.1.9",
+      "document": {
+        "schema_version": "0.1.10"
+      },
+      "outcome": "newer",
+      "expected_message": "document written by schema 0.1.10; this reader understands up to 0.1.9; update the model package to one built from >= 0.1.10"
+    },
+    {
+      "reader": "1.2.0",
+      "document": {
+        "schema_version": "1.9.0"
+      },
+      "outcome": "newer",
+      "expected_message": "document written by schema 1.9.0; this reader understands up to 1.2.0; update the model package to one built from >= 1.9.0"
+    },
+    {
+      "reader": "1.9.0",
+      "document": {
+        "schema_version": "1.2.0"
+      },
+      "outcome": "upgradable"
+    },
+    {
+      "reader": "0.1.5",
+      "document": {
+        "schema_version": "0.1.2"
+      },
+      "outcome": "upgradable"
+    },
+    {
+      "reader": "0.1.0",
+      "document": {
+        "schema_version": "0.2.0"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 0.2.0 (line 0.2) cannot be read by schema 0.1.0 (line 0.1): documents do not cross compatibility lines; migrating between lines is a separate upgrade tool's job (psy5 bundles: PowerSystemsUpdater)"
+    },
+    {
+      "reader": "0.2.0",
+      "document": {
+        "schema_version": "0.1.5"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 0.1.5 (line 0.1) cannot be read by schema 0.2.0 (line 0.2): documents do not cross compatibility lines; migrating between lines is a separate upgrade tool's job (psy5 bundles: PowerSystemsUpdater)"
+    },
+    {
+      "reader": "1.0.0",
+      "document": {
+        "schema_version": "2.0.0"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 2.0.0 (line 2) cannot be read by schema 1.0.0 (line 1): documents do not cross compatibility lines; migrating between lines is a separate upgrade tool's job (psy5 bundles: PowerSystemsUpdater)"
+    },
+    {
+      "reader": "2.0.0",
+      "document": {
+        "schema_version": "1.9.9"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 1.9.9 (line 1) cannot be read by schema 2.0.0 (line 2): documents do not cross compatibility lines; migrating between lines is a separate upgrade tool's job (psy5 bundles: PowerSystemsUpdater)"
+    },
+    {
+      "reader": "0.2.0-rc.1",
+      "document": {
+        "schema_version": "0.2.0-rc.1"
+      },
+      "outcome": "current"
+    },
+    {
+      "reader": "0.2.0-rc.1",
+      "document": {
+        "schema_version": "0.2.0-rc.2"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 0.2.0-rc.2 cannot be read by schema 0.2.0-rc.1: dev builds read only their own output"
+    },
+    {
+      "reader": "0.2.0-rc.1",
+      "document": {
+        "schema_version": "0.2.0"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 0.2.0 cannot be read by schema 0.2.0-rc.1: dev builds read only their own output"
+    },
+    {
+      "reader": "0.2.0",
+      "document": {
+        "schema_version": "0.2.0-rc.1"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 0.2.0-rc.1 cannot be read by schema 0.2.0: dev builds read only their own output"
+    },
+    {
+      "reader": "0.1.0-3-gabc123-dirty",
+      "document": {
+        "schema_version": "0.1.0-3-gabc123-dirty"
+      },
+      "outcome": "current"
+    },
+    {
+      "reader": "0.1.0",
+      "document": {
+        "schema_version": "0.1.0-3-gabc123-dirty"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 0.1.0-3-gabc123-dirty cannot be read by schema 0.1.0: dev builds read only their own output"
+    },
+    {
+      "reader": "0.1.0-3-gabc123-dirty",
+      "document": {
+        "schema_version": "0.1.0"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 0.1.0 cannot be read by schema 0.1.0-3-gabc123-dirty: dev builds read only their own output"
+    },
+    {
+      "reader": "0.1.0",
+      "document": {
+        "components": {}
+      },
+      "outcome": "missing",
+      "expected_message": "document has no schema_version: it predates versioning; re-export it with a current producer (psy5 bundles: PowerSystemsUpdater)"
+    },
+    {
+      "reader": "0.1.0",
+      "document": {
+        "schema_version": 0.1
+      },
+      "outcome": "malformed",
+      "expected_message": "document schema_version 0.1 is not a valid version"
+    },
+    {
+      "reader": "0.1.0",
+      "document": {
+        "schema_version": null
+      },
+      "outcome": "malformed",
+      "expected_message": "document schema_version null is not a valid version"
+    },
+    {
+      "reader": "0.1.0",
+      "document": {
+        "schema_version": "v0.1.0"
+      },
+      "outcome": "malformed",
+      "expected_message": "document schema_version \"v0.1.0\" is not a valid version"
+    },
+    {
+      "reader": "1.2.3",
+      "document": {
+        "schema_version": "01.2.3"
+      },
+      "outcome": "malformed",
+      "expected_message": "document schema_version \"01.2.3\" is not a valid version"
+    },
+    {
+      "reader": "0.1.0",
+      "document": {
+        "schema_version": "0.1"
+      },
+      "outcome": "malformed",
+      "expected_message": "document schema_version \"0.1\" is not a valid version"
+    },
+    {
+      "reader": "0.1.0",
+      "document": {
+        "schema_version": ""
+      },
+      "outcome": "malformed",
+      "expected_message": "document schema_version \"\" is not a valid version"
+    },
+    {
+      "reader": "0.1.0",
+      "document": {
+        "schema_version": "0.1.0\n"
+      },
+      "outcome": "malformed",
+      "expected_message": "document schema_version \"0.1.0\\n\" is not a valid version"
+    },
+    {
+      "reader": "0.1.0",
+      "document": {
+        "schema_version": "0.1.1-rc.1"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 0.1.1-rc.1 cannot be read by schema 0.1.0: dev builds read only their own output"
+    },
+    {
+      "reader": "0.1.5",
+      "document": {
+        "schema_version": "0.1.2-rc.1"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 0.1.2-rc.1 cannot be read by schema 0.1.5: dev builds read only their own output"
+    },
+    {
+      "reader": "0.1.1-rc.1",
+      "document": {
+        "schema_version": "0.1.0"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 0.1.0 cannot be read by schema 0.1.1-rc.1: dev builds read only their own output"
+    },
+    {
+      "reader": "0.1.0",
+      "document": {
+        "schema_version": "0.2.0-rc.1"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 0.2.0-rc.1 cannot be read by schema 0.1.0: dev builds read only their own output"
+    },
+    {
+      "reader": "9007199254740992.0.0",
+      "document": {
+        "schema_version": "9007199254740993.0.0"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 9007199254740993.0.0 (line 9007199254740993) cannot be read by schema 9007199254740992.0.0 (line 9007199254740992): documents do not cross compatibility lines; migrating between lines is a separate upgrade tool's job (psy5 bundles: PowerSystemsUpdater)"
+    },
+    {
+      "reader": "99999999999999999999.0.0",
+      "document": {
+        "schema_version": "99999999999999999999.0.0"
+      },
+      "outcome": "current"
+    },
+    {
+      "reader": "1.0.0",
+      "document": {
+        "schema_version": "18446744073709551616.0.0"
+      },
+      "outcome": "incompatible",
+      "expected_message": "document written by schema 18446744073709551616.0.0 (line 18446744073709551616) cannot be read by schema 1.0.0 (line 1): documents do not cross compatibility lines; migrating between lines is a separate upgrade tool's job (psy5 bundles: PowerSystemsUpdater)"
+    },
+    {
+      "reader": "0.1.0",
+      "document": {
+        "schema_version": true
+      },
+      "outcome": "malformed",
+      "expected_message": "document schema_version true is not a valid version"
+    },
+    {
+      "reader": "0.1.0",
+      "document": {
+        "schema_version": [
+          0,
+          1,
+          0
+        ]
+      },
+      "outcome": "malformed",
+      "expected_message": "document schema_version [0,1,0] is not a valid version"
+    },
+    {
+      "reader": "0.1.0",
+      "document": {
+        "schema_version": {
+          "v": "0.1.0"
+        }
+      },
+      "outcome": "malformed",
+      "expected_message": "document schema_version {\"v\":\"0.1.0\"} is not a valid version"
+    }
+  ]
+}

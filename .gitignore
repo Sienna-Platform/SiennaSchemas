@@ -7,6 +7,9 @@ docs/_site/
 docs/.jekyll-cache/
 docs/.jekyll-metadata
 
+# Release artifacts built by scripts/build_bundles.py.
+bundles/
+
 # Working plans/specs are local-only, never committed
 .claude/plans/
 

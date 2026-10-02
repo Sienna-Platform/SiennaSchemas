@@ -7,6 +7,22 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ## [Unreleased]
 
+### Added
+
+- `schema_version` on `SystemDocument` and `PortfolioDocument`, and `docs/VERSIONING.md`
+  defining the compatibility line and the reader rule.
+
+  A document had no record of the schema that wrote it, so a reader built from an older release
+  either dropped the newer rows silently or failed at an unrelated place with `extra field`.
+  The stamp lets a reader compare versions before decoding and refuse with a message naming
+  both. `scripts/check_compat.py` classifies the schema diff since the last tag, so the version
+  number reflects whether documents stay readable.
+
+### Changed
+
+- `schema_version` is required on both documents. Documents written before this change have no
+  stamp and must be regenerated with a current producer.
+
 ### Removed
 
 - `Investments/SupplementalAttributes/TopologyMapping.json`, and its entry in the
