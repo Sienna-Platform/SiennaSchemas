@@ -125,17 +125,22 @@ A line is written `MAJOR` from 1.0 and `0.MINOR` for 0.x.
 
 `scripts/check_compat.py` answers: is every document valid under the base tag still valid under
 HEAD, with the same meaning? It diffs the resolved schemas against the base tag
-(`git describe --tags --abbrev=0` by default) and fails closed: any change to a keyword it does not
-list as a feature counts as breaking.
+(`git describe --tags --abbrev=0 --exclude "*-*"` by default, so a prerelease tag is never the
+base) and fails closed: any change to a keyword it does not list as a feature counts as breaking.
 
 - Feature, allowed within a line: new schema or property (not required), property dropped from
-  `required`, widened `type`, added `enum` value or `oneOf` branch, added discriminator `mapping`
-  entry, relaxed bound, widened `additionalProperties`.
+  `required`, widened `type`, added `enum` value, added discriminator `mapping` entry, relaxed
+  bound, widened `additionalProperties`, a type added to a document's components or attributes.
+  An added or widened `oneOf` branch is a feature only when every branch const-pins and requires
+  the same tag property (the strict bundles drop `discriminator`); `anyOf` branches always are.
 - Breaking, needs a new line: removed or renamed schema or property, property added to `required`,
-  narrowed or changed `type`, retargeted `$ref`, removed `enum` value, removed `oneOf` branch,
-  removed or retargeted discriminator `mapping` entry, changed `discriminator.propertyName`,
+  narrowed or changed `type`, retargeted `$ref`, removed `enum` value, removed `oneOf` or `anyOf`
+  branch, removed or retargeted discriminator `mapping` entry, changed `discriminator.propertyName`,
   `const` added or changed, tightened bound, `pattern` added or changed, narrowed
-  `additionalProperties`, a `default` added, changed or removed, any `x-unit*` change.
+  `additionalProperties`, a `default` added, changed or removed, any `x-unit*` change. Also
+  breaking: closing an object the strict bundle left open (its first property, or dropping an
+  explicit `additionalProperties: true`), a type leaving a document's components or attributes,
+  and an added or widened `oneOf` branch in a union that is not tag-pinned as above.
 - Ignored: `description`, `title`, `examples`, `$comment`, key order.
 
 All six selectors must carry the same `info.version`. When the version equals the base tag's, the

@@ -30,6 +30,12 @@ from refs import (  # noqa: E402
     target_names,
     _repoint,
 )
+from build_bundles import (  # noqa: E402
+    DOCUMENTS as BUNDLE_DOCUMENTS,
+    _merged,
+    _names_under,
+    effective_additional,
+)
 from schema_version import parse  # noqa: E402
 
 DOCUMENTS = ["Core/SystemDocument.json", "Investments/PortfolioDocument.json"]
@@ -47,6 +53,11 @@ FEATURE = "feature"
 
 
 class Findings(list):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.base_defs = {}
+        self.head_defs = {}
+
     def add(self, kind, where, path, msg):
         self.append((kind, where, path, msg))
 
@@ -123,19 +134,46 @@ def diff_additional(b, h, out, where, path):
             f"additionalProperties {verb}: {canon(b)} -> {canon(h)}")
 
 
+PREFIX = "#/components/schemas/"
+
+
+def pinned_tags(branch, defs):
+    """Properties a branch const-pins and requires; a `$ref` resolves one level, else pins nothing."""
+    ref = branch.get("$ref") if isinstance(branch, dict) else None
+    if isinstance(ref, str) and ref.startswith(PREFIX):
+        branch = defs.get(ref[len(PREFIX):], {})
+    props = branch.get("properties", {}) if isinstance(branch, dict) else {}
+    required = branch.get("required", []) if isinstance(branch, dict) else []
+    return {n for n, p in props.items() if isinstance(p, dict) and "const" in p and n in required}
+
+
+def is_pinned(b, h, out):
+    """The strict bundle drops `discriminator`, so only a required const tag keeps oneOf exclusive."""
+    tags = [pinned_tags(x, out.base_defs) for x in b] + [pinned_tags(x, out.head_defs) for x in h]
+    return bool(tags) and bool(set.intersection(*tags))
+
+
 def diff_union(key, b, h, out, where, path):
     bc = [canon(strip(x)) for x in b]
     hc = [canon(strip(x)) for x in h]
     rem = [x for x in b if canon(strip(x)) not in hc]
     add = [x for x in h if canon(strip(x)) not in bc]
+    overlap = key == "oneOf" and not is_pinned(b, h, out)
     if len(rem) == len(add) and rem:
         for i, (rb, ah) in enumerate(zip(rem, add)):
-            diff_schema(rb, ah, out, where, f"{path}/{key}[branch {i}]")
+            inner = Findings()
+            inner.base_defs, inner.head_defs = out.base_defs, out.head_defs
+            diff_schema(rb, ah, inner, where, f"{path}/{key}[branch {i}]")
+            for kind, w, p, msg in inner:
+                if overlap and kind == FEATURE:
+                    kind, msg = BREAKING, f"{msg} (oneOf overlap: unpinned branches may both match)"
+                out.add(kind, w, p, msg)
         return
     for x in rem:
         out.add(BREAKING, where, f"{path}/{key}", f"branch removed: {canon(x)}")
     for x in add:
-        out.add(FEATURE, where, f"{path}/{key}", f"branch added: {canon(x)}")
+        out.add(BREAKING if overlap else FEATURE, where, f"{path}/{key}",
+                f"branch added to {'an unpinned oneOf' if overlap else key}: {canon(x)}")
 
 
 def diff_mapping(b, h, out, where, path):
@@ -194,7 +232,10 @@ def diff_schema(b, h, out, where, path=""):
         if canon(b) != canon(h):
             out.add(BREAKING, where, path or "/", "schema changed shape")
         return
-    for key in sorted((set(b) | set(h)) - COSMETIC - SKIPPED):
+    eb, eh = effective_additional(b), effective_additional(h)
+    if canon(eb) != canon(eh):
+        diff_additional(eb, eh, out, where, path)
+    for key in sorted((set(b) | set(h)) - COSMETIC - SKIPPED - {"additionalProperties"}):
         bv, hv = b.get(key), h.get(key)
         if key in b and key in h and canon(strip({key: bv})) == canon(strip({key: hv})):
             continue
@@ -214,9 +255,6 @@ def diff_schema(b, h, out, where, path=""):
                 out.add(FEATURE, where, p, f"pattern removed (was {canon(bv)})")
             else:
                 out.add(BREAKING, where, p, f"pattern added or changed: {canon(bv)} -> {canon(hv)}")
-        elif key == "additionalProperties":
-            diff_additional(True if bv is None else bv, True if hv is None else hv,
-                            out, where, path)
         elif key in UNION_KEYS and key in b and key in h:
             diff_union(key, bv, hv, out, where, path)
         elif key == "discriminator":
@@ -235,11 +273,16 @@ def diff_schema(b, h, out, where, path=""):
             out.add(BREAKING, where, p, f"unclassified keyword changed: {canon(strip({key: bv})[key])} -> {canon(strip({key: hv})[key])}")
 
 
-def document_schemas(root):
+def domains_in(root):
+    """The `DOMAINS` whose selector exists under `root`; used on the base tree only."""
+    return [d for d in DOMAINS if (Path(root) / f"openapi-{d}.json").is_file()]
+
+
+def document_schemas(root, domains=DOMAINS):
     """Hand-written document schemas, resolved against every domain's names."""
     root = Path(root)
     names = _Names()
-    for domain in DOMAINS:
+    for domain in domains:
         names.update(target_names(domain, root))
     result = {}
     for rel in DOCUMENTS:
@@ -249,24 +292,47 @@ def document_schemas(root):
     return result
 
 
-def collect(root):
+def collect(root, domains=DOMAINS):
     """Every comparable schema under `root`, keyed ``domain/Name``."""
     schemas = {}
-    for domain in DOMAINS:
+    for domain in domains:
         doc = resolved_document(domain, root)
         for name, body in doc["components"]["schemas"].items():
             schemas[f"{domain}/{name}"] = body
-    schemas.update(document_schemas(root))
+    schemas.update(document_schemas(root, domains))
     return schemas
 
 
-def versions(root):
-    return {d: load_json(Path(root) / f"openapi-{d}.json")["info"]["version"] for d in DOMAINS}
+def versions(root, domains=DOMAINS):
+    return {d: load_json(Path(root) / f"openapi-{d}.json")["info"]["version"] for d in domains}
+
+
+def membership(root, available=DOMAINS):
+    """Bundle membership per document: ``(document, kind) -> set of type names``."""
+    result = {}
+    for doc, (_, domains, component_dirs, attribute_dirs) in BUNDLE_DOCUMENTS.items():
+        names, _ = _merged(root, [d for d in domains if d in available])
+        result[doc, "components"] = set(_names_under(root, names, component_dirs))
+        result[doc, "attributes"] = set(_names_under(root, names, attribute_dirs))
+    return result
+
+
+def diff_membership(b, h, out):
+    for key in sorted(set(b) | set(h)):
+        doc, kind = key
+        for name in sorted(b.get(key, set()) - h.get(key, set())):
+            out.add(BREAKING, f"{doc}/{kind}", name, f"{name} no longer in {doc} {kind}")
+        for name in sorted(h.get(key, set()) - b.get(key, set())):
+            out.add(FEATURE, f"{doc}/{kind}", name, f"{name} added to {doc} {kind}")
 
 
 def diff_trees(base_root, head_root):
-    base, head = collect(base_root), collect(head_root)
+    present = domains_in(base_root)
+    base, head = collect(base_root, present), collect(head_root)
     out = Findings()
+    out.base_defs = {k.split("/", 1)[1]: v for k, v in base.items() if not k.startswith("doc/")}
+    out.head_defs = {k.split("/", 1)[1]: v for k, v in head.items() if not k.startswith("doc/")}
+    diff_membership(membership(base_root, present), membership(head_root), out)
     for key in sorted(set(base) | set(head)):
         if key not in head:
             out.add(BREAKING, key, "/", "named schema removed")
@@ -317,7 +383,8 @@ def main(argv=None):
 
     with tempfile.TemporaryDirectory() as tmp:
         extract_base(base, tmp)
-        b = versions(tmp)[DOMAINS[0]]
+        present = domains_in(tmp)
+        b = versions(tmp, present)[present[0]]
         findings = diff_trees(tmp, REPO_ROOT)
 
     breaking = [f for f in findings if f[0] == BREAKING]

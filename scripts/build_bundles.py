@@ -97,6 +97,13 @@ def _branch_properties(node):
     return names
 
 
+def effective_additional(node):
+    """The additionalProperties a strict bundle gives `node` (before constraint context)."""
+    if "additionalProperties" in node:
+        return node["additionalProperties"]
+    return not (node.get("properties") and "$ref" not in node)
+
+
 def strict(node, where, constraint=False):
     """Copy a schema with vendor keys dropped, refs localized, objects closed."""
     if isinstance(node, list):
@@ -122,9 +129,8 @@ def strict(node, where, constraint=False):
     own = node.get("properties")
     if (
         not constraint
-        and own
         and "additionalProperties" not in node
-        and "$ref" not in node
+        and effective_additional(node) is False
     ):
         extra = _branch_properties(node) - set(own)
         if extra:
@@ -157,8 +163,8 @@ def _merged(root, domains):
 def _names_under(root, names, dirs):
     root = Path(root).resolve()
     result = []
-    for (path, _), name in names.items():
-        if any(path.parent == root / d for d in dirs):
+    for (path, fragment), name in names.items():
+        if not fragment and any(path.parent == root / d for d in dirs):
             result.append(name)
     return sorted(result)
 
@@ -246,7 +252,15 @@ def release_tags():
         ["git", "-C", str(REPO_ROOT), "tag", "--list", "v*"],
         check=True, capture_output=True, text=True,
     ).stdout.split()
-    return sorted(out, key=lambda t: parse(t[1:])[:3])
+    tags = []
+    for t in out:
+        try:
+            parse(t[1:])
+        except ValueError:
+            print(f"skipping non-release tag {t}", file=sys.stderr)
+        else:
+            tags.append(t)
+    return sorted(tags, key=lambda t: parse(t[1:])[:3])
 
 
 def build_tag(tag, out):
