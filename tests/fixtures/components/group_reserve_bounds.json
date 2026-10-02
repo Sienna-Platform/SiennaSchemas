@@ -1,0 +1,9 @@
+{
+  "id": 7,
+  "name": "R_UP",
+  "available": true,
+  "requirement": 2129.0,
+  "max_requirement": 2129.0,
+  "participation_bounds": [[4, 1.0, 1.0], [5, 0.0, 0.2]],
+  "reserve_direction": "UP"
+}

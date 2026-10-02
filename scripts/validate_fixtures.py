@@ -58,6 +58,10 @@ COMPONENT = {
     "ofl_half": ("Core/common.json", "/$defs/OperationalFlowLimit", False),
     "line_with_ofl": ("Operations/Branch/Line.json", None, True),
     "line_without_ofl": ("Operations/Branch/Line.json", None, True),
+    "group_reserve_bounds": ("Operations/Service/GroupReserve.json", None, True),
+    "group_reserve_without_bounds": ("Operations/Service/GroupReserve.json", None, True),
+    "group_reserve_bound_short": ("Operations/Service/GroupReserve.json", None, False),
+    "group_reserve_negative_cap": ("Operations/Service/GroupReserve.json", None, False),
 }
 
 

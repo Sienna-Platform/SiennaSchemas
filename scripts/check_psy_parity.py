@@ -180,6 +180,8 @@ SCHEMA_AHEAD = {
     "TwoTerminalLCCLine": {"rating", "rating_from", "rating_to", "operational_flow_limit"},
     "TwoTerminalVSCLine": {"operational_flow_limit"},
     "TModelHVDCLine": {"operational_flow_limit"},
+    # PSY adds both in its participation-bounds PR; drop this entry once psy6 has them.
+    "GroupReserve": {"max_requirement", "participation_bounds"},
 }
 
 # PSY still carries these fields, but the schema dropped them on purpose:
