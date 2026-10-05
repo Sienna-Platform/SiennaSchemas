@@ -2,7 +2,7 @@
 """Verify every `$ref` and `discriminator.mapping` value resolves, and that each
 selector declares everything it reaches.
 
-Two passes:
+Three passes:
 
 1. Source schemas. A `$ref` is chased across files, or within its own file, and
    its target must exist. A `discriminator.mapping` (or `defaultMapping`) value
@@ -18,6 +18,10 @@ Two passes:
    output after `components.schemas` keys, so a reached-but-undeclared schema
    has no name to generate under: both toolchains invent one per reference site
    and a shared type silently becomes several.
+
+3. Tagged oneOfs. A oneOf with a discriminator whose branches are all objects must
+   map every branch and pin the tag with `const` in each, so checking only the
+   selected variant is equivalent to checking the whole oneOf.
 
 Exit 1 and print one line per problem.
 """
@@ -95,12 +99,110 @@ def check_selector(domain, errors):
         )
 
 
+# Keywords a tagged oneOf may carry besides its branches. Anything else would be an extra
+# assertion that checking only the selected variant would skip.
+TAGGED_ONEOF_KEYS = {"oneOf", "discriminator", "type", "title", "description", "default", "$schema", "$id"}
+
+
+SCALAR_TYPES = {"number", "integer", "string", "boolean"}
+REF_ANNOTATIONS = {"$ref", "description", "title", "default", "$comment", "examples", "deprecated"}
+
+
+def _is_tagged_oneof(node):
+    return isinstance(node, dict) and isinstance(node.get("discriminator"), dict) and isinstance(node.get("oneOf"), list)
+
+
+def check_tagged_oneof_refs(file_path, errors):
+    """A `$ref` to a tagged oneOf may carry only annotations: generators copy the wrapper to
+    that site, and any other sibling would be an assertion the selected-variant check skips."""
+    for path, node in _nodes(load_json(file_path)):
+        ref = node.get("$ref")
+        extra = sorted(k for k in node if k not in REF_ANNOTATIONS and not k.startswith("x-"))
+        if not (isinstance(ref, str) and extra):
+            continue
+        try:
+            target, fragment = resolve_ref_path(file_path, ref)
+            body = resolve_fragment(load_json(target), fragment)
+        except (RefError, KeyError):
+            continue  # reported by check_source
+        if _is_tagged_oneof(body):
+            where = f"{file_path.relative_to(REPO_ROOT).as_posix()}#{path}"
+            errors.append(f"{where}: $ref to a tagged oneOf carries extra keywords {extra}")
+
+
+def _deref(path, node):
+    """Follow a branch's `$ref` chain to (target, body); target is None for an inline body."""
+    target = None
+    while isinstance(node, dict) and "$ref" in node and set(node) <= {"$ref", "title", "description"}:
+        target = resolve_ref_path(path, node["$ref"])
+        path = target[0]
+        node = resolve_fragment(load_json(target[0]), target[1])
+    return target, node
+
+
+def _nodes(node, path=""):
+    """Yield (path, dict) for every dict under `node`."""
+    if isinstance(node, dict):
+        yield path, node
+        for key, value in node.items():
+            yield from _nodes(value, f"{path}/{key}")
+    elif isinstance(node, list):
+        for index, value in enumerate(node):
+            yield from _nodes(value, f"{path}[{index}]")
+
+
+def check_tagged_oneofs(file_path, errors):
+    """A oneOf with a discriminator whose branches are all objects must map every branch and
+    pin the tag with `const` in each, so checking the selected variant alone is the oneOf check.
+    Bad references are left to `check_source`, which reports them."""
+    for path, node in _nodes(load_json(file_path)):
+        disc = node.get("discriminator")
+        if not (isinstance(disc, dict) and isinstance(node.get("oneOf"), list)):
+            continue
+        try:
+            branches = [_deref(file_path, b) for b in node["oneOf"]]
+            targets = {
+                key: resolve_ref_path(file_path, ref)
+                for key, ref in disc.get("mapping", {}).items()
+            }
+            bodies = {key: resolve_fragment(load_json(t[0]), t[1]) for key, t in targets.items()}
+        except (RefError, KeyError):
+            continue
+        where = f"{file_path.relative_to(REPO_ROOT).as_posix()}#{path}"
+        non_objects = [body for _, body in branches if body.get("type") not in (None, "object")]
+        if non_objects:
+            # The generator decodes one scalar branch by shape and the rest by tag.
+            if len(non_objects) == 1 and non_objects[0].get("type") in SCALAR_TYPES:
+                continue
+            errors.append(f"{where}: tagged oneOf branch shape the generator cannot decode by tag")
+            continue
+        extra = sorted(k for k in node if k not in TAGGED_ONEOF_KEYS and not k.startswith("x-"))
+        if extra:
+            errors.append(f"{where}: tagged oneOf carries extra keywords {extra}")
+        prop = disc.get("propertyName")
+        if prop is None:
+            errors.append(f"{where}: discriminator has no propertyName")
+            continue
+        for key, body in bodies.items():
+            if body.get("properties", {}).get(prop, {}).get("const") != key:
+                errors.append(f"{where}: variant {key!r} does not pin {prop} with const {key!r}")
+        branch_targets = [target for target, _ in branches]
+        for key, target in targets.items():
+            if target not in branch_targets:
+                errors.append(f"{where}: mapping {key!r} names a schema that is not a oneOf branch")
+        for index, (target, _) in enumerate(branches):
+            if target not in targets.values():
+                errors.append(f"{where}/oneOf[{index}] is not reachable through the discriminator mapping")
+
+
 def main():
     errors = []
 
     source_files = collect_source_files()
     for f in source_files:
         check_source(f, errors)
+        check_tagged_oneofs(f, errors)
+        check_tagged_oneof_refs(f, errors)
 
     for domain in DOMAINS:
         check_selector(domain, errors)
@@ -113,7 +215,8 @@ def main():
 
     print(
         f"OK: 0 dangling targets across {len(source_files)} source file(s); "
-        f"{len(DOMAINS)} selector(s) declare everything they reach."
+        f"{len(DOMAINS)} selector(s) declare everything they reach; "
+        "tagged oneOf variants pin their tags."
     )
     return 0
 
