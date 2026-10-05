@@ -62,9 +62,10 @@ Dynamics/                # DynamicGeneratorComponent/, DynamicInverterComponent/
 TimeSeries/              # common.json, the six per-type schemas, TimeSeriesAssociation.json (oneOf wrapper)
 openapi-infrastructure-core.json, openapi-{core,operations,investments,dynamics,timeseries}.json     # $ref wrappers selecting package membership
 scripts/                 # validate_units.py, refs.py, check_refs.py, check_layering.py,
-                         # check_psip_parity.py, check_infrastore_parity.py, check_compat.py
+                         # check_psip_parity.py, check_infrastore_parity.py, check_compat.py,
+                         # stage_release.sh (the release tree; build-models.yml builds from it)
 docs/                    # PIPELINE.md (gates), UNIT_ANNOTATIONS.md (annotation spec)
-.github/workflows/       # release.yml, validate-schemas.yml
+.github/workflows/       # release.yml, validate-schemas.yml, build-models.yml
 ```
 
 Cross-references are relative paths (`"$ref": "../../Core/common.json#/definitions/MinMax"`) — **directory layout is load-bearing**; moving a file breaks every `$ref` to it.

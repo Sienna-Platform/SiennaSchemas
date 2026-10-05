@@ -1,0 +1,117 @@
+name: Build Models
+
+# Generates both model repositories from this tree and builds them, so a schema change
+# that breaks a generator fails here, before release, not in the downstream schema-update
+# PR. It builds; it does not run the downstream test suites. Those suites change with
+# fixtures and hand-written code, and gating on them would need a downstream branch for
+# every schema PR. They run on the PR that the release opens in each repository.
+#
+# Each job uses the model repository's main and reads its tool pins from that repository,
+# so no version is copied here.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  julia:
+    name: PowerOpenAPIModels
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # build_bundles.py --line needs the release tags.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Stage the release tree
+        run: scripts/stage_release.sh "$RUNNER_TEMP/schemas"
+
+      - uses: actions/checkout@v4
+        with:
+          repository: Sienna-Platform/PowerOpenAPIModels
+          path: models
+
+      # The codegen image fixes the Julia version that generates the packages.
+      - name: Read the generator's Julia version
+        id: julia
+        run: echo "version=$(sed -n 's/^FROM julia:\([0-9.]*\).*/\1/p' models/Dockerfile)" >> "$GITHUB_OUTPUT"
+
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: ${{ steps.julia.outputs.version }}
+
+      - uses: julia-actions/cache@v2
+
+      - name: Generate
+        run: make -C models generate SCHEMA_DIR="$RUNNER_TEMP/schemas"
+
+      # Base.isprecompiled, not `using`: see the header of test/precompile.jl.
+      - name: Precompile all seven packages
+        working-directory: models
+        run: julia test/precompile.jl
+
+  python:
+    name: power-openapi-models
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Stage the release tree
+        run: scripts/stage_release.sh "$RUNNER_TEMP/schemas"
+
+      - uses: actions/checkout@v4
+        with:
+          repository: Sienna-Platform/power-openapi-models
+          path: models
+
+      - name: Install the pinned Python generators
+        run: pip install $(grep -oE '(datamodel-code-generator|ruff)==[0-9.]+' models/codegen/Dockerfile)
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      # openapi-to-rust is a cargo install pinned in the Makefile; keyed on the Makefile so
+      # a pin change rebuilds it.
+      - uses: actions/cache@v4
+        with:
+          path: models/codegen/rust/.tools
+          key: openapi-to-rust-${{ hashFiles('models/Makefile') }}
+
+      # The same generation steps as the repository's update-schema.yml. generate-python
+      # copies .schema-version into the package, so it is written first.
+      - name: Generate
+        working-directory: models
+        run: |
+          echo "v$(jq -r .info.version "$RUNNER_TEMP/schemas/openapi-core.json")" > .schema-version
+          make generate SCHEMA_DIR="$RUNNER_TEMP/schemas"
+          npm ci
+          make generate-typescript SCHEMA_DIR="$RUNNER_TEMP/schemas"
+          make generate-rust SCHEMA_DIR="$RUNNER_TEMP/schemas"
+          make sync-bundles SCHEMA_DIR="$RUNNER_TEMP/schemas"
+
+      - name: Build Python
+        working-directory: models
+        run: |
+          pip install -e ./python
+          python -c "import importlib, pkgutil, power_openapi_models as p; [importlib.import_module(m.name) for m in pkgutil.walk_packages(p.__path__, p.__name__ + '.')]"
+
+      - name: Build TypeScript
+        working-directory: models
+        run: npx tsc --noEmit --project typescript
+
+      - name: Build Rust
+        working-directory: models
+        run: cargo build --manifest-path rust/Cargo.toml
