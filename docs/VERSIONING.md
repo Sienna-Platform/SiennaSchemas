@@ -88,7 +88,7 @@ line up to `R`. The shared vectors ship as `schemas/versioning/cases.json`.
 
 | Binding | Check / upgrade / source version | Write target | Error | Source validation needs |
 |---|---|---|---|---|
-| Julia | `check_schema_version`, `upgrade_document`, `upgrade_portfolio_document`, `get_source_schema_version` | `write_document(...; schema_version = :current \| :source)` | `SchemaVersionError` | JSON Schema package extension |
+| Julia | `check_schema_version`, `upgrade_document`, `upgrade_portfolio_document`, `get_source_schema_version` | `write_document(...; schema_version = :current \| :source)` | `SchemaVersionError` | `InfrastructureCoreOpenAPIModels`' JSONSchema.jl extension |
 | Python | `check_schema_version`, `upgrade_document`, `upgrade_portfolio_document`, `get_source_schema_version` | `write_document(..., schema_version="current" \| "source")` | `SchemaVersionError` | `power-openapi-models[source-version]` |
 | TypeScript | `checkSchemaVersion`, `upgradeDocument`, `upgradePortfolioDocument`, `getSourceSchemaVersion` | `writeDocument(doc, path, { schemaVersion: "current" \| "source" })` | `SchemaVersionError` | optional peer `ajv` (Node only) |
 | Rust | `check_schema_version`, `upgrade_document`, `upgrade_portfolio_document`, `get_source_schema_version` | `SchemaVersionTarget::{Current, Source}` | `DocumentError` | `source-version` feature |
@@ -96,6 +96,11 @@ line up to `R`. The shared vectors ship as `schemas/versioning/cases.json`.
 `read_document` and `upgrade_document` act on a `SystemDocument`; `read_portfolio_document` and
 `upgrade_portfolio_document` are their `PortfolioDocument` counterparts (TypeScript:
 `readPortfolioDocument`, `upgradePortfolioDocument`).
+
+In Julia the version check, `write_document`, and `get_source_schema_version` live in
+`InfrastructureCoreOpenAPIModels`; `SystemDocument` and its readers in `PowerCoreOpenAPIModels`;
+`PortfolioDocument` and its readers in `PowerInvestmentsOpenAPIModels`. Neither container needs
+the `PowerOpenAPIModels` umbrella.
 
 A document whose root is not a JSON object is a format error, not `missing`: the public check
 raises the binding's document format error (Julia `DocumentFormatError`, Python pydantic

@@ -286,8 +286,8 @@ SCHEMA_ONLY_COMPONENTS = {
     "Probabilistic",
     "Scenarios",
     # The whole-system serialization envelope, not a component. Its Julia
-    # counterpart is the hand-written container in the umbrella
-    # PowerOpenAPIModels.jl package (src/document.jl), checked against the
+    # counterpart is the hand-written container in the
+    # PowerCoreOpenAPIModels.jl package (src/document.jl), checked against the
     # schema by that repo's own validate.jl -- there is no PSY struct to match.
     "SystemDocument",
 }
