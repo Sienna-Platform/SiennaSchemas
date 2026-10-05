@@ -88,7 +88,7 @@ Every numeric property carries a unit annotation (`x-unit`, or `x-units` +
 
 ### Validating locally
 
-Nine gates run across this repo, PowerOpenAPIModels, and SiennaGridDB — the full registry,
+Ten gates run across this repo, PowerOpenAPIModels, and SiennaGridDB — the full registry,
 what each one catches, and the commands to run them, is `docs/PIPELINE.md`. The gates that
 live in this repo:
 

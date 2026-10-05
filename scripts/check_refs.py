@@ -2,7 +2,7 @@
 """Verify every `$ref` and `discriminator.mapping` value resolves, and that each
 selector declares everything it reaches.
 
-Four passes:
+Five passes:
 
 1. Source schemas. A `$ref` is chased across files, or within its own file, and
    its target must exist. A `discriminator.mapping` (or `defaultMapping`) value
@@ -26,6 +26,10 @@ Four passes:
 4. Default types. A `default` must have the JSON type its node declares. The
    generators emit the default as a literal, so a string `"1.0"` on a number
    field fails the TypeScript type check and decodes wrongly elsewhere.
+
+5. Required names. Each name in `required` must be defined in `properties` on the
+   same node. The generators make an undefined required name a field with no
+   schema, and the Rust post-processor panics on it.
 
 Exit 1 and print one line per problem.
 """
@@ -223,6 +227,22 @@ def check_default_types(file_path, errors):
             errors.append(f"{where}: default {node['default']!r} is not of type {node['type']}")
 
 
+def check_required_names(file_path, errors):
+    """Each `required` name must be defined in `properties` on the same node. A node that
+    composes others (`allOf`, `anyOf`, `oneOf`) can take properties from them, so it is not
+    checked."""
+    for path, node in _nodes(load_json(file_path)):
+        required, properties = node.get("required"), node.get("properties")
+        if not (isinstance(required, list) and isinstance(properties, dict)):
+            continue
+        if any(k in node for k in ("allOf", "anyOf", "oneOf")):
+            continue
+        undefined = [name for name in required if name not in properties]
+        if undefined:
+            where = f"{file_path.relative_to(REPO_ROOT).as_posix()}#{path}"
+            errors.append(f"{where}: required names not in properties: {undefined}")
+
+
 def main():
     errors = []
 
@@ -232,6 +252,7 @@ def main():
         check_tagged_oneofs(f, errors)
         check_tagged_oneof_refs(f, errors)
         check_default_types(f, errors)
+        check_required_names(f, errors)
 
     for domain in DOMAINS:
         check_selector(domain, errors)
@@ -245,7 +266,8 @@ def main():
     print(
         f"OK: 0 dangling targets across {len(source_files)} source file(s); "
         f"{len(DOMAINS)} selector(s) declare everything they reach; "
-        "tagged oneOf variants pin their tags; defaults match their types."
+        "tagged oneOf variants pin their tags; defaults match their types; "
+        "required names are defined."
     )
     return 0
 
