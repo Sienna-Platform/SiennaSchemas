@@ -5,6 +5,8 @@ Resolves all six domains (plus the two hand-written document schemas) in the
 base tree and in the working tree, diffs every named schema, and classifies each
 difference as a *feature* (allowed within a compatibility line) or *breaking*.
 Any keyword not explicitly listed as a feature is breaking: the gate fails closed.
+The ``Core/units.json`` vocabulary is diffed by entry: an added quantity kind or
+unit is a feature, a removed or changed one is breaking.
 
 ``info.version`` (V) must agree across the six selectors. V == base version (B):
 report only. V != B: fail when V is below the level the changes require.
@@ -47,6 +49,8 @@ UNIT_KEYS = {"x-unit", "x-units", "x-unit-discriminator", "x-unit-base"}
 LOWER_BOUNDS = {"minimum", "exclusiveMinimum", "minLength", "minItems"}
 UPPER_BOUNDS = {"maximum", "exclusiveMaximum", "maxLength", "maxItems"}
 UNION_KEYS = {"oneOf", "anyOf"}
+UNITS = "Core/units.json"
+UNIT_TABLES = {"quantity_kinds": ("name",), "allowed_units": ("quantity_kind", "unit")}
 
 BREAKING = "breaking"
 FEATURE = "feature"
@@ -326,6 +330,22 @@ def diff_membership(b, h, out):
             out.add(FEATURE, f"{doc}/{kind}", name, f"{name} added to {doc} {kind}")
 
 
+def diff_units(b, h, out):
+    """The bundles drop `x-*`, but a changed vocabulary entry changes what stored values mean."""
+    for table, key in UNIT_TABLES.items():
+        bt = {tuple(e[k] for k in key): e for e in b[table]}
+        ht = {tuple(e[k] for k in key): e for e in h[table]}
+        for entry in sorted(set(bt) | set(ht)):
+            name = "/".join(entry)
+            if entry not in ht:
+                out.add(BREAKING, f"units/{table}", name, "vocabulary entry removed")
+            elif entry not in bt:
+                out.add(FEATURE, f"units/{table}", name, "vocabulary entry added")
+            elif canon(strip(bt[entry])) != canon(strip(ht[entry])):
+                out.add(BREAKING, f"units/{table}", name,
+                        f"vocabulary entry changed: {canon(strip(bt[entry]))} -> {canon(strip(ht[entry]))}")
+
+
 def diff_trees(base_root, head_root):
     present = domains_in(base_root)
     base, head = collect(base_root, present), collect(head_root)
@@ -333,6 +353,7 @@ def diff_trees(base_root, head_root):
     out.base_defs = {k.split("/", 1)[1]: v for k, v in base.items() if not k.startswith("doc/")}
     out.head_defs = {k.split("/", 1)[1]: v for k, v in head.items() if not k.startswith("doc/")}
     diff_membership(membership(base_root, present), membership(head_root), out)
+    diff_units(load_json(Path(base_root) / UNITS), load_json(Path(head_root) / UNITS), out)
     for key in sorted(set(base) | set(head)):
         if key not in head:
             out.add(BREAKING, key, "/", "named schema removed")

@@ -135,7 +135,8 @@ base) and fails closed: any change to a keyword it does not list as a feature co
 
 - Feature, allowed within a line: new schema or property (not required), property dropped from
   `required`, widened `type`, added `enum` value, added discriminator `mapping` entry, relaxed
-  bound, widened `additionalProperties`, a type added to a document's components or attributes.
+  bound, widened `additionalProperties`, a type added to a document's components or attributes,
+  a quantity kind or unit added to `Core/units.json`.
   An added or widened `oneOf` branch is a feature only when every branch const-pins and requires
   the same tag property (the strict bundles drop `discriminator`); `anyOf` branches always are.
 - Breaking, needs a new line: removed or renamed schema or property, property added to `required`,
@@ -145,7 +146,8 @@ base) and fails closed: any change to a keyword it does not list as a feature co
   `additionalProperties`, a `default` added, changed or removed, any `x-unit*` change. Also
   breaking: closing an object the strict bundle left open (its first property, or dropping an
   explicit `additionalProperties: true`), a type leaving a document's components or attributes,
-  and an added or widened `oneOf` branch in a union that is not tag-pinned as above.
+  an added or widened `oneOf` branch in a union that is not tag-pinned as above, and a removed
+  or changed `Core/units.json` quantity kind or unit.
 - Ignored: `description`, `title`, `examples`, `$comment`, key order.
 
 All six selectors must carry the same `info.version`. When the version equals the base tag's, the

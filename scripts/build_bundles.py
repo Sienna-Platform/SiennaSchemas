@@ -22,7 +22,9 @@ Strictness rules:
   ``supplemental_attributes`` items become ``anyOf`` over the release's
   attribute schemas.
 * Which schemas are components or attributes follows the source directory, as
-  below. Dynamics schemas appear in neither document.
+  below. Dynamics schemas appear in neither document. A whole-file selector
+  entry of a document's domains that the bundle does not reach fails the
+  build, so a new directory cannot drop its types without an error.
 
 OpenAPI-only and vendor keywords (``discriminator``, ``x-*``, ``$schema`` below
 the root) are dropped: strict validators such as ajv reject unknown keywords.
@@ -227,6 +229,14 @@ def build_document(root, document, version):
     bundle["title"] = document
     definitions = {n: strict(b, n) for n, b in schemas.items()}
     keep = _reachable(definitions, [bundle])
+    # A component in a directory missing from DOCUMENTS would otherwise vanish
+    # from the closed components map, and the bundle would reject it.
+    orphans = sorted(n for (_, fragment), n in names.items() if not fragment and n not in keep)
+    if orphans:
+        raise ValueError(
+            f"{document}: selected schemas {orphans} are not components, attributes, "
+            "or referenced; add their directory to DOCUMENTS"
+        )
     bundle["definitions"] = {n: definitions[n] for n in sorted(keep)}
     bundle["$comment"] = f"Strict validation bundle for schema release {version}."
     return bundle

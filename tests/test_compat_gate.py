@@ -164,6 +164,45 @@ def test_head_missing_selector_still_raises():
         shutil.rmtree(tmp)
 
 
+def test_units_vocabulary_diff():
+    kind = {"name": "ActivePower", "default_unit": "MW", "description": "x"}
+    mw = {"quantity_kind": "ActivePower", "unit": "MW", "to_default": 1.0}
+    kw = {"quantity_kind": "ActivePower", "unit": "kW", "to_default": 0.001}
+    b = {"quantity_kinds": [kind], "allowed_units": [mw, kw]}
+
+    def run(h):
+        out = cc.Findings()
+        cc.diff_units(b, h, out)
+        return sorted((f[0], f[2]) for f in out)
+
+    assert run({"quantity_kinds": [{**kind, "description": "y"}], "allowed_units": [mw, kw]}) == []
+    assert run({"quantity_kinds": [kind], "allowed_units": [mw, {**kw, "to_default": 1e-6}]}) == [
+        (cc.BREAKING, "ActivePower/kW")]
+    assert run({"quantity_kinds": [kind], "allowed_units": [mw]}) == [(cc.BREAKING, "ActivePower/kW")]
+    gw = {"quantity_kind": "ActivePower", "unit": "GW", "to_default": 1000.0}
+    assert run({"quantity_kinds": [kind], "allowed_units": [mw, kw, gw]}) == [(cc.FEATURE, "ActivePower/GW")]
+
+
+def test_component_in_unlisted_directory_fails_build():
+    import build_bundles as bb
+
+    with tempfile.TemporaryDirectory() as tmp:
+        tree = Path(tmp) / "tree"
+        shutil.copytree(ROOT, tree, ignore=shutil.ignore_patterns(".git"))
+        old = "Operations/StaticInjection/InterruptiblePowerLoad.json"
+        new = "Operations/Storage/InterruptiblePowerLoad.json"
+        (tree / new).parent.mkdir()
+        (tree / old).rename(tree / new)
+        for sel in tree.glob("openapi-*.json"):
+            sel.write_text(sel.read_text().replace(old, new))
+        try:
+            bb.build_document(tree, "SystemDocument", "0.0.0")
+        except ValueError as e:
+            assert "InterruptiblePowerLoad" in str(e), e
+            return
+        raise AssertionError("unlisted component directory did not fail the build")
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):
