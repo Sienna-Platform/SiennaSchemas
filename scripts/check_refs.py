@@ -2,7 +2,7 @@
 """Verify every `$ref` and `discriminator.mapping` value resolves, and that each
 selector declares everything it reaches.
 
-Three passes:
+Four passes:
 
 1. Source schemas. A `$ref` is chased across files, or within its own file, and
    its target must exist. A `discriminator.mapping` (or `defaultMapping`) value
@@ -22,6 +22,10 @@ Three passes:
 3. Tagged oneOfs. A oneOf with a discriminator whose branches are all objects must
    map every branch and pin the tag with `const` in each, so checking only the
    selected variant is equivalent to checking the whole oneOf.
+
+4. Default types. A `default` must have the JSON type its node declares. The
+   generators emit the default as a literal, so a string `"1.0"` on a number
+   field fails the TypeScript type check and decodes wrongly elsewhere.
 
 Exit 1 and print one line per problem.
 """
@@ -195,6 +199,30 @@ def check_tagged_oneofs(file_path, errors):
                 errors.append(f"{where}/oneOf[{index}] is not reachable through the discriminator mapping")
 
 
+# bool is a subclass of int in Python, so it is excluded from the numeric types.
+_JSON_TYPES = {
+    "string": lambda v: isinstance(v, str),
+    "number": lambda v: isinstance(v, (int, float)) and not isinstance(v, bool),
+    "integer": lambda v: isinstance(v, int) and not isinstance(v, bool),
+    "boolean": lambda v: isinstance(v, bool),
+    "object": lambda v: isinstance(v, dict),
+    "array": lambda v: isinstance(v, list),
+    "null": lambda v: v is None,
+}
+
+
+def check_default_types(file_path, errors):
+    """A `default` must match the `type` declared on the same node. A node with no `type`
+    (a bare `$ref`, an enum) is not checked."""
+    for path, node in _nodes(load_json(file_path)):
+        if "default" not in node or "type" not in node:
+            continue
+        declared = node["type"] if isinstance(node["type"], list) else [node["type"]]
+        if not any(_JSON_TYPES[t](node["default"]) for t in declared if t in _JSON_TYPES):
+            where = f"{file_path.relative_to(REPO_ROOT).as_posix()}#{path}"
+            errors.append(f"{where}: default {node['default']!r} is not of type {node['type']}")
+
+
 def main():
     errors = []
 
@@ -203,6 +231,7 @@ def main():
         check_source(f, errors)
         check_tagged_oneofs(f, errors)
         check_tagged_oneof_refs(f, errors)
+        check_default_types(f, errors)
 
     for domain in DOMAINS:
         check_selector(domain, errors)
@@ -216,7 +245,7 @@ def main():
     print(
         f"OK: 0 dangling targets across {len(source_files)} source file(s); "
         f"{len(DOMAINS)} selector(s) declare everything they reach; "
-        "tagged oneOf variants pin their tags."
+        "tagged oneOf variants pin their tags; defaults match their types."
     )
     return 0
 
