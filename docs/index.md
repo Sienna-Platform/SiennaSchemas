@@ -46,3 +46,5 @@ field draws on, and the conventions those fields follow.
 - [UNIT_ANNOTATIONS.md](https://github.com/Sienna-Platform/SiennaSchemas/blob/main/docs/UNIT_ANNOTATIONS.md) —
   for writing or changing a schema: how a unit annotation is declared, placed, and validated.
   To interpret a unit you are reading, see [Units](units.md) instead.
+- [VERSIONING.md](https://github.com/Sienna-Platform/SiennaSchemas/blob/main/docs/VERSIONING.md) —
+  the `schema_version` stamp on a document and the rule a reader applies to it.

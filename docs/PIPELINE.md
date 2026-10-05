@@ -20,7 +20,7 @@ Core/units.json ──► JSON Schemas (x-unit annotated)
                          └── scripts/check_units_sync.py        (three-layer unit sync gate)
 ```
 
-## The nine gates
+## The ten gates
 
 | Gate | Repo | Command | Prevents |
 |---|---|---|---|
@@ -29,8 +29,9 @@ Core/units.json ──► JSON Schemas (x-unit annotated)
 | Reference resolution and selector completeness | SiennaSchemas | `python3 scripts/check_refs.py` | a `$ref` or `discriminator.mapping` value that names nothing; and a domain that reaches a schema its selector does not declare, which leaves the generators no name for it so each invents one per reference site and a shared type silently becomes several |
 | PSY parity | SiennaSchemas | `python3 scripts/check_psy_parity.py --psy-path ../PowerSystems.jl` | structural drift between PowerSystems.jl structs and schema components (missing schemas, field drift); SKIPs cleanly when PSY is absent |
 | Layering | SiennaSchemas | `python3 scripts/check_layering.py` | power semantics leaking into InfrastructureCore: an undeclared or missing member, a schema name shared with the power core, or a `$ref` chain from the InfrastructureCore/TimeSeries selectors reaching a file or definition outside the InfrastructureCore set |
-| Time series fixtures | SiennaSchemas | `python3 scripts/validate_fixtures.py` | a broken `oneOf` discriminator, a wrong `required` list, or a discriminator `mapping` naming the wrong schema, exercised against real example instances rather than structure alone |
+| Fixtures, versioning vectors, strict bundles | SiennaSchemas | `python3 scripts/validate_fixtures.py` | a broken `oneOf` discriminator, a wrong `required` list, or a discriminator `mapping` naming the wrong schema, exercised against real example instances rather than structure alone; also the reader-rule vectors and error texts, and the strict bundles' accept/reject checks |
 | Infrastore parity | SiennaSchemas | `python3 scripts/check_infrastore_parity.py` | field-name drift between the six time series schemas and infrastore's `time_series_associations` catalog row; SKIPs cleanly when no infrastore checkout is present, so a green run there is not proof the check ran — mirroring how PSY parity SKIPs when PSY is absent |
+| Version compatibility | SiennaSchemas | `python3 scripts/check_compat.py` | a version below what the schema diff since the last tag requires: a breaking change needs a new line (minor in 0.x, major from 1.0), a feature needs the next patch in 0.x or the next minor from 1.0. Report-only while `info.version` still equals the base tag; fails closed on any keyword it does not classify |
 | Inline schema aliases | PowerOpenAPIModels | `make validate` (`test/validate.jl`) | a shared schema silently duplicated as `<Base>1`, `<Base>2`, … when an inline object at the reference site has no named `$defs` entry. This is the downstream backstop: alias names are assigned by OpenAPI.jl's native generator and cannot be derived statically from the schemas alone, so a check here would have false negatives. Keys on the unsuffixed base existing, so real digit-suffixed type names (`SteamTurbineGov1`) are not flagged |
 | DB sync | SiennaGridDB | `python3 scripts/check_units_sync.py` and `python3 scripts/generate_sql_schema.py --check --diff` | unit contradictions between registry and schemas; DDL drifting from the schema projection |
 

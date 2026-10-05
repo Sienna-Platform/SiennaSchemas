@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.2.0",
+  "frequency": 60.0,
+  "components": {
+    "ACBus": [
+      {
+        "id": 1,
+        "name": "bus1",
+        "available": true,
+        "number": 1
+      }
+    ]
+  },
+  "supplemental_attributes": [
+    {
+      "id": 10,
+      "geo_json": {
+        "type": "Point",
+        "coordinates": [
+          0.0,
+          0.0
+        ]
+      }
+    }
+  ],
+  "supplemental_attribute_associations": [],
+  "plant_associations": [],
+  "combined_cycle_associations": [],
+  "service_associations": [],
+  "time_series_associations": [],
+  "time_series_storage_file": "ts.h5",
+  "ext": {
+    "producer": {
+      "note": "free-form"
+    }
+  }
+}

@@ -12,15 +12,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Tags are needed to diff against the previous release and to build
+          # the strict bundles of earlier releases in this compatibility line.
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
+      - name: Assert the tag equals info.version
+        # A v0.2.0 tag must not ship selectors that still say 0.1.0: generators
+        # and readers take the version from info.version.
+        run: |
+          version=$(jq -r .info.version openapi-core.json)
+          if [ "${GITHUB_REF_NAME#v}" != "$version" ]; then
+            echo "::error::tag ${GITHUB_REF_NAME} does not match info.version ${version} in openapi-core.json" >&2
+            exit 1
+          fi
+
+      - name: Check version compatibility
+        # info.version differs from the previous tag's by construction here, so
+        # the gate enforces: the version must cover the schema diff. A describe
+        # failure (no earlier tag, missing tags) fails the step: this is the
+        # release gate and must not skip itself.
+        run: |
+          previous=$(git describe --tags --abbrev=0 --exclude '*-*' "${GITHUB_REF_NAME}^")
+          python3 scripts/check_compat.py --base "$previous"
+
       - name: Package schemas
         # Ships the schema tree as authored: the domain schemas, Core/units.json,
-        # and the openapi-*.json selectors. Both codegen toolchains resolve the
-        # $ref graph themselves, so there is nothing to build first.
+        # and the openapi-*.json selectors, plus the strict validation bundles
+        # that scripts/build_bundles.py builds into the stage below.
         #
         # Staged into a named directory before archiving, so the tarball unpacks
         # as schemas/ instead of scattering its members into whatever directory
@@ -43,6 +66,14 @@ jobs:
           # tests/ and the Jekyll Gemfiles are development tooling, not schema.
           cp -r Core Operations Investments Dynamics TimeSeries docs scripts \
                 openapi-*.json README.md CHANGELOG.md LICENSE "$stage/"
+          find "$stage" -name __pycache__ -prune -exec rm -rf {} +
+          # Strict validation bundles for every release in this line up to this
+          # one: a document stamped with any of them is checked against its own.
+          python3 scripts/build_bundles.py --line --out "$stage/bundles"
+          # The reader-rule test vectors, outside tests/ (which must not ship):
+          # each binding runs them against its own version check.
+          mkdir "$stage/versioning"
+          cp tests/fixtures/versioning/cases.json "$stage/versioning/"
           tar -czf "$RUNNER_TEMP/schemas-${GITHUB_REF_NAME}.tar.gz" -C "$RUNNER_TEMP" schemas
           echo "Top-level members:"
           tar -tzf "$RUNNER_TEMP/schemas-${GITHUB_REF_NAME}.tar.gz" | awk -F/ '{print $1}' | sort -u

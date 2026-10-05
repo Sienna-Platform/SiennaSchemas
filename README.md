@@ -83,6 +83,8 @@ Every numeric property carries a unit annotation (`x-unit`, or `x-units` +
 - **`docs/PIPELINE.md`** — the end-to-end pipeline: schemas → generated model
   packages, schemas → GridDB registry/DDL, and the PSY parity gate
   (`scripts/check_psy_parity.py`), with the change protocol and release order.
+- **`docs/VERSIONING.md`** — the `schema_version` stamp, the compatibility line, the reader
+  rule every binding implements, and the release compatibility gate.
 
 ### Validating locally
 
@@ -129,9 +131,13 @@ The tarball for a tagged release ships:
 - the raw schema files (`Core/`, `Operations/`, `Investments/`, `Dynamics/`, `TimeSeries/`)
 - `Core/units.json`, the unit vocabulary
 - the `openapi-*.json` selectors
+- `bundles/<version>/{SystemDocument,PortfolioDocument}.json`, the strict validation bundles for
+  every release in the current compatibility line up to this one
+- `versioning/cases.json`, the shared reader-rule test vectors
 
-Nothing is built first: both codegen toolchains read the selectors and resolve the `$ref`
-graph across files themselves, `discriminator.mapping` values included. That is why a
+The schema files are not built: both codegen toolchains read the selectors and resolve the `$ref`
+graph across files themselves, `discriminator.mapping` values included. (Only the bundles are
+built, by `scripts/build_bundles.py`.) That is why a
 selector must declare every schema its domain reaches — the generators name their output
 after `components.schemas` keys, and `scripts/check_refs.py` gates the completeness. Every
 property description also carries a `Units:` sentence, because neither generator renders the
@@ -140,9 +146,12 @@ preserves.
 
 ### Creating a release
 
+Set `info.version` to the new version in all six `openapi-*.json` selectors first; the release
+workflow fails unless the tag equals it.
+
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.2.0
+git push origin v0.2.0
 ```
 
 This triggers the release workflow, which publishes the schema
