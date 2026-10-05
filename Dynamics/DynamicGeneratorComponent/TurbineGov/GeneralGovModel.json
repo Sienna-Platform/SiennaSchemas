@@ -6,7 +6,7 @@
       "description": "Unique integer identifier for this component",
       "type": "integer"
     },
-    "R_select": {
+    "Rselect": {
       "description": "Feedback signal for governor droop",
       "type": "integer"
     },

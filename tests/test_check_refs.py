@@ -1,4 +1,4 @@
-"""Regression tests for check_refs default-type rule.
+"""Regression tests for the check_refs default-type and required-name rules.
 
 Run: ../.venv/bin/python3 tests/test_check_refs.py
 """
@@ -14,13 +14,13 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import check_refs as cr
 
 
-def errors_for(properties):
+def errors_for(properties, check=cr.check_default_types, **schema):
     with tempfile.NamedTemporaryFile("w", suffix=".json", dir=ROOT, delete=False) as f:
-        json.dump({"type": "object", "properties": properties}, f)
+        json.dump({"type": "object", "properties": properties, **schema}, f)
     path = Path(f.name)
     try:
         errors = []
-        cr.check_default_types(path, errors)
+        check(path, errors)
         return errors
     finally:
         path.unlink()
@@ -48,6 +48,19 @@ def test_matching_defaults_pass():
             "e": {"$ref": "#/x", "default": "COMPONENT_BASE"},
         }
     )
+
+
+def test_undefined_required_name_fails():
+    errors = errors_for({"psi": {"type": "number"}}, cr.check_required_names, required=["phi"])
+    assert len(errors) == 1 and "phi" in errors[0]
+
+
+def test_defined_required_names_pass():
+    assert not errors_for({"psi": {"type": "number"}}, cr.check_required_names, required=["psi"])
+
+
+def test_composed_node_is_not_checked():
+    assert not errors_for({}, cr.check_required_names, required=["x"], allOf=[{"$ref": "#/a"}])
 
 
 if __name__ == "__main__":
