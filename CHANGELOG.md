@@ -7,8 +7,24 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-05
+
 ### Added
 
+- The full dynamic generator and dynamic inverter component families. The files are in one
+  subfolder per role (`AVR/`, `Machine/`, `PSS/`, `Shaft/`, `TurbineGov/`, `Converter/`,
+  `DCSource/`, `Filter/`, `FrequencyEstimator/`, `InnerControl/`, `OuterControl/`,
+  `OutputCurrentLimiter/`).
+- `OperationalFlowLimit` and an optional `operational_flow_limit` on `Line`,
+  `DiscreteControlledACBranch`, `TransformerCircuit`, `GenericArcImpedance`, and the three
+  two-terminal HVDC lines.
+- `switching_times` on `ThermalStandard` and `ThermalMultiStart`.
+- Shared voltage control: `VoltageControlAssociation`, `ReactivePowerSharing`, and
+  `VoltageDroopControl`.
+- Unit annotations for cost and loss curves (`x-curve-axes`, `x-curve-output`,
+  `x-curve-dimension`).
+- `check_refs.py` checks that each tagged `oneOf` variant pins its discriminator with `const`.
+- The release workflow sends `schema-release` to the model-package repositories.
 - `schema_version` on `SystemDocument` and `PortfolioDocument`, and `docs/VERSIONING.md`
   defining the compatibility line and the reader rule.
 
@@ -22,9 +38,22 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 - `schema_version` is required on both documents. Documents written before this change have no
   stamp and must be regenerated with a current producer.
+- A field whose unit changed with a mode enum is now one field per physical quantity, each with
+  a fixed unit. For example, `TransformerCircuit.control_limits` and
+  `controlled_quantity_limits` become five `*_limits` bands.
+- HVDC impedance, voltage, and voltage-droop fields are natural units only. `parameter_units`
+  and `dc_voltage_units` are removed.
+- The HVDC lines lose `active_power_limits_from`/`_to`. The generic and LCC lines gain
+  `rating`, `rating_from`, and `rating_to`. `TransformerCircuit.rating` is required.
+- Existing dynamics files moved into the role subfolders, so their `$ref` paths changed.
 
 ### Removed
 
+- `Operations/Branch/MonitoredLine.json`. Use `Line.operational_flow_limit`.
+- `GenericArcImpedance.max_flow`. Use `operational_flow_limit`.
+- `scripts/check_psy_parity.py` and its CI step. The gate compared the schemas against a
+  PowerSystems.jl branch, so each schema change needed a matching PowerSystems.jl branch. It
+  did not show whether a release breaks PowerSystems.jl (issue #72).
 - `Investments/SupplementalAttributes/TopologyMapping.json`, and its entry in the
   `openapi-investments` selector.
 
@@ -43,6 +72,11 @@ This project is pre-1.0; any release may change schemas incompatibly.
   Nothing produced it: the RTS-GMLC tutorials emit none in either language, and the PSIP
   parity gate now reports `TopologyMapping` alongside `Node` and `Zone` as PSIP-side types
   pending removal.
+
+### Fixed
+
+- `validate_units.py --fix-descriptions` is idempotent on a `Units:` sentence with no final
+  period. It appended a second sentence before.
 
 ## [0.1.0] - 2026-09-12
 
@@ -86,4 +120,6 @@ renders vendor extensions, so it is the only channel that survives into generate
 - **The unit-quantity pairing rule needs a SiennaGridDB checkout** and skips silently without
   one, so a green CI run is not evidence that it holds.
 
+[Unreleased]: https://github.com/Sienna-Platform/SiennaSchemas/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/Sienna-Platform/SiennaSchemas/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Sienna-Platform/SiennaSchemas/releases/tag/v0.1.0

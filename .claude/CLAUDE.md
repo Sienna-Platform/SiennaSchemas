@@ -31,7 +31,7 @@ SiennaSchemas (this repo — hand-written source)
   └─ Core/units.json ──SiennaGridDB/scripts/generate_unit_registry.py──▶ GridDB sealed unit registry
 ```
 
-- Schemas mirror **PowerSystems.jl component types field-for-field** but in natural units with integer-id references (PSY internals are per-unit with object references). A PSY field change without a schema change is drift; `scripts/check_psy_parity.py` is the gate that catches it.
+- Schemas mirror **PowerSystems.jl component types field-for-field** but in natural units with integer-id references (PSY internals are per-unit with object references). A PSY field change without a schema change is drift; no gate catches it, so mirror the change by hand.
 - No converter exists between a PSY `System` and these types or GridDB rows, so **validators are the only consistency mechanism** — treat annotation and vocabulary correctness as load-bearing.
 - Component coverage against PSY is complete for everything except Dynamics: every non-dynamics PSY struct has a schema, and the absent structs are all in the dynamics family (AVR, TurbineGov, Machine, PSS, DynamicInjection, filters, limiters), deferred by design. Fields absent **by convention rather than drift**: `services`/`reserves`/`contributing_services` (many-to-many), `n_states`/`states`/`states_types` (read-only dynamic metadata), and `TransformerCircuit.base_value` (derived units anchor PSY marks "do not modify"). Don't re-flag these as gaps.
 - **Service membership is recorded**, by `Operations/Associations/ServiceAssociation.json` — one row per (service, member) pair, the same normalized shape as `PlantAssociation` and `Core/SupplementalAttributes/SupplementalAttributeAssociation.json`. `entity_id` may name a Device, a Branch, or another Service, so no member-type discriminator is needed. Don't re-flag this as a gap; the data model library keeps the same relation on the device side as `Device.services`.
@@ -62,7 +62,7 @@ Dynamics/                # DynamicGeneratorComponent/, DynamicInverterComponent/
 TimeSeries/              # common.json, the six per-type schemas, TimeSeriesAssociation.json (oneOf wrapper)
 openapi-infrastructure-core.json, openapi-{core,operations,investments,dynamics,timeseries}.json     # $ref wrappers selecting package membership
 scripts/                 # validate_units.py, refs.py, check_refs.py, check_layering.py,
-                         # check_psy_parity.py, check_psip_parity.py
+                         # check_psip_parity.py, check_infrastore_parity.py, check_compat.py
 docs/                    # PIPELINE.md (gates), UNIT_ANNOTATIONS.md (annotation spec)
 .github/workflows/       # release.yml, validate-schemas.yml
 ```

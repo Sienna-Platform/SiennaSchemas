@@ -81,8 +81,8 @@ Every numeric property carries a unit annotation (`x-unit`, or `x-units` +
   channel, discriminated units, and the physics conventions (reactive power is `MVAr`,
   impedance/admittance are `pu`, percent is banned in favor of fractions).
 - **`docs/PIPELINE.md`** — the end-to-end pipeline: schemas → generated model
-  packages, schemas → GridDB registry/DDL, and the PSY parity gate
-  (`scripts/check_psy_parity.py`), with the change protocol and release order.
+  packages and schemas → GridDB registry/DDL, with the gates, the change protocol, and the
+  release order.
 - **`docs/VERSIONING.md`** — the `schema_version` stamp, the compatibility line, the reader
   rule every binding implements, and the release compatibility gate.
 
@@ -96,7 +96,6 @@ live in this repo:
 python3 scripts/validate_units.py
 python3 scripts/validate_units.py --check-descriptions
 python3 scripts/check_refs.py
-python3 scripts/check_psy_parity.py --psy-path ../PowerSystems.jl
 python3 scripts/check_layering.py
 python3 scripts/validate_fixtures.py
 python3 scripts/check_infrastore_parity.py
