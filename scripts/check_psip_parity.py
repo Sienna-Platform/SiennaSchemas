@@ -8,8 +8,8 @@ drift, and each schema's `required` list must be derivable from the descriptor.
 Usage:
   python3 scripts/check_psip_parity.py --psip-path ../PowerSystemsInvestmentsPortfolios.jl
 
-When the PSIP checkout is absent the check SKIPs cleanly (exit 0), mirroring
-check_psy_parity.py, so CI can run it unconditionally.
+When the PSIP checkout is absent the check SKIPs cleanly (exit 0), so CI can run
+it unconditionally.
 
 `required` is derived rather than compared verbatim. Both repos use the same
 rule -- a field is required exactly when it has no default -- but only PSIP
@@ -29,7 +29,7 @@ Output contract:
 Exit 1 if N + M + U > 0.
 
 Unit parity is checked because PSIP's units are ABSOLUTE (MW, USD/MWh, t) rather
-than the relative per-unit bases check_psy_parity.py deals with, so each
+than relative per-unit bases, so each
 `conversion_unit` admits exactly one `x-unit` and disagreement is unambiguous. A
 mismatch here is a silent wrong magnitude -- no error, no failing test -- which is
 why it is fatal rather than a WARN.
@@ -167,8 +167,8 @@ def load_schema_components():
     return components
 
 
-# PSIP's units are ABSOLUTE (MW, USD/MWh, t), not relative per-unit bases, so unlike
-# check_psy_parity.py's family logic each `conversion_unit` admits exactly one `x-unit`.
+# PSIP's units are ABSOLUTE (MW, USD/MWh, t), not relative per-unit bases, so each
+# `conversion_unit` admits exactly one `x-unit`.
 # The two vocabularies are mechanically related -- `:usd_per_mwh` <-> `USD/MWh` -- so
 # normalizing both sides beats a lookup table, which would be a third source of truth
 # for the unit names and would rot independently of either side.

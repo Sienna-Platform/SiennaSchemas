@@ -14,7 +14,7 @@
   },
   "required": [
     "k1",
-    "phi"
+    "psi"
   ],
   "title": "ActiveVirtualOscillator",
   "type": "object"

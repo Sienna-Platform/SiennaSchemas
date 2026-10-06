@@ -6,7 +6,7 @@
       "description": "Unique integer identifier for this component",
       "type": "integer"
     },
-    "R_select": {
+    "Rselect": {
       "description": "Feedback signal for governor droop",
       "type": "integer"
     },
@@ -136,7 +136,7 @@
     },
     "P_ref": {
       "description": "Reference power set-point",
-      "default": "1.0",
+      "default": 1.0,
       "type": "number"
     }
   },

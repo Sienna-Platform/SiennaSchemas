@@ -50,7 +50,7 @@
       "description": "Minimum and maximum gate openings",
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
-    "D_turb": {
+    "D": {
       "description": "Turbine damping coefficient",
       "type": "number"
     },
@@ -74,7 +74,7 @@
     },
     "P_ref": {
       "description": "Reference load set-point",
-      "default": "1.0",
+      "default": 1.0,
       "type": "number"
     }
   },

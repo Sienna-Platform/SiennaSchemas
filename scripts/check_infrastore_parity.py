@@ -6,8 +6,7 @@ metadata/schema.rs and diffs its columns against the union of properties across
 the six per-type schemas. Every difference must be one of the deliberate ones in
 ALLOWED_SCHEMA_ONLY / ALLOWED_INFRASTORE_ONLY; anything else is drift.
 
-Skips cleanly (exit 0, with a SKIP line) when the infrastore checkout is absent,
-matching how check_psy_parity.py handles a missing PowerSystems.jl.
+Skips cleanly (exit 0, with a SKIP line) when the infrastore checkout is absent.
 """
 
 import json
