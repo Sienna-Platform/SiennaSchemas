@@ -171,12 +171,14 @@
       "x-quantity": "ActivePower"
     },
     "efficiency": {
-      "description": "Turbine/Pump efficiency [0, 1.0].",
+      "description": "Turbine/Pump efficiency [0, 1.0]. Units: 1.",
       "default": {
         "turbine": 1.0,
         "pump": 1.0
       },
-      "$ref": "../../Core/common.json#/$defs/TurbinePump"
+      "$ref": "../../Core/common.json#/$defs/TurbinePump",
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "transition_time": {
       "description": "Transition time to switch into the specific mode. Units: min.",
