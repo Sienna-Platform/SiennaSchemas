@@ -146,9 +146,11 @@
       "x-unit": "m3/s"
     },
     "efficiency": {
-      "description": "Turbine efficiency [0, 1.0].",
+      "description": "Turbine efficiency [0, 1.0]. Units: 1.",
       "default": 1.0,
-      "type": "number"
+      "type": "number",
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     },
     "turbine_type": {
       "description": "Type of the turbine.",
