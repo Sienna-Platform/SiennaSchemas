@@ -50,6 +50,9 @@
       "CurveStyles": {
         "$ref": "Core/common.json#/$defs/CurveStyles"
       },
+      "CurrentLossCurve": {
+        "$ref": "Core/common.json#/$defs/CurrentLossCurve"
+      },
       "CurveMultiStep": {
         "$ref": "Core/common.json#/$defs/CurveMultiStep"
       },
@@ -79,6 +82,9 @@
       },
       "FuelCurve": {
         "$ref": "Core/common.json#/$defs/FuelCurve"
+      },
+      "FuelUnit": {
+        "$ref": "Core/common.json#/$defs/FuelUnit"
       },
       "GenericOperationCost": {
         "$ref": "Core/common.json#/$defs/GenericOperationCost"

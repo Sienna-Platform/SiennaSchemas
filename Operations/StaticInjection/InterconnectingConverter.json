@@ -84,8 +84,8 @@
       "x-unit": "A"
     },
     "loss_function": {
-      "description": "Linear or quadratic loss function with respect to the converter current.",
-      "$ref": "../../Core/common.json#/$defs/LossCurve"
+      "description": "Linear or quadratic loss (power) as a function of the converter's DC current.",
+      "$ref": "../../Core/common.json#/$defs/CurrentLossCurve"
     },
     "dc_control": {
       "description": "DC-side control mode of the converter. No default: an in-service converter always controls something on each side, so the mode is supplied explicitly.",

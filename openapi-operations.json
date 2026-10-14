@@ -260,6 +260,9 @@
       "CostCurve": {
         "$ref": "Core/common.json#/$defs/CostCurve"
       },
+      "CurrentLossCurve": {
+        "$ref": "Core/common.json#/$defs/CurrentLossCurve"
+      },
       "CurveMultiStep": {
         "$ref": "Core/common.json#/$defs/CurveMultiStep"
       },
@@ -277,6 +280,9 @@
       },
       "FuelCurve": {
         "$ref": "Core/common.json#/$defs/FuelCurve"
+      },
+      "FuelUnit": {
+        "$ref": "Core/common.json#/$defs/FuelUnit"
       },
       "FunctionData": {
         "$ref": "Core/common.json#/$defs/FunctionData"
