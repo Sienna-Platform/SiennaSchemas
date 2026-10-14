@@ -98,7 +98,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        repo: [PowerOpenAPIModels, power-openapi-models]
+        repo: [PowerOpenAPIModels, power-openapi-models, SiennaGridDB]
     steps:
       - uses: actions/create-github-app-token@v1
         id: app-token
