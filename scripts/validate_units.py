@@ -918,9 +918,11 @@ def curve_axes_sentence(node, source_path):
     """Return the 'Units: ...' sentence for a curve family carrying x-curve-axes.
 
     The family knows both axis quantity kinds; the x axis is discriminated by
-    its own power_units, exactly as an x-units map would be. Where the y axis
-    IS the x quantity (a loss curve), power_units governs both and the sentence
-    says so rather than repeating the same discriminated list twice.
+    its own power_units, exactly as an x-units map would be. The y axis is too
+    when its quantity has a per-unit form (a loss curve's power), and is fixed
+    at its default unit when it has none (a cost curve's USD/h). Where the y
+    axis IS the x quantity, the sentence says "both axes" rather than repeating
+    the same discriminated list twice.
     """
     axes = node["x-curve-axes"]
     defaults = load_quantity_defaults()
@@ -929,14 +931,19 @@ def curve_axes_sentence(node, source_path):
     order = [v for v in ("NATURAL_UNITS", "COMPONENT_BASE") if v in enum]
     order += sorted(enum.difference(order))
 
-    x_parts = ", ".join(
-        f"{v}: {defaults.get(axes['x'], '?') if v == 'NATURAL_UNITS' else 'pu'}"
-        for v in order
-    )
+    def parts(quantity):
+        return ", ".join(
+            f"{v}: {defaults.get(quantity, '?') if v == 'NATURAL_UNITS' else 'pu'}"
+            for v in order
+        )
+
     if axes["x"] == axes["y"]:
-        return f"Units: both axes per power_units — {x_parts} ."
-    y_unit = defaults.get(axes["y"], "?")
-    return f"Units: x-axis per power_units — {x_parts} ; y-axis {y_unit} ."
+        return f"Units: both axes per power_units — {parts(axes['x'])} ."
+    if axes["y"] in load_unit_quantities().get("pu", []):
+        y = f"per power_units — {parts(axes['y'])}"
+    else:
+        y = defaults.get(axes["y"], "?")
+    return f"Units: x-axis per power_units — {parts(axes['x'])} ; y-axis {y} ."
 
 
 def curve_dimension_sentence(dim, is_form_scalar):
