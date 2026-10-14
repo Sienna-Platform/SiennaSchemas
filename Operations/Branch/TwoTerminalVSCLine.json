@@ -133,7 +133,7 @@
     },
     "max_dc_current_from": {
       "description": "Maximum stable dc current limits. Units: kA.",
-      "default": 100000000.0,
+      "default": 100000.0,
       "type": "number",
       "x-unit": "kA"
     },
@@ -265,7 +265,7 @@
     },
     "max_dc_current_to": {
       "description": "Maximum stable dc current limits. Units: kA.",
-      "default": 100000000.0,
+      "default": 100000.0,
       "type": "number",
       "x-unit": "kA"
     },
