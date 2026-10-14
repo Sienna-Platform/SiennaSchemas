@@ -24,9 +24,9 @@
       "type": "integer"
     },
     "base_current": {
-      "description": "Base current of the line as recorded by the source data. No field of this component is per-unit on it. Units: A.",
+      "description": "Base current of the line as recorded by the source data. No field of this component is per-unit on it. Units: kA.",
       "type": "number",
-      "x-unit": "A"
+      "x-unit": "kA"
     },
     "r": {
       "description": "Total series resistance, split equally on both sides of the shunt capacitance. Units: ohm.",
