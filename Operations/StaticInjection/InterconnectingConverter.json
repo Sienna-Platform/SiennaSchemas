@@ -78,8 +78,8 @@
       "x-unit": "kA"
     },
     "max_dc_current": {
-      "description": "Maximum stable dc current limits. Units: kA.",
-      "default": 100000000.0,
+      "description": "Maximum stable dc current limits. 9999 means no limit. Units: kA.",
+      "default": 9999.0,
       "type": "number",
       "x-unit": "kA"
     },
