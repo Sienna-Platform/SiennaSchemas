@@ -14,6 +14,16 @@ This project is pre-1.0; any release may change schemas incompatibly.
   (`SeriesCompensatorControlMode`) is `FIXED`, `BYPASSED`, `DISPATCHABLE` or
   `ACTIVE_POWER_FLOW`; the last two require `reactance_limits`, and `ACTIVE_POWER_FLOW` also
   `active_power_flow_setpoint`.
+- `SwitchingSchedule`, a supplemental attribute naming the time series that schedules switch states (1 = closed, 0 = open).
+- Optional `rating_b` and `rating_c` on `DiscreteControlledACBranch`, matching `Line`.
+
+### Changed
+
+- Describe `rating_b` and `rating_c` on `Line`, `TransformerCircuit`, and `DiscreteControlledACBranch` as the short-term (Rate B) and emergency (Rate C) thermal ratings.
+
+### Removed
+
+- `monitored_components` from `PlannedOutage`; post-contingency monitoring applies only to unplanned outages.
 
 ## [0.2.0] - 2026-10-05
 
