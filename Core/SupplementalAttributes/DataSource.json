@@ -28,6 +28,10 @@
       "type": "string",
       "description": "Data version or vintage, e.g. '2023 final'."
     },
+    "license": {
+      "type": "string",
+      "description": "License of the source data, if known: an SPDX identifier such as 'CC-BY-4.0', or a license name or URL."
+    },
     "published_at": {
       "type": [
         "string",
