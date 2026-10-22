@@ -68,6 +68,7 @@ COMPONENT = {
     "line_with_ofl": ("Operations/Branch/Line.json", None, True),
     "line_without_ofl": ("Operations/Branch/Line.json", None, True),
     "area_with_interchange": ("Core/Topology/Area.json", None, True),
+    "area_null_interchange": ("Core/Topology/Area.json", None, True),
 }
 
 

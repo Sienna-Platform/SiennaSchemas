@@ -1,0 +1,7 @@
+{
+  "id": 2,
+  "name": "area_2",
+  "scheduled_net_interchange": null,
+  "base_power": 100.0,
+  "power_units": "NATURAL_UNITS"
+}
