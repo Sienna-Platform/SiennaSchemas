@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A series compensator on an `Arc`: a series capacitor or reactor, or a thyristor-controlled or static synchronous series compensator, with one series reactance. Devices that also inject at a bus, such as a UPFC, are not covered.",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
+      "type": "boolean"
+    },
+    "active_power_flow": {
+      "description": "Initial condition of active power flow through the compensator. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "type": "number",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ActivePower"
+    },
+    "reactive_power_flow": {
+      "description": "Initial condition of reactive power flow through the compensator. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
+      "type": "number",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ReactivePower"
+    },
+    "arc": {
+      "description": "An `Arc` defining this line `from` a bus `to` another bus.",
+      "type": "integer"
+    },
+    "r": {
+      "description": "Resistance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "type": "number",
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "ohm",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "Resistance"
+    },
+    "x": {
+      "description": "Series reactance; negative for a capacitor. Under `DISPATCHABLE` and `ACTIVE_POWER_FLOW`, the present value. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "type": "number",
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "ohm",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "Reactance"
+    },
+    "rating": {
+      "description": "Thermal rating. Flow through the compensator must be between -`rating` and `rating`. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
+      "type": "number",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ApparentPower"
+    },
+    "control_mode": {
+      "description": "How the series reactance is set. `FIXED` holds `x`; `BYPASSED` shorts the compensator into a zero-impedance tie; `DISPATCHABLE` makes the reactance a decision within `reactance_limits`; `ACTIVE_POWER_FLOW` sets it to hold `active_power_flow_setpoint`.",
+      "default": "FIXED",
+      "$ref": "../../Operations/common.json#/$defs/SeriesCompensatorControlMode"
+    },
+    "reactance_limits": {
+      "description": "Minimum and maximum series reactance. Required when `control_mode` is `DISPATCHABLE` or `ACTIVE_POWER_FLOW`. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit-discriminator": "parameter_units",
+      "x-units": {
+        "NATURAL_UNITS": "ohm",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "Reactance"
+    },
+    "active_power_flow_setpoint": {
+      "description": "Active power flow, from the `from` bus to the `to` bus, the compensator holds. Required when `control_mode` is `ACTIVE_POWER_FLOW`. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "type": "number",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ActivePower"
+    },
+    "rating_b": {
+      "description": "Second current rating. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
+      "type": "number",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ApparentPower"
+    },
+    "rating_c": {
+      "description": "Third current rating. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
+      "type": "number",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ApparentPower"
+    },
+    "operational_flow_limit": {
+      "description": "Operator-set minimum and maximum flow in each direction. Absent means no operational limit. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "$ref": "../../Core/common.json#/$defs/OperationalFlowLimit",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ActivePower"
+    },
+    "base_power": {
+      "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
+    },
+    "power_units": {
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "$ref": "../../Core/common.json#/$defs/UnitSystem"
+    },
+    "parameter_units": {
+      "description": "Unit basis for r and x. COMPONENT_BASE is per-unit on this component's base_power, which records the system base.",
+      "default": "COMPONENT_BASE",
+      "$ref": "../../Core/common.json#/$defs/ImpedanceUnitBasis"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "available",
+    "active_power_flow",
+    "reactive_power_flow",
+    "arc",
+    "r",
+    "x",
+    "rating",
+    "base_power",
+    "power_units"
+  ],
+  "title": "SeriesCompensator",
+  "type": "object",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "control_mode": {
+            "enum": [
+              "DISPATCHABLE",
+              "ACTIVE_POWER_FLOW"
+            ]
+          }
+        },
+        "required": [
+          "control_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "reactance_limits"
+        ],
+        "properties": {
+          "reactance_limits": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "control_mode": {
+            "enum": [
+              "ACTIVE_POWER_FLOW"
+            ]
+          }
+        },
+        "required": [
+          "control_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "active_power_flow_setpoint"
+        ],
+        "properties": {
+          "active_power_flow_setpoint": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  ]
+}

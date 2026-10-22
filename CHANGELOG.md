@@ -7,6 +7,14 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ## [Unreleased]
 
+### Added
+
+- `SeriesCompensator`, a branch with one series reactance: a series capacitor or reactor, a
+  thyristor-controlled or a static synchronous series compensator. Its `control_mode`
+  (`SeriesCompensatorControlMode`) is `FIXED`, `BYPASSED`, `DISPATCHABLE` or
+  `ACTIVE_POWER_FLOW`; the last two require `reactance_limits`, and `ACTIVE_POWER_FLOW` also
+  `active_power_flow_setpoint`.
+
 ## [0.2.0] - 2026-10-05
 
 ### Added
