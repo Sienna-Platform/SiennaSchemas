@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Interconnecting Power Converter (IPC) for transforming power from an ACBus to a DCBus. Voltage and voltage-droop fields are natural units only: there is no conventional DC base voltage from which to per-unitize them.",
+  "description": "Interconnecting Power Converter (IPC) for transforming power from an ACBus to a DCBus. Voltage and voltage-droop fields are natural units only: there is no conventional DC base voltage from which to per-unitize them. `rated_dc_voltage` and `rated_ac_voltage` record the voltage bases, so a consumer can convert the voltage fields to per unit.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -116,6 +116,12 @@
       ],
       "x-unit": "kV"
     },
+    "rated_dc_voltage": {
+      "description": "Rated DC voltage of the converter, the base for `dc_voltage_setpoint` and `voltage_limits`; 0.0 means unspecified. Units: kV.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "kV"
+    },
     "power_factor_setpoint": {
       "description": "Power-factor setpoint of the converter, used when `ac_control` is `AC_REACTIVE_POWER`; `null` otherwise. Units: 1.",
       "type": [
@@ -133,6 +139,12 @@
         "number",
         "null"
       ],
+      "x-unit": "kV"
+    },
+    "rated_ac_voltage": {
+      "description": "Rated AC voltage at the converter's AC terminal, the base for `ac_voltage_setpoint`; 0.0 means unspecified. Units: kV.",
+      "default": 0.0,
+      "type": "number",
       "x-unit": "kV"
     },
     "dc_voltage_droop": {
