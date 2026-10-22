@@ -67,6 +67,8 @@ COMPONENT = {
     "ofl_half": ("Core/common.json", "/$defs/OperationalFlowLimit", False),
     "line_with_ofl": ("Operations/Branch/Line.json", None, True),
     "line_without_ofl": ("Operations/Branch/Line.json", None, True),
+    "acbus_pq_with_setpoint": ("Core/Topology/ACBus.json", None, True),
+    "acbus_null_setpoint": ("Core/Topology/ACBus.json", None, True),
 }
 
 
