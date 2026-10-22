@@ -36,7 +36,6 @@
     },
     "voltage_setpoint": {
       "description": "Scheduled voltage magnitude for this bus, as a multiple of `base_voltage`. It is the target of every device that regulates this bus, at the bus or from a remote terminal. A `PV` bus holds this value; a `PQ` bus can have it and not reach it. `null` when no device regulates this bus. Units: pu.",
-      "$comment": "FACTSControlDevice.voltage_setpoint, TwoTerminalVSCLine.ac_voltage_setpoint_from and ac_voltage_setpoint_to, and InterconnectingConverter.ac_voltage_setpoint duplicate this target for the bus each device regulates. Remove them in a follow-up so that the regulated bus is the single source of the voltage target.",
       "type": [
         "number",
         "null"
