@@ -1,0 +1,11 @@
+{
+  "id": 1,
+  "name": "area_1",
+  "scheduled_net_interchange": 150.0,
+  "out_of_area_load_ids": [
+    42,
+    43
+  ],
+  "base_power": 100.0,
+  "power_units": "NATURAL_UNITS"
+}
