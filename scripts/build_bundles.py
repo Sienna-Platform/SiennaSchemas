@@ -65,6 +65,7 @@ DOCUMENTS = {
             "Core/Topology",
             "Operations/Branch",
             "Operations/Market",
+            "Operations/SectorCoupling",
             "Operations/Service",
             "Operations/StaticInjection",
         ],

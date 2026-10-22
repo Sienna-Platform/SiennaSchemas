@@ -17,6 +17,15 @@
       "BilateralTransaction": {
         "$ref": "Operations/Market/BilateralTransaction.json"
       },
+      "CarrierDemand": {
+        "$ref": "Operations/SectorCoupling/CarrierDemand.json"
+      },
+      "CarrierStore": {
+        "$ref": "Operations/SectorCoupling/CarrierStore.json"
+      },
+      "CarrierSupply": {
+        "$ref": "Operations/SectorCoupling/CarrierSupply.json"
+      },
       "CombinedCycleAssociation": {
         "$ref": "Operations/Associations/CombinedCycleAssociation.json"
       },
@@ -85,6 +94,9 @@
       },
       "Line": {
         "$ref": "Operations/Branch/Line.json"
+      },
+      "Link": {
+        "$ref": "Operations/SectorCoupling/Link.json"
       },
       "MotorLoad": {
         "$ref": "Operations/StaticInjection/MotorLoad.json"
@@ -316,6 +328,9 @@
       },
       "LossValueCurve": {
         "$ref": "Core/common.json#/$defs/LossValueCurve"
+      },
+      "LinkPort": {
+        "$ref": "Core/common.json#/$defs/LinkPort"
       },
       "MarketBidCost": {
         "$ref": "Core/common.json#/$defs/MarketBidCost"

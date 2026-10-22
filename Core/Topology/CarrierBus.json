@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CarrierBus",
+  "description": "A bus for a non-electric energy carrier. Conversion links, carrier stores, carrier demands, and carrier supplies connect to it; its energy balance holds in every period.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component. Components of the same type must have unique names, but components of different types can share a name.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+      "type": "boolean"
+    },
+    "carrier": {
+      "description": "ID of the carrier that flows through this bus.",
+      "type": "integer"
+    },
+    "area": {
+      "description": "ID of the area containing the carrier bus.",
+      "type": "integer"
+    },
+    "load_zone": {
+      "description": "ID of the load zone containing the carrier bus.",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "available",
+    "carrier"
+  ]
+}

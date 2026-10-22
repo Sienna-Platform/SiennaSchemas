@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Link",
+  "description": "A conversion device that draws energy flow from one input bus and delivers it to one or more output buses, each at its own efficiency. Any port can connect to an electric bus or a carrier bus, so the link models electrolysers, heat pumps, combined heat and power units, and carrier pipelines.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component. Components of the same type must have unique names, but components of different types can share a name.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+      "type": "boolean"
+    },
+    "carrier": {
+      "description": "ID of a carrier that labels the technology of this link. Optional.",
+      "type": "integer"
+    },
+    "bus": {
+      "description": "ID of the input bus that this link draws from. The bus can be an electric bus or a carrier bus.",
+      "type": "integer"
+    },
+    "output_ports": {
+      "description": "Output ports in order. Each port names a bus and the efficiency from the input bus to that bus.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "../../Core/common.json#/$defs/LinkPort"
+      }
+    },
+    "max_active_power": {
+      "description": "Maximum energy flow drawn from the input bus. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
+    },
+    "flow_limits": {
+      "description": "Minimum and maximum flow at the input bus as fractions of `max_active_power`. A negative minimum allows flow in the reverse direction. Units: 1.",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit": "1",
+      "x-quantity": "Fraction"
+    },
+    "variable_cost": {
+      "description": "Cost per unit of energy drawn from the input bus. Units: USD/MWh.",
+      "type": "number",
+      "x-unit": "USD/MWh"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "available",
+    "bus",
+    "output_ports",
+    "max_active_power",
+    "flow_limits"
+  ]
+}

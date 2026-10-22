@@ -67,6 +67,14 @@ COMPONENT = {
     "ofl_half": ("Core/common.json", "/$defs/OperationalFlowLimit", False),
     "line_with_ofl": ("Operations/Branch/Line.json", None, True),
     "line_without_ofl": ("Operations/Branch/Line.json", None, True),
+    "carrier_hydrogen": ("Core/Topology/Carrier.json", None, True),
+    "carrier_bus_hydrogen": ("Core/Topology/CarrierBus.json", None, True),
+    "link_electrolyser": ("Operations/SectorCoupling/Link.json", None, True),
+    "link_chp": ("Operations/SectorCoupling/Link.json", None, True),
+    "link_without_ports": ("Operations/SectorCoupling/Link.json", None, False),
+    "carrier_store_hydrogen": ("Operations/SectorCoupling/CarrierStore.json", None, True),
+    "carrier_demand_heat": ("Operations/SectorCoupling/CarrierDemand.json", None, True),
+    "carrier_supply_gas": ("Operations/SectorCoupling/CarrierSupply.json", None, True),
 }
 
 

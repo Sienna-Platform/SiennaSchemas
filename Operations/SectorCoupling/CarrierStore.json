@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CarrierStore",
+  "description": "Storage of carrier energy at a carrier bus, such as a hydrogen tank or a heat storage. It charges and discharges without a power limit of its own; a link limits the flow when needed.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component. Components of the same type must have unique names, but components of different types can share a name.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+      "type": "boolean"
+    },
+    "bus": {
+      "description": "ID of the carrier bus that this component is connected to.",
+      "type": "integer"
+    },
+    "storage_capacity": {
+      "description": "Maximum energy the store can hold. Units: per energy_units — MWH: MWh, MWMIN: MWmin .",
+      "type": "number",
+      "x-unit-discriminator": "energy_units",
+      "x-units": {
+        "MWH": "MWh",
+        "MWMIN": "MWmin"
+      }
+    },
+    "energy_units": {
+      "description": "Unit basis for `storage_capacity`. MWH is the default interchange form; MWMIN records the same energy on the minutes basis used by operational durations.",
+      "default": "MWH",
+      "$ref": "../../Core/common.json#/$defs/EnergyUnitBasis"
+    },
+    "storage_level_limits": {
+      "description": "Minimum and maximum storage levels as fractions of `storage_capacity`. Units: 1.",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit": "1",
+      "x-quantity": "Fraction"
+    },
+    "initial_storage_level": {
+      "description": "Initial storage level as a fraction of `storage_capacity`. Units: 1.",
+      "type": "number",
+      "x-unit": "1",
+      "x-quantity": "Fraction"
+    },
+    "cyclic": {
+      "description": "Whether the storage level at the end of the horizon must equal the initial level.",
+      "default": false,
+      "type": "boolean"
+    },
+    "self_discharge": {
+      "description": "Fraction of the stored energy lost per minute. Units: 1/min.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "1/min"
+    },
+    "variable_cost": {
+      "description": "Cost per unit of energy discharged from the store. Units: USD/MWh.",
+      "type": "number",
+      "x-unit": "USD/MWh"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "available",
+    "bus",
+    "storage_capacity",
+    "storage_level_limits",
+    "initial_storage_level"
+  ]
+}

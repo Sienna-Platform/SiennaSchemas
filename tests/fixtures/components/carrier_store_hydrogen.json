@@ -1,0 +1,15 @@
+{
+  "id": 31,
+  "name": "H2-TANK-1",
+  "available": true,
+  "bus": 11,
+  "storage_capacity": 400.0,
+  "energy_units": "MWH",
+  "storage_level_limits": {
+    "min": 0.05,
+    "max": 1.0
+  },
+  "initial_storage_level": 0.5,
+  "cyclic": true,
+  "self_discharge": 0.0
+}

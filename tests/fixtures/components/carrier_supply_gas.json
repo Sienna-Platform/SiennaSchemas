@@ -1,0 +1,12 @@
+{
+  "id": 51,
+  "name": "GAS-IMPORT-1",
+  "available": true,
+  "bus": 12,
+  "max_active_power": 500.0,
+  "flow_limits": {
+    "min": 0.0,
+    "max": 1.0
+  },
+  "variable_cost": 25.0
+}

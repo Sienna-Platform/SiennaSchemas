@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CarrierSupply",
+  "description": "A source of carrier energy at a carrier bus, such as a natural gas import point or a biomass supply.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component. Components of the same type must have unique names, but components of different types can share a name.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+      "type": "boolean"
+    },
+    "bus": {
+      "description": "ID of the carrier bus that this component is connected to.",
+      "type": "integer"
+    },
+    "max_active_power": {
+      "description": "Maximum energy flow that this supply delivers. Units: MW.",
+      "type": "number",
+      "x-unit": "MW"
+    },
+    "flow_limits": {
+      "description": "Minimum and maximum delivered flow as fractions of `max_active_power`. An attached time series can make the limits time-varying. Units: 1.",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit": "1",
+      "x-quantity": "Fraction"
+    },
+    "variable_cost": {
+      "description": "Cost per unit of energy delivered. Units: USD/MWh.",
+      "type": "number",
+      "x-unit": "USD/MWh"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "available",
+    "bus",
+    "max_active_power",
+    "flow_limits"
+  ]
+}
