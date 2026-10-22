@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
     "ACBusType": {
-      "description": "Classification of an AC bus for power flow, following the MATPOWER bus-type convention. `PQ` fixes the active and reactive injections and solves for voltage magnitude and angle; `PV` fixes active power and voltage magnitude and solves for reactive power and angle; `REF` names the reference for the system voltage angle; `SLACK` balances the system active and reactive mismatch and sets the reference angle; `ISOLATED` marks a bus not connected to the network.",
+      "description": "Classification of an AC bus for power flow, following the MATPOWER bus-type convention. `PQ` fixes the active and reactive injections and solves for voltage magnitude and angle, also at a bus with a `voltage_setpoint` that a droop or a reactive power limit stops it from reaching; `PV` fixes active power and holds the voltage magnitude at the bus `voltage_setpoint`, and solves for reactive power and angle; `REF` names the reference for the system voltage angle; `SLACK` balances the system active and reactive mismatch and sets the reference angle; `ISOLATED` marks a bus not connected to the network.",
       "enum": [
         "PQ",
         "PV",

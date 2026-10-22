@@ -19,17 +19,28 @@
       "type": "boolean"
     },
     "bustype": {
-      "description": "Used to describe the connectivity and behavior of this bus. in psy5 a required param with an option to be nothing",
+      "description": "Power flow classification of this bus. It sets which quantities the solve holds fixed. It does not record whether a device regulates the bus voltage: a `PQ` bus can have a `voltage_setpoint` that a voltage droop or a reactive power limit stops it from reaching.",
       "$ref": "../common.json#/$defs/ACBusType"
     },
     "angle": {
-      "description": "Angle of the bus. Units: rad.",
+      "description": "Solved voltage angle from the last power flow, or the start value for the next solve. Units: rad.",
       "type": "number",
       "x-unit": "rad"
     },
     "magnitude": {
-      "description": "Voltage as a multiple of `base_voltage`. Units: pu.",
+      "description": "Solved voltage magnitude from the last power flow, or the start value for the next solve, as a multiple of `base_voltage`. This is a result, not a control target; the target is `voltage_setpoint`. Units: pu.",
       "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Voltage",
+      "x-unit-base": "base_voltage"
+    },
+    "voltage_setpoint": {
+      "description": "Scheduled voltage magnitude for this bus, as a multiple of `base_voltage`. It is the target of every device that regulates this bus, at the bus or from a remote terminal. A `PV` bus holds this value; a `PQ` bus can have it and not reach it. `null` when no device regulates this bus. Units: pu.",
+      "$comment": "FACTSControlDevice.voltage_setpoint, TwoTerminalVSCLine.ac_voltage_setpoint_from and ac_voltage_setpoint_to, and InterconnectingConverter.ac_voltage_setpoint duplicate this target for the bus each device regulates. Remove them in a follow-up so that the regulated bus is the single source of the voltage target.",
+      "type": [
+        "number",
+        "null"
+      ],
       "x-unit": "pu",
       "x-quantity": "Voltage",
       "x-unit-base": "base_voltage"
