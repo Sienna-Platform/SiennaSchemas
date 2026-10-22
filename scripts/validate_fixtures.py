@@ -67,6 +67,7 @@ COMPONENT = {
     "ofl_half": ("Core/common.json", "/$defs/OperationalFlowLimit", False),
     "line_with_ofl": ("Operations/Branch/Line.json", None, True),
     "line_without_ofl": ("Operations/Branch/Line.json", None, True),
+    "area_with_interchange": ("Core/Topology/Area.json", None, True),
 }
 
 
