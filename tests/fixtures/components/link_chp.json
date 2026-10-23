@@ -13,9 +13,8 @@
       "efficiency": 0.45
     }
   ],
-  "max_active_power": 120.0,
-  "input_flow_limits": {
+  "input_active_power_limits": {
     "min": 0.0,
-    "max": 1.0
+    "max": 120.0
   }
 }

@@ -1,19 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "CarrierStore",
   "description": "Storage of carrier energy at a carrier bus, such as a hydrogen tank or a heat storage. It charges and discharges without a power limit of its own; a link limits the flow when needed.",
-  "type": "object",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Components of the same type must have unique names, but components of different types can share a name.",
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
-      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
@@ -40,7 +38,7 @@
       "x-unit": "1",
       "x-quantity": "Fraction"
     },
-    "initial_storage_level": {
+    "initial_storage_capacity_level": {
       "description": "Initial storage level as a fraction of `storage_capacity`. Units: 1.",
       "type": "number",
       "x-unit": "1",
@@ -52,10 +50,9 @@
       "type": "number",
       "x-unit": "1/min"
     },
-    "variable_cost": {
-      "description": "Cost per unit of energy discharged from the store. Units: USD/MWh.",
-      "type": "number",
-      "x-unit": "USD/MWh"
+    "operation_cost": {
+      "description": "Operating cost of the store. Any variable cost curve must use NATURAL_UNITS.",
+      "$ref": "../../Core/common.json#/$defs/StorageCost"
     }
   },
   "required": [
@@ -65,6 +62,8 @@
     "bus",
     "storage_capacity",
     "storage_level_limits",
-    "initial_storage_level"
-  ]
+    "initial_storage_capacity_level"
+  ],
+  "title": "CarrierStore",
+  "type": "object"
 }

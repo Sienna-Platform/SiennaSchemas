@@ -1,20 +1,20 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Carrier",
   "description": "An energy carrier, such as hydrogen, heat, or natural gas. Every flow of a carrier is recorded as energy flow; fuel carriers use the lower heating value. Carrier buses reference a carrier, and conversion links may reference one to label their technology. Emissions from consuming the carrier are recorded by an attached `EmissionsData` with basis `FUEL_INPUT`, on the lower heating value.",
-  "type": "object",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Components of the same type must have unique names, but components of different types can share a name.",
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     }
   },
   "required": [
     "id",
     "name"
-  ]
+  ],
+  "title": "Carrier",
+  "type": "object"
 }

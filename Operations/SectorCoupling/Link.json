@@ -1,27 +1,25 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Link",
   "description": "A conversion device that draws energy flow from one input bus and delivers it to one or more output buses, each at its own efficiency. Any port can connect to an electric bus or a carrier bus, so the link models electrolysers, heat pumps, combined heat and power units, and carrier pipelines.",
-  "type": "object",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Components of the same type must have unique names, but components of different types can share a name.",
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
-      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
-    },
-    "carrier": {
-      "description": "ID of a carrier that labels the technology of this link. Optional.",
-      "type": "integer"
     },
     "bus": {
       "description": "ID of the input bus that this link draws from. The bus can be an electric bus or a carrier bus.",
+      "type": "integer"
+    },
+    "carrier": {
+      "description": "ID of a carrier that labels the technology of this link. Optional.",
       "type": "integer"
     },
     "output_ports": {
@@ -32,21 +30,14 @@
         "$ref": "../../Core/common.json#/$defs/LinkPort"
       }
     },
-    "max_active_power": {
-      "description": "Maximum energy flow drawn from the input bus. Units: MW.",
-      "type": "number",
+    "input_active_power_limits": {
+      "description": "Minimum and maximum energy flow drawn from the input bus. A negative minimum allows flow in the reverse direction. Units: MW.",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "MW"
     },
-    "input_flow_limits": {
-      "description": "Minimum and maximum flow at the input bus as fractions of `max_active_power`. A negative minimum allows flow in the reverse direction. Units: 1.",
-      "$ref": "../../Core/common.json#/$defs/MinMax",
-      "x-unit": "1",
-      "x-quantity": "Fraction"
-    },
     "variable_cost": {
-      "description": "Cost per unit of energy drawn from the input bus. Units: USD/MWh.",
-      "type": "number",
-      "x-unit": "USD/MWh"
+      "description": "Variable cost of the energy flow drawn from the input bus. The curve's `power_units` must be NATURAL_UNITS.",
+      "$ref": "../../Core/common.json#/$defs/CostCurve"
     }
   },
   "required": [
@@ -55,7 +46,8 @@
     "available",
     "bus",
     "output_ports",
-    "max_active_power",
-    "input_flow_limits"
-  ]
+    "input_active_power_limits"
+  ],
+  "title": "Link",
+  "type": "object"
 }

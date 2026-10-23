@@ -1,19 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "CarrierDemand",
   "description": "A demand for carrier energy at a carrier bus, such as an industrial hydrogen offtake or a district heating load. A time series attached to this component gives the demand profile.",
-  "type": "object",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
       "type": "integer"
     },
     "name": {
-      "description": "Name of the component. Components of the same type must have unique names, but components of different types can share a name.",
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
       "type": "string"
     },
     "available": {
-      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
       "type": "boolean"
     },
     "bus": {
@@ -32,5 +30,7 @@
     "available",
     "bus",
     "max_active_power"
-  ]
+  ],
+  "title": "CarrierDemand",
+  "type": "object"
 }

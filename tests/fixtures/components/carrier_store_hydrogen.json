@@ -9,6 +9,32 @@
     "min": 0.05,
     "max": 1.0
   },
-  "initial_storage_level": 0.5,
-  "self_discharge": 0.0
+  "self_discharge": 0.0,
+  "initial_storage_capacity_level": 0.5,
+  "operation_cost": {
+    "cost_type": "STORAGE",
+    "fixed": 0.0,
+    "start_up": 0.0,
+    "shut_down": 0.0,
+    "discharge_variable_cost": {
+      "variable_cost_type": "COST",
+      "power_units": "NATURAL_UNITS",
+      "value_curve": {
+        "curve_type": "INPUT_OUTPUT",
+        "function_data": {
+          "function_type": "LINEAR",
+          "proportional_term": 0.5,
+          "constant_term": 0.0
+        }
+      },
+      "vom_cost": {
+        "curve_type": "INPUT_OUTPUT",
+        "function_data": {
+          "function_type": "LINEAR",
+          "proportional_term": 0.0,
+          "constant_term": 0.0
+        }
+      }
+    }
+  }
 }
