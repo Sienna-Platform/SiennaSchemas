@@ -72,16 +72,16 @@
       "x-quantity": "ReactivePower"
     },
     "dc_current": {
-      "description": "DC current on the converter. Units: A.",
+      "description": "DC current on the converter. Units: kA.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "A"
+      "x-unit": "kA"
     },
     "max_dc_current": {
-      "description": "Maximum stable dc current limits. Units: A.",
-      "default": 100000000.0,
+      "description": "Maximum stable dc current limits. 9999 means no limit. Units: kA.",
+      "default": 9999.0,
       "type": "number",
-      "x-unit": "A"
+      "x-unit": "kA"
     },
     "loss_function": {
       "description": "Linear or quadratic loss function with respect to the converter current.",

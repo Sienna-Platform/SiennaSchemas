@@ -46,10 +46,10 @@
       "x-quantity": "Conductance"
     },
     "dc_current": {
-      "description": "DC current on the converter flowing in the DC line, from `from` bus to `to` bus. Units: A.",
+      "description": "DC current on the converter flowing in the DC line, from `from` bus to `to` bus. Units: kA.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "A"
+      "x-unit": "kA"
     },
     "reactive_power_from": {
       "description": "Initial condition of reactive power flowing into the from-bus. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
@@ -132,10 +132,10 @@
       "$ref": "../../Core/common.json#/$defs/LossCurve"
     },
     "max_dc_current_from": {
-      "description": "Maximum stable dc current limits. Units: A.",
-      "default": 100000000.0,
+      "description": "Maximum stable dc current limits. 9999 means no limit. Units: kA.",
+      "default": 9999.0,
       "type": "number",
-      "x-unit": "A"
+      "x-unit": "kA"
     },
     "rating_from": {
       "description": "Converter rating in the `from` bus. Absent means the converter imposes no limit beyond `rating`. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
@@ -264,10 +264,10 @@
       "$ref": "../../Core/common.json#/$defs/LossCurve"
     },
     "max_dc_current_to": {
-      "description": "Maximum stable dc current limits. Units: A.",
-      "default": 100000000.0,
+      "description": "Maximum stable dc current limits. 9999 means no limit. Units: kA.",
+      "default": 9999.0,
       "type": "number",
-      "x-unit": "A"
+      "x-unit": "kA"
     },
     "rating_to": {
       "description": "Converter rating in the `to` bus. Absent means the converter imposes no limit beyond `rating`. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
