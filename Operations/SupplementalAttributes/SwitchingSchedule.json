@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SwitchingSchedule",
+  "description": "Supplemental attribute naming the time series that schedules the open or closed state of the switches it is attached to. Schedule values: 1 = closed, 0 = open.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "status_schedule": {
+      "type": "string",
+      "description": "Name of the time series, stored on this attribute, that carries the switch status schedule."
+    },
+    "identifier": {
+      "description": "Optional user-supplied identifier for the schedule, such as a name or a switching plan id. Null when not set.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "id",
+    "status_schedule"
+  ]
+}
