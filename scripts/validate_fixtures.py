@@ -71,6 +71,14 @@ COMPONENT = {
     "series_compensator_dispatchable": ("Operations/Branch/SeriesCompensator.json", None, True),
     "series_compensator_dispatchable_without_limits": ("Operations/Branch/SeriesCompensator.json", None, False),
     "series_compensator_power_flow_without_setpoint": ("Operations/Branch/SeriesCompensator.json", None, False),
+    "carrier_hydrogen": ("Core/Topology/Carrier.json", None, True),
+    "carrier_bus_hydrogen": ("Core/Topology/CarrierBus.json", None, True),
+    "link_electrolyser": ("Operations/SectorCoupling/Link.json", None, True),
+    "link_chp": ("Operations/SectorCoupling/Link.json", None, True),
+    "link_without_ports": ("Operations/SectorCoupling/Link.json", None, False),
+    "carrier_store_hydrogen": ("Operations/SectorCoupling/CarrierStore.json", None, True),
+    "carrier_demand_heat": ("Operations/SectorCoupling/CarrierDemand.json", None, True),
+    "carrier_supply_gas": ("Operations/SectorCoupling/CarrierSupply.json", None, True),
 }
 
 

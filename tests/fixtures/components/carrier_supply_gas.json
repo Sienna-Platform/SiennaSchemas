@@ -1,0 +1,30 @@
+{
+  "id": 51,
+  "name": "GAS-IMPORT-1",
+  "available": true,
+  "bus": 12,
+  "active_power_limits": {
+    "min": 0.0,
+    "max": 500.0
+  },
+  "variable_cost": {
+    "variable_cost_type": "COST",
+    "power_units": "NATURAL_UNITS",
+    "value_curve": {
+      "curve_type": "INPUT_OUTPUT",
+      "function_data": {
+        "function_type": "LINEAR",
+        "proportional_term": 25.0,
+        "constant_term": 0.0
+      }
+    },
+    "vom_cost": {
+      "curve_type": "INPUT_OUTPUT",
+      "function_data": {
+        "function_type": "LINEAR",
+        "proportional_term": 0.0,
+        "constant_term": 0.0
+      }
+    }
+  }
+}

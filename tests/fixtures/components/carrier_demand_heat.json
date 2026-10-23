@@ -1,0 +1,7 @@
+{
+  "id": 41,
+  "name": "DISTRICT-HEAT-1",
+  "available": true,
+  "bus": 13,
+  "max_active_power": 35.0
+}

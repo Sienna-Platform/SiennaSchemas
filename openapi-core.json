@@ -17,6 +17,12 @@
       "CapitalCost": {
         "$ref": "Core/common.json#/$defs/CapitalCost"
       },
+      "Carrier": {
+        "$ref": "Core/Topology/Carrier.json"
+      },
+      "CarrierBus": {
+        "$ref": "Core/Topology/CarrierBus.json"
+      },
       "ChargeDischarge": {
         "$ref": "Core/common.json#/$defs/ChargeDischarge"
       },
@@ -109,6 +115,9 @@
       },
       "InputOutputCurve": {
         "$ref": "Core/common.json#/$defs/InputOutputCurve"
+      },
+      "LinkPort": {
+        "$ref": "Core/common.json#/$defs/LinkPort"
       },
       "LoadCost": {
         "$ref": "Core/common.json#/$defs/LoadCost"
