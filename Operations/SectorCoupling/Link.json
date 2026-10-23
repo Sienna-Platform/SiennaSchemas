@@ -37,7 +37,7 @@
       "type": "number",
       "x-unit": "MW"
     },
-    "flow_limits": {
+    "input_flow_limits": {
       "description": "Minimum and maximum flow at the input bus as fractions of `max_active_power`. A negative minimum allows flow in the reverse direction. Units: 1.",
       "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "1",
@@ -56,6 +56,6 @@
     "bus",
     "output_ports",
     "max_active_power",
-    "flow_limits"
+    "input_flow_limits"
   ]
 }

@@ -46,11 +46,6 @@
       "x-unit": "1",
       "x-quantity": "Fraction"
     },
-    "cyclic": {
-      "description": "Whether the storage level at the end of the horizon must equal the initial level.",
-      "default": false,
-      "type": "boolean"
-    },
     "self_discharge": {
       "description": "Fraction of the stored energy lost per minute. Units: 1/min.",
       "default": 0.0,

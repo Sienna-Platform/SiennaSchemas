@@ -14,7 +14,7 @@
     }
   ],
   "max_active_power": 120.0,
-  "flow_limits": {
+  "input_flow_limits": {
     "min": 0.0,
     "max": 1.0
   }
