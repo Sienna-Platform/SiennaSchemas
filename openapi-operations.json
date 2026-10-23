@@ -29,6 +29,9 @@
       "DiscreteControlledACBranch": {
         "$ref": "Operations/Branch/DiscreteControlledACBranch.json"
       },
+      "SeriesCompensator": {
+        "$ref": "Operations/Branch/SeriesCompensator.json"
+      },
       "EnergyReservoirStorage": {
         "$ref": "Operations/StaticInjection/EnergyReservoirStorage.json"
       },
@@ -208,6 +211,9 @@
       },
       "SwitchedAdmittanceControlMode": {
         "$ref": "Operations/common.json#/$defs/SwitchedAdmittanceControlMode"
+      },
+      "SeriesCompensatorControlMode": {
+        "$ref": "Operations/common.json#/$defs/SeriesCompensatorControlMode"
       },
       "ReserveDirection": {
         "$ref": "Operations/common.json#/$defs/ReserveDirection"

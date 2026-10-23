@@ -56,6 +56,17 @@
       "title": "SwitchedAdmittanceControlMode",
       "type": "string"
     },
+    "SeriesCompensatorControlMode": {
+      "description": "Control mode of a series compensator. `FIXED` holds the series impedance constant (a series capacitor; PSS/E FACTS MODE 3). `BYPASSED` shorts the compensator into a zero-impedance tie (PSS/E FACTS MODE 2). `DISPATCHABLE` makes the series reactance a decision within `reactance_limits`. `ACTIVE_POWER_FLOW` sets the series reactance to hold `active_power_flow_setpoint`.",
+      "enum": [
+        "FIXED",
+        "BYPASSED",
+        "DISPATCHABLE",
+        "ACTIVE_POWER_FLOW"
+      ],
+      "title": "SeriesCompensatorControlMode",
+      "type": "string"
+    },
     "CombinedCycleConfiguration": {
       "description": "Shaft and turbine arrangement of a combined cycle plant: a single shaft carrying one combustion and one steam turbine, separate shafts for the two, two or three combustion turbines feeding one steam turbine, or `Other` for any arrangement outside these.",
       "enum": [
