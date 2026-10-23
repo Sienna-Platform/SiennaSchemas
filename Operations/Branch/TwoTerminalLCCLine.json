@@ -48,12 +48,12 @@
       "x-quantity": "ActivePower"
     },
     "current_transfer_setpoint": {
-      "description": "Scheduled current transfer, used when `control_mode` is `CURRENT`; `null` otherwise. Units: A.",
+      "description": "Scheduled current transfer, used when `control_mode` is `CURRENT`; `null` otherwise. Units: kA.",
       "type": [
         "number",
         "null"
       ],
-      "x-unit": "A"
+      "x-unit": "kA"
     },
     "scheduled_dc_voltage": {
       "description": "Scheduled compounded DC voltage. By default this parameter is the scheduled DC voltage in the inverter bus. Units: kV.",

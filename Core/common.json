@@ -14,7 +14,7 @@
       "type": "string"
     },
     "AverageRateCurve": {
-      "description": "A curve whose y values are the average rate `f(x)/x` at production level `x` — total cost or fuel divided by output, the form heat rate tables use when they report MBTU/MWh against MW. `initial_input` records the total input at the minimum production point and is what makes conversion to an `InputOutputCurve` possible. Use `IncrementalCurve` when the data gives marginal rather than average rates.",
+      "description": "A curve whose y values are the average rate `f(x)/x` at production level `x` — total cost or fuel divided by output, the form heat rate tables use when they report MMBtu/MWh against MW. `initial_input` records the total input at the minimum production point and is what makes conversion to an `InputOutputCurve` possible. Use `IncrementalCurve` when the data gives marginal rather than average rates.",
       "properties": {
         "curve_type": {
           "const": "AVERAGE_RATE",
@@ -234,14 +234,14 @@
       "type": "object"
     },
     "FuelCurve": {
-      "description": "Variable operation cost of a device expressed in fuel consumed — MBTU, liters, m^3 — together with the price that converts fuel to currency. Wraps a `ValueCurve` in input-output, incremental, or average-rate form; exactly one of `fuel_cost` and `fuel_cost_time_series` supplies the price.",
+      "description": "Variable operation cost of a device expressed in fuel consumed, in the fuel quantity `fuel_units` names, together with the price that converts fuel to currency. Wraps a `ValueCurve` in input-output, incremental, or average-rate form, whose y axis is fuel per hour; exactly one of `fuel_cost` and `fuel_cost_time_series` supplies the price.",
       "properties": {
         "fuel_cost": {
           "type": [
             "number",
             "null"
           ],
-          "description": "Fixed fuel cost per unit of fuel, or null when fuel_cost_time_series names a time-varying one. Exactly one of the two is set; producers and consumers enforce it."
+          "description": "Fixed fuel cost in USD per one `fuel_units` of fuel, or null when fuel_cost_time_series names a time-varying one. Exactly one of the two is set; producers and consumers enforce it."
         },
         "fuel_cost_time_series": {
           "type": [
@@ -250,11 +250,15 @@
           ],
           "description": "Store-minted id of the fuel-cost time series association, or null when fuel_cost carries a fixed value. Exactly one of the two is set."
         },
+        "fuel_units": {
+          "description": "The fuel quantity the curve's y axis counts (per hour) and `fuel_cost` is priced per. No default: an unstated fuel unit is ambiguous.",
+          "$ref": "#/$defs/FuelUnit"
+        },
         "power_units": {
           "$ref": "#/$defs/UnitSystem"
         },
         "startup_fuel_offtake": {
-          "description": "Fuel consumed during startup, as a curve in the unit's fuel units.",
+          "description": "Fuel consumed during startup, as a curve in `fuel_units`.",
           "$ref": "#/$defs/InputOutputCurve"
         },
         "value_curve": {
@@ -272,11 +276,21 @@
       "required": [
         "value_curve",
         "power_units",
+        "fuel_units",
         "vom_cost",
         "variable_cost_type"
       ],
       "title": "FuelCurve",
       "type": "object"
+    },
+    "FuelUnit": {
+      "description": "Fuel quantity a `FuelCurve` is expressed in: `MMBTU` (million British thermal units) or `GJ` (gigajoules) of heat content.",
+      "enum": [
+        "MMBTU",
+        "GJ"
+      ],
+      "title": "FuelUnit",
+      "type": "string"
     },
     "FunctionData": {
       "description": "Raw mathematical data defining a function `f(x)` — coefficients or point tables with no units or interpretation attached. `function_type` selects the shape: linear, quadratic, piecewise linear through (x, y) points, or piecewise constant between x endpoints. What `x` and `y` stand for is supplied by whatever wraps this, and the `TIME_SERIES_*` variants hold a reference to a stored series in place of the numbers.",
@@ -727,7 +741,7 @@
       "type": "object"
     },
     "LossCurve": {
-      "description": "Losses of a device as a function of the flow through it, together with the power basis the curve is expressed in. `power_units` governs BOTH axes: a loss curve's y values are power in the same base as its x values, so a change of base rescales both. This is what separates it from a cost curve, whose y axis is currency and so rides through a change of base untouched. Units: both axes per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "description": "Losses of a device as a function of the power flow through it, together with the power basis the curve is expressed in. A loss driven by current instead is a `CurrentLossCurve`. `power_units` governs BOTH axes: a loss curve's y values are power in the same base as its x values, so a change of base rescales both. This is what separates it from a cost curve, whose y axis is currency and so rides through a change of base untouched. Units: both axes per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "properties": {
         "power_units": {
           "default": "NATURAL_UNITS",
@@ -745,6 +759,28 @@
       "type": "object",
       "x-curve-axes": {
         "x": "ActivePower",
+        "y": "ActivePower"
+      }
+    },
+    "CurrentLossCurve": {
+      "description": "Losses of a device as a function of the current through it (a converter's DC current), together with the basis the curve is expressed in. `power_units` governs both axes: the y values are power and the x values current, each per-unit on the component's base (current's base being base power over base voltage) or natural. Units: x-axis per power_units — NATURAL_UNITS: kA, COMPONENT_BASE: pu ; y-axis per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "properties": {
+        "power_units": {
+          "default": "NATURAL_UNITS",
+          "$ref": "#/$defs/UnitSystem"
+        },
+        "value_curve": {
+          "$ref": "#/$defs/LossValueCurve"
+        }
+      },
+      "required": [
+        "value_curve",
+        "power_units"
+      ],
+      "title": "CurrentLossCurve",
+      "type": "object",
+      "x-curve-axes": {
+        "x": "CurrentFlow",
         "y": "ActivePower"
       }
     },

@@ -1,0 +1,18 @@
+{
+  "id": 1,
+  "name": "ANCOA-CS1",
+  "available": true,
+  "active_power_flow": 0.0,
+  "reactive_power_flow": 0.0,
+  "arc": 1,
+  "r": 0.0,
+  "x": -0.0125,
+  "rating": 1700.0,
+  "base_power": 100.0,
+  "power_units": "NATURAL_UNITS",
+  "control_mode": "DISPATCHABLE",
+  "reactance_limits": {
+    "min": -0.02,
+    "max": 0.0
+  }
+}

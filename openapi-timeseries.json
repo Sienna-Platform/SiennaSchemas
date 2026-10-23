@@ -47,6 +47,9 @@
       "TimeReference": {
         "$ref": "TimeSeries/common.json#/$defs/TimeReference"
       },
+      "IntervalAlignment": {
+        "$ref": "TimeSeries/common.json#/$defs/IntervalAlignment"
+      },
       "UnitSystem": {
         "$ref": "Core/common.json#/$defs/UnitSystem"
       }

@@ -86,6 +86,9 @@
       "FuelCurve": {
         "$ref": "Core/common.json#/$defs/FuelCurve"
       },
+      "FuelUnit": {
+        "$ref": "Core/common.json#/$defs/FuelUnit"
+      },
       "FunctionData": {
         "$ref": "Core/common.json#/$defs/FunctionData"
       },
