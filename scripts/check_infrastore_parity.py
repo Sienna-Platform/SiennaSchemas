@@ -55,6 +55,8 @@ ALLOWED_SCHEMA_ONLY = {
     # so there is no column to match. It travels because a forecast's layout is
     # a producer convention and cannot be rebuilt from horizon/count.
     "array_shape",
+    # The catalog has no column for it yet. Remove this entry when the column lands.
+    "interval_alignment",
 }
 
 # Present in infrastore's catalog, absent here -- each deliberate.

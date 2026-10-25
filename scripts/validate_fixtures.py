@@ -69,6 +69,10 @@ COMPONENT = {
     "line_without_ofl": ("Operations/Branch/Line.json", None, True),
     "area_with_interchange": ("Core/Topology/Area.json", None, True),
     "area_null_interchange": ("Core/Topology/Area.json", None, True),
+    "series_compensator_fixed": ("Operations/Branch/SeriesCompensator.json", None, True),
+    "series_compensator_dispatchable": ("Operations/Branch/SeriesCompensator.json", None, True),
+    "series_compensator_dispatchable_without_limits": ("Operations/Branch/SeriesCompensator.json", None, False),
+    "series_compensator_power_flow_without_setpoint": ("Operations/Branch/SeriesCompensator.json", None, False),
 }
 
 

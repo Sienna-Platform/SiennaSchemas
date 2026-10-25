@@ -29,6 +29,9 @@
       "DiscreteControlledACBranch": {
         "$ref": "Operations/Branch/DiscreteControlledACBranch.json"
       },
+      "SeriesCompensator": {
+        "$ref": "Operations/Branch/SeriesCompensator.json"
+      },
       "EnergyReservoirStorage": {
         "$ref": "Operations/StaticInjection/EnergyReservoirStorage.json"
       },
@@ -209,6 +212,9 @@
       "SwitchedAdmittanceControlMode": {
         "$ref": "Operations/common.json#/$defs/SwitchedAdmittanceControlMode"
       },
+      "SeriesCompensatorControlMode": {
+        "$ref": "Operations/common.json#/$defs/SeriesCompensatorControlMode"
+      },
       "ReserveDirection": {
         "$ref": "Operations/common.json#/$defs/ReserveDirection"
       },
@@ -260,6 +266,9 @@
       "CostCurve": {
         "$ref": "Core/common.json#/$defs/CostCurve"
       },
+      "CurrentLossCurve": {
+        "$ref": "Core/common.json#/$defs/CurrentLossCurve"
+      },
       "CurveMultiStep": {
         "$ref": "Core/common.json#/$defs/CurveMultiStep"
       },
@@ -277,6 +286,9 @@
       },
       "FuelCurve": {
         "$ref": "Core/common.json#/$defs/FuelCurve"
+      },
+      "FuelUnit": {
+        "$ref": "Core/common.json#/$defs/FuelUnit"
       },
       "FunctionData": {
         "$ref": "Core/common.json#/$defs/FunctionData"
