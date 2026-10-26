@@ -143,6 +143,9 @@
       "SwitchedAdmittance": {
         "$ref": "Operations/StaticInjection/SwitchedAdmittance.json"
       },
+      "SwitchingSchedule": {
+        "$ref": "Operations/SupplementalAttributes/SwitchingSchedule.json"
+      },
       "SynchronousCondenser": {
         "$ref": "Operations/StaticInjection/SynchronousCondenser.json"
       },

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Supplemental attribute describing outages that are scheduled in advance, naming the time series that carries the schedule.",
+  "description": "Supplemental attribute describing outages that are scheduled in advance, naming the time series that carries the schedule. Schedule values: 1 = out of service, 0 = in service.",
   "title": "PlannedOutage",
   "type": "object",
   "properties": {
@@ -9,15 +9,6 @@
     },
     "outage_schedule": {
       "type": "string"
-    },
-    "monitored_components": {
-      "type": "array",
-      "items": {
-        "type": "integer"
-      },
-      "uniqueItems": true,
-      "default": [],
-      "description": "IDs of devices whose post-contingency state should be modeled when this outage occurs. Empty by default; semantics of an empty list are decided by the downstream consumer."
     },
     "identifier": {
       "description": "Optional user-supplied identifier for the outage, such as a name or a block id. Null when not set.",
