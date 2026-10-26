@@ -215,8 +215,8 @@
       "UnitSystem": {
         "$ref": "Core/common.json#/$defs/UnitSystem"
       },
-      "XY_Coords": {
-        "$ref": "Core/common.json#/$defs/XY_Coords"
+      "TwoDimensionalFunctionPoint": {
+        "$ref": "Core/common.json#/$defs/TwoDimensionalFunctionPoint"
       }
     }
   }

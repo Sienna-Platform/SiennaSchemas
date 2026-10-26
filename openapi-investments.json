@@ -185,8 +185,8 @@
       "ValueCurve": {
         "$ref": "Core/common.json#/$defs/ValueCurve"
       },
-      "XY_Coords": {
-        "$ref": "Core/common.json#/$defs/XY_Coords"
+      "TwoDimensionalFunctionPoint": {
+        "$ref": "Core/common.json#/$defs/TwoDimensionalFunctionPoint"
       }
     }
   }
