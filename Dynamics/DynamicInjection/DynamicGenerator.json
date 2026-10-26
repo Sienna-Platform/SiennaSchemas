@@ -13,9 +13,10 @@
       "type": "string"
     },
     "omega_ref": {
-      "description": "Frequency reference set-point, per unit of the system frequency.",
-      "default": 1.0,
-      "type": "number"
+      "description": "Frequency reference set-point, in natural units. Usually equal to the system frequency. Units: Hz.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "Hz"
     },
     "synchronous_machine_dynamics": {
       "description": "ID of the SynchronousMachineDynamics function block: the machine model for the electromagnetic dynamics.",
@@ -47,6 +48,7 @@
   "required": [
     "id",
     "name",
+    "omega_ref",
     "synchronous_machine_dynamics",
     "shaft",
     "excitation_system_dynamics",

@@ -30,7 +30,7 @@
       {
         "id": 3,
         "name": "unit1",
-        "omega_ref": 1.0,
+        "omega_ref": 60.0,
         "synchronous_machine_dynamics": 4,
         "shaft": 5,
         "excitation_system_dynamics": 6,

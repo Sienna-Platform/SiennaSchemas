@@ -181,7 +181,7 @@ def check_dynamics(validator, failures):
         for ident, kind in models.values():
             rows(doc, kind).append({"id": ident, "base_power": 100.0, **params[kind]})
         rows(doc, "DynamicInverter").append(
-            {"id": 20, "name": "ibr1", "base_power": 100.0, "current_limitation": None,
+            {"id": 20, "name": "ibr1", "omega_ref": 60.0, "base_power": 100.0, "current_limitation": None,
              **{prop: ident for prop, (ident, _) in models.items()}})
         rows(doc, "SwitchedAdmittance").append(
             {**static(doc), "id": 19, "name": "ibr1", "dynamic_injector": 20})
@@ -194,6 +194,7 @@ def check_dynamics(validator, failures):
         "name absent": (lambda d: gen(d).pop("name"), False),
         "model base_power absent": (lambda d: rows(d, "AVRFixed")[0].pop("base_power"), False),
         "wrapper with an unknown property": (lambda d: gen(d).update(Ka=1.0), False),
+        "omega_ref absent": (lambda d: gen(d).pop("omega_ref"), False),
         "dynamic inverter": (add_inverter, True),
         "inverter with a current_limitation reference": (
             lambda d: (add_inverter(d), inv(d).update(current_limitation=28),
