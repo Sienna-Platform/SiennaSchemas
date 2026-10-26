@@ -65,7 +65,6 @@ vocabulary or components that do not exist yet.
 
 ## Known deferred items
 
-- Dynamics component schemas.
 - Neither codegen toolchain renders the `x-unit` vendor extension;
   the `Units:` description sentences carry units to generated code meanwhile.
 - SiennaGridDB tables for `GenericArcImpedance`, `TransmissionInterface`, and

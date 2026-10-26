@@ -33,13 +33,13 @@
         "$ref": "Dynamics/DynamicInverterComponent/Filter/RLFilter.json"
       },
       "FixedFrequency": {
-        "$ref": "Dynamics/DynamicInverterComponent/FrequencyEstimator/FixedFrequency.json"
+        "$ref": "Dynamics/DynamicInverterComponent/ReferenceFrameRotation/FixedFrequency.json"
       },
       "KauraPLL": {
-        "$ref": "Dynamics/DynamicInverterComponent/FrequencyEstimator/KauraPLL.json"
+        "$ref": "Dynamics/DynamicInverterComponent/ReferenceFrameRotation/KauraPLL.json"
       },
       "ReducedOrderPLL": {
-        "$ref": "Dynamics/DynamicInverterComponent/FrequencyEstimator/ReducedOrderPLL.json"
+        "$ref": "Dynamics/DynamicInverterComponent/ReferenceFrameRotation/ReducedOrderPLL.json"
       },
       "CurrentModeControl": {
         "$ref": "Dynamics/DynamicInverterComponent/InnerControl/CurrentModeControl.json"
@@ -51,178 +51,178 @@
         "$ref": "Dynamics/DynamicInverterComponent/InnerControl/VoltageModeControl.json"
       },
       "ActivePowerDroop": {
-        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ActivePowerDroop.json"
+        "$ref": "Dynamics/DynamicInverterComponent/ActivePowerControl/ActivePowerDroop.json"
       },
       "ActivePowerPI": {
-        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ActivePowerPI.json"
+        "$ref": "Dynamics/DynamicInverterComponent/ActivePowerControl/ActivePowerPI.json"
       },
       "ActiveRenewableControllerAB": {
-        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ActiveRenewableControllerAB.json"
+        "$ref": "Dynamics/DynamicInverterComponent/ActivePowerControl/ActiveRenewableControllerAB.json"
       },
       "ActiveVirtualOscillator": {
-        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ActiveVirtualOscillator.json"
+        "$ref": "Dynamics/DynamicInverterComponent/ActivePowerControl/ActiveVirtualOscillator.json"
       },
       "ReactivePowerDroop": {
-        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ReactivePowerDroop.json"
+        "$ref": "Dynamics/DynamicInverterComponent/ReactivePowerControl/ReactivePowerDroop.json"
       },
       "ReactivePowerPI": {
-        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ReactivePowerPI.json"
+        "$ref": "Dynamics/DynamicInverterComponent/ReactivePowerControl/ReactivePowerPI.json"
       },
       "ReactiveRenewableControllerAB": {
-        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ReactiveRenewableControllerAB.json"
+        "$ref": "Dynamics/DynamicInverterComponent/ReactivePowerControl/ReactiveRenewableControllerAB.json"
       },
       "ReactiveVirtualOscillator": {
-        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/ReactiveVirtualOscillator.json"
+        "$ref": "Dynamics/DynamicInverterComponent/ReactivePowerControl/ReactiveVirtualOscillator.json"
       },
       "VirtualInertia": {
-        "$ref": "Dynamics/DynamicInverterComponent/OuterControl/VirtualInertia.json"
+        "$ref": "Dynamics/DynamicInverterComponent/ActivePowerControl/VirtualInertia.json"
       },
       "HybridOutputCurrentLimiter": {
-        "$ref": "Dynamics/DynamicInverterComponent/OutputCurrentLimiter/HybridOutputCurrentLimiter.json"
+        "$ref": "Dynamics/DynamicInverterComponent/CurrentLimitation/HybridOutputCurrentLimiter.json"
       },
       "InstantaneousOutputCurrentLimiter": {
-        "$ref": "Dynamics/DynamicInverterComponent/OutputCurrentLimiter/InstantaneousOutputCurrentLimiter.json"
+        "$ref": "Dynamics/DynamicInverterComponent/CurrentLimitation/InstantaneousOutputCurrentLimiter.json"
       },
       "MagnitudeOutputCurrentLimiter": {
-        "$ref": "Dynamics/DynamicInverterComponent/OutputCurrentLimiter/MagnitudeOutputCurrentLimiter.json"
+        "$ref": "Dynamics/DynamicInverterComponent/CurrentLimitation/MagnitudeOutputCurrentLimiter.json"
       },
       "PriorityOutputCurrentLimiter": {
-        "$ref": "Dynamics/DynamicInverterComponent/OutputCurrentLimiter/PriorityOutputCurrentLimiter.json"
+        "$ref": "Dynamics/DynamicInverterComponent/CurrentLimitation/PriorityOutputCurrentLimiter.json"
       },
       "SaturationOutputCurrentLimiter": {
-        "$ref": "Dynamics/DynamicInverterComponent/OutputCurrentLimiter/SaturationOutputCurrentLimiter.json"
+        "$ref": "Dynamics/DynamicInverterComponent/CurrentLimitation/SaturationOutputCurrentLimiter.json"
       },
       "AVRFixed": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/AVRFixed.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/AVRFixed.json"
       },
       "AVRSimple": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/AVRSimple.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/AVRSimple.json"
       },
       "AVRTypeI": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/AVRTypeI.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/AVRTypeI.json"
       },
       "AVRTypeII": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/AVRTypeII.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/AVRTypeII.json"
       },
       "ESAC1A": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ESAC1A.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/ESAC1A.json"
       },
       "ESAC6A": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ESAC6A.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/ESAC6A.json"
       },
       "ESAC8B": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ESAC8B.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/ESAC8B.json"
       },
       "ESDC1A": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ESDC1A.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/ESDC1A.json"
       },
       "ESDC2A": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ESDC2A.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/ESDC2A.json"
       },
       "ESST1A": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ESST1A.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/ESST1A.json"
       },
       "ESST4B": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ESST4B.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/ESST4B.json"
       },
       "EX4VSA": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/EX4VSA.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/EX4VSA.json"
       },
       "EXAC1": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/EXAC1.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/EXAC1.json"
       },
       "EXAC1A": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/EXAC1A.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/EXAC1A.json"
       },
       "EXAC2": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/EXAC2.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/EXAC2.json"
       },
       "EXPIC1": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/EXPIC1.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/EXPIC1.json"
       },
       "EXST1": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/EXST1.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/EXST1.json"
       },
       "IEEET1": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/IEEET1.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/IEEET1.json"
       },
       "SCRX": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/SCRX.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/SCRX.json"
       },
       "SEXS": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/SEXS.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/SEXS.json"
       },
       "ST6B": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ST6B.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/ST6B.json"
       },
       "ST8C": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/AVR/ST8C.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics/ST8C.json"
       },
       "AndersonFouadMachine": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/AndersonFouadMachine.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/AndersonFouadMachine.json"
       },
       "BaseMachine": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/BaseMachine.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/BaseMachine.json"
       },
       "FullMachine": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/FullMachine.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/FullMachine.json"
       },
       "MarconatoMachine": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/MarconatoMachine.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/MarconatoMachine.json"
       },
       "OneDOneQMachine": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/OneDOneQMachine.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/OneDOneQMachine.json"
       },
       "RoundRotorExponential": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/RoundRotorExponential.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/RoundRotorExponential.json"
       },
       "RoundRotorMachine": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/RoundRotorMachine.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/RoundRotorMachine.json"
       },
       "RoundRotorQuadratic": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/RoundRotorQuadratic.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/RoundRotorQuadratic.json"
       },
       "SalientPoleExponential": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/SalientPoleExponential.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/SalientPoleExponential.json"
       },
       "SalientPoleMachine": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/SalientPoleMachine.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/SalientPoleMachine.json"
       },
       "SalientPoleQuadratic": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/SalientPoleQuadratic.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/SalientPoleQuadratic.json"
       },
       "SauerPaiMachine": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/SauerPaiMachine.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/SauerPaiMachine.json"
       },
       "SimpleAFMachine": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/SimpleAFMachine.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/SimpleAFMachine.json"
       },
       "SimpleFullMachine": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/SimpleFullMachine.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/SimpleFullMachine.json"
       },
       "SimpleMarconatoMachine": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/Machine/SimpleMarconatoMachine.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics/SimpleMarconatoMachine.json"
       },
       "IEEEST": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/PSS/IEEEST.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/PowerSystemStabilizerDynamics/IEEEST.json"
       },
       "PSS2A": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/PSS/PSS2A.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/PowerSystemStabilizerDynamics/PSS2A.json"
       },
       "PSS2B": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/PSS/PSS2B.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/PowerSystemStabilizerDynamics/PSS2B.json"
       },
       "PSS2C": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/PSS/PSS2C.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/PowerSystemStabilizerDynamics/PSS2C.json"
       },
       "PSSFixed": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/PSS/PSSFixed.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/PowerSystemStabilizerDynamics/PSSFixed.json"
       },
       "PSSSimple": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/PSS/PSSSimple.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/PowerSystemStabilizerDynamics/PSSSimple.json"
       },
       "STAB1": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/PSS/STAB1.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/PowerSystemStabilizerDynamics/STAB1.json"
       },
       "FiveMassShaft": {
         "$ref": "Dynamics/DynamicGeneratorComponent/Shaft/FiveMassShaft.json"
@@ -231,43 +231,43 @@
         "$ref": "Dynamics/DynamicGeneratorComponent/Shaft/SingleMass.json"
       },
       "DEGOV": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/DEGOV.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGovernorDynamics/DEGOV.json"
       },
       "DEGOV1": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/DEGOV1.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGovernorDynamics/DEGOV1.json"
       },
       "GasTG": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/GasTG.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGovernorDynamics/GasTG.json"
       },
       "GeneralGovModel": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/GeneralGovModel.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGovernorDynamics/GeneralGovModel.json"
       },
       "HydroTurbineGov": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/HydroTurbineGov.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGovernorDynamics/HydroTurbineGov.json"
       },
       "IEEETurbineGov1": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/IEEETurbineGov1.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGovernorDynamics/IEEETurbineGov1.json"
       },
       "PIDGOV": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/PIDGOV.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGovernorDynamics/PIDGOV.json"
       },
       "SteamTurbineGov1": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/SteamTurbineGov1.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGovernorDynamics/SteamTurbineGov1.json"
       },
       "TGFixed": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/TGFixed.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGovernorDynamics/TGFixed.json"
       },
       "TGSimple": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/TGSimple.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGovernorDynamics/TGSimple.json"
       },
       "TGTypeI": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/TGTypeI.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGovernorDynamics/TGTypeI.json"
       },
       "TGTypeII": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/TGTypeII.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGovernorDynamics/TGTypeII.json"
       },
       "WPIDHY": {
-        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGov/WPIDHY.json"
+        "$ref": "Dynamics/DynamicGeneratorComponent/TurbineGovernorDynamics/WPIDHY.json"
       },
       "DbdPnts": {
         "$ref": "Core/common.json#/$defs/DbdPnts"
@@ -280,6 +280,12 @@
       },
       "UpDown": {
         "$ref": "Core/common.json#/$defs/UpDown"
+      },
+      "DynamicGenerator": {
+        "$ref": "Dynamics/DynamicInjection/DynamicGenerator.json"
+      },
+      "DynamicInverter": {
+        "$ref": "Dynamics/DynamicInjection/DynamicInverter.json"
       }
     }
   }

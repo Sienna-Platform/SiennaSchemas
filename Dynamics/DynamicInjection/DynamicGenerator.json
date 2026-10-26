@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DynamicGenerator",
+  "description": "Dynamic response model of a synchronous generator. It names five function blocks by id: a machine, a shaft, an AVR, a turbine governor, and a PSS. It has no bus of its own: exactly one static injection device, with the same name, names it in its `dynamic_injector` property, and that device supplies the rest of the generator's data.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the dynamic injection. Must equal the name of the static injection device that names it in `dynamic_injector`.",
+      "type": "string"
+    },
+    "omega_ref": {
+      "description": "Frequency reference set-point, per unit of the system frequency.",
+      "default": 1.0,
+      "type": "number"
+    },
+    "synchronous_machine_dynamics": {
+      "description": "ID of the SynchronousMachineDynamics function block: the machine model for the electromagnetic dynamics.",
+      "type": "integer"
+    },
+    "shaft": {
+      "description": "ID of the Shaft function block: the shaft model for the electromechanical dynamics.",
+      "type": "integer"
+    },
+    "excitation_system_dynamics": {
+      "description": "ID of the ExcitationSystemDynamics function block: the excitation system model.",
+      "type": "integer"
+    },
+    "turbine_governor_dynamics": {
+      "description": "ID of the TurbineGovernorDynamics function block: the prime mover and turbine governor model.",
+      "type": "integer"
+    },
+    "power_system_stabilizer_dynamics": {
+      "description": "ID of the PowerSystemStabilizerDynamics function block: the power system stabilizer model.",
+      "type": "integer"
+    },
+    "base_power": {
+      "description": "Base power for the per-unit parameters of the referenced function blocks. Usually equal to the `base_power` of the static injection device that names this model. Units: MVA.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "MVA"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "synchronous_machine_dynamics",
+    "shaft",
+    "excitation_system_dynamics",
+    "turbine_governor_dynamics",
+    "power_system_stabilizer_dynamics",
+    "base_power"
+  ]
+}

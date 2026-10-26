@@ -22,7 +22,8 @@ Strictness rules:
   ``supplemental_attributes`` items become ``anyOf`` over the release's
   attribute schemas.
 * Which schemas are components or attributes follows the source directory, as
-  below. Dynamics schemas appear in neither document. A whole-file selector
+  below. Dynamic injections and the function blocks they name by id are
+  SystemDocument components. A whole-file selector
   entry of a document's domains that the bundle does not reach fails the
   build, so a new directory cannot drop its types without an error.
 
@@ -60,9 +61,23 @@ DRAFT = "http://json-schema.org/draft-07/schema#"
 DOCUMENTS = {
     "SystemDocument": (
         "Core/SystemDocument.json",
-        ["infrastructure-core", "core", "operations", "timeseries"],
+        ["infrastructure-core", "core", "operations", "dynamics", "timeseries"],
         [
             "Core/Topology",
+            "Dynamics/DynamicInjection",
+            "Dynamics/DynamicGeneratorComponent/ExcitationSystemDynamics",
+            "Dynamics/DynamicGeneratorComponent/PowerSystemStabilizerDynamics",
+            "Dynamics/DynamicGeneratorComponent/Shaft",
+            "Dynamics/DynamicGeneratorComponent/SynchronousMachineDynamics",
+            "Dynamics/DynamicGeneratorComponent/TurbineGovernorDynamics",
+            "Dynamics/DynamicInverterComponent/ActivePowerControl",
+            "Dynamics/DynamicInverterComponent/Converter",
+            "Dynamics/DynamicInverterComponent/CurrentLimitation",
+            "Dynamics/DynamicInverterComponent/DCSource",
+            "Dynamics/DynamicInverterComponent/Filter",
+            "Dynamics/DynamicInverterComponent/InnerControl",
+            "Dynamics/DynamicInverterComponent/ReactivePowerControl",
+            "Dynamics/DynamicInverterComponent/ReferenceFrameRotation",
             "Operations/Branch",
             "Operations/Market",
             "Operations/Service",

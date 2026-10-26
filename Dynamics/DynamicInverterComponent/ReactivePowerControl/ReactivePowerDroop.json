@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "base_power": {
+      "description": "Base power for this model's per-unit parameters. Usually equal to the `base_power` of the dynamic injection that names this model; the ingestion layer reconciles a difference. Units: MVA.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "MVA"
+    },
+    "kq": {
+      "type": "number"
+    },
+    "omegaf": {
+      "type": "number"
+    },
+    "V_ref": {
+      "type": "number",
+      "default": 1.0
+    }
+  },
+  "required": [
+    "id",
+    "base_power",
+    "kq",
+    "omegaf"
+  ],
+  "title": "ReactivePowerDroop",
+  "type": "object"
+}
