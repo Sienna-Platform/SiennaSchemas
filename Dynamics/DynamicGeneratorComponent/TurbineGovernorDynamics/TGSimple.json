@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of a Simple one-state Turbine Governor",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "base_power": {
+      "description": "Base power for this model's per-unit parameters. Usually equal to the `base_power` of the dynamic injection that names this model; the ingestion layer reconciles a difference. Units: MVA.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "MVA"
+    },
+    "d_t": {
+      "description": "Inverse droop parameter",
+      "type": "number"
+    },
+    "Tm": {
+      "description": "Turbine governor low-pass time constant",
+      "type": "number"
+    },
+    "P_ref": {
+      "description": "Reference power set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "base_power",
+    "d_t",
+    "Tm"
+  ],
+  "title": "TGSimple",
+  "type": "object"
+}

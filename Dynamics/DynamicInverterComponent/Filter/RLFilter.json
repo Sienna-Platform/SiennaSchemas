@@ -2,6 +2,16 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Parameters of RL series filter in algebraic representation",
   "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "base_power": {
+      "description": "Base power for this model's per-unit parameters. Usually equal to the `base_power` of the dynamic injection that names this model; the ingestion layer reconciles a difference. Units: MVA.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "MVA"
+    },
     "rf": {
       "description": "Series resistance in p.u. of converter filter to the grid",
       "type": "number"
@@ -12,6 +22,8 @@
     }
   },
   "required": [
+    "id",
+    "base_power",
     "rf",
     "lf"
   ],

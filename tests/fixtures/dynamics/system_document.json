@@ -1,0 +1,97 @@
+{
+  "schema_version": "0.2.0",
+  "frequency": 60.0,
+  "components": {
+    "ACBus": [
+      {
+        "id": 1,
+        "name": "bus1",
+        "available": true,
+        "number": 1
+      }
+    ],
+    "AVRFixed": [
+      {
+        "id": 6,
+        "base_power": 100.0,
+        "Vf": 1.05
+      }
+    ],
+    "BaseMachine": [
+      {
+        "id": 4,
+        "base_power": 100.0,
+        "R": 0.0,
+        "Xd_p": 0.2995,
+        "eq_p": 0.7087
+      }
+    ],
+    "DynamicGenerator": [
+      {
+        "id": 3,
+        "name": "unit1",
+        "omega_ref": 60.0,
+        "synchronous_machine_dynamics": 4,
+        "shaft": 5,
+        "excitation_system_dynamics": 6,
+        "turbine_governor_dynamics": 7,
+        "power_system_stabilizer_dynamics": 8,
+        "base_power": 100.0
+      }
+    ],
+    "PSSFixed": [
+      {
+        "id": 8,
+        "base_power": 100.0,
+        "V_pss": 0.0
+      }
+    ],
+    "SingleMass": [
+      {
+        "id": 5,
+        "base_power": 100.0,
+        "H": 3.148,
+        "D": 2.0
+      }
+    ],
+    "SwitchedAdmittance": [
+      {
+        "id": 2,
+        "name": "unit1",
+        "available": true,
+        "bus": 1,
+        "dynamic_injector": 3
+      }
+    ],
+    "TGFixed": [
+      {
+        "id": 7,
+        "base_power": 100.0,
+        "efficiency": 1.0
+      }
+    ]
+  },
+  "supplemental_attributes": [
+    {
+      "id": 10,
+      "geo_json": {
+        "type": "Point",
+        "coordinates": [
+          0.0,
+          0.0
+        ]
+      }
+    }
+  ],
+  "supplemental_attribute_associations": [],
+  "plant_associations": [],
+  "combined_cycle_associations": [],
+  "service_associations": [],
+  "time_series_associations": [],
+  "time_series_storage_file": "ts.h5",
+  "ext": {
+    "producer": {
+      "note": "free-form"
+    }
+  }
+}

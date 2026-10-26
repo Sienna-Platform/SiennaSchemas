@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of a Classic Machine: GENCLS in PSSE and PSLF",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "base_power": {
+      "description": "Base power for this model's per-unit parameters. Usually equal to the `base_power` of the dynamic injection that names this model; the ingestion layer reconciles a difference. Units: MVA.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "MVA"
+    },
+    "R": {
+      "description": "Resistance after EMF",
+      "type": "number"
+    },
+    "Xd_p": {
+      "description": "Reactance after EMF",
+      "type": "number"
+    },
+    "eq_p": {
+      "description": "Fixed EMF behind the impedance",
+      "type": "number"
+    }  
+  },
+  "required": [
+    "id",
+    "base_power",
+    "R",
+    "Xd_p",
+    "eq_p"
+  ],
+  "title": "BaseMachine",
+  "type": "object"
+}

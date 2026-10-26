@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DynamicInverter",
+  "description": "Dynamic response model of a grid-connected inverter. It names its function blocks by id: a converter, an active and a reactive power control, an inner control, a DC source, a reference frame rotation (the frequency estimator), a filter, and an optional current limitation. It has no bus of its own: exactly one static injection device, with the same name, names it in its `dynamic_injector` property, and that device supplies the rest of the inverter's data.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the dynamic injection. Must equal the name of the static injection device that names it in `dynamic_injector`.",
+      "type": "string"
+    },
+    "omega_ref": {
+      "description": "Frequency reference set-point, in natural units. Usually equal to the system frequency. Units: Hz.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "Hz"
+    },
+    "converter": {
+      "description": "ID of the Converter function block: the converter model.",
+      "type": "integer"
+    },
+    "active_power_control": {
+      "description": "ID of the ActivePowerControl function block: the outer active power control.",
+      "type": "integer"
+    },
+    "reactive_power_control": {
+      "description": "ID of the ReactivePowerControl function block: the outer reactive power control.",
+      "type": "integer"
+    },
+    "inner_control": {
+      "description": "ID of the InnerControl function block: the inner control model.",
+      "type": "integer"
+    },
+    "dc_source": {
+      "description": "ID of the DCSource function block: the DC source model.",
+      "type": "integer"
+    },
+    "reference_frame_rotation": {
+      "description": "ID of the ReferenceFrameRotation function block: the frequency estimator (PLL) model.",
+      "type": "integer"
+    },
+    "filter": {
+      "description": "ID of the Filter function block: the output filter model.",
+      "type": "integer"
+    },
+    "current_limitation": {
+      "description": "ID of the CurrentLimitation function block: the output current limiter model, or null when the inverter has no limiter.",
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "base_power": {
+      "description": "Base power for the per-unit parameters of the referenced function blocks. Usually equal to the `base_power` of the static injection device that names this model. Units: MVA.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "MVA"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "omega_ref",
+    "converter",
+    "active_power_control",
+    "reactive_power_control",
+    "inner_control",
+    "dc_source",
+    "reference_frame_rotation",
+    "filter",
+    "base_power"
+  ]
+}

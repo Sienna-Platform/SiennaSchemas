@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Hydro turbine-governor",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "base_power": {
+      "description": "Base power for this model's per-unit parameters. Usually equal to the `base_power` of the dynamic injection that names this model; the ingestion layer reconciles a difference. Units: MVA.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "MVA"
+    },
+    "R": {
+      "description": "Permanent droop parameter",
+      "type": "number"
+    },
+    "r": {
+      "description": "Temporary droop",
+      "type": "number"
+    },
+    "Tr": {
+      "description": "Governor time constant",
+      "type": "number"
+    },
+    "Tf": {
+      "description": "Filter time constant",
+      "type": "number"
+    },
+    "Tg": {
+      "description": "Servo time constant",
+      "type": "number"
+    },
+    "VELM": {
+      "description": "Gate velocity limit",
+      "type": "number"
+    },
+    "gate_position_limits": {
+      "description": "Gate position limits",
+      "$ref": "../../../Core/common.json#/$defs/MinMax"
+    },
+    "Tw": {
+      "description": "Water time constant",
+      "type": "number"
+    },
+    "At": {
+      "description": "Turbine gain",
+      "type": "number"
+    },
+    "D_T": {
+      "description": "Turbine damping",
+      "type": "number"
+    },
+    "q_nl": {
+      "description": "No power flow",
+      "type": "number"
+    },
+    "P_ref": {
+      "description": "Reference load set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "base_power",
+    "R",
+    "r",
+    "Tr",
+    "Tf",
+    "Tg",
+    "VELM",
+    "gate_position_limits",
+    "Tw",
+    "At",
+    "D_T",
+    "q_nl"
+  ],
+  "title": "HydroTurbineGov",
+  "type": "object"
+}

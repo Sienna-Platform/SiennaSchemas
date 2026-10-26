@@ -70,7 +70,7 @@ The write target is chosen at save time:
   `R` for a new document; never serialized).
 
 `source` with `D = R` is the same as `current`. With `D < R`, the writer validates the encoded
-tree against `D`'s strict bundle (one self-contained draft-07 schema in which every object schema
+tree against `D`'s strict bundle (one self-contained JSON Schema 2020-12 schema in which every object schema
 without an explicit `additionalProperties` gets `false`, built by `scripts/build_bundles.py`). If
 anything is unknown to `D`, the write fails and the error lists every offending path, not just the
 first. Nothing is dropped to make the write fit. Without a validator installed the write is an
