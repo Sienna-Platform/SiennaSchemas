@@ -54,7 +54,10 @@ Deliberate differences between PSY and the schemas: infra fields (`internal`, `e
 fields) are dropped; schemas add integer `id`s; `Reserve{T}` direction is
 flattened to a `reserve_direction` property; PSY relationship/map fields are
 normalized into association components (`PlantAssociation`,
-`CombinedCycleAssociation`); `Source.base_voltage` is schemas-ahead-of-PSY.
+`CombinedCycleAssociation`); `Source.base_voltage` is schemas-ahead-of-PSY; the
+`DynamicGenerator` and `DynamicInverter` reference fields use CGMES Dynamics
+profile names (`excitation_system_dynamics` for PSY `avr`, and so on) until PSY
+changes to match.
 
 ## Release order
 

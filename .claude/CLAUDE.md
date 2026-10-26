@@ -1,6 +1,6 @@
 # SiennaSchemas — Claude Guide
 
-The **single source of truth for Sienna data-model schemas**: hand-written JSON Schema (draft-07) definitions organized by domain, the OpenAPI specs that select what each generated package contains, the **unit vocabulary** (`Core/units.json`), and the units validator. Everything here is source; the generated side lives downstream. Platform conventions: the `sienna-psy6` skill. The end-to-end pipeline and its gates are documented in `docs/PIPELINE.md`; the annotation spec is `docs/UNIT_ANNOTATIONS.md`.
+The **single source of truth for Sienna data-model schemas**: hand-written JSON Schema definitions organized by domain, the OpenAPI specs that select what each generated package contains, the **unit vocabulary** (`Core/units.json`), and the units validator. Everything here is source; the generated side lives downstream. Platform conventions: the `sienna-psy6` skill. The end-to-end pipeline and its gates are documented in `docs/PIPELINE.md`; the annotation spec is `docs/UNIT_ANNOTATIONS.md`.
 
 Branch and repo state change constantly — read them, don't trust them written down: `git branch --show-current`, `git status --short`, `git log --oneline origin/main..HEAD`.
 
@@ -31,7 +31,7 @@ SiennaSchemas (this repo — hand-written source)
   └─ Core/units.json ──SiennaGridDB/scripts/generate_unit_registry.py──▶ GridDB sealed unit registry
 ```
 
-- Schemas mirror **PowerSystems.jl component types field-for-field** but in natural units with integer-id references (PSY internals are per-unit with object references). A PSY field change without a schema change is drift; no gate catches it, so mirror the change by hand.
+- Schemas mirror **PowerSystems.jl component types field-for-field** but in natural units with integer-id references (PSY internals are per-unit with object references). A PSY field change without a schema change is drift; no gate catches it, so mirror the change by hand. Deliberate exception: the dynamic injection reference fields use CGMES Dynamics profile names (`excitation_system_dynamics`, `current_limitation`, ...), not the PSY names (`avr`, `limiter`, ...), until PSY changes to match.
 - No converter exists between a PSY `System` and these types or GridDB rows, so **validators are the only consistency mechanism** — treat annotation and vocabulary correctness as load-bearing.
 - Component coverage against PSY is complete except for 8 dynamic injection leaf types (`SingleCageInductionMachine`, `SimplifiedSingleCageInductionMachine`, `GenericDER`, `AggregateDistributedGenerationA`, `CSVGN1`, `ActiveConstantPowerLoad`, `DynamicExponentialLoad`, `PeriodicVariableSource`), planned for a separate change. Dynamic injections (`DynamicGenerator`, `DynamicInverter`) and their function blocks are `SystemDocument` components that link by integer id; `scripts/dynamic_links.py` checks those links. Fields absent **by convention rather than drift**: `services`/`reserves`/`contributing_services` (many-to-many), `n_states`/`states`/`states_types` (read-only dynamic metadata), and `TransformerCircuit.base_value` (derived units anchor PSY marks "do not modify"). Don't re-flag these as gaps.
 - **Service membership is recorded**, by `Operations/Associations/ServiceAssociation.json` — one row per (service, member) pair, the same normalized shape as `PlantAssociation` and `Core/SupplementalAttributes/SupplementalAttributeAssociation.json`. `entity_id` may name a Device, a Branch, or another Service, so no member-type discriminator is needed. Don't re-flag this as a gap; the data model library keeps the same relation on the device side as `Device.services`.
@@ -88,7 +88,7 @@ Cross-references are relative paths (`"$ref": "../../Core/common.json#/definitio
 ## Schema conventions
 
 - Schema content (titles, descriptions, examples) must never reference specific Sienna library/package/repo names — describe systems by role (the store, the data layer, the relational mirror, the producing parsers, the consumer packages). Package-specific facts belong in package docs, not in schemas.
-- JSON Schema draft-07 (`"$schema": "http://json-schema.org/draft-07/schema#"`).
+- Always use the latest JSON Schema release, currently 2020-12 (`"$schema": "https://json-schema.org/draft/2020-12/schema"`). Never move a schema to an older draft. Older files that still declare draft-07 are not convention errors.
 - Discriminated unions: `oneOf` + a `discriminator` block (`propertyName` + `mapping`).
 - Component base properties: `id` (integer), `name` (string), `available` (boolean).
 - `ext`, supplemental attributes, and many-to-many relations are stored *separately*; one-to-many relations become integer id references, named with an `_id` / `_ids` suffix.

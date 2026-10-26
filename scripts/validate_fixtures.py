@@ -157,18 +157,29 @@ def check_dynamics(validator, failures):
         return doc["components"].setdefault(kind, [])
 
     def add_inverter(doc, active="ActivePowerPI", reactive="ReactivePowerPI"):
-        # Link rows only: the link check reads ids, names, and types, not parameters.
+        params = {
+            "AverageConverter": {"rated_voltage": 0.69, "rated_current": 100.0},
+            "ActivePowerPI": {"Kp_p": 0.0, "Ki_p": 4.69, "omegaz": 1000.0},
+            "ReactivePowerPI": {"Kp_q": 0.0, "Ki_q": 4.69, "omegaf": 1000.0},
+            "VoltageModeControl": {
+                "kpv": 0.59, "kiv": 736.0, "kffv": 0.0, "rv": 0.0, "lv": 0.2,
+                "kpc": 1.27, "kic": 14.3, "kffi": 0.0, "omegaad": 50.0, "kad": 0.2,
+            },
+            "FixedDCSource": {"voltage": 600.0},
+            "FixedFrequency": {},
+            "RLFilter": {"rf": 0.01, "lf": 0.08},
+        }
         models = {
             "converter": (21, "AverageConverter"),
             "active_power_control": (22, active),
             "reactive_power_control": (23, reactive),
             "inner_control": (24, "VoltageModeControl"),
             "dc_source": (25, "FixedDCSource"),
-            "reference_frame_rotation": (26, "KauraPLL"),
-            "filter": (27, "LCLFilter"),
+            "reference_frame_rotation": (26, "FixedFrequency"),
+            "filter": (27, "RLFilter"),
         }
         for ident, kind in models.values():
-            rows(doc, kind).append({"id": ident, "base_power": 100.0})
+            rows(doc, kind).append({"id": ident, "base_power": 100.0, **params[kind]})
         rows(doc, "DynamicInverter").append(
             {"id": 20, "name": "ibr1", "base_power": 100.0, "current_limitation": None,
              **{prop: ident for prop, (ident, _) in models.items()}})
@@ -183,6 +194,11 @@ def check_dynamics(validator, failures):
         "name absent": (lambda d: gen(d).pop("name"), False),
         "model base_power absent": (lambda d: rows(d, "AVRFixed")[0].pop("base_power"), False),
         "wrapper with an unknown property": (lambda d: gen(d).update(Ka=1.0), False),
+        "dynamic inverter": (add_inverter, True),
+        "inverter with a current_limitation reference": (
+            lambda d: (add_inverter(d), inv(d).update(current_limitation=28),
+                       rows(d, "MagnitudeOutputCurrentLimiter").append({"id": 28, "base_power": 100.0, "I_max": 1.0})), True),
+        "inverter required reference absent": (lambda d: (add_inverter(d), inv(d).pop("filter")), False),
     }
     links = {
         "linked": (lambda d: None, 0),

@@ -3,7 +3,7 @@
   "info": {
     "title": "PowerDynamicsOpenAPIModels",
     "version": "0.2.0",
-    "description": "Power system dynamics models: DynamicGeneratorComponent and DynamicInverterComponent"
+    "description": "Power system dynamics models: DynamicInjection, DynamicGeneratorComponent, and DynamicInverterComponent"
   },
   "paths": {},
   "components": {

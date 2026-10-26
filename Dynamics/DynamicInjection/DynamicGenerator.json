@@ -1,7 +1,7 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "DynamicGenerator",
-  "description": "Dynamic response model of a synchronous generator. It names five function blocks by id: a machine, a shaft, an AVR, a turbine governor, and a PSS. It has no bus of its own: exactly one static injection device, with the same name, names it in its `dynamic_injector` property, and that device supplies the rest of the generator's data.",
+  "description": "Dynamic response model of a synchronous generator. It names five function blocks by id: a synchronous machine model, a shaft, an excitation system, a turbine governor, and a power system stabilizer. It has no bus of its own: exactly one static injection device, with the same name, names it in its `dynamic_injector` property, and that device supplies the rest of the generator's data.",
   "type": "object",
   "properties": {
     "id": {

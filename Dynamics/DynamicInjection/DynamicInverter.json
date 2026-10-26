@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "DynamicInverter",
   "description": "Dynamic response model of a grid-connected inverter. It names its function blocks by id: a converter, an active and a reactive power control, an inner control, a DC source, a reference frame rotation (the frequency estimator), a filter, and an optional current limitation. It has no bus of its own: exactly one static injection device, with the same name, names it in its `dynamic_injector` property, and that device supplies the rest of the inverter's data.",
   "type": "object",
