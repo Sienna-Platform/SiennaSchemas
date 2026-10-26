@@ -14,8 +14,8 @@
       "ComplexNumber": {
         "$ref": "Core/common.json#/$defs/ComplexNumber"
       },
-      "XY_Coords": {
-        "$ref": "Core/common.json#/$defs/XY_Coords"
+      "TwoDimensionalFunctionPoint": {
+        "$ref": "Core/common.json#/$defs/TwoDimensionalFunctionPoint"
       },
       "MinMax": {
         "$ref": "Core/common.json#/$defs/MinMax"

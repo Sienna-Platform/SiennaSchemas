@@ -55,7 +55,7 @@ INFRA_MEMBERS = {
     "TimeSeriesPiecewiseStepData",
     # value shapes with no power semantics
     "ComplexNumber",
-    "XY_Coords",
+    "TwoDimensionalFunctionPoint",
     "MinMax",
     "UpDown",
     "InOut",

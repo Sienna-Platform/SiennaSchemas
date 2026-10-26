@@ -15,6 +15,11 @@ This project is pre-1.0; any release may change schemas incompatibly.
   `ACTIVE_POWER_FLOW`; the last two require `reactance_limits`, and `ACTIVE_POWER_FLOW` also
   `active_power_flow_setpoint`.
 
+### Changed
+
+- `XY_Coords` is renamed to `TwoDimensionalFunctionPoint`. The old name was easy to confuse with
+  geographic coordinates. Consumers that name the generated type must use the new name.
+
 ## [0.2.0] - 2026-10-05
 
 ### Added

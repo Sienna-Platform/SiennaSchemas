@@ -1016,7 +1016,7 @@
         },
         "points": {
           "items": {
-            "$ref": "#/$defs/XY_Coords"
+            "$ref": "#/$defs/TwoDimensionalFunctionPoint"
           },
           "type": "array"
         }
@@ -1730,7 +1730,7 @@
       "title": "ValueCurve",
       "type": "object"
     },
-    "XY_Coords": {
+    "TwoDimensionalFunctionPoint": {
       "description": "A single point, given as its `x` and `y` coordinates.",
       "properties": {
         "x": {
@@ -1754,7 +1754,7 @@
         "x",
         "y"
       ],
-      "title": "XY_Coords",
+      "title": "TwoDimensionalFunctionPoint",
       "type": "object"
     }
   }
