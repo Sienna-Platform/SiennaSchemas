@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Excitation System AC8B. Used to represent the Basler Digital Excitation Control System (DECS) with PID controller in PSSE",
   "properties": {
     "id": {

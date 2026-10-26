@@ -88,7 +88,7 @@ Cross-references are relative paths (`"$ref": "../../Core/common.json#/definitio
 ## Schema conventions
 
 - Schema content (titles, descriptions, examples) must never reference specific Sienna library/package/repo names — describe systems by role (the store, the data layer, the relational mirror, the producing parsers, the consumer packages). Package-specific facts belong in package docs, not in schemas.
-- Always use the latest JSON Schema release, currently 2020-12 (`"$schema": "https://json-schema.org/draft/2020-12/schema"`). Never move a schema to an older draft. Older files that still declare draft-07 are not convention errors.
+- Always use the latest JSON Schema release, currently 2020-12 (`"$schema": "https://json-schema.org/draft/2020-12/schema"`). Never move a schema to an older draft.
 - Discriminated unions: `oneOf` + a `discriminator` block (`propertyName` + `mapping`).
 - Component base properties: `id` (integer), `name` (string), `available` (boolean).
 - `ext`, supplemental attributes, and many-to-many relations are stored *separately*; one-to-many relations become integer id references, named with an `_id` / `_ids` suffix.

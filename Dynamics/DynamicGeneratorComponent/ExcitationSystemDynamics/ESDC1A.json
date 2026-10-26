@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Self-excited shunt fields with the voltage regulator operating in a mode commonly termed buck-boost. Parameters of IEEE Std 421.5 Type DC1A Excitacion System. This model corresponds to ESDC1A in PSSE and PSLF",
   "properties": {
     "id": {

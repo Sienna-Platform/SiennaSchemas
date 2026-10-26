@@ -34,7 +34,7 @@ from schema_version import classify, message
 # a large rewrite for a test script. Kept deliberately, warning silenced.
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", DeprecationWarning)
-    from jsonschema import Draft7Validator, Draft202012Validator, RefResolver
+    from jsonschema import Draft202012Validator, RefResolver
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 TS_DIR = REPO_ROOT / "TimeSeries"
@@ -97,7 +97,7 @@ def check_bundles(failures):
         version = current_version(REPO_ROOT)
         build(REPO_ROOT, version, tmp)
         for name, (stem, component, attrs) in docs.items():
-            validator = Draft7Validator(load(pathlib.Path(tmp) / version / f"{name}.json"))
+            validator = Draft202012Validator(load(pathlib.Path(tmp) / version / f"{name}.json"))
             base = load(FIXTURE_DIR / "versioning" / f"{stem}.json")
 
             def mutated(edit):
@@ -130,7 +130,7 @@ def check_bundles(failures):
                     want = "accept" if should_pass else "reject"
                     failures.append(f"{name} bundle, {label}: was {verb}, expected to {want}")
         count += check_dynamics(
-            Draft7Validator(load(pathlib.Path(tmp) / version / "SystemDocument.json")), failures
+            Draft202012Validator(load(pathlib.Path(tmp) / version / "SystemDocument.json")), failures
         )
     return count
 

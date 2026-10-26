@@ -2,8 +2,8 @@
 """Build strict, self-contained validation bundles for one release.
 
 Writes ``<out>/<version>/SystemDocument.json`` and ``PortfolioDocument.json``.
-Each is one draft-07 root schema with every reachable schema inlined under
-``definitions`` and every ``$ref`` local, so any binding's stock validator can use
+Each is one JSON Schema 2020-12 root schema with every reachable schema inlined
+under ``$defs`` and every ``$ref`` local, so any binding's stock validator can use
 it. A document that passes is readable by the strictest binding (the ones that
 reject unknown keys), which is what a ``source``-version save has to guarantee.
 
@@ -55,7 +55,7 @@ from refs import (  # noqa: E402
 )
 from schema_version import line, parse  # noqa: E402
 
-DRAFT = "http://json-schema.org/draft-07/schema#"
+DRAFT = "https://json-schema.org/draft/2020-12/schema"
 
 # document -> (file, domains whose schemas it reaches, component dirs, attribute dirs)
 DOCUMENTS = {
@@ -102,7 +102,7 @@ BRANCHES = ("allOf", "oneOf", "anyOf")
 
 
 def _local(ref):
-    return ref.replace("#/components/schemas/", "#/definitions/")
+    return ref.replace("#/components/schemas/", "#/$defs/")
 
 
 def _branch_properties(node):
@@ -187,7 +187,7 @@ def _names_under(root, names, dirs):
 
 
 def _reachable(bodies, seeds):
-    prefix = "#/definitions/"
+    prefix = "#/$defs/"
     seen, queue = set(), list(seeds)
 
     def refs_of(node):
@@ -252,7 +252,7 @@ def build_document(root, document, version):
             f"{document}: selected schemas {orphans} are not components, attributes, "
             "or referenced; add their directory to DOCUMENTS"
         )
-    bundle["definitions"] = {n: definitions[n] for n in sorted(keep)}
+    bundle["$defs"] = {n: definitions[n] for n in sorted(keep)}
     bundle["$comment"] = f"Strict validation bundle for schema release {version}."
     return bundle
 
