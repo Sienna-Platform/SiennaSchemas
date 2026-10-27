@@ -149,8 +149,8 @@ Set `info.version` to the new version in all six `openapi-*.json` selectors firs
 workflow fails unless the tag equals it.
 
 ```bash
-git tag v0.2.0
-git push origin v0.2.0
+git tag v0.3.0
+git push origin v0.3.0
 ```
 
 This triggers the release workflow, which publishes the schema
