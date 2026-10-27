@@ -1,0 +1,37 @@
+{
+  "id": 21,
+  "name": "ELECTROLYSER-1",
+  "available": true,
+  "bus": 101,
+  "carrier": 5,
+  "output_ports": [
+    {
+      "bus": 11,
+      "efficiency": 0.7
+    }
+  ],
+  "input_active_power_limits": {
+    "min": 0.0,
+    "max": 50.0
+  },
+  "variable_cost": {
+    "variable_cost_type": "COST",
+    "power_units": "NATURAL_UNITS",
+    "value_curve": {
+      "curve_type": "INPUT_OUTPUT",
+      "function_data": {
+        "function_type": "LINEAR",
+        "proportional_term": 1.5,
+        "constant_term": 0.0
+      }
+    },
+    "vom_cost": {
+      "curve_type": "INPUT_OUTPUT",
+      "function_data": {
+        "function_type": "LINEAR",
+        "proportional_term": 0.0,
+        "constant_term": 0.0
+      }
+    }
+  }
+}

@@ -224,7 +224,12 @@
           "minimum": 0
         }
       },
-      "required": ["from_to_min", "from_to_max", "to_from_min", "to_from_max"],
+      "required": [
+        "from_to_min",
+        "from_to_max",
+        "to_from_min",
+        "to_from_max"
+      ],
       "title": "OperationalFlowLimit",
       "type": "object"
     },
@@ -658,6 +663,27 @@
       "title": "InputOutputCurve",
       "type": "object",
       "x-curve-output": 0
+    },
+    "LinkPort": {
+      "description": "One output port of a conversion link: the bus the port connects to and the flow at that bus per unit of flow at the link's input bus.",
+      "properties": {
+        "bus": {
+          "description": "ID of the bus that this port connects to. The bus can be an electric bus or a carrier bus.",
+          "type": "integer"
+        },
+        "efficiency": {
+          "description": "Flow delivered to `bus` per unit of flow drawn from the link's input bus, both measured as energy. Values above 1 are valid (a heat pump coefficient of performance); a negative value makes the port draw from `bus`. A time series attached to the link can make the value time-varying. Units: 1.",
+          "type": "number",
+          "x-unit": "1",
+          "x-quantity": "Dimensionless"
+        }
+      },
+      "required": [
+        "bus",
+        "efficiency"
+      ],
+      "title": "LinkPort",
+      "type": "object"
     },
     "LinearFunctionData": {
       "description": "Data for a linear function `f(x) = proportional_term * x + constant_term`.",

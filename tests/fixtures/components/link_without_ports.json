@@ -1,0 +1,11 @@
+{
+  "id": 23,
+  "name": "LINK-EMPTY",
+  "available": true,
+  "bus": 12,
+  "output_ports": [],
+  "input_active_power_limits": {
+    "min": 0.0,
+    "max": 10.0
+  }
+}

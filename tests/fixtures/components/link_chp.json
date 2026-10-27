@@ -1,0 +1,20 @@
+{
+  "id": 22,
+  "name": "CHP-1",
+  "available": true,
+  "bus": 12,
+  "output_ports": [
+    {
+      "bus": 101,
+      "efficiency": 0.4
+    },
+    {
+      "bus": 13,
+      "efficiency": 0.45
+    }
+  ],
+  "input_active_power_limits": {
+    "min": 0.0,
+    "max": 120.0
+  }
+}

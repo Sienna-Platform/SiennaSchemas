@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A source of carrier energy at a carrier bus, such as a natural gas import point or a biomass supply.",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
+      "type": "boolean"
+    },
+    "bus": {
+      "description": "ID of the carrier bus that this component is connected to.",
+      "type": "integer"
+    },
+    "active_power_limits": {
+      "description": "Minimum and maximum energy flow that this supply delivers. An attached time series can make the limits time-varying. Units: MW.",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit": "MW"
+    },
+    "variable_cost": {
+      "description": "Variable cost of the delivered energy flow. The curve's `power_units` must be NATURAL_UNITS.",
+      "$ref": "../../Core/common.json#/$defs/CostCurve"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "available",
+    "bus",
+    "active_power_limits"
+  ],
+  "title": "CarrierSupply",
+  "type": "object"
+}
