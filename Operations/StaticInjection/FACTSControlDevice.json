@@ -15,7 +15,7 @@
       "type": "boolean"
     },
     "bus": {
-      "description": "Sending end bus number.",
+      "description": "ID of the sending end bus.",
       "type": "integer"
     },
     "control_mode": {
@@ -58,12 +58,13 @@
         "STATCOM"
       ]
     },
-    "regulated_bus_number": {
-      "description": "Bus whose voltage this device regulates, to the `voltage_setpoint` of that bus; 0 means the local (sending) bus (PSS/E FCREG). Units: 1.",
-      "default": 0,
-      "type": "integer",
-      "x-unit": "1",
-      "x-quantity": "Dimensionless"
+    "remote_regulated_bus": {
+      "description": "ID of the bus whose voltage this device regulates, to the `voltage_setpoint` of that bus (PSS/E FCREG); null regulates the sending end bus. A value equal to `bus` is invalid.",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ]
     },
     "base_power": {
       "description": "System base power for per-unitization of this component's per-unit fields, recorded per component in lieu of a system-level table. Units: MVA.",

@@ -133,8 +133,8 @@
       "type": "number",
       "x-unit": "kV/MW"
     },
-    "remote_bus_control": {
-      "description": "Number of the AC bus whose voltage the converter regulates when `ac_control` is `AC_VOLTAGE`, to the `voltage_setpoint` of that bus; null regulates its own terminal bus.",
+    "remote_regulated_bus": {
+      "description": "ID of the AC bus whose voltage the converter regulates when `ac_control` is `AC_VOLTAGE`, to the `voltage_setpoint` of that bus; null regulates the converter's own AC bus. A value equal to `bus` is invalid.",
       "default": null,
       "type": [
         "integer",
