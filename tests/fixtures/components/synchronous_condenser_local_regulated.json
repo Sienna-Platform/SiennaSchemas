@@ -1,0 +1,11 @@
+{
+  "id": 8,
+  "name": "condenser_regulating_own_bus",
+  "bus": 3,
+  "remote_regulated_bus": null,
+  "available": true,
+  "reactive_power": 12.0,
+  "rating": 50.0,
+  "base_power": 50.0,
+  "power_units": "NATURAL_UNITS"
+}

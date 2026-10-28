@@ -97,7 +97,7 @@ Rules:
 - `x-unit-discriminator` must name an existing sibling property.
 - The discriminator must be one of the **unit-basis tags** the validator lists in
   `UNIT_BASIS_DISCRIMINATORS`: `power_units`, `parameter_units`, `admittance_units`,
-  `voltage_units`, `dc_voltage_units`, `voltage_setpoint_units`, `setpoint_voltage_units`,
+  `voltage_units`, `dc_voltage_units`, `setpoint_voltage_units`,
   `energy_units`, `mass_unit`. Each selects the unit of measure of a quantity that is
   fixed for the property's lifetime.
 - The `x-units` **key set must exactly equal the discriminator's enum**, whether the

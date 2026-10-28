@@ -1,0 +1,11 @@
+{
+  "id": 9,
+  "name": "condenser_with_named_regulated_bus",
+  "bus": 3,
+  "remote_regulated_bus": "high_side_bus",
+  "available": true,
+  "reactive_power": 12.0,
+  "rating": 50.0,
+  "base_power": 50.0,
+  "power_units": "NATURAL_UNITS"
+}

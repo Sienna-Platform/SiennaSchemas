@@ -3,7 +3,7 @@
   "description": "Shared enum definitions used only by Operations-domain components (never Investments or Dynamics). Domain-agnostic shared types remain in Core/common.json.",
   "$defs": {
     "VSCACControlModes": {
-      "description": "AC-side control mode of a voltage-source-converter (VSC) terminal. AC_REACTIVE_POWER: converter controls reactive power / fixed power factor. AC_VOLTAGE: converter controls the AC-side voltage magnitude.",
+      "description": "AC-side control mode of a voltage-source-converter (VSC) terminal. AC_REACTIVE_POWER: converter controls reactive power / fixed power factor. AC_VOLTAGE: converter holds the voltage magnitude of its regulated AC bus at the `voltage_setpoint` of that bus.",
       "enum": [
         "AC_REACTIVE_POWER",
         "AC_VOLTAGE"
@@ -108,6 +108,16 @@
       "title": "TransformerControlObjective",
       "type": "string"
     },
+    "TransformerRegulationOrientation": {
+      "description": "Which end of a transformer circuit's `arc` the tap adjustment treats the regulated bus as lying on, when the regulated bus is not an end of the arc: a remote bus, or another winding's terminal of a three-winding transformer. It sets the direction the tap moves to raise that bus's voltage (PSS/E sign of CONT). The `from` end is the tapped winding. UNDEFINED: the regulated bus is an end of the arc, so the connections give the direction, or there is no regulated bus. FROM: adjust as if the regulated bus lies on the `from` side (PSS/E negative CONT). TO: adjust as if it lies on the `to` side (PSS/E positive CONT).",
+      "enum": [
+        "UNDEFINED",
+        "FROM",
+        "TO"
+      ],
+      "title": "TransformerRegulationOrientation",
+      "type": "string"
+    },
     "TwoWindingTransformerShuntLocation": {
       "description": "Placement of a `TwoWindingTransformer`'s magnetizing shunt admittance on the two sides of its single circuit arc. PRIMARY: the full magnetizing shunt is applied on the primary (from) side. SECONDARY: the full magnetizing shunt is applied on the secondary (to) side. SPLIT: the full complex magnetizing shunt value is applied on BOTH sides.",
       "enum": [
@@ -128,7 +138,7 @@
       "type": "string"
     },
     "VoltageUnitBasis": {
-      "description": "Unit basis a voltage setpoint is stored in. NATURAL_UNITS: kilovolts. COMPONENT_BASE: per-unit on the component's own base voltage (the connected bus's base voltage for AC setpoints — PSS/E RAW native for FACTS VSET — and the device voltage base PSS/E supplies for DC-line converters and CZ=2 transformer windings). There is no separate system-base option: bus-base per-unit is the device base for voltage.",
+      "description": "Unit basis a voltage setpoint is stored in. NATURAL_UNITS: kilovolts. COMPONENT_BASE: per-unit on the component's own base voltage (the connected bus's base voltage for AC setpoints, and the device voltage base PSS/E supplies for DC-line converters and CZ=2 transformer windings). There is no separate system-base option: bus-base per-unit is the device base for voltage.",
       "enum": [
         "NATURAL_UNITS",
         "COMPONENT_BASE"

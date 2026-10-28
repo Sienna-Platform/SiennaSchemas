@@ -73,6 +73,26 @@ COMPONENT = {
     "series_compensator_dispatchable": ("Operations/Branch/SeriesCompensator.json", None, True),
     "series_compensator_dispatchable_without_limits": ("Operations/Branch/SeriesCompensator.json", None, False),
     "series_compensator_power_flow_without_setpoint": ("Operations/Branch/SeriesCompensator.json", None, False),
+    "acbus_pq_with_setpoint": ("Core/Topology/ACBus.json", None, True),
+    "acbus_null_setpoint": ("Core/Topology/ACBus.json", None, True),
+    "synchronous_condenser_remote_regulated": (
+        "Operations/StaticInjection/SynchronousCondenser.json", None, True,
+    ),
+    "synchronous_condenser_local_regulated": (
+        "Operations/StaticInjection/SynchronousCondenser.json", None, True,
+    ),
+    "synchronous_condenser_regulated_bus_name": (
+        "Operations/StaticInjection/SynchronousCondenser.json", None, False,
+    ),
+    "transformer_circuit_remote_regulated": (
+        "Operations/Branch/TransformerCircuit.json", None, True,
+    ),
+    "transformer_circuit_unknown_orientation": (
+        "Operations/Branch/TransformerCircuit.json", None, False,
+    ),
+    "transformer_circuit_orientation_without_bus": (
+        "Operations/Branch/TransformerCircuit.json", None, False,
+    ),
 }
 
 

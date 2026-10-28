@@ -64,7 +64,6 @@ UNIT_BASIS_DISCRIMINATORS = frozenset({
     "admittance_units",
     "voltage_units",
     "dc_voltage_units",
-    "voltage_setpoint_units",
     "setpoint_voltage_units",
     "energy_units",
     "mass_unit",
