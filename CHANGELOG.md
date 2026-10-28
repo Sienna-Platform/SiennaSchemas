@@ -7,6 +7,35 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-27
+
+0.4.0 starts a new compatibility line. Timestamps follow the OpenAPI Format Registry: a
+`date-time` always carries a time zone, and a time series timestamp without one is a
+`date-time-local`. Documents written at 0.3.x do not read at 0.4.0; regenerate them with a
+current producer.
+
+### Changed
+
+- `initial_timestamp` on `SingleTimeSeries`, `Deterministic`,
+  `DeterministicSingleTimeSeries`, `Probabilistic` and `Scenarios` is one of two RFC 3339
+  forms: `date-time`, with `Z` or a UTC offset, or `date-time-local`, with no offset (a wall
+  clock that names no instant). Each form has a `pattern`, because JSON Schema treats
+  `format` as an annotation. The patterns allow at most 3 fractional-second digits and
+  uppercase `T` and `Z` only.
+- `time_reference` now fixes the form of `initial_timestamp`: `zoneless` requires
+  `date-time-local`; `utc` requires `Z` or `+00:00` (RFC 3339 gives `-00:00` the meaning
+  "offset unknown"); a fixed offset or an IANA zone name requires `date-time`. With no
+  `time_reference`, either form is accepted, and no zone is assumed.
+- `DataSource.retrieved_at` and `published_at` stay `date-time` and gain the same offset
+  `pattern`: a data source records an instant, so these fields always carry a time zone. A
+  value without an offset, which 0.3.x validators accepted, is now rejected.
+
+### Fixed
+
+- `scripts/validate_fixtures.py` checks `pattern` with ECMA-262 semantics, as JSON Schema
+  requires. Python's `re` let `$` match before a trailing newline and `\d` match any Unicode
+  digit. The gate now depends on `regress`.
+
 ## [0.3.0] - 2026-10-26
 
 0.3.0 starts a new compatibility line. Documents written at 0.2.x do not read at 0.3.0;
