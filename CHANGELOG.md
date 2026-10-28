@@ -7,6 +7,22 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ## [Unreleased]
 
+### Added
+
+- `PlannedEquipmentModification`, a supplemental attribute grouping the planned changes to equipment that make up one event (switch operations and the equipment they take out of service, or an outage with no switching detail), with `PlannedEquipmentModificationAssociation` rows in the new `planned_equipment_modification_associations` document array.
+  Each row plans `available` and/or `switch_status` for one piece of equipment.
+  Optional time series on the attribute, named after the field and keyed by a `component_id` feature, give a planned value over time (1 = in service or closed, 0 = out of service or open).
+- `DiscreteControlledBranchStatus`, the open/closed enum, as a named definition shared by `DiscreteControlledACBranch.branch_status`, `DiscreteControlledACBranch.normal_branch_status` and `PlannedEquipmentModificationAssociation.switch_status`.
+- Optional `rating_b` and `rating_c` on `DiscreteControlledACBranch`, matching `Line`.
+
+### Changed
+
+- Describe `rating_b` and `rating_c` on `Line`, `TransformerCircuit`, and `DiscreteControlledACBranch` as the short-term (Rate B) and emergency (Rate C) thermal ratings.
+
+### Removed
+
+- `PlannedOutage`, replaced by `PlannedEquipmentModification`.
+
 ## [0.4.0] - 2026-10-27
 
 0.4.0 starts a new compatibility line. Timestamps follow the OpenAPI Format Registry: a

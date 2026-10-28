@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PlannedEquipmentModification",
+  "description": "Supplemental attribute grouping the planned changes to equipment that make up one logical event, such as a switching operation together with the equipment it takes out of service, or a planned outage with no switching detail. It plans two things per piece of equipment: availability, and the open or closed status of a switching device. The per-equipment planned values are recorded as PlannedEquipmentModificationAssociation rows. A record is complete without time series: a planned value then holds throughout. Optional time series on this attribute give a planned field's value over time; each is named after the field it describes (`available` or `switch_status`) and carries a `component_id` feature naming the equipment, with values 1/0 (`available`: 1 = in service, 0 = out of service; `switch_status`: 1 = closed, 0 = open). A planned modification is known in advance and is never a contingency.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this attribute.",
+      "type": "integer"
+    },
+    "identifier": {
+      "description": "Optional user-supplied identifier for the event, such as an outage id or a group label. Null when not set.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "id"
+  ]
+}

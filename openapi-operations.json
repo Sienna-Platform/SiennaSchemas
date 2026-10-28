@@ -101,8 +101,11 @@
       "OperationalFlowLimit": {
         "$ref": "Core/common.json#/$defs/OperationalFlowLimit"
       },
-      "PlannedOutage": {
-        "$ref": "Operations/SupplementalAttributes/PlannedOutage.json"
+      "PlannedEquipmentModification": {
+        "$ref": "Operations/SupplementalAttributes/PlannedEquipmentModification.json"
+      },
+      "PlannedEquipmentModificationAssociation": {
+        "$ref": "Operations/Associations/PlannedEquipmentModificationAssociation.json"
       },
       "PlantAssociation": {
         "$ref": "Operations/Associations/PlantAssociation.json"
@@ -214,6 +217,9 @@
       },
       "SeriesCompensatorControlMode": {
         "$ref": "Operations/common.json#/$defs/SeriesCompensatorControlMode"
+      },
+      "DiscreteControlledBranchStatus": {
+        "$ref": "Operations/common.json#/$defs/DiscreteControlledBranchStatus"
       },
       "ReserveDirection": {
         "$ref": "Operations/common.json#/$defs/ReserveDirection"

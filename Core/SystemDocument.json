@@ -47,7 +47,7 @@
       }
     },
     "supplemental_attribute_associations": {
-      "description": "Links each plain supplemental attribute (e.g. EmissionsData, GeographicInfo) to the entity it describes. One row per (attribute, entity) pair. Plant, combined-cycle, and service memberships are carried by their own arrays below, not here.",
+      "description": "Links each supplemental attribute (e.g. EmissionsData, GeographicInfo) to the entity it describes. One row per (attribute, entity) pair. Plant, combined-cycle, and planned equipment modification attributes have their rows here too; their own arrays below add the per-member data. Service membership is carried by its own array below, not here.",
       "type": "array",
       "items": {
         "$ref": "Associations/SupplementalAttributeAssociation.json"
@@ -88,6 +88,14 @@
       "type": "array",
       "items": {
         "$ref": "../Operations/Associations/VoltageControlAssociation.json"
+      }
+    },
+    "planned_equipment_modification_associations": {
+      "description": "Links a PlannedEquipmentModification to one piece of equipment with the availability and switch status it plans for it. One row per (modification, equipment) pair, each accompanying that pair's row in `supplemental_attribute_associations`. Optional, defaulting to empty, like `trading_hub_associations`: documents written before it exist and omit it.",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "../Operations/Associations/PlannedEquipmentModificationAssociation.json"
       }
     },
     "time_series_associations": {

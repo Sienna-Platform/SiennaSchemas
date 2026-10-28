@@ -118,6 +118,10 @@ COMPONENT = {
     "data_source_published_null": ("Core/SupplementalAttributes/DataSource.json", None, True),
     "data_source_zoneless": ("Core/SupplementalAttributes/DataSource.json", None, False),
     "data_source_published_zoneless": ("Core/SupplementalAttributes/DataSource.json", None, False),
+    "planned_equipment_modification_association_both": ("Operations/Associations/PlannedEquipmentModificationAssociation.json", None, True),
+    "planned_equipment_modification_association_available_only": ("Operations/Associations/PlannedEquipmentModificationAssociation.json", None, True),
+    "planned_equipment_modification_association_switch_only": ("Operations/Associations/PlannedEquipmentModificationAssociation.json", None, True),
+    "planned_equipment_modification_association_neither": ("Operations/Associations/PlannedEquipmentModificationAssociation.json", None, False),
 }
 
 
