@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Interconnecting Power Converter (IPC) for transforming power from an ACBus to a DCBus. Voltage and voltage-droop fields are natural units only: there is no conventional DC base voltage from which to per-unitize them.",
+  "description": "Interconnecting Power Converter (IPC) for transforming power from an ACBus to a DCBus. Voltage and voltage-droop fields are natural units only: there is no conventional DC base voltage from which to per-unitize them. `rated_dc_voltage` and `rated_ac_voltage` record the voltage bases, so a consumer can convert the voltage fields to per unit.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -72,20 +72,20 @@
       "x-quantity": "ReactivePower"
     },
     "dc_current": {
-      "description": "DC current on the converter. Units: A.",
+      "description": "DC current on the converter. Units: kA.",
       "default": 0.0,
       "type": "number",
-      "x-unit": "A"
+      "x-unit": "kA"
     },
     "max_dc_current": {
-      "description": "Maximum stable dc current limits. Units: A.",
-      "default": 100000000.0,
+      "description": "Maximum stable dc current limits. 9999 means no limit. Units: kA.",
+      "default": 9999.0,
       "type": "number",
-      "x-unit": "A"
+      "x-unit": "kA"
     },
     "loss_function": {
-      "description": "Linear or quadratic loss function with respect to the converter current.",
-      "$ref": "../../Core/common.json#/$defs/LossCurve"
+      "description": "Linear or quadratic loss (power) as a function of the converter's DC current.",
+      "$ref": "../../Core/common.json#/$defs/CurrentLossCurve"
     },
     "dc_control": {
       "description": "DC-side control mode of the converter. No default: an in-service converter always controls something on each side, so the mode is supplied explicitly.",
@@ -116,6 +116,12 @@
       ],
       "x-unit": "kV"
     },
+    "rated_dc_voltage": {
+      "description": "Rated DC voltage of the converter, the base for `dc_voltage_setpoint` and `voltage_limits`; 0.0 means unspecified. Units: kV.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "kV"
+    },
     "power_factor_setpoint": {
       "description": "Power-factor setpoint of the converter, used when `ac_control` is `AC_REACTIVE_POWER`; `null` otherwise. Units: 1.",
       "type": [
@@ -126,6 +132,12 @@
       "maximum": 1.0,
       "x-unit": "1",
       "x-quantity": "PowerFactor"
+    },
+    "rated_ac_voltage": {
+      "description": "Rated AC voltage at the converter's AC terminal, the base for `ac_voltage_setpoint`; 0.0 means unspecified. Units: kV.",
+      "default": 0.0,
+      "type": "number",
+      "x-unit": "kV"
     },
     "dc_voltage_droop": {
       "description": "DC-voltage droop gain on the converter, used when `dc_control` is `DC_VOLTAGE_DROOP`: `V_dc = dc_voltage_setpoint - dc_voltage_droop * P_c`, with `V_dc` in kV and `P_c` in MW regardless of `power_units`. A value of 0.0 disables droop. Units: kV/MW.",

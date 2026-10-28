@@ -22,7 +22,7 @@
       "type": "string"
     },
     "LCCControlMode": {
-      "description": "Control mode of an LCC-HVDC line (PSS/E MDC). BLOCKED: the line is blocked and holds no schedule. POWER: the line holds a power schedule (power_transfer_setpoint, MW). CURRENT: the line holds a current schedule (current_transfer_setpoint, A).",
+      "description": "Control mode of an LCC-HVDC line (PSS/E MDC). BLOCKED: the line is blocked and holds no schedule. POWER: the line holds a power schedule (power_transfer_setpoint, MW). CURRENT: the line holds a current schedule (current_transfer_setpoint, kA).",
       "enum": [
         "BLOCKED",
         "POWER",
@@ -54,6 +54,17 @@
         "DISCRETE_REACTIVE_FACTS"
       ],
       "title": "SwitchedAdmittanceControlMode",
+      "type": "string"
+    },
+    "SeriesCompensatorControlMode": {
+      "description": "Control mode of a series compensator. `FIXED` holds the series impedance constant (a series capacitor; PSS/E FACTS MODE 3). `BYPASSED` shorts the compensator into a zero-impedance tie (PSS/E FACTS MODE 2). `DISPATCHABLE` makes the series reactance a decision within `reactance_limits`. `ACTIVE_POWER_FLOW` sets the series reactance to hold `active_power_flow_setpoint`.",
+      "enum": [
+        "FIXED",
+        "BYPASSED",
+        "DISPATCHABLE",
+        "ACTIVE_POWER_FLOW"
+      ],
+      "title": "SeriesCompensatorControlMode",
       "type": "string"
     },
     "CombinedCycleConfiguration": {

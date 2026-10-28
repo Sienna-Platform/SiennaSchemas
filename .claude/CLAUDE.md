@@ -42,7 +42,7 @@ Six packages (each generated in both Julia and Python):
 
 | Package | Contents | Dependencies |
 |---|---|---|
-| **InfrastructureCoreOpenAPIModels** | Domain-neutral: `UnitSystem`, the function-data family, value shapes (`MinMax`, `UpDown`, `InOut`, `FromTo`, `FromTo_ToFrom`, `ComplexNumber`, `XY_Coords`), and the supplemental attributes (`GeographicInfo`, `DataSource`, `SupplementalAttributeAssociation`) | None |
+| **InfrastructureCoreOpenAPIModels** | Domain-neutral: `UnitSystem`, the function-data family, value shapes (`MinMax`, `UpDown`, `InOut`, `FromTo`, `FromTo_ToFrom`, `ComplexNumber`, `TwoDimensionalFunctionPoint`), and the supplemental attributes (`GeographicInfo`, `DataSource`, `SupplementalAttributeAssociation`) | None |
 | **PowerCoreOpenAPIModels** | Topology; shared types: curves, enums, helpers (CostCurve, ValueCurve, ThermalFuels, TurbinePump, …) | InfrastructureCore |
 | **PowerOperationsOpenAPIModels** | Branch, StaticInjection, Service | PowerCore |
 | **PowerInvestmentsOpenAPIModels** | Technologies, Financials, Requirements, SupplementalAttributes, Portfolio | PowerCore |

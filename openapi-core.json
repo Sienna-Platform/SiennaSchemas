@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "PowerCoreOpenAPIModels",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "Shared types for the Sienna power systems ecosystem: curves, enums, helpers (MinMax, UpDown, CostCurve, etc.)"
   },
   "paths": {},
@@ -50,6 +50,9 @@
       "CurveStyles": {
         "$ref": "Core/common.json#/$defs/CurveStyles"
       },
+      "CurrentLossCurve": {
+        "$ref": "Core/common.json#/$defs/CurrentLossCurve"
+      },
       "CurveMultiStep": {
         "$ref": "Core/common.json#/$defs/CurveMultiStep"
       },
@@ -79,6 +82,9 @@
       },
       "FuelCurve": {
         "$ref": "Core/common.json#/$defs/FuelCurve"
+      },
+      "FuelUnit": {
+        "$ref": "Core/common.json#/$defs/FuelUnit"
       },
       "GenericOperationCost": {
         "$ref": "Core/common.json#/$defs/GenericOperationCost"
@@ -209,8 +215,8 @@
       "UnitSystem": {
         "$ref": "Core/common.json#/$defs/UnitSystem"
       },
-      "XY_Coords": {
-        "$ref": "Core/common.json#/$defs/XY_Coords"
+      "TwoDimensionalFunctionPoint": {
+        "$ref": "Core/common.json#/$defs/TwoDimensionalFunctionPoint"
       }
     }
   }

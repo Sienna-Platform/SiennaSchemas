@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "PowerInvestmentsOpenAPIModels",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "Power system investments models: Technologies, Financials, Requirements, SupplementalAttributes, and Portfolio components"
   },
   "paths": {},
@@ -85,6 +85,9 @@
       },
       "FuelCurve": {
         "$ref": "Core/common.json#/$defs/FuelCurve"
+      },
+      "FuelUnit": {
+        "$ref": "Core/common.json#/$defs/FuelUnit"
       },
       "FunctionData": {
         "$ref": "Core/common.json#/$defs/FunctionData"
@@ -182,8 +185,8 @@
       "ValueCurve": {
         "$ref": "Core/common.json#/$defs/ValueCurve"
       },
-      "XY_Coords": {
-        "$ref": "Core/common.json#/$defs/XY_Coords"
+      "TwoDimensionalFunctionPoint": {
+        "$ref": "Core/common.json#/$defs/TwoDimensionalFunctionPoint"
       }
     }
   }

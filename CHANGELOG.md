@@ -7,6 +7,47 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-26
+
+0.3.0 starts a new compatibility line. Documents written at 0.2.x do not read at 0.3.0;
+regenerate them with a current producer, including cached test systems.
+
+### Added
+
+- `SeriesCompensator`, a branch with one series reactance: a series capacitor or reactor, a
+  thyristor-controlled or a static synchronous series compensator. Its `control_mode`
+  (`SeriesCompensatorControlMode`) is `FIXED`, `BYPASSED`, `DISPATCHABLE` or
+  `ACTIVE_POWER_FLOW`; the last two require `reactance_limits`, and `ACTIVE_POWER_FLOW` also
+  `active_power_flow_setpoint`.
+- `CurrentLossCurve`, a loss curve of active power against current (MW against kA in natural
+  units).
+- `IntervalAlignment` (`PERIOD_BEGINNING`, `PERIOD_MIDPOINT`, `PERIOD_ENDING`) and an optional
+  `interval_alignment` (default `PERIOD_ENDING`) on `SingleTimeSeries`, `Deterministic`,
+  `DeterministicSingleTimeSeries`, `Probabilistic`, and `Scenarios`. The value is record-only.
+- `Area.scheduled_net_interchange` (nullable, follows `power_units`; positive means export) and
+  `Area.out_of_area_load_ids`.
+- `InterconnectingConverter.rated_dc_voltage` and `rated_ac_voltage` (kV, default 0.0 =
+  unspecified).
+- An optional `license` on `DataSource`: an SPDX identifier, a license name, or a URL.
+- The release workflow also sends `schema-release` to SiennaGridDB.
+
+### Changed
+
+- `XY_Coords` is renamed to `TwoDimensionalFunctionPoint`. The old name was easy to confuse with
+  geographic coordinates. Consumers that name the generated type must use the new name.
+- `FuelCurve.fuel_units` is required. Its type is the new `FuelUnit` enum (`MMBTU`, `GJ`), and
+  `fuel_cost` is priced per one `fuel_units`.
+- `InterconnectingConverter.loss_function` is a `CurrentLossCurve`, not a `LossCurve`. The wire
+  shape does not change, but natural-units coefficients now mean MW against kA.
+- Seven DC current fields are in kA, not A: `InterconnectingConverter.dc_current` and
+  `max_dc_current`, `TwoTerminalVSCLine.dc_current`, `max_dc_current_from` and
+  `max_dc_current_to`, `TwoTerminalLCCLine.current_transfer_setpoint`, and
+  `TModelHVDCLine.base_current`. An old value still validates but reads 1000 times too large.
+  The "no limit" default of the three `max_dc_current*` fields changes from `1e8` to `9999.0`.
+- `HydroTurbine.efficiency` and `HydroPumpTurbine.efficiency` are annotated as a `Fraction`
+  (unit `1`).
+- `interval_alignment` is a reserved time series feature name.
+
 ## [0.2.0] - 2026-10-05
 
 ### Added
@@ -120,6 +161,7 @@ renders vendor extensions, so it is the only channel that survives into generate
 - **The unit-quantity pairing rule needs a SiennaGridDB checkout** and skips silently without
   one, so a green CI run is not evidence that it holds.
 
-[Unreleased]: https://github.com/Sienna-Platform/SiennaSchemas/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/Sienna-Platform/SiennaSchemas/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/Sienna-Platform/SiennaSchemas/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Sienna-Platform/SiennaSchemas/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Sienna-Platform/SiennaSchemas/releases/tag/v0.1.0
