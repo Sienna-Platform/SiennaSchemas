@@ -78,6 +78,12 @@ COMPONENT = {
     "synchronous_condenser_regulated_bus_name": (
         "Operations/StaticInjection/SynchronousCondenser.json", None, False,
     ),
+    "transformer_circuit_remote_regulated": (
+        "Operations/Branch/TransformerCircuit.json", None, True,
+    ),
+    "transformer_circuit_unknown_orientation": (
+        "Operations/Branch/TransformerCircuit.json", None, False,
+    ),
 }
 
 
