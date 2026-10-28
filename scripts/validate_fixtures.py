@@ -69,6 +69,21 @@ COMPONENT = {
     "line_without_ofl": ("Operations/Branch/Line.json", None, True),
     "acbus_pq_with_setpoint": ("Core/Topology/ACBus.json", None, True),
     "acbus_null_setpoint": ("Core/Topology/ACBus.json", None, True),
+    "synchronous_condenser_remote_regulated": (
+        "Operations/StaticInjection/SynchronousCondenser.json", None, True,
+    ),
+    "synchronous_condenser_local_regulated": (
+        "Operations/StaticInjection/SynchronousCondenser.json", None, True,
+    ),
+    "synchronous_condenser_regulated_bus_name": (
+        "Operations/StaticInjection/SynchronousCondenser.json", None, False,
+    ),
+    "transformer_circuit_remote_regulated": (
+        "Operations/Branch/TransformerCircuit.json", None, True,
+    ),
+    "transformer_circuit_unknown_orientation": (
+        "Operations/Branch/TransformerCircuit.json", None, False,
+    ),
 }
 
 

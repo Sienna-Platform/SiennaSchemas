@@ -315,16 +315,16 @@
       "type": "number",
       "x-unit": "kV"
     },
-    "remote_bus_control_from": {
-      "description": "Number of the AC bus whose voltage the `from` converter regulates when `ac_control_from` is `AC_VOLTAGE`, to the `voltage_setpoint` of that bus; null regulates its own terminal bus.",
+    "remote_regulated_bus_from": {
+      "description": "ID of the AC bus whose voltage the `from` converter regulates when `ac_control_from` is `AC_VOLTAGE`, to the `voltage_setpoint` of that bus; null regulates the `from` terminal bus. A value equal to the `from` terminal bus is invalid.",
       "default": null,
       "type": [
         "integer",
         "null"
       ]
     },
-    "remote_bus_control_to": {
-      "description": "Number of the AC bus whose voltage the `to` converter regulates when `ac_control_to` is `AC_VOLTAGE`, to the `voltage_setpoint` of that bus; null regulates its own terminal bus.",
+    "remote_regulated_bus_to": {
+      "description": "ID of the AC bus whose voltage the `to` converter regulates when `ac_control_to` is `AC_VOLTAGE`, to the `voltage_setpoint` of that bus; null regulates the `to` terminal bus. A value equal to the `to` terminal bus is invalid.",
       "default": null,
       "type": [
         "integer",
