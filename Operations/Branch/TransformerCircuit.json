@@ -59,10 +59,18 @@
       "default": "UNDEFINED",
       "$ref": "../../Operations/common.json#/$defs/TransformerControlObjective"
     },
-    "regulated_bus_number": {
-      "description": "Controlled bus number (PSS/E CONT; sign = regulation side).",
-      "default": 0,
-      "type": "integer"
+    "regulated_bus": {
+      "description": "ID of the bus whose voltage this circuit's tap changer regulates (PSS/E CONT), within `controlled_voltage_limits`. It may be an end of `arc` or a remote bus. Used only when `control_objective` is `VOLTAGE` or `VOLTAGE_DISABLED`; null otherwise, or when no regulated bus is stated.",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "regulated_bus_orientation": {
+      "description": "Direction the tap adjustment assumes for `regulated_bus`, replacing the sign of PSS/E CONT. Stated only when `regulated_bus` is not an end of `arc`; `UNDEFINED` when it is an end of `arc` or null, because the connections already give the direction.",
+      "default": "UNDEFINED",
+      "$ref": "../../Operations/common.json#/$defs/TransformerRegulationOrientation"
     },
     "tap_ratio_limits": {
       "description": "Tap-ratio actuator band (PSS/E RMA/RMI) when `control_objective` moves the tap; `null` otherwise. Under the tap-moving objectives it may be omitted and then defaults to 0.9 to 1.1, PSS/E's own RMI/RMA defaults, which is why it is the one band the conditional blocks do not require. Units: 1.",

@@ -215,6 +215,9 @@
       "TransformerControlObjective": {
         "$ref": "Operations/common.json#/$defs/TransformerControlObjective"
       },
+      "TransformerRegulationOrientation": {
+        "$ref": "Operations/common.json#/$defs/TransformerRegulationOrientation"
+      },
       "TwoWindingTransformerShuntLocation": {
         "$ref": "Operations/common.json#/$defs/TwoWindingTransformerShuntLocation"
       },
