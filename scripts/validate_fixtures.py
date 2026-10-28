@@ -18,11 +18,14 @@ documents exactly that, and is expected to validate. Closing it would mean
 """
 
 import copy
+import functools
 import json
 import pathlib
 import sys
 import tempfile
 import warnings
+
+import regress
 
 from build_bundles import build, current_version
 from schema_version import classify, message
@@ -33,7 +36,31 @@ from schema_version import classify, message
 # a large rewrite for a test script. Kept deliberately, warning silenced.
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", DeprecationWarning)
-    from jsonschema import Draft7Validator, Draft202012Validator, RefResolver
+    from jsonschema import Draft7Validator, Draft202012Validator, RefResolver, validators
+    from jsonschema.exceptions import ValidationError
+
+
+
+@functools.cache
+def _ecma_regex(pattern):
+    return regress.Regex(pattern, "u")
+
+
+def _ecma_pattern(validator, pattern, instance, schema):
+    """`pattern` with ECMA-262 semantics, as JSON Schema requires. Python's `re` differs:
+    `$` also matches before a trailing newline, and `\\d` matches any Unicode digit."""
+    if validator.is_type(instance, "string") and _ecma_regex(pattern).find(instance) is None:
+        yield ValidationError(f"{instance!r} does not match {pattern!r}")
+
+
+# Registered for each dialect URI, so a `$ref` into a file that declares its own `$schema`
+# keeps the ECMA-262 `pattern` instead of falling back to the stock class.
+Draft7Validator = validators.validates("http://json-schema.org/draft-07/schema")(
+    validators.extend(Draft7Validator, {"pattern": _ecma_pattern})
+)
+Draft202012Validator = validators.validates("https://json-schema.org/draft/2020-12/schema")(
+    validators.extend(Draft202012Validator, {"pattern": _ecma_pattern})
+)
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 TS_DIR = REPO_ROOT / "TimeSeries"
@@ -56,6 +83,20 @@ NEGATIVE = {
     "invalid_reserved_feature_name": False,
     # See the module docstring: accepted, because additionalProperties is open.
     "invalid_nonsequential_with_resolution": True,
+    # `initial_timestamp` against `time_reference`, and the RFC 3339 forms the
+    # patterns allow. Checked with ECMA-262 `pattern` semantics (`_ecma_pattern`).
+    "timestamp_zoneless_local": True,
+    "timestamp_utc_plus_zero": True,
+    "timestamp_unspecified_local": True,
+    "timestamp_unspecified_offset": True,
+    "invalid_timestamp_zoneless_with_offset": False,
+    "invalid_timestamp_utc_nonzero_offset": False,
+    "invalid_timestamp_utc_unknown_offset": False,
+    "invalid_timestamp_zone_without_offset": False,
+    "invalid_timestamp_trailing_newline": False,
+    "invalid_timestamp_microseconds": False,
+    "invalid_timestamp_lowercase_separator": False,
+    "invalid_timestamp_space_separator": False,
 }
 
 # Component fixtures, in tests/fixtures/components: fixture stem ->
@@ -73,6 +114,10 @@ COMPONENT = {
     "series_compensator_dispatchable": ("Operations/Branch/SeriesCompensator.json", None, True),
     "series_compensator_dispatchable_without_limits": ("Operations/Branch/SeriesCompensator.json", None, False),
     "series_compensator_power_flow_without_setpoint": ("Operations/Branch/SeriesCompensator.json", None, False),
+    "data_source_offset": ("Core/SupplementalAttributes/DataSource.json", None, True),
+    "data_source_published_null": ("Core/SupplementalAttributes/DataSource.json", None, True),
+    "data_source_zoneless": ("Core/SupplementalAttributes/DataSource.json", None, False),
+    "data_source_published_zoneless": ("Core/SupplementalAttributes/DataSource.json", None, False),
 }
 
 

@@ -94,9 +94,19 @@
       "description": "Opaque, package-owned payload (typically JSON) carried verbatim for an application to reconstruct its own domain objects. Never parsed or interpreted here, and end users are not expected to set it. Element typing does not belong here — that is `element_type`."
     },
     "initial_timestamp": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Start of the first forecast window."
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?(Z|[+-]\\d{2}:\\d{2})$"
+        },
+        {
+          "type": "string",
+          "format": "date-time-local",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?$"
+        }
+      ],
+      "description": "Start of the first forecast window. Written in one of two RFC 3339 forms, with at most 3 fractional-second digits: `date-time`, with `Z` or a UTC offset, names an instant; `date-time-local`, with no offset, is a wall clock and names no instant. `time_reference` fixes the form: `zoneless` requires `date-time-local`, `utc` requires a zero offset, and a fixed offset or an IANA zone requires `date-time`. With no `time_reference`, either form is accepted and none is assumed."
     },
     "resolution": {
       "$ref": "common.json#/$defs/Period",
@@ -132,5 +142,69 @@
     "horizon",
     "interval",
     "count"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "time_reference": {
+            "const": "zoneless"
+          }
+        },
+        "required": [
+          "time_reference"
+        ]
+      },
+      "then": {
+        "properties": {
+          "initial_timestamp": {
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "time_reference": {
+            "const": "utc"
+          }
+        },
+        "required": [
+          "time_reference"
+        ]
+      },
+      "then": {
+        "properties": {
+          "initial_timestamp": {
+            "pattern": "(Z|\\+00:00)$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "time_reference": {
+            "not": {
+              "enum": [
+                "utc",
+                "zoneless"
+              ]
+            }
+          }
+        },
+        "required": [
+          "time_reference"
+        ]
+      },
+      "then": {
+        "properties": {
+          "initial_timestamp": {
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?(Z|[+-]\\d{2}:\\d{2})$"
+          }
+        }
+      }
+    }
   ]
 }
