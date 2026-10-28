@@ -210,6 +210,22 @@
     {
       "if": {
         "properties": {
+          "regulated_bus": {
+            "type": "null"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "regulated_bus_orientation": {
+            "const": "UNDEFINED"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
           "control_objective": {
             "enum": [
               "FIXED",

@@ -19,7 +19,7 @@
       "type": "boolean"
     },
     "bustype": {
-      "description": "Power flow classification of this bus. It sets which quantities the solve holds fixed. It does not record whether a device regulates the bus voltage: a `PQ` bus can have a `voltage_setpoint` that a voltage droop or a reactive power limit stops it from reaching.",
+      "description": "Power flow classification of this bus. It does not by itself say which bus voltage is held; the regulating devices and the bus `voltage_setpoint` say that.",
       "$ref": "../common.json#/$defs/ACBusType"
     },
     "angle": {
@@ -35,7 +35,7 @@
       "x-unit-base": "base_voltage"
     },
     "voltage_setpoint": {
-      "description": "Scheduled voltage magnitude for this bus, as a multiple of `base_voltage`. It is the target of every device that regulates this bus, at the bus or from a remote terminal. A `PV` bus holds this value; a `PQ` bus can have it and not reach it. `null` when no device regulates this bus. Units: pu.",
+      "description": "Scheduled voltage magnitude for this bus, as a multiple of `base_voltage`. It is the target of every device that regulates this bus, at the bus or from a remote terminal. The devices that regulate this bus hold it at this value unless a droop or a reactive power limit prevents it. `null` when no device regulates this bus. Units: pu.",
       "type": [
         "number",
         "null"

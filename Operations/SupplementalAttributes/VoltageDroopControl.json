@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "VoltageDroopControl",
-  "description": "Supplemental attribute for a voltage droop controller (PSS/E voltage droop control): a set of generators jointly regulating the reactive power at one bus along a Q–V characteristic. While the controller is available its regulated bus and characteristic override each member's own voltage target; while it is unavailable the members fall back to their own targets. Membership and each member's relative reactive power weight are VoltageControlAssociation rows. The characteristic holds `reactive_power_limits.max` below `voltage_limits.min`, ramps to `deadband_reactive_power` at `deadband_voltage_limits.min`, holds it through `deadband_voltage_limits.max`, ramps to `reactive_power_limits.min` at `voltage_limits.max`, and holds it above.",
+  "description": "Supplemental attribute for a voltage droop controller (PSS/E voltage droop control): a set of generators jointly regulating the reactive power at one bus along a Q–V characteristic. While the controller is available, its regulated bus and characteristic replace each member's own voltage regulation. While it is unavailable, each member holds the bus it regulates, its `remote_regulated_bus` or the bus it is connected to, at that bus's `voltage_setpoint`. Membership and each member's relative reactive power weight are VoltageControlAssociation rows. The characteristic holds `reactive_power_limits.max` below `voltage_limits.min`, ramps to `deadband_reactive_power` at `deadband_voltage_limits.min`, holds it through `deadband_voltage_limits.max`, ramps to `reactive_power_limits.min` at `voltage_limits.max`, and holds it above.",
   "type": "object",
   "properties": {
     "id": {
@@ -13,7 +13,7 @@
       "type": "string"
     },
     "available": {
-      "description": "Whether the controller is in service (PSS/E STATUS). While false, members regulate their own targets.",
+      "description": "Whether the controller is in service (PSS/E STATUS). While false, each member holds the bus it regulates at that bus's `voltage_setpoint`.",
       "default": true,
       "type": "boolean"
     },

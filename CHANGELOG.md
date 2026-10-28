@@ -7,6 +7,38 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ## [Unreleased]
 
+### Added
+
+- `ACBus.voltage_setpoint` (nullable, pu on `base_voltage`): the target of every device that
+  regulates the bus, at the bus or from a remote terminal.
+- `remote_regulated_bus` (nullable bus ID, default `null` = the device's own bus) on
+  `ThermalStandard`, `ThermalMultiStart`, `HydroDispatch`, `HydroTurbine`, `HydroPumpTurbine`,
+  `RenewableDispatch`, `EnergyReservoirStorage`, `HybridSystem`, `Source`, and
+  `SynchronousCondenser`.
+- `TransformerCircuit.regulated_bus` (nullable bus ID) and `regulated_bus_orientation`, with the
+  new `TransformerRegulationOrientation` enum (`UNDEFINED`, `FROM`, `TO`).
+
+### Changed
+
+- `ACBus.bustype` is a classification only: a `PV` bus has in-service generation that
+  regulates voltage, at this bus or at its `remote_regulated_bus`. The held voltage is the
+  regulated bus's `voltage_setpoint`, and `magnitude` is the solved value.
+- `FACTSControlDevice.regulated_bus_number` and `SwitchedAdmittance.regulated_bus_number` are
+  replaced by `remote_regulated_bus`, a nullable bus ID instead of a bus number with 0 for local.
+- `InterconnectingConverter.remote_bus_control` and
+  `TwoTerminalVSCLine.remote_bus_control_from`/`_to` are renamed `remote_regulated_bus` and
+  `remote_regulated_bus_from`/`_to`, and hold bus IDs instead of bus numbers.
+- `TransformerCircuit.regulated_bus_number`, a signed bus number, is replaced by
+  `regulated_bus` and `regulated_bus_orientation`. A null `regulated_bus` requires an
+  `UNDEFINED` orientation.
+
+### Removed
+
+- The device-level AC voltage setpoints: `FACTSControlDevice.voltage_setpoint` and
+  `voltage_setpoint_units`, `InterconnectingConverter.ac_voltage_setpoint`, and
+  `TwoTerminalVSCLine.ac_voltage_setpoint_from`/`_to`. A regulating device holds the
+  `voltage_setpoint` of the bus it regulates.
+
 ## [0.3.0] - 2026-10-26
 
 0.3.0 starts a new compatibility line. Documents written at 0.2.x do not read at 0.3.0;

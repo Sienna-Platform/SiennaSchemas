@@ -90,6 +90,9 @@ COMPONENT = {
     "transformer_circuit_unknown_orientation": (
         "Operations/Branch/TransformerCircuit.json", None, False,
     ),
+    "transformer_circuit_orientation_without_bus": (
+        "Operations/Branch/TransformerCircuit.json", None, False,
+    ),
 }
 
 

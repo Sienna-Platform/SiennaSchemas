@@ -81,7 +81,7 @@
       "$ref": "../../Operations/common.json#/$defs/SwitchedAdmittanceControlMode"
     },
     "remote_regulated_bus": {
-      "description": "ID of the bus this shunt regulates (PSS/E SWREG): under the voltage modes, the bus whose voltage it holds within `voltage_limits`; under the reactive modes, the bus of the device whose reactive quantity it regulates. null means the bus this shunt is connected to. A value equal to `bus` is invalid.",
+      "description": "ID of the bus this shunt regulates (PSS/E SWREM in v33, SWREG in v34 and later): under the voltage modes, the bus whose voltage it holds within `voltage_limits`; under the reactive modes, the bus of the device whose reactive quantity it regulates. null means the bus this shunt is connected to. A value equal to `bus` is invalid.",
       "default": null,
       "type": [
         "integer",
