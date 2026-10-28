@@ -210,6 +210,14 @@
       ],
       "title": "VoltageControlTerminal",
       "type": "string"
+    },
+    "DiscreteControlledBranchStatus": {
+      "description": "Open or closed status of a switching device.",
+      "type": "string",
+      "enum": [
+        "OPEN",
+        "CLOSED"
+      ]
     }
   }
 }

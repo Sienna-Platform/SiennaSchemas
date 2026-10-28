@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PlannedEquipmentModificationAssociation",
+  "description": "Links a PlannedEquipmentModification to one piece of equipment and records the values the modification plans for it. One row per (modification, equipment) pair; each row accompanies the plain supplemental attribute association row for the same pair. At least one of `available` and `switch_status` is present. A planned value applies while the modification is in effect: throughout when the attribute has no time series for that field and equipment, otherwise as the time series says. Where no modification has a planned value in effect, the equipment keeps its own `available` and normal switch status.",
+  "type": "object",
+  "properties": {
+    "modification_id": {
+      "description": "ID of the PlannedEquipmentModification attribute.",
+      "type": "integer"
+    },
+    "component_id": {
+      "description": "ID of the equipment the modification plans values for.",
+      "type": "integer"
+    },
+    "available": {
+      "description": "Planned availability of the equipment: false takes it out of service, true brings it into service. Omitted when the modification does not plan availability for this equipment.",
+      "type": "boolean"
+    },
+    "switch_status": {
+      "description": "Planned open or closed status of a switching device. Omitted when the modification does not plan a switch status for this equipment, and always omitted for equipment that is not a switching device.",
+      "$ref": "../../Operations/common.json#/$defs/DiscreteControlledBranchStatus"
+    }
+  },
+  "required": [
+    "modification_id",
+    "component_id"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "not": {
+          "required": [
+            "available"
+          ]
+        }
+      },
+      "then": {
+        "required": [
+          "switch_status"
+        ]
+      }
+    }
+  ]
+}
