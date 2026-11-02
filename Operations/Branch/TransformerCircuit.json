@@ -117,7 +117,7 @@
       "x-quantity": "ApparentPower"
     },
     "rating_b": {
-      "description": "Second current rating. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
+      "description": "Short-term thermal rating (Rate B in PSS/E), the flow allowed for a limited time, such as after a contingency. Absent means no short-term rating. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -127,7 +127,7 @@
       "x-quantity": "ApparentPower"
     },
     "rating_c": {
-      "description": "Third current rating. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
+      "description": "Emergency thermal rating (Rate C in PSS/E), the highest flow allowed for a brief period. Absent means no emergency rating. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
