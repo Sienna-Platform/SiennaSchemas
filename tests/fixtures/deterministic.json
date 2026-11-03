@@ -15,6 +15,7 @@
   "units": "MW",
   "quantity_kind": "ActivePower",
   "unit_system": "COMPONENT_BASE",
+  "per_unit_of": "base_power",
   "time_reference": "utc",
   "initial_timestamp": "2030-01-01T00:00:00Z",
   "resolution": "PT1H",
