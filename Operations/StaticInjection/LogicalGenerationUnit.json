@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A logical generation unit: a market-facing unit that the operator dispatches and commits as one resource, such as one configuration of a combined cycle plant.\n\nA logical unit holds its own limits, ramps, start-up data and costs, independent of the physical units behind it. Its `bus` is where it injects when a model represents logical units instead of physical ones. It has the start-up representation of `ThermalMultiStart`, with no fuel and no dynamic model.",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component. Components of the same type (e.g., `PowerLoad`) must have unique names, but components of different types (e.g., `PowerLoad` and `ACBus`) can have the same name.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`). Unavailable components are excluded during simulations.",
+      "type": "boolean"
+    },
+    "status": {
+      "description": "Operating state of the unit at the start of a simulation.",
+      "$ref": "../../Operations/common.json#/$defs/OperationalStates"
+    },
+    "commitment_mode": {
+      "description": "Commitment mode of the unit.",
+      "$ref": "../../Operations/common.json#/$defs/CommitmentModes",
+      "default": "COMMITTED"
+    },
+    "bus": {
+      "description": "ID of the bus that this component is connected to.",
+      "type": "integer"
+    },
+    "active_power": {
+      "description": "Initial active power set point of the unit. For power flow, this is the steady state operating point of the system. For production cost modeling, this may or may not be used as the initial starting point for the solver, depending on the solver used. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "type": "number",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ActivePower"
+    },
+    "reactive_power": {
+      "description": "Initial reactive power set point of the unit. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
+      "type": "number",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ReactivePower"
+    },
+    "rating": {
+      "description": "Maximum AC side output power rating of the unit. Not to be confused with base_power. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
+      "type": "number",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVA",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ApparentPower"
+    },
+    "prime_mover_type": {
+      "description": "Prime mover technology according to EIA 923.",
+      "$ref": "../../Core/common.json#/$defs/PrimeMovers"
+    },
+    "active_power_limits": {
+      "description": "Minimum and maximum stable active power levels. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ActivePower"
+    },
+    "reactive_power_limits": {
+      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MVAr",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ReactivePower"
+    },
+    "ramp_limits": {
+      "description": "Ramp up and ramp down limits. Units: per power_units — NATURAL_UNITS: MW/min, COMPONENT_BASE: pu/min .",
+      "$ref": "../../Core/common.json#/$defs/UpDown",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW/min",
+        "COMPONENT_BASE": "pu/min"
+      }
+    },
+    "power_trajectory": {
+      "description": "Power trajectory the unit will take during the start-up and shut-down ramp process. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "$ref": "../../Core/common.json#/$defs/StartUpShutDown",
+      "x-unit-discriminator": "power_units",
+      "x-units": {
+        "NATURAL_UNITS": "MW",
+        "COMPONENT_BASE": "pu"
+      },
+      "x-quantity": "ActivePower"
+    },
+    "time_limits": {
+      "description": "Minimum up and minimum down time limits. Units: min.",
+      "$ref": "../../Core/common.json#/$defs/UpDown",
+      "x-unit": "min"
+    },
+    "start_time_limits": {
+      "description": "Time limits for start-up based on turbine temperature. Units: min.",
+      "$ref": "../../Core/common.json#/$defs/StartUpStages",
+      "x-unit": "min"
+    },
+    "start_types": {
+      "description": "Number of start-up based on turbine temperature, where `1` = *hot*, `2` = *warm*, and `3` = *cold*.",
+      "type": "integer"
+    },
+    "operation_cost": {
+      "description": "Operating cost of generation. or MarketBidCost",
+      "discriminator": {
+        "mapping": {
+          "THERMAL": "../../Core/common.json#/$defs/ThermalGenerationCost",
+          "MARKET_BID": "../../Core/common.json#/$defs/MarketBidCost",
+          "MARKET_BID_TIME_SERIES": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost",
+          "IMPORT_EXPORT_TIME_SERIES": "../../Core/common.json#/$defs/ImportExportTimeSeriesCost"
+        },
+        "propertyName": "cost_type"
+      },
+      "oneOf": [
+        {
+          "$ref": "../../Core/common.json#/$defs/ThermalGenerationCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/$defs/MarketBidCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/$defs/MarketBidTimeSeriesCost"
+        },
+        {
+          "$ref": "../../Core/common.json#/$defs/ImportExportTimeSeriesCost"
+        }
+      ]
+    },
+    "base_power": {
+      "description": "Base power of the unit for per unitization. Units: MVA.",
+      "type": "number",
+      "x-unit": "MVA"
+    },
+    "power_units": {
+      "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
+      "$ref": "../../Core/common.json#/$defs/UnitSystem"
+    },
+    "time_at_status": {
+      "description": "Time the unit has been in its current status. Units: min.",
+      "default": 600000.0,
+      "type": "number",
+      "x-unit": "min"
+    },
+    "switching_times": {
+      "description": "Time it takes the unit to switch ONLINE (`up`) or OFFLINE (`down`) after a start or shut-down is initiated. Set to `null` if not modeled. Units: min.",
+      "$ref": "../../Core/common.json#/$defs/UpDown",
+      "x-unit": "min"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "available",
+    "status",
+    "bus",
+    "active_power",
+    "reactive_power",
+    "rating",
+    "prime_mover_type",
+    "active_power_limits",
+    "start_types",
+    "operation_cost",
+    "base_power",
+    "power_units"
+  ],
+  "title": "LogicalGenerationUnit",
+  "type": "object"
+}
