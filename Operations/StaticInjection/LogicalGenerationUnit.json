@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A logical generation unit: a market-facing unit that the operator dispatches and commits as one resource, such as one configuration of a combined cycle plant.\n\nA logical unit holds its own limits, ramps, start-up data and costs, independent of the physical units behind it. Its `bus` is where it injects when a model represents logical units instead of physical ones. It has the start-up representation of `ThermalMultiStart`, with no fuel and no dynamic model.",
+  "description": "A logical generation unit: a market-facing unit that the operator dispatches and commits as one resource, such as one configuration of a combined cycle plant.\n\nA logical unit holds its own limits, ramps, start-up data and costs, independent of the physical units behind it. Its `bus` is where it injects when a model represents logical units instead of physical ones. It has the start-up representation of `ThermalMultiStart`, with no dynamic model.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -60,6 +60,10 @@
     "prime_mover_type": {
       "description": "Prime mover technology according to EIA 923.",
       "$ref": "../../Core/common.json#/$defs/PrimeMovers"
+    },
+    "fuel": {
+      "description": "Prime mover fuel according to EIA 923.",
+      "$ref": "../../Core/common.json#/$defs/ThermalFuels"
     },
     "active_power_limits": {
       "description": "Minimum and maximum stable active power levels. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
@@ -171,6 +175,7 @@
     "reactive_power",
     "rating",
     "prime_mover_type",
+    "fuel",
     "active_power_limits",
     "start_types",
     "operation_cost",

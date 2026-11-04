@@ -8,6 +8,7 @@
   "reactive_power": 0.0,
   "rating": 480.0,
   "prime_mover_type": "CC",
+  "fuel": "NATURAL_GAS",
   "ramp_limits": {
     "up": 12.0,
     "down": 12.0

@@ -11,7 +11,7 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 - `LogicalGenerationUnit`, a market-facing unit that the operator dispatches and commits as one
   resource, such as one configuration of a combined cycle plant. It carries the
-  `ThermalMultiStart` fields without `fuel` or `dynamic_injector`. Links to physical units and
+  `ThermalMultiStart` fields without `dynamic_injector`. Links to physical units and
   rules that keep logical units from running together are not modeled yet.
 
 ## [0.4.0] - 2026-10-27
