@@ -1,0 +1,59 @@
+{
+  "id": 1,
+  "name": "CC1_2X1",
+  "available": true,
+  "status": "OFFLINE",
+  "bus": 1,
+  "active_power": 0.0,
+  "reactive_power": 0.0,
+  "rating": 480.0,
+  "prime_mover_type": "CC",
+  "fuel": "NATURAL_GAS",
+  "ramp_limits": {
+    "up": 12.0,
+    "down": 12.0
+  },
+  "time_limits": {
+    "up": 240.0,
+    "down": 120.0
+  },
+  "start_time_limits": {
+    "hot": 480.0,
+    "warm": 720.0,
+    "cold": 1440.0
+  },
+  "start_types": 3,
+  "operation_cost": {
+    "cost_type": "THERMAL",
+    "variable_operation_cost": {
+      "variable_cost_type": "COST",
+      "value_curve": {
+        "curve_type": "INPUT_OUTPUT",
+        "function_data": {
+          "function_type": "LINEAR",
+          "proportional_term": 22.5,
+          "constant_term": 0.0
+        }
+      },
+      "power_units": "NATURAL_UNITS",
+      "vom_cost": {
+        "curve_type": "INPUT_OUTPUT",
+        "function_data": {
+          "function_type": "LINEAR",
+          "proportional_term": 0.0,
+          "constant_term": 0.0
+        }
+      }
+    },
+    "fixed": 0.0,
+    "start_up": {
+      "startup_stages_type": "STAGES",
+      "hot": 9000.0,
+      "warm": 15000.0,
+      "cold": 24000.0
+    },
+    "shut_down": 0.0
+  },
+  "base_power": 500.0,
+  "power_units": "NATURAL_UNITS"
+}

@@ -152,6 +152,9 @@
       "ThermalMultiStart": {
         "$ref": "Operations/StaticInjection/ThermalMultiStart.json"
       },
+      "LogicalGenerationUnit": {
+        "$ref": "Operations/StaticInjection/LogicalGenerationUnit.json"
+      },
       "ThermalPowerPlant": {
         "$ref": "Operations/SupplementalAttributes/ThermalPowerPlant.json"
       },
