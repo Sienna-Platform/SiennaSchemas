@@ -11,11 +11,23 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 - Optional `rating_b` and `rating_c` on `DiscreteControlledACBranch`, matching `Line` and
   `TransformerCircuit`.
+- Required `discount_rate`, `inflation_rate` and `interest_rate` on `TechnologyFinancialData`.
+  Each technology carries the rates used to convert its costs to a net present value in the
+  model base year. A portfolio with one common rate repeats it on every technology.
+
+### Removed
+
+- `PortfolioFinancialData` and `PortfolioDocument.financial_data`. Portfolio-wide financial
+  parameters are modeling assumptions, not data: the rates move to `TechnologyFinancialData`
+  and the base year belongs to the consuming model. Documents carrying `financial_data` no
+  longer validate; regenerate them with a current producer.
 
 ### Changed
 
 - `rating_b` and `rating_c` on `Line`, `TransformerCircuit`, and `DiscreteControlledACBranch`
   are described as the short-term (PSS/E Rate B) and emergency (Rate C) thermal ratings.
+- `StorageTechnology.storage_tech` is optional with a documented default of `OTHER_CHEM`,
+  matching the consumer data model.
 
 ## [0.4.0] - 2026-10-27
 
