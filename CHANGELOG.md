@@ -7,6 +7,16 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ## [Unreleased]
 
+### Added
+
+- Optional `rating_b` and `rating_c` on `DiscreteControlledACBranch`, matching `Line` and
+  `TransformerCircuit`.
+
+### Changed
+
+- `rating_b` and `rating_c` on `Line`, `TransformerCircuit`, and `DiscreteControlledACBranch`
+  are described as the short-term (PSS/E Rate B) and emergency (Rate C) thermal ratings.
+
 ## [0.4.0] - 2026-10-27
 
 0.4.0 starts a new compatibility line. Timestamps follow the OpenAPI Format Registry: a
