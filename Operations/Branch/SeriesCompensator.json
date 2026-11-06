@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A fixed series admittance on an `Arc`: a series capacitor or reactor, or an AC line without charging susceptance, with constant `r` and `x` (the CIM `SeriesCompensator`). `bypassed` shorts the device into a zero-impedance tie; `available = false` takes it out of service. Controllable series devices are not covered.",
+  "description": "A fixed series compensator on an `Arc` (the CIM `SeriesCompensator`): a series capacitor or reactor, or an AC line without charging susceptance, with constant `r` and `x`. `bypassed` shorts the device into a zero-impedance tie; `available = false` takes it out of service. Controllable series devices are not covered.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -15,7 +15,7 @@
       "type": "boolean"
     },
     "active_power_flow": {
-      "description": "Initial condition of active power flow through the device. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
+      "description": "Initial condition of active power flow through the compensator. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -25,7 +25,7 @@
       "x-quantity": "ActivePower"
     },
     "reactive_power_flow": {
-      "description": "Initial condition of reactive power flow through the device. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
+      "description": "Initial condition of reactive power flow through the compensator. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -59,7 +59,7 @@
       "x-quantity": "Reactance"
     },
     "rating": {
-      "description": "Thermal rating. Flow through the device must be between -`rating` and `rating`. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
+      "description": "Thermal rating. Flow through the compensator must be between -`rating` and `rating`. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -131,6 +131,6 @@
     "base_power",
     "power_units"
   ],
-  "title": "SeriesAdmittance",
+  "title": "SeriesCompensator",
   "type": "object"
 }

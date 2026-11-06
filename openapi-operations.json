@@ -29,8 +29,8 @@
       "DiscreteControlledACBranch": {
         "$ref": "Operations/Branch/DiscreteControlledACBranch.json"
       },
-      "SeriesAdmittance": {
-        "$ref": "Operations/Branch/SeriesAdmittance.json"
+      "SeriesCompensator": {
+        "$ref": "Operations/Branch/SeriesCompensator.json"
       },
       "EnergyReservoirStorage": {
         "$ref": "Operations/StaticInjection/EnergyReservoirStorage.json"
