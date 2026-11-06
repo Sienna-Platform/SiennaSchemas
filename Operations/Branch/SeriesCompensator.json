@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A series compensator on an `Arc`: a series capacitor or reactor, or a thyristor-controlled or static synchronous series compensator, with one series reactance. Devices that also inject at a bus, such as a UPFC, are not covered.",
+  "description": "A fixed series compensator on an `Arc` (the CIM `SeriesCompensator`): a series capacitor or reactor, or an AC line without charging susceptance, with constant `r` and `x`. `bypassed` shorts the device into a zero-impedance tie; `available = false` takes it out of service. Controllable series devices are not covered.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -49,7 +49,7 @@
       "x-quantity": "Resistance"
     },
     "x": {
-      "description": "Series reactance; negative for a capacitor. Under `DISPATCHABLE` and `ACTIVE_POWER_FLOW`, the present value. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "description": "Series reactance; negative for a capacitor. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
       "type": "number",
       "x-unit-discriminator": "parameter_units",
       "x-units": {
@@ -68,30 +68,10 @@
       },
       "x-quantity": "ApparentPower"
     },
-    "control_mode": {
-      "description": "How the series reactance is set. `FIXED` holds `x`; `BYPASSED` shorts the compensator into a zero-impedance tie; `DISPATCHABLE` makes the reactance a decision within `reactance_limits`; `ACTIVE_POWER_FLOW` sets it to hold `active_power_flow_setpoint`.",
-      "default": "FIXED",
-      "$ref": "../../Operations/common.json#/$defs/SeriesCompensatorControlMode"
-    },
-    "reactance_limits": {
-      "description": "Minimum and maximum series reactance. Required when `control_mode` is `DISPATCHABLE` or `ACTIVE_POWER_FLOW`. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
-      "$ref": "../../Core/common.json#/$defs/MinMax",
-      "x-unit-discriminator": "parameter_units",
-      "x-units": {
-        "NATURAL_UNITS": "ohm",
-        "COMPONENT_BASE": "pu"
-      },
-      "x-quantity": "Reactance"
-    },
-    "active_power_flow_setpoint": {
-      "description": "Active power flow, from the `from` bus to the `to` bus, the compensator holds. Required when `control_mode` is `ACTIVE_POWER_FLOW`. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
-      "type": "number",
-      "x-unit-discriminator": "power_units",
-      "x-units": {
-        "NATURAL_UNITS": "MW",
-        "COMPONENT_BASE": "pu"
-      },
-      "x-quantity": "ActivePower"
+    "bypassed": {
+      "description": "Whether the device is bypassed: shorted into a zero-impedance tie between the `from` and `to` buses. `r` and `x` keep the impedance it has when in service.",
+      "default": false,
+      "type": "boolean"
     },
     "rating_b": {
       "description": "Second current rating. Units: per power_units — NATURAL_UNITS: MVA, COMPONENT_BASE: pu .",
@@ -152,56 +132,5 @@
     "power_units"
   ],
   "title": "SeriesCompensator",
-  "type": "object",
-  "allOf": [
-    {
-      "if": {
-        "properties": {
-          "control_mode": {
-            "enum": [
-              "DISPATCHABLE",
-              "ACTIVE_POWER_FLOW"
-            ]
-          }
-        },
-        "required": [
-          "control_mode"
-        ]
-      },
-      "then": {
-        "required": [
-          "reactance_limits"
-        ],
-        "properties": {
-          "reactance_limits": {
-            "type": "object"
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "control_mode": {
-            "enum": [
-              "ACTIVE_POWER_FLOW"
-            ]
-          }
-        },
-        "required": [
-          "control_mode"
-        ]
-      },
-      "then": {
-        "required": [
-          "active_power_flow_setpoint"
-        ],
-        "properties": {
-          "active_power_flow_setpoint": {
-            "type": "number"
-          }
-        }
-      }
-    }
-  ]
+  "type": "object"
 }
