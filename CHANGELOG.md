@@ -17,6 +17,11 @@ This project is pre-1.0; any release may change schemas incompatibly.
 - `rating_b` and `rating_c` on `Line`, `TransformerCircuit`, and `DiscreteControlledACBranch`
   are described as the short-term (PSS/E Rate B) and emergency (Rate C) thermal ratings.
 
+### Removed
+
+- `monitored_components` on `PlannedOutage`. A planned outage is not a contingency; only
+  `FixedForcedOutage` and `GeometricDistributionForcedOutage` carry monitored components.
+
 ## [0.4.0] - 2026-10-27
 
 0.4.0 starts a new compatibility line. Timestamps follow the OpenAPI Format Registry: a
