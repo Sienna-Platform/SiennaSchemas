@@ -16,6 +16,11 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 - `rating_b` and `rating_c` on `Line`, `TransformerCircuit`, and `DiscreteControlledACBranch`
   are described as the short-term (PSS/E Rate B) and emergency (Rate C) thermal ratings.
+- `GenericArcImpedance.r` and `x` are per-unit on `base_power` only, and `parameter_units` is removed.
+  The component is an equivalent produced by network reduction, not equipment, and its arc may join buses at different voltage levels.
+  Ohms on such an arc depend on which end's base voltage is chosen, and the two choices differ by the squared voltage ratio, so neither is correct.
+  The schema now matches `DiscreteControlledACBranch`, whose `r` and `x` are also per-unit only.
+  This is a breaking change: a document that sets `parameter_units` no longer validates.
 
 ## [0.4.0] - 2026-10-27
 
