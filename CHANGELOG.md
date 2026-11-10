@@ -11,8 +11,24 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 - Optional `rating_b` and `rating_c` on `DiscreteControlledACBranch`, matching `Line` and
   `TransformerCircuit`.
+- `ProjectedDemand` (investments), replacing `DemandRequirement`: an exogenous demand with
+  `peak_demand_mw`, `construction_year`, voluntary curtailment (`max_demand_curtailment`,
+  `curtailment_cost`), `value_of_lost_load` for the rest, and time shifting
+  (`flexible_fraction`, `max_demand_delay`, `max_demand_advance`, `shift_efficiency`,
+  `shift_cost`).
+- `RetrofitPotential.retrofit_efficiency`: option capacity obtained per unit of source
+  capacity retrofitted, replacing `retrofit_fraction`.
 
 ### Changed
+
+- **Breaking:** `DemandRequirement` is removed; use `ProjectedDemand`.
+- **Breaking:** `DemandSideTechnology` is an investable end-use technology: it gains
+  `capacity_limits`, `unit_size`, `capital_costs`, `operation_costs` (`LoadCost`),
+  `ramp_limits` and `lifetime`, and requires `financial_data`. Its flexibility fields
+  (`peak_demand_mw`, curtailment, delay and advance, `demand_energy_efficiency`,
+  `shift_variable_cost`) move to `ProjectedDemand`. `technology_efficiency` defaults to 1.
+- **Breaking:** `RetrofitPotential.retrofit_fraction` is renamed `retrofit_efficiency`, and
+  `retrofit_cost` is optional.
 
 - `rating_b` and `rating_c` on `Line`, `TransformerCircuit`, and `DiscreteControlledACBranch`
   are described as the short-term (PSS/E Rate B) and emergency (Rate C) thermal ratings.

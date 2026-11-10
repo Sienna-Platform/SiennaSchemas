@@ -23,9 +23,6 @@
       "ColocatedSupplyStorageTechnology": {
         "$ref": "Investments/Technologies/ColocatedSupplyStorageTechnology.json"
       },
-      "DemandRequirement": {
-        "$ref": "Investments/Technologies/DemandRequirement.json"
-      },
       "DemandSideTechnology": {
         "$ref": "Investments/Technologies/DemandSideTechnology.json"
       },
@@ -52,6 +49,9 @@
       },
       "PortfolioFinancialData": {
         "$ref": "Investments/Financials/PortfolioFinancialData.json"
+      },
+      "ProjectedDemand": {
+        "$ref": "Investments/Technologies/ProjectedDemand.json"
       },
       "RequirementAssociation": {
         "$ref": "Investments/Associations/RequirementAssociation.json"
@@ -109,6 +109,9 @@
       },
       "LinearFunctionData": {
         "$ref": "Core/common.json#/$defs/LinearFunctionData"
+      },
+      "LoadCost": {
+        "$ref": "Core/common.json#/$defs/LoadCost"
       },
       "MinMax": {
         "$ref": "Core/common.json#/$defs/MinMax"

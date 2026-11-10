@@ -1,20 +1,20 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Supplemental attribute defining which existing generators mapped to a supply technology are eligible for retrofit.",
+  "description": "Supplemental attribute linking a retrofit: existing generators of a source supply technology that can be converted into a retrofit option supply technology. The same attribute is attached to both the source and the option, one attribute per source and option pair.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
       "type": "integer"
     },
     "eligible_generators": {
-      "description": "Names of individual generation units mapped to this technology that can be retrofitted.",
+      "description": "Names of the existing generation units of the source technology that can be retrofitted into the option technology.",
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "retrofit_fraction": {
-      "description": "Fraction of existing capacity that is eligible for retrofits. Units: 1.",
+    "retrofit_efficiency": {
+      "description": "Capacity of the option technology obtained per unit of source capacity retrofitted, e.g. below 1 when a retrofit derates the plant. Units: 1.",
       "type": "number",
       "default": 1.0,
       "x-unit": "1",
@@ -28,8 +28,7 @@
   },
   "required": [
     "id",
-    "eligible_generators",
-    "retrofit_cost"
+    "eligible_generators"
   ],
   "title": "RetrofitPotential",
   "type": "object"

@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A projected demand in a region: an exogenous load profile that must be served, with optional voluntary curtailment and time shifting. A demand with existing loads in the base system takes its peak from them and grows from the base year; a new demand starts in its construction year at `peak_demand_mw`. Conforming demands grow by `growth_rate`. Curtailment up to `max_demand_curtailment` is priced by `curtailment_cost`, and the rest of the demand by `value_of_lost_load`.",
+  "properties": {
+    "id": {
+      "description": "ID for individual component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the component.",
+      "type": "string"
+    },
+    "available": {
+      "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
+      "type": "boolean",
+      "default": true
+    },
+    "power_systems_type": {
+      "description": "Corresponding type to be used in PCM modeling.",
+      "type": "string"
+    },
+    "region": {
+      "description": "Location where the component applies. Can be a zone or node.",
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "peak_demand_mw": {
+      "description": "Peak demand. Demands with existing loads in the base system derive their peak demand from those loads, not from this value. Units: MW.",
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "MW"
+    },
+    "construction_year": {
+      "description": "The year in which a new demand starts. Should only be used for new demands.",
+      "type": "integer",
+      "default": 2020
+    },
+    "growth_rate": {
+      "description": "The annual growth rate of the demand, used to scale present-day loads into future projections. Only used for conforming demands. Units: 1.",
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "1",
+      "x-quantity": "Fraction"
+    },
+    "conformity": {
+      "description": "Whether the demand is conforming (grows by `growth_rate`) or non-conforming (does not grow). Must be set for new demands.",
+      "type": "string",
+      "default": "UNDEFINED"
+    },
+    "max_demand_curtailment": {
+      "description": "Maximum fraction of demand that can be curtailed voluntarily. Units: 1.",
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "1",
+      "x-quantity": "Fraction"
+    },
+    "curtailment_cost": {
+      "description": "Cost of voluntary curtailment. A linear curve is a single price for all curtailable demand; a piecewise incremental curve gives tiers whose x coordinates are fractions of demand, from 0 to `max_demand_curtailment`, and whose slopes are prices. Units: USD/MWh.",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
+      "x-unit": "USD/MWh"
+    },
+    "value_of_lost_load": {
+      "description": "Cost of involuntary shedding of the demand that cannot be curtailed. Units: USD/MWh.",
+      "type": "number",
+      "default": 100000000.0,
+      "x-unit": "USD/MWh"
+    },
+    "flexible_fraction": {
+      "description": "Fraction of demand that can be shifted in time. Units: 1.",
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "1",
+      "x-quantity": "Fraction"
+    },
+    "max_demand_delay": {
+      "description": "Maximum time that flexible demand can be delayed. Units: min.",
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "min"
+    },
+    "max_demand_advance": {
+      "description": "Maximum time that flexible demand can be served in advance. Units: min.",
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "min"
+    },
+    "shift_efficiency": {
+      "description": "Fraction of shifted energy that is kept. Represents energy losses due to time shifting. Units: 1.",
+      "type": "number",
+      "default": 1.0,
+      "x-unit": "1",
+      "x-quantity": "Fraction"
+    },
+    "shift_cost": {
+      "description": "Cost of shifting demand, per MWh shifted. Units: USD/MWh.",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
+      "x-unit": "USD/MWh"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "power_systems_type"
+  ],
+  "title": "ProjectedDemand",
+  "type": "object"
+}

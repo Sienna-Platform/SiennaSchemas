@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Demand-side technology such as an electric vehicle fleet or a hydrogen electrolyzer. Its flexibility is described by how far demand may be delayed or advanced, how much of it may be curtailed, and the cost and energy losses of doing either.",
+  "description": "An end-use technology that consumes electricity and can be built, such as a hydrogen electrolyzer, direct air capture, or an industrial heat pump. Its consumption is a decision, valued by what it produces: `technology_efficiency` converts electricity into product and `price_per_unit` prices the product. It carries the capital and operating cost of new capacity together with its capacity limits, minimum consumption, and ramp limits.",
   "properties": {
     "id": {
       "description": "ID for individual component.",
@@ -14,6 +14,10 @@
       "description": "Indicator of whether the component is connected and online (`true`) or disconnected, offline, or down (`false`).",
       "type": "boolean"
     },
+    "power_systems_type": {
+      "description": "Corresponding type to be used in PCM modeling.",
+      "type": "string"
+    },
     "region": {
       "description": "Location where the component applies. Can be a zone or node.",
       "type": "array",
@@ -21,72 +25,66 @@
         "type": "integer"
       }
     },
-    "power_systems_type": {
-      "description": "Corresponding type to be used in PCM modeling.",
-      "type": "string"
+    "capacity_limits": {
+      "description": "Minimum and maximum allowable installed capacity for a technology. Units: MW.",
+      "$ref": "../../Core/common.json#/$defs/MinMax",
+      "x-unit": "MW"
     },
-    "technology_efficiency": {
-      "description": "MWh of electricity per unit of output. Ex: MWh per ton of hydrogen for electrolyzers. Units: 1.",
-      "type": "number",
-      "default": 0.0,
-      "x-unit": "1",
-      "x-quantity": "Fraction"
-    },
-    "price_per_unit": {
-      "description": "Price or value per unit of output. Ex: USD per ton of hydrogen for electrolyzers. Units: USD/t.",
-      "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "x-unit": "USD/t"
-    },
-    "min_power": {
-      "description": "Minimum operation of demandside unit as a fraction of peak demand. Units: 1.",
-      "type": "number",
-      "default": 0.0,
-      "x-unit": "1",
-      "x-quantity": "Fraction"
-    },
-    "peak_demand_mw": {
-      "description": "Peak demand value in MW. Units: MW.",
+    "unit_size": {
+      "description": "Used for discrete investment decisions. Size of each unit being built. Units: MW.",
       "type": "number",
       "default": 0.0,
       "x-unit": "MW"
     },
-    "max_demand_delay": {
-      "description": "Maximum number of minutes that demand can be deferred or delayed (minutes). Units: min.",
-      "type": "number",
-      "x-unit": "min"
+    "capital_costs": {
+      "description": "Capital and interconnection cost for investing in a technology (capital cost in USD/MW).",
+      "$ref": "../../Core/common.json#/$defs/CapitalCost"
     },
-    "max_demand_advance": {
-      "description": "Maximum number of minutes that demand can be scheduled in advance of the original schedule (minutes). Units: min.",
-      "type": "number",
-      "x-unit": "min"
+    "operation_costs": {
+      "description": "Fixed and variable O&M costs, the variable cost per MWh consumed. Units: USD/MWh.",
+      "$ref": "../../Core/common.json#/$defs/LoadCost",
+      "x-unit": "USD/MWh"
     },
-    "demand_energy_efficiency": {
-      "description": "Energy efficiency associated with time shifting demand. Represents energy losses due to time shifting. Units: 1.",
+    "min_power": {
+      "description": "Minimum consumption as a fraction of installed capacity. Units: 1.",
       "type": "number",
+      "default": 0.0,
       "x-unit": "1",
       "x-quantity": "Fraction"
     },
-    "shift_variable_cost": {
-      "description": "Variable operation and maintenance costs associated with flexible demand deferral/advancement. Units: USD/MWh.",
-      "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "x-unit": "USD/MWh"
+    "ramp_limits": {
+      "description": "Maximum decrease and increase in consumption between operation periods. Units: MW/min.",
+      "$ref": "../../Core/common.json#/$defs/UpDown",
+      "x-unit": "MW/min"
     },
-    "curtailment_cost": {
-      "description": "Energy cost of curtailed demand, USD per MWh. Units: USD/MWh.",
-      "$ref": "../../Core/common.json#/$defs/ValueCurve",
-      "x-unit": "USD/MWh"
-    },
-    "max_demand_curtailment": {
-      "description": "Maximum fraction of demand that can be curtailed. Units: 1.",
+    "technology_efficiency": {
+      "description": "Electricity consumed per unit of product. Ex: MWh per tonne of hydrogen for electrolyzers. Units: 1.",
       "type": "number",
+      "default": 1.0,
       "x-unit": "1",
-      "x-quantity": "Fraction"
+      "x-quantity": "Dimensionless"
+    },
+    "price_per_unit": {
+      "description": "Price or value per unit of product. Ex: USD per tonne of hydrogen for electrolyzers. Units: USD/t.",
+      "$ref": "../../Core/common.json#/$defs/ValueCurve",
+      "x-unit": "USD/t"
+    },
+    "lifetime": {
+      "description": "Maximum number of years a technology can be active once installed. Units: yr.",
+      "type": "integer",
+      "default": 100,
+      "x-unit": "yr"
+    },
+    "financial_data": {
+      "description": "Struct containing relevant financial information for a technology.",
+      "$ref": "../Financials/TechnologyFinancialData.json"
     }
   },
   "required": [
-    "name",
-    "id",
     "available",
+    "financial_data",
+    "id",
+    "name",
     "power_systems_type"
   ],
   "title": "DemandSideTechnology",
