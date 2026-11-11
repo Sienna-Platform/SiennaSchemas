@@ -212,9 +212,6 @@
       "SwitchedAdmittanceControlMode": {
         "$ref": "Operations/common.json#/$defs/SwitchedAdmittanceControlMode"
       },
-      "SeriesCompensatorControlMode": {
-        "$ref": "Operations/common.json#/$defs/SeriesCompensatorControlMode"
-      },
       "ReserveDirection": {
         "$ref": "Operations/common.json#/$defs/ReserveDirection"
       },
