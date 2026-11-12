@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PeriodicVariableSource",
+  "description": "This struct acts as an infinity bus with time varying phasor values magnitude and angle V(t) heta(t). Time varying functions are represented using fourier series It has no bus of its own: exactly one static injection device, with the same name, names it in its `dynamic_injector` property, and that device supplies the rest of its data.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the dynamic injection. Must equal the name of the static injection device that names it in `dynamic_injector`.",
+      "type": "string"
+    },
+    "R_th": {
+      "description": "Source Thevenin resistance",
+      "type": "number"
+    },
+    "X_th": {
+      "description": "Source Thevenin reactance",
+      "type": "number"
+    },
+    "internal_voltage_bias": {
+      "description": "a0 term of the Fourier Series for the voltage",
+      "type": "number",
+      "default": 0.0
+    },
+    "internal_voltage_frequencies": {
+      "description": "Frequencies in radians/s",
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "default": [
+        0.0
+      ]
+    },
+    "internal_voltage_coefficients": {
+      "description": "Coefficients for terms n > 1. First component corresponds to sin and second component to cos",
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "default": [
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "internal_angle_bias": {
+      "description": "a0 term of the Fourier Series for the angle",
+      "type": "number",
+      "default": 0.0
+    },
+    "internal_angle_frequencies": {
+      "description": "Frequencies in radians/s",
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "default": [
+        0.0
+      ]
+    },
+    "internal_angle_coefficients": {
+      "description": "Coefficients for terms n > 1. First component corresponds to sin and second component to cos",
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "default": [
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "base_power": {
+      "description": "Base power for the per-unit parameters of this model. Usually equal to the `base_power` of the static injection device that names this model. Units: MVA.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "MVA"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "R_th",
+    "X_th",
+    "base_power"
+  ]
+}

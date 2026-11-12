@@ -1,7 +1,7 @@
 # Unit annotations (the `x-unit` family)
 
 Sienna schemas carry units as JSON Schema extension keywords (the `x-` prefix
-keeps them outside the validated vocabulary so draft-07 tooling ignores them).
+keeps them outside the validated vocabulary so JSON Schema tooling ignores them).
 This document specifies the family and the rules `scripts/validate_units.py`
 enforces on every schema in `Core/`, `Operations/`, `Investments/`, and
 `Dynamics/`.
@@ -290,7 +290,7 @@ to `Core/units.json`; `scripts/validate_units.py` will reject it.
 schema JSON under `Core/`, `Operations/`, `Investments/`, `Dynamics/`
 (excluding `Core/units.json` and the `openapi-*.json` specs):
 
-1. Each schema validates against the **draft-07 meta-schema**.
+1. Each schema validates against the **JSON Schema 2020-12 meta-schema**.
 2. Every `x-unit` / `x-units` value is in `Core/units.json` `allowed_units`, or
    `"pu"`.
 3. Every `x-unit-base` and `x-unit-discriminator` names an existing sibling

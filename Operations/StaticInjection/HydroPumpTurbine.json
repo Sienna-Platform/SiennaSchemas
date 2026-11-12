@@ -67,7 +67,7 @@
       "x-quantity": "ActivePower"
     },
     "reactive_power_limits": {
-      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
+      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -87,7 +87,7 @@
       "x-quantity": "ActivePower"
     },
     "outflow_limits": {
-      "description": "Turbine/Pump outflow limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing Units: m3/s.",
+      "description": "Turbine/Pump outflow limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing. Units: m3/s.",
       "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "m3/s"
     },
@@ -98,7 +98,7 @@
       "x-quantity": "Elevation"
     },
     "ramp_limits": {
-      "description": "Ramp up and ramp down limits. in psy5 a required param with an option to be nothing Units: per power_units — NATURAL_UNITS: MW/min, COMPONENT_BASE: pu/min .",
+      "description": "Ramp up and ramp down limits. in psy5 a required param with an option to be nothing. Units: per power_units — NATURAL_UNITS: MW/min, COMPONENT_BASE: pu/min .",
       "$ref": "../../Core/common.json#/$defs/UpDown",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -107,7 +107,7 @@
       }
     },
     "time_limits": {
-      "description": "Minimum up and minimum down time limits. in psy5 a required param with an option to be nothing Units: min.",
+      "description": "Minimum up and minimum down time limits. in psy5 a required param with an option to be nothing. Units: min.",
       "$ref": "../../Core/common.json#/$defs/UpDown",
       "x-unit": "min"
     },

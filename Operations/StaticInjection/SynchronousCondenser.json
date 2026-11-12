@@ -47,7 +47,7 @@
       "x-quantity": "ApparentPower"
     },
     "reactive_power_limits": {
-      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
+      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit-discriminator": "power_units",
       "x-units": {

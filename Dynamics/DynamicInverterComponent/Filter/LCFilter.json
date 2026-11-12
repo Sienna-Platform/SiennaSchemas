@@ -2,20 +2,31 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Parameters of a LCL filter outside the converter",
   "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
     "lf": {
-      "description": "Filter inductance",
-      "type": "number"
+      "description": "Filter inductance. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "rf": {
-      "description": "Filter resistance",
-      "type": "number"
+      "description": "Filter resistance. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
     },
     "cf": {
-      "description": "Filter capacitance",
-      "type": "number"
+      "description": "Filter capacitance. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Susceptance"
     }
   },
   "required": [
+    "id",
     "lf",
     "rf",
     "cf"

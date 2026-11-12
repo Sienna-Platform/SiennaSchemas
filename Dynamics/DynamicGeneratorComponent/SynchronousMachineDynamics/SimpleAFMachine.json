@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of 4-states simplified Anderson-Fouad (SimpleAFMachine) model. The derivative of stator fluxes (ψd and ψq) is neglected and ωψd = ψd and ωψq = ψq is assumed (i.e. ω=1.0). This is standard when transmission network dynamics is neglected. If transmission dynamics is considered use the full order Anderson Fouad model",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "R": {
+      "description": "Resistance after EMF. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
+    },
+    "Xd": {
+      "description": "Reactance after EMF in d-axis. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
+    },
+    "Xq": {
+      "description": "Reactance after EMF in q-axis. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
+    },
+    "Xd_p": {
+      "description": "Transient reactance after EMF in d-axis. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
+    },
+    "Xq_p": {
+      "description": "Transient reactance after EMF in q-axis. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
+    },
+    "Xd_pp": {
+      "description": "Sub-Transient reactance after EMF in d-axis. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
+    },
+    "Xq_pp": {
+      "description": "Sub-Transient reactance after EMF in q-axis. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
+    },
+    "Td0_p": {
+      "description": "Time constant of transient d-axis voltage. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "Tq0_p": {
+      "description": "Time constant of transient q-axis voltage. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "Td0_pp": {
+      "description": "Time constant of sub-transient d-axis voltage. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "Tq0_pp": {
+      "description": "Time constant of sub-transient q-axis voltage. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    }
+  },
+  "required": [
+    "id",
+    "R",
+    "Xd",
+    "Xq",
+    "Xd_p",
+    "Xq_p",
+    "Xd_pp",
+    "Xq_pp",
+    "Td0_p",
+    "Tq0_p",
+    "Td0_pp",
+    "Tq0_pp"
+  ],
+  "title": "SimpleAFMachine",
+  "type": "object"
+}
