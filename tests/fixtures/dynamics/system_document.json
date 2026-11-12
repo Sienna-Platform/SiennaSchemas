@@ -13,14 +13,12 @@
     "AVRFixed": [
       {
         "id": 6,
-        "base_power": 100.0,
         "Vf": 1.05
       }
     ],
     "BaseMachine": [
       {
         "id": 4,
-        "base_power": 100.0,
         "R": 0.0,
         "Xd_p": 0.2995,
         "eq_p": 0.7087
@@ -42,32 +40,65 @@
     "PSSFixed": [
       {
         "id": 8,
-        "base_power": 100.0,
         "V_pss": 0.0
       }
     ],
     "SingleMass": [
       {
         "id": 5,
-        "base_power": 100.0,
         "H": 3.148,
         "D": 2.0
-      }
-    ],
-    "SwitchedAdmittance": [
-      {
-        "id": 2,
-        "name": "unit1",
-        "available": true,
-        "bus": 1,
-        "dynamic_injector": 3
       }
     ],
     "TGFixed": [
       {
         "id": 7,
-        "base_power": 100.0,
         "efficiency": 1.0
+      }
+    ],
+    "ThermalStandard": [
+      {
+        "id": 2,
+        "name": "unit1",
+        "available": true,
+        "status": "ONLINE",
+        "bus": 1,
+        "active_power": 80.0,
+        "reactive_power": 10.0,
+        "rating": 100.0,
+        "active_power_limits": {
+          "min": 10.0,
+          "max": 90.0
+        },
+        "operation_cost": {
+          "cost_type": "THERMAL",
+          "variable_operation_cost": {
+            "variable_cost_type": "COST",
+            "power_units": "NATURAL_UNITS",
+            "value_curve": {
+              "curve_type": "INPUT_OUTPUT",
+              "function_data": {
+                "function_type": "LINEAR",
+                "constant_term": 0,
+                "proportional_term": 0
+              }
+            },
+            "vom_cost": {
+              "curve_type": "INPUT_OUTPUT",
+              "function_data": {
+                "function_type": "LINEAR",
+                "constant_term": 0,
+                "proportional_term": 0
+              }
+            }
+          },
+          "fixed": 0.0,
+          "start_up": 0.0,
+          "shut_down": 0.0
+        },
+        "base_power": 100.0,
+        "power_units": "NATURAL_UNITS",
+        "dynamic_injector": 3
       }
     ]
   },

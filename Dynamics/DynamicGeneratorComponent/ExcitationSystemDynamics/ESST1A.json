@@ -6,12 +6,6 @@
       "description": "Unique integer identifier for this component",
       "type": "integer"
     },
-    "base_power": {
-      "description": "Base power for this model's per-unit parameters. Usually equal to the `base_power` of the dynamic injection that names this model; the ingestion layer reconciles a difference. Units: MVA.",
-      "type": "number",
-      "exclusiveMinimum": 0,
-      "x-unit": "MVA"
-    },
     "UEL_flags": {
       "description": "Code input for Underexcitization limiter (UEL) entry",
       "type": "integer"
@@ -93,7 +87,6 @@
   },
   "required": [
     "id",
-    "base_power",
     "UEL_flags",
     "PSS_flags",
     "Tr",

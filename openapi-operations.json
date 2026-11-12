@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "PowerOperationsOpenAPIModels",
-    "version": "0.2.0",
+    "version": "0.4.0",
     "description": "Power system operations models: Branch, StaticInjection, and Service components"
   },
   "paths": {},
@@ -212,14 +212,14 @@
       "SwitchedAdmittanceControlMode": {
         "$ref": "Operations/common.json#/$defs/SwitchedAdmittanceControlMode"
       },
-      "SeriesCompensatorControlMode": {
-        "$ref": "Operations/common.json#/$defs/SeriesCompensatorControlMode"
-      },
       "ReserveDirection": {
         "$ref": "Operations/common.json#/$defs/ReserveDirection"
       },
       "TransformerControlObjective": {
         "$ref": "Operations/common.json#/$defs/TransformerControlObjective"
+      },
+      "TransformerRegulationOrientation": {
+        "$ref": "Operations/common.json#/$defs/TransformerRegulationOrientation"
       },
       "TwoWindingTransformerShuntLocation": {
         "$ref": "Operations/common.json#/$defs/TwoWindingTransformerShuntLocation"
@@ -410,8 +410,8 @@
       "ValueCurve": {
         "$ref": "Core/common.json#/$defs/ValueCurve"
       },
-      "XY_Coords": {
-        "$ref": "Core/common.json#/$defs/XY_Coords"
+      "TwoDimensionalFunctionPoint": {
+        "$ref": "Core/common.json#/$defs/TwoDimensionalFunctionPoint"
       }
     }
   }

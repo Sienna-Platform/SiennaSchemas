@@ -17,7 +17,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install jsonschema
+        run: pip install jsonschema regress
 
       # NOTE: without a SiennaGridDB checkout the (quantity_kind, unit) pairing
       # rule is SKIPPED, not satisfied — this step passing does not prove that

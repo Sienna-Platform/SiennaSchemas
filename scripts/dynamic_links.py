@@ -20,8 +20,9 @@ linear in the number of components.
 Links resolve only when ids are unique across `components`, so a duplicate id
 is the only error reported for that document.
 
-`base_power` is data on every row, so a function block, its dynamic injection, and the
-static device may record different bases; the ingestion layer reconciles them.
+A function block carries no `base_power`: its per-unit parameters are on the base of the
+dynamic injection that names it. The injection and the static device each record a base, and
+the ingestion layer reconciles those two.
 
 Terms follow the CGMES Dynamics profile (IEC 61970-302): a function block
 (`DynamicsFunctionBlock`) is one model component, its function block class is

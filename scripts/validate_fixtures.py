@@ -18,11 +18,14 @@ documents exactly that, and is expected to validate. Closing it would mean
 """
 
 import copy
+import functools
 import json
 import pathlib
 import sys
 import tempfile
 import warnings
+
+import regress
 
 from build_bundles import build, current_version
 from dynamic_links import link_errors, standard_models, static_injectors
@@ -34,7 +37,31 @@ from schema_version import classify, message
 # a large rewrite for a test script. Kept deliberately, warning silenced.
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", DeprecationWarning)
-    from jsonschema import Draft202012Validator, RefResolver
+    from jsonschema import Draft7Validator, Draft202012Validator, RefResolver, validators
+    from jsonschema.exceptions import ValidationError
+
+
+
+@functools.cache
+def _ecma_regex(pattern):
+    return regress.Regex(pattern, "u")
+
+
+def _ecma_pattern(validator, pattern, instance, schema):
+    """`pattern` with ECMA-262 semantics, as JSON Schema requires. Python's `re` differs:
+    `$` also matches before a trailing newline, and `\\d` matches any Unicode digit."""
+    if validator.is_type(instance, "string") and _ecma_regex(pattern).find(instance) is None:
+        yield ValidationError(f"{instance!r} does not match {pattern!r}")
+
+
+# Registered for each dialect URI, so a `$ref` into a file that declares its own `$schema`
+# keeps the ECMA-262 `pattern` instead of falling back to the stock class.
+Draft7Validator = validators.validates("http://json-schema.org/draft-07/schema")(
+    validators.extend(Draft7Validator, {"pattern": _ecma_pattern})
+)
+Draft202012Validator = validators.validates("https://json-schema.org/draft/2020-12/schema")(
+    validators.extend(Draft202012Validator, {"pattern": _ecma_pattern})
+)
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 TS_DIR = REPO_ROOT / "TimeSeries"
@@ -57,6 +84,20 @@ NEGATIVE = {
     "invalid_reserved_feature_name": False,
     # See the module docstring: accepted, because additionalProperties is open.
     "invalid_nonsequential_with_resolution": True,
+    # `initial_timestamp` against `time_reference`, and the RFC 3339 forms the
+    # patterns allow. Checked with ECMA-262 `pattern` semantics (`_ecma_pattern`).
+    "timestamp_zoneless_local": True,
+    "timestamp_utc_plus_zero": True,
+    "timestamp_unspecified_local": True,
+    "timestamp_unspecified_offset": True,
+    "invalid_timestamp_zoneless_with_offset": False,
+    "invalid_timestamp_utc_nonzero_offset": False,
+    "invalid_timestamp_utc_unknown_offset": False,
+    "invalid_timestamp_zone_without_offset": False,
+    "invalid_timestamp_trailing_newline": False,
+    "invalid_timestamp_microseconds": False,
+    "invalid_timestamp_lowercase_separator": False,
+    "invalid_timestamp_space_separator": False,
 }
 
 # Component fixtures, in tests/fixtures/components: fixture stem ->
@@ -71,9 +112,31 @@ COMPONENT = {
     "area_with_interchange": ("Core/Topology/Area.json", None, True),
     "area_null_interchange": ("Core/Topology/Area.json", None, True),
     "series_compensator_fixed": ("Operations/Branch/SeriesCompensator.json", None, True),
-    "series_compensator_dispatchable": ("Operations/Branch/SeriesCompensator.json", None, True),
-    "series_compensator_dispatchable_without_limits": ("Operations/Branch/SeriesCompensator.json", None, False),
-    "series_compensator_power_flow_without_setpoint": ("Operations/Branch/SeriesCompensator.json", None, False),
+    "series_compensator_bypassed": ("Operations/Branch/SeriesCompensator.json", None, True),
+    "data_source_offset": ("Core/SupplementalAttributes/DataSource.json", None, True),
+    "data_source_published_null": ("Core/SupplementalAttributes/DataSource.json", None, True),
+    "data_source_zoneless": ("Core/SupplementalAttributes/DataSource.json", None, False),
+    "data_source_published_zoneless": ("Core/SupplementalAttributes/DataSource.json", None, False),
+    "acbus_pq_with_setpoint": ("Core/Topology/ACBus.json", None, True),
+    "acbus_null_setpoint": ("Core/Topology/ACBus.json", None, True),
+    "synchronous_condenser_remote_regulated": (
+        "Operations/StaticInjection/SynchronousCondenser.json", None, True,
+    ),
+    "synchronous_condenser_local_regulated": (
+        "Operations/StaticInjection/SynchronousCondenser.json", None, True,
+    ),
+    "synchronous_condenser_regulated_bus_name": (
+        "Operations/StaticInjection/SynchronousCondenser.json", None, False,
+    ),
+    "transformer_circuit_remote_regulated": (
+        "Operations/Branch/TransformerCircuit.json", None, True,
+    ),
+    "transformer_circuit_unknown_orientation": (
+        "Operations/Branch/TransformerCircuit.json", None, False,
+    ),
+    "transformer_circuit_orientation_without_bus": (
+        "Operations/Branch/TransformerCircuit.json", None, False,
+    ),
 }
 
 
@@ -148,7 +211,7 @@ def check_dynamics(validator, failures):
         return doc["components"]["DynamicGenerator"][0]
 
     def static(doc):
-        return doc["components"]["SwitchedAdmittance"][0]
+        return doc["components"]["ThermalStandard"][0]
 
     def inv(doc):
         return doc["components"]["DynamicInverter"][0]
@@ -166,7 +229,7 @@ def check_dynamics(validator, failures):
                 "kpc": 1.27, "kic": 14.3, "kffi": 0.0, "omegaad": 50.0, "kad": 0.2,
             },
             "FixedDCSource": {"voltage": 600.0},
-            "FixedFrequency": {},
+            "FixedFrequency": {"frequency": 60.0},
             "RLFilter": {"rf": 0.01, "lf": 0.08},
         }
         models = {
@@ -179,12 +242,16 @@ def check_dynamics(validator, failures):
             "filter": (27, "RLFilter"),
         }
         for ident, kind in models.values():
-            rows(doc, kind).append({"id": ident, "base_power": 100.0, **params[kind]})
+            rows(doc, kind).append({"id": ident, **params[kind]})
         rows(doc, "DynamicInverter").append(
             {"id": 20, "name": "ibr1", "omega_ref": 60.0, "base_power": 100.0, "current_limitation": None,
              **{prop: ident for prop, (ident, _) in models.items()}})
-        rows(doc, "SwitchedAdmittance").append(
-            {**static(doc), "id": 19, "name": "ibr1", "dynamic_injector": 20})
+        rows(doc, "RenewableDispatch").append(
+            {"id": 19, "name": "ibr1", "available": True, "bus": 1, "active_power": 50.0,
+             "reactive_power": 0.0, "rating": 60.0, "prime_mover_type": "PVe", "power_factor": 1.0,
+             "operation_cost": {"cost_type": "RENEWABLE", "variable_operation_cost": static(doc)[
+                 "operation_cost"]["variable_operation_cost"]},
+             "base_power": 100.0, "power_units": "NATURAL_UNITS", "dynamic_injector": 20})
 
     shape = {
         "dynamic generator": (lambda d: None, True),
@@ -192,13 +259,13 @@ def check_dynamics(validator, failures):
         "model row with an unknown property": (lambda d: rows(d, "AVRFixed")[0].update(Ka=1.0), False),
         "required model reference absent": (lambda d: gen(d).pop("power_system_stabilizer_dynamics"), False),
         "name absent": (lambda d: gen(d).pop("name"), False),
-        "model base_power absent": (lambda d: rows(d, "AVRFixed")[0].pop("base_power"), False),
+        "model with a base_power": (lambda d: rows(d, "AVRFixed")[0].update(base_power=100.0), False),
         "wrapper with an unknown property": (lambda d: gen(d).update(Ka=1.0), False),
         "omega_ref absent": (lambda d: gen(d).pop("omega_ref"), False),
         "dynamic inverter": (add_inverter, True),
         "inverter with a current_limitation reference": (
             lambda d: (add_inverter(d), inv(d).update(current_limitation=28),
-                       rows(d, "MagnitudeOutputCurrentLimiter").append({"id": 28, "base_power": 100.0, "I_max": 1.0})), True),
+                       rows(d, "MagnitudeOutputCurrentLimiter").append({"id": 28, "I_max": 1.0})), True),
         "inverter required reference absent": (lambda d: (add_inverter(d), inv(d).pop("filter")), False),
     }
     links = {
@@ -208,16 +275,15 @@ def check_dynamics(validator, failures):
         "orphan dynamic injection": (lambda d: static(d).update(dynamic_injector=None), 1),
         "name differs from the static device": (lambda d: gen(d).update(name="other"), 1),
         "shared dynamic injection": (
-            lambda d: rows(d, "SwitchedAdmittance").append({**static(d), "id": 9, "name": "unit2"}), 1),
+            lambda d: rows(d, "ThermalStandard").append({**static(d), "id": 9, "name": "unit2"}), 1),
         "function block reference names another class": (lambda d: gen(d).update(excitation_system_dynamics=4), 3),
         "dangling model reference": (lambda d: gen(d).update(excitation_system_dynamics=99), 2),
-        "orphan model": (lambda d: rows(d, "AVRFixed").append({"id": 10, "base_power": 100.0, "Vf": 1.0}), 1),
+        "orphan model": (lambda d: rows(d, "AVRFixed").append({"id": 10, "Vf": 1.0}), 1),
         "dynamic inverter": (add_inverter, 0),
         "active and reactive controls swapped": (
             lambda d: add_inverter(d, active="ReactivePowerPI", reactive="ActivePowerPI"), 2),
-        "model base_power differs": (lambda d: rows(d, "AVRFixed")[0].update(base_power=50.0), 0),
         "bus carries a dynamic_injector": (lambda d: rows(d, "ACBus")[0].update(dynamic_injector=3), 2),
-        "duplicate id": (lambda d: rows(d, "AVRFixed").append({"id": 4, "base_power": 100.0, "Vf": 1.0}), 1),
+        "duplicate id": (lambda d: rows(d, "AVRFixed").append({"id": 4, "Vf": 1.0}), 1),
         "dynamic injection name absent": (lambda d: gen(d).pop("name"), 1),
         "static device name absent": (lambda d: static(d).pop("name"), 1),
         "inverter name differs": (lambda d: (add_inverter(d), inv(d).update(name="other")), 1),
@@ -226,7 +292,7 @@ def check_dynamics(validator, failures):
         "shared models": (
             lambda d: (
                 rows(d, "DynamicGenerator").append({**gen(d), "id": 11, "name": "unit2"}),
-                rows(d, "SwitchedAdmittance").append(
+                rows(d, "ThermalStandard").append(
                     {**static(d), "id": 12, "name": "unit2", "dynamic_injector": 11}),
             ),
             5,

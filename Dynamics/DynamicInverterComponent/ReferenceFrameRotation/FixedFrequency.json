@@ -6,21 +6,16 @@
       "description": "Unique integer identifier for this component",
       "type": "integer"
     },
-    "base_power": {
-      "description": "Base power for this model's per-unit parameters. Usually equal to the `base_power` of the dynamic injection that names this model; the ingestion layer reconciles a difference. Units: MVA.",
+    "frequency": {
+      "description": "Reference frequency, in natural units. Units: Hz.",
       "type": "number",
       "exclusiveMinimum": 0,
-      "x-unit": "MVA"
-    },
-    "frequency": {
-      "description": "Reference frequency",
-      "default": 1.0,
-      "type": "number"
+      "x-unit": "Hz"
     }
   },
   "required": [
     "id",
-    "base_power"
+    "frequency"
   ],
   "title": "FixedFrequency",
   "type": "object"
