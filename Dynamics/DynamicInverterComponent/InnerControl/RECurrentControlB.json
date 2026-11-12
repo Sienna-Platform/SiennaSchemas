@@ -18,7 +18,7 @@
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "T_rv": {
-      "description": "Voltage Filter Time Constant Units: s.",
+      "description": "Voltage Filter Time Constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -47,7 +47,7 @@
       "type": "number"
     },
     "T_iq": {
-      "description": "Time constant for low-pass filter for state q_V when QFlag = 0 Units: s.",
+      "description": "Time constant for low-pass filter for state q_V when QFlag = 0. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

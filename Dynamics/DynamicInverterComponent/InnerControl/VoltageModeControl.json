@@ -38,8 +38,9 @@
       "type": "number"
     },
     "active_damping_filter_frequency": {
-      "description": "active damping filter cutoff frequency (rad/sec)",
-      "type": "number"
+      "description": "Active damping filter cutoff frequency, in natural units. Units: Hz.",
+      "type": "number",
+      "x-unit": "Hz"
     },
     "kad": {
       "description": "active damping gain",

@@ -19,7 +19,7 @@
       "type": "number"
     },
     "Te": {
-      "description": "Regulator time constant Units: s.",
+      "description": "Regulator time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

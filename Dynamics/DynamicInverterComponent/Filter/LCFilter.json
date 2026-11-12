@@ -7,19 +7,19 @@
       "type": "integer"
     },
     "lf": {
-      "description": "Filter inductance Units: pu.",
+      "description": "Filter inductance. Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "Reactance"
     },
     "rf": {
-      "description": "Filter resistance Units: pu.",
+      "description": "Filter resistance. Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "Resistance"
     },
     "cf": {
-      "description": "Filter capacitance Units: pu.",
+      "description": "Filter capacitance. Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "Susceptance"

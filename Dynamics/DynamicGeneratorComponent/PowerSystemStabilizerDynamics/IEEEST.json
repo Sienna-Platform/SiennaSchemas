@@ -39,32 +39,32 @@
       "type": "number"
     },
     "T1": {
-      "description": "Time constant Units: s.",
+      "description": "Time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T2": {
-      "description": "Time constant Units: s.",
+      "description": "Time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T3": {
-      "description": "Time constant Units: s.",
+      "description": "Time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T4": {
-      "description": "Time constant Units: s.",
+      "description": "Time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T5": {
-      "description": "Time constant Units: s.",
+      "description": "Time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T6": {
-      "description": "Time constant Units: s.",
+      "description": "Time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

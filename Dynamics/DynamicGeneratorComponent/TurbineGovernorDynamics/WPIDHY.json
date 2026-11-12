@@ -7,7 +7,7 @@
       "type": "integer"
     },
     "T_reg": {
-      "description": "Input time constant of the governor Units: s.",
+      "description": "Input time constant of the governor. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -28,12 +28,12 @@
       "type": "number"
     },
     "Ta": {
-      "description": "Governor derivative/high-frequency time constant Units: s.",
+      "description": "Governor derivative/high-frequency time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tb": {
-      "description": "Gate-servo time constant Units: s.",
+      "description": "Gate-servo time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -46,7 +46,7 @@
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Tw": {
-      "description": "Water inertia time constant Units: s.",
+      "description": "Water inertia time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

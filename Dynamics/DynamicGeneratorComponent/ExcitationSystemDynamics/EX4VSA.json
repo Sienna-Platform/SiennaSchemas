@@ -23,7 +23,7 @@
       "type": "number"
     },
     "K1": {
-      "description": "OEL delay time constant Units: s.",
+      "description": "OEL delay time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -40,17 +40,17 @@
       "type": "number"
     },
     "Ta": {
-      "description": "Numerator lead-lag (lead) time constant Units: s.",
+      "description": "Numerator lead-lag (lead) time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tb": {
-      "description": "Denominator lead-lag (lag) time constant Units: s.",
+      "description": "Denominator lead-lag (lag) time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Te": {
-      "description": "Exciter time constant Units: s.",
+      "description": "Exciter time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

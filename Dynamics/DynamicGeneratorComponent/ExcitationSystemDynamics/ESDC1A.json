@@ -7,7 +7,7 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Voltage measurement time constant Units: s.",
+      "description": "Voltage measurement time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -16,17 +16,17 @@
       "type": "number"
     },
     "Ta": {
-      "description": "Amplifier time constant Units: s.",
+      "description": "Amplifier time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tb": {
-      "description": "Regulator input time constant Units: s.",
+      "description": "Regulator input time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tc": {
-      "description": "Regulator input time constant Units: s.",
+      "description": "Regulator input time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -39,7 +39,7 @@
       "type": "number"
     },
     "Te": {
-      "description": "Exciter time constant, integration rate associated with exciter control Units: s.",
+      "description": "Exciter time constant, integration rate associated with exciter control. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -48,7 +48,7 @@
       "type": "number"
     },
     "Tf": {
-      "description": "Excitation control system stabilizer time constant Units: s.",
+      "description": "Excitation control system stabilizer time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

@@ -11,7 +11,7 @@
       "type": "number"
     },
     "T": {
-      "description": "Time constant for washout filter Units: s.",
+      "description": "Time constant for washout filter. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -20,7 +20,7 @@
       "type": "number"
     },
     "T3": {
-      "description": "Time constant Units: s.",
+      "description": "Time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -29,7 +29,7 @@
       "type": "number"
     },
     "T4": {
-      "description": "Time constant Units: s.",
+      "description": "Time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

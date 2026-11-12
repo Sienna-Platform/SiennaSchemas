@@ -1003,6 +1003,8 @@ def desired_description(node, source_path=None, is_form_scalar=False):
     prefix = strip_units_sentence(desc).rstrip()
     if prefix == "":
         return sentence
+    if not prefix.endswith((".", "!", "?")):
+        prefix += "."
     return f"{prefix} {sentence}"
 
 

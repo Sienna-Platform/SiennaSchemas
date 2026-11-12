@@ -15,7 +15,7 @@
       "type": "number"
     },
     "T_reg": {
-      "description": "Speed detector time constant Units: s.",
+      "description": "Speed detector time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -32,12 +32,12 @@
       "type": "number"
     },
     "Ta": {
-      "description": "Governor derivative time constant Units: s.",
+      "description": "Governor derivative time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tb": {
-      "description": "Gate-servo time constant Units: s.",
+      "description": "Gate-servo time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -72,7 +72,7 @@
       "type": "number"
     },
     "Tw": {
-      "description": "Water inertia time constant Units: s.",
+      "description": "Water inertia time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

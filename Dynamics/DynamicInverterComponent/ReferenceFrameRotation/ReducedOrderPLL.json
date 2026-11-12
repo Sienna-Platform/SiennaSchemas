@@ -7,8 +7,9 @@
       "type": "integer"
     },
     "frequency_lp": {
-      "description": "PLL low-pass filter frequency",
-      "type": "number"
+      "description": "PLL low-pass filter cutoff frequency, in natural units. Units: Hz.",
+      "type": "number",
+      "x-unit": "Hz"
     },
     "kp_pll": {
       "description": "PLL proportional gain",

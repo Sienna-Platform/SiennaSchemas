@@ -11,12 +11,12 @@
       "type": "number"
     },
     "Ts": {
-      "description": "Governor time constant Units: s.",
+      "description": "Governor time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tc": {
-      "description": "Servo time constant Units: s.",
+      "description": "Servo time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -25,12 +25,12 @@
       "type": "number"
     },
     "T4": {
-      "description": "Power fraction time constant Units: s.",
+      "description": "Power fraction time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T5": {
-      "description": "Reheat time constant Units: s.",
+      "description": "Reheat time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

@@ -35,7 +35,7 @@
       "type": "boolean"
     },
     "Trv": {
-      "description": "Voltage measurement transducer's time constant, in s Units: s.",
+      "description": "Voltage measurement transducer's time constant, in s. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -48,7 +48,7 @@
       "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "Tp": {
-      "description": "Power measurement transducer's time constant, in s Units: s.",
+      "description": "Power measurement transducer's time constant, in s. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -73,7 +73,7 @@
       "type": "number"
     },
     "Tg": {
-      "description": "Current control's time constant, in s Units: s.",
+      "description": "Current control's time constant, in s. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -90,7 +90,7 @@
       "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "Trf": {
-      "description": "Time constant to estimate system frequency, in s Units: s.",
+      "description": "Time constant to estimate system frequency, in s. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -127,7 +127,7 @@
       "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "T_pord": {
-      "description": "Power filter time constant in s Units: s.",
+      "description": "Power filter time constant in s. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -144,7 +144,7 @@
       "$ref": "#/$defs/VoltageRideThroughTimePnts"
     },
     "tV_delay": {
-      "description": "Time delay for reconnection after voltage ride-through disconnection Units: s.",
+      "description": "Time delay for reconnection after voltage ride-through disconnection. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -161,7 +161,7 @@
       "$ref": "#/$defs/FrequencyRideThroughTimePnts"
     },
     "tF_delay": {
-      "description": "Time delay for reconnection after frequency ride-through disconnection Units: s.",
+      "description": "Time delay for reconnection after frequency ride-through disconnection. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -175,14 +175,14 @@
       "default": 0.0
     },
     "Q_ref": {
-      "description": "Reference reactive power, in pu Units: pu.",
+      "description": "Reference reactive power, in pu. Units: pu.",
       "type": "number",
       "default": 0.0,
       "x-unit": "pu",
       "x-quantity": "ReactivePower"
     },
     "P_ref": {
-      "description": "Reference active power, in pu Units: pu.",
+      "description": "Reference active power, in pu. Units: pu.",
       "type": "number",
       "default": 1.0,
       "x-unit": "pu",

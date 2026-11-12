@@ -17,27 +17,27 @@
       "type": "number"
     },
     "T1": {
-      "description": "Time constant in s Units: s.",
+      "description": "Time constant in s. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T2": {
-      "description": "Time constant in s Units: s.",
+      "description": "Time constant in s. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T3": {
-      "description": "Time constant in s Units: s.",
+      "description": "Time constant in s. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T4": {
-      "description": "Time constant in s Units: s.",
+      "description": "Time constant in s. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T5": {
-      "description": "Time constant in s Units: s.",
+      "description": "Time constant in s. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -46,13 +46,13 @@
       "type": "number"
     },
     "Vmax": {
-      "description": "Maximum voltage in pu Units: pu.",
+      "description": "Maximum voltage in pu. Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "Voltage"
     },
     "Vmin": {
-      "description": "Minimum voltage in pu Units: pu.",
+      "description": "Minimum voltage in pu. Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "Voltage"

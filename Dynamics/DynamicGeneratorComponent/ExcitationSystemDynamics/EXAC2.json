@@ -7,17 +7,17 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Regulator input filter time constant Units: s.",
+      "description": "Regulator input filter time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tb": {
-      "description": "Regulator denominator (lag) time constant Units: s.",
+      "description": "Regulator denominator (lag) time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tc": {
-      "description": "Regulator numerator (lead) time constant Units: s.",
+      "description": "Regulator numerator (lead) time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -26,7 +26,7 @@
       "type": "number"
     },
     "Ta": {
-      "description": "Regulator output time constant Units: s.",
+      "description": "Regulator output time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -43,7 +43,7 @@
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Te": {
-      "description": "Exciter field time constant Units: s.",
+      "description": "Exciter field time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -60,7 +60,7 @@
       "type": "number"
     },
     "Tf": {
-      "description": "Rate feedback time constant Units: s.",
+      "description": "Rate feedback time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

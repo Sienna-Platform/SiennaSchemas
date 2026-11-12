@@ -7,7 +7,7 @@
       "type": "integer"
     },
     "H": {
-      "description": "Rotor inertia constant in MWs/MVA Units: s.",
+      "description": "Rotor inertia constant in MWs/MVA. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

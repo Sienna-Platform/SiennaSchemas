@@ -11,17 +11,17 @@
       "type": "integer"
     },
     "T1": {
-      "description": "Governor mechanism time constant Units: s.",
+      "description": "Governor mechanism time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T2": {
-      "description": "Turbine power time constant Units: s.",
+      "description": "Turbine power time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T3": {
-      "description": "Turbine exhaust temperature time constant Units: s.",
+      "description": "Turbine exhaust temperature time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -30,22 +30,22 @@
       "type": "number"
     },
     "T4": {
-      "description": "Governor lead time constant Units: s.",
+      "description": "Governor lead time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T5": {
-      "description": "Governor lag time constant Units: s.",
+      "description": "Governor lag time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T6": {
-      "description": "Actuator time constant Units: s.",
+      "description": "Actuator time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Td": {
-      "description": "Engine time delay Units: s.",
+      "description": "Engine time delay. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -63,7 +63,7 @@
       "type": "number"
     },
     "Te": {
-      "description": "Power transducer time constant Units: s.",
+      "description": "Power transducer time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

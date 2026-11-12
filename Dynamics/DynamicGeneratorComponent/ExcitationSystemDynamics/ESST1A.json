@@ -15,7 +15,7 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Regulator input filter time constant Units: s.",
+      "description": "Regulator input filter time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -29,22 +29,22 @@
       "maxItems": 2
     },
     "Tc": {
-      "description": "First regulator numerator (lead) time constant Units: s.",
+      "description": "First regulator numerator (lead) time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tb": {
-      "description": "First regulator denominator (lag) time constant Units: s.",
+      "description": "First regulator denominator (lag) time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tc1": {
-      "description": "Second regulator numerator (lead) time constant Units: s.",
+      "description": "Second regulator numerator (lead) time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tb1": {
-      "description": "Second regulator denominator (lag) time constant Units: s.",
+      "description": "Second regulator denominator (lag) time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -53,7 +53,7 @@
       "type": "number"
     },
     "Ta": {
-      "description": "Voltage regulator time constant Units: s.",
+      "description": "Voltage regulator time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -74,7 +74,7 @@
       "type": "number"
     },
     "Tf": {
-      "description": "Rate feedback time constant Units: s.",
+      "description": "Rate feedback time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

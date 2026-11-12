@@ -7,7 +7,7 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Regulator input filter time constant Units: s.",
+      "description": "Regulator input filter time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -16,7 +16,7 @@
       "type": "number"
     },
     "Ta": {
-      "description": "Voltage regulator time constant Units: s.",
+      "description": "Voltage regulator time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -25,17 +25,17 @@
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Ta_2": {
-      "description": "Voltage regulator time constant Units: s.",
+      "description": "Voltage regulator time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Ta_3": {
-      "description": "Voltage regulator time constant Units: s.",
+      "description": "Voltage regulator time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Ta_4": {
-      "description": "Voltage regulator time constant Units: s.",
+      "description": "Voltage regulator time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -48,12 +48,12 @@
       "type": "number"
     },
     "Tf_1": {
-      "description": "Rate feedback time constant Units: s.",
+      "description": "Rate feedback time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tf_2": {
-      "description": "Rate feedback time constant Units: s.",
+      "description": "Rate feedback time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -66,7 +66,7 @@
       "type": "number"
     },
     "Te": {
-      "description": "Exciter time constant Units: s.",
+      "description": "Exciter time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

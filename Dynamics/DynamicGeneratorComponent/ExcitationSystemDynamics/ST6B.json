@@ -11,7 +11,7 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Regulator input filter time constant Units: s.",
+      "description": "Regulator input filter time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -28,7 +28,7 @@
       "type": "number"
     },
     "T_da": {
-      "description": "Voltage regulator derivative channel time constant Units: s.",
+      "description": "Voltage regulator derivative channel time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -65,7 +65,7 @@
       "type": "number"
     },
     "Tg": {
-      "description": "Feedback time constant of the inner loop field voltage regulator Units: s.",
+      "description": "Feedback time constant of the inner loop field voltage regulator. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

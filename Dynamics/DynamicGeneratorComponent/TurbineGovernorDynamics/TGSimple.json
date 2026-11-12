@@ -11,7 +11,7 @@
       "type": "number"
     },
     "Tm": {
-      "description": "Turbine governor low-pass time constant Units: s.",
+      "description": "Turbine governor low-pass time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

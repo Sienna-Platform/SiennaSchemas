@@ -7,7 +7,7 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Voltage measurement time constant Units: s.",
+      "description": "Voltage measurement time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -16,12 +16,12 @@
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Tc": {
-      "description": "Numerator lead-lag (lead) time constant Units: s.",
+      "description": "Numerator lead-lag (lead) time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tb": {
-      "description": "Denominator lead-lag (lag) time constant Units: s.",
+      "description": "Denominator lead-lag (lag) time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -30,7 +30,7 @@
       "type": "number"
     },
     "Ta": {
-      "description": "Amplifier time constant Units: s.",
+      "description": "Amplifier time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -47,7 +47,7 @@
       "type": "number"
     },
     "Tf": {
-      "description": "Excitation control system stabilizer time constant Units: s.",
+      "description": "Excitation control system stabilizer time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

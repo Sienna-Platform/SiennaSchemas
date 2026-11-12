@@ -10,11 +10,12 @@
       "type": "number"
     },
     "active_power_filter_frequency": {
-      "description": "filter frequency cutoff",
-      "type": "number"
+      "description": "Filter cutoff frequency, in natural units. Units: Hz.",
+      "type": "number",
+      "x-unit": "Hz"
     },
     "P_ref": {
-      "description": "Reference Power Set-point (pu) Units: pu.",
+      "description": "Reference Power Set-point (pu). Units: pu.",
       "type": "number",
       "default": 1.0,
       "x-unit": "pu",

@@ -7,27 +7,27 @@
       "type": "integer"
     },
     "H": {
-      "description": "Rotor inertia constant in MWs/MVA Units: s.",
+      "description": "Rotor inertia constant in MWs/MVA. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "H_hp": {
-      "description": "High pressure turbine inertia constant in MWs/MVA Units: s.",
+      "description": "High pressure turbine inertia constant in MWs/MVA. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "H_ip": {
-      "description": "Intermediate pressure turbine inertia constant in MWs/MVA Units: s.",
+      "description": "Intermediate pressure turbine inertia constant in MWs/MVA. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "H_lp": {
-      "description": "Low pressure turbine inertia constant in MWs/MVA Units: s.",
+      "description": "Low pressure turbine inertia constant in MWs/MVA. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "H_ex": {
-      "description": "Exciter inertia constant in MWs/MVA Units: s.",
+      "description": "Exciter inertia constant in MWs/MVA. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

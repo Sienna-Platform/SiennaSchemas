@@ -37,12 +37,12 @@
       "type": "boolean"
     },
     "T_rv": {
-      "description": "Voltage measurement transducer time constant Units: s.",
+      "description": "Voltage measurement transducer time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Trf": {
-      "description": "Frequency measurement transducer time constant Units: s.",
+      "description": "Frequency measurement transducer time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -55,12 +55,12 @@
       "type": "number"
     },
     "Tp": {
-      "description": "Power measurement transducer time constant Units: s.",
+      "description": "Power measurement transducer time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T_iq": {
-      "description": "Time constant for low-pass filter for state q_V when QFlag = 0 Units: s.",
+      "description": "Time constant for low-pass filter for state q_V when QFlag = 0. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -89,7 +89,7 @@
       "$ref": "../../Core/common.json#/$defs/MinMax"
     },
     "Tpord": {
-      "description": "Power filter time constant Units: s.",
+      "description": "Power filter time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -138,27 +138,27 @@
       "type": "number"
     },
     "fl": {
-      "description": "Inverter frequency break-point for low frequency cut-out (Hz) Units: Hz.",
+      "description": "Inverter frequency break-point for low frequency cut-out (Hz). Units: Hz.",
       "type": "number",
       "x-unit": "Hz"
     },
     "fh": {
-      "description": "Inverter frequency break-point for high frequency cut-out (Hz) Units: Hz.",
+      "description": "Inverter frequency break-point for high frequency cut-out (Hz). Units: Hz.",
       "type": "number",
       "x-unit": "Hz"
     },
     "tfl": {
-      "description": "Low frequency cut-out timer corresponding to frequency fl (s) Units: s.",
+      "description": "Low frequency cut-out timer corresponding to frequency fl (s). Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "tfh": {
-      "description": "High frequency cut-out timer corresponding to frequency fh (s) Units: s.",
+      "description": "High frequency cut-out timer corresponding to frequency fh (s). Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tg": {
-      "description": "Current control time constant (to represent behavior of inner control loops) (> 0) (s) Units: s.",
+      "description": "Current control time constant (to represent behavior of inner control loops) (> 0) (s). Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -167,12 +167,12 @@
       "type": "number"
     },
     "Tv": {
-      "description": "Time constant on the output of the multiplier (s) Units: s.",
+      "description": "Time constant on the output of the multiplier (s). Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Vpr": {
-      "description": "Voltage below which frequency tripping is disabled (pu) Units: pu.",
+      "description": "Voltage below which frequency tripping is disabled (pu). Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "Voltage"
@@ -192,19 +192,19 @@
       "default": 0.0
     },
     "frequency_ref": {
-      "description": "Reference Frequency (pu)",
+      "description": "Reference frequency, in natural units. Usually equal to the system frequency. Units: Hz.",
       "type": "number",
-      "default": 1.0
+      "x-unit": "Hz"
     },
     "Q_ref": {
-      "description": "Reference reactive power, in pu Units: pu.",
+      "description": "Reference reactive power, in pu. Units: pu.",
       "type": "number",
       "default": 0.0,
       "x-unit": "pu",
       "x-quantity": "ReactivePower"
     },
     "P_ref": {
-      "description": "Reference active power, in pu Units: pu.",
+      "description": "Reference active power, in pu. Units: pu.",
       "type": "number",
       "default": 1.0,
       "x-unit": "pu",

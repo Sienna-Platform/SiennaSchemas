@@ -11,32 +11,32 @@
       "type": "number"
     },
     "T1": {
-      "description": "First pole in s Units: s.",
+      "description": "First pole in s. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T2": {
-      "description": "First zero in s Units: s.",
+      "description": "First zero in s. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T3": {
-      "description": "First pole in s Units: s.",
+      "description": "First pole in s. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T4": {
-      "description": "First zero in s Units: s.",
+      "description": "First zero in s. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Te": {
-      "description": "Field circuit time constant Units: s.",
+      "description": "Field circuit time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tr": {
-      "description": "Voltage measurement time constant Units: s.",
+      "description": "Voltage measurement time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

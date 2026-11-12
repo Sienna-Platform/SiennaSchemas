@@ -9,6 +9,15 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ### Added
 
+- `SystemDocument` carries dynamic injections and their function blocks. `DynamicGenerator` and
+  `DynamicInverter` name their function blocks by integer id, and a static injection device names
+  its dynamic injection in `dynamic_injector`. A function block uses the base of its dynamic
+  injection and has no `base_power`.
+- The eight remaining dynamic injection types: `SingleCageInductionMachine`,
+  `SimplifiedSingleCageInductionMachine`, `GenericDER`, `AggregateDistributedGenerationA`,
+  `CSVGN1`, `ActiveConstantPowerLoad`, `DynamicExponentialLoad`, and `PeriodicVariableSource`.
+- `scripts/dynamic_links.py` checks the links between dynamic injections, function blocks and
+  static devices.
 - `ACBus.voltage_setpoint` (nullable, pu on `base_voltage`): the target of every device that
   regulates the bus, at the bus or from a remote terminal.
 - `remote_regulated_bus` (nullable bus ID, default `null` = the device's own bus) on
@@ -22,6 +31,18 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ### Changed
 
+- Dynamics directories and properties use the CGMES Dynamics names, for example `AVR/` is
+  `ExcitationSystemDynamics/` and `avr` is `excitation_system_dynamics`. Inverter properties use
+  IEC 61400-27-1 block names: `limiter` is `current_limitation` and `freq_estimator` is
+  `reference_frame_rotation`. `OuterControl/` is split into `ActivePowerControl/` and
+  `ReactivePowerControl/`.
+- `frequency_ref` replaces `omega_ref` and is in Hz on `DynamicGenerator`, `DynamicInverter`,
+  `AggregateDistributedGenerationA` and `ActiveConstantPowerLoad`. `FixedFrequency.frequency`
+  is in Hz and has no default. The filter and PLL cutoff frequencies of the inverter function
+  blocks are in Hz.
+- All schemas and the strict bundles use JSON Schema 2020-12. A consumer that validates with a
+  draft-07 validator must change to a 2020-12 validator.
+- `Units:` sentences in descriptions always follow a full stop.
 - `ACBus.bustype` is a classification only: a `PV` bus has in-service generation that
   regulates voltage, at this bus or at its `remote_regulated_bus`. The held voltage is the
   regulated bus's `voltage_setpoint`, and `magnitude` is the solved value.

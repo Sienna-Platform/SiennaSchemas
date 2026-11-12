@@ -15,17 +15,17 @@
       "type": "number"
     },
     "Tr": {
-      "description": "Governor time constant Units: s.",
+      "description": "Governor time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tf": {
-      "description": "Filter time constant Units: s.",
+      "description": "Filter time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "Tg": {
-      "description": "Servo time constant Units: s.",
+      "description": "Servo time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -38,7 +38,7 @@
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Tw": {
-      "description": "Water time constant Units: s.",
+      "description": "Water time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

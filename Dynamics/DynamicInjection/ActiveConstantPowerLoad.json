@@ -65,26 +65,27 @@
       "type": "number"
     },
     "P_ref": {
-      "description": "Reference active power (pu) Units: pu.",
+      "description": "Reference active power (pu). Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "ActivePower"
     },
     "Q_ref": {
-      "description": "Reference reactive power (pu) Units: pu.",
+      "description": "Reference reactive power (pu). Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "ReactivePower"
     },
     "V_ref": {
-      "description": "Reference voltage (pu) Units: pu.",
+      "description": "Reference voltage (pu). Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "Voltage"
     },
     "frequency_ref": {
-      "description": "Reference frequency (pu)",
-      "type": "number"
+      "description": "Reference frequency, in natural units. Usually equal to the system frequency. Units: Hz.",
+      "type": "number",
+      "x-unit": "Hz"
     },
     "is_filter_differential": {
       "description": "Boolean to decide if filter states are differential or algebraic",

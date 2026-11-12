@@ -10,11 +10,12 @@
       "type": "number"
     },
     "reactive_power_filter_frequency": {
-      "description": "filter frequency cutoff",
-      "type": "number"
+      "description": "Filter cutoff frequency, in natural units. Units: Hz.",
+      "type": "number",
+      "x-unit": "Hz"
     },
     "V_ref": {
-      "description": "Reference Voltage Set-point (pu) Units: pu.",
+      "description": "Reference Voltage Set-point (pu). Units: pu.",
       "type": "number",
       "default": 1.0,
       "x-unit": "pu",

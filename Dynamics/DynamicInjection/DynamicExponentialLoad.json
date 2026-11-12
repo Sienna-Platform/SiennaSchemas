@@ -29,12 +29,12 @@
       "type": "number"
     },
     "T_p": {
-      "description": "Active Power Time Constant Units: s.",
+      "description": "Active Power Time Constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
     "T_q": {
-      "description": "Reactive Power Time Constant Units: s.",
+      "description": "Reactive Power Time Constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

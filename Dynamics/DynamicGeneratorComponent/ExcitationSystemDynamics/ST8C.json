@@ -23,7 +23,7 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Regulator input filter time constant Units: s.",
+      "description": "Regulator input filter time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -56,7 +56,7 @@
       "type": "number"
     },
     "T_a": {
-      "description": "Controlled rectifier bridge equivalent time constant Units: s.",
+      "description": "Controlled rectifier bridge equivalent time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -69,7 +69,7 @@
       "type": "number"
     },
     "T_f": {
-      "description": "Field current feedback time constant Units: s.",
+      "description": "Field current feedback time constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },

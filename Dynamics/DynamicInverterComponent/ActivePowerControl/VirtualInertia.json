@@ -6,7 +6,7 @@
       "type": "integer"
     },
     "Ta": {
-      "description": "VSM inertia constant Units: s.",
+      "description": "VSM inertia constant. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
@@ -19,7 +19,7 @@
       "type": "number"
     },
     "P_ref": {
-      "description": "Reference Power Set-point (pu) Units: pu.",
+      "description": "Reference Power Set-point (pu). Units: pu.",
       "type": "number",
       "default": 1.0,
       "x-unit": "pu",

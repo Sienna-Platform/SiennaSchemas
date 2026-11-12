@@ -13,37 +13,37 @@
       "type": "string"
     },
     "R_s": {
-      "description": "Armature stator resistance Units: pu.",
+      "description": "Armature stator resistance. Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "Resistance"
     },
     "R_r": {
-      "description": "Rotor resistance Units: pu.",
+      "description": "Rotor resistance. Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "Resistance"
     },
     "X_ls": {
-      "description": "Stator Leakage Reactance Units: pu.",
+      "description": "Stator Leakage Reactance. Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "Reactance"
     },
     "X_lr": {
-      "description": "Rotor Leakage Reactance Units: pu.",
+      "description": "Rotor Leakage Reactance. Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "Reactance"
     },
     "X_m": {
-      "description": "Stator-Rotor Mutual Reactance Units: pu.",
+      "description": "Stator-Rotor Mutual Reactance. Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "Reactance"
     },
     "H": {
-      "description": "Motor Inertia Constant [s] Units: s.",
+      "description": "Motor Inertia Constant [s]. Units: s.",
       "type": "number",
       "x-unit": "s"
     },
