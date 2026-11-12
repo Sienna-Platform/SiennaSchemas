@@ -19,17 +19,27 @@
       "type": "boolean"
     },
     "bustype": {
-      "description": "Used to describe the connectivity and behavior of this bus. in psy5 a required param with an option to be nothing",
+      "description": "Power flow classification of this bus. It does not by itself say which bus voltage is held; the regulating devices and the bus `voltage_setpoint` say that.",
       "$ref": "../common.json#/$defs/ACBusType"
     },
     "angle": {
-      "description": "Angle of the bus. Units: rad.",
+      "description": "Solved voltage angle from the last power flow, or the start value for the next solve. Units: rad.",
       "type": "number",
       "x-unit": "rad"
     },
     "magnitude": {
-      "description": "Voltage as a multiple of `base_voltage`. Units: pu.",
+      "description": "Solved voltage magnitude from the last power flow, or the start value for the next solve, as a multiple of `base_voltage`. This is a result, not a control target; the target is `voltage_setpoint`. Units: pu.",
       "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Voltage",
+      "x-unit-base": "base_voltage"
+    },
+    "voltage_setpoint": {
+      "description": "Scheduled voltage magnitude for this bus, as a multiple of `base_voltage`. It is the target of every device that regulates this bus, at the bus or from a remote terminal. The devices that regulate this bus hold it at this value unless a droop or a reactive power limit prevents it. `null` when no device regulates this bus. Units: pu.",
+      "type": [
+        "number",
+        "null"
+      ],
       "x-unit": "pu",
       "x-quantity": "Voltage",
       "x-unit-base": "base_voltage"
