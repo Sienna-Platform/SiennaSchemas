@@ -6,15 +6,22 @@
       "type": "integer"
     },
     "k2": {
+      "description": "VOC voltage-amplitude control gain",
       "type": "number"
     },
     "V_ref": {
+      "description": "Reference Voltage Set-point (pu) Units: pu.",
       "type": "number",
-      "default": 1.0
+      "default": 1.0,
+      "x-unit": "pu",
+      "x-quantity": "Voltage"
     },
     "Q_ref": {
+      "description": "Reference Reactive Power Set-point (pu) Units: pu.",
       "type": "number",
-      "default": 1.0
+      "default": 1.0,
+      "x-unit": "pu",
+      "x-quantity": "ReactivePower"
     }
   },
   "required": [

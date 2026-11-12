@@ -6,20 +6,25 @@
       "type": "integer"
     },
     "Rp": {
+      "description": "Droop Gain",
       "type": "number"
     },
-    "omegaz": {
+    "active_power_filter_frequency": {
+      "description": "filter frequency cutoff",
       "type": "number"
     },
     "P_ref": {
+      "description": "Reference Power Set-point (pu) Units: pu.",
       "type": "number",
-      "default": 1.0
+      "default": 1.0,
+      "x-unit": "pu",
+      "x-quantity": "ActivePower"
     }
   },
   "required": [
     "id",
     "Rp",
-    "omegaz"
+    "active_power_filter_frequency"
   ],
   "title": "ActivePowerDroop",
   "type": "object"

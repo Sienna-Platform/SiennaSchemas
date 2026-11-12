@@ -11,8 +11,9 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Regulator input filter time constant",
-      "type": "number"
+      "description": "Regulator input filter time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "K_pa": {
       "description": "Regulator proportional gain",
@@ -27,8 +28,9 @@
       "type": "number"
     },
     "T_da": {
-      "description": "Voltage regulator derivative channel time constant",
-      "type": "number"
+      "description": "Voltage regulator derivative channel time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Va_lim": {
       "description": "Regulator output limits",
@@ -63,8 +65,9 @@
       "type": "number"
     },
     "Tg": {
-      "description": "Feedback time constant of the inner loop field voltage regulator",
-      "type": "number"
+      "description": "Feedback time constant of the inner loop field voltage regulator Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "V_ref": {
       "description": "Reference voltage set-point",

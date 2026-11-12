@@ -6,24 +6,31 @@
       "type": "integer"
     },
     "Ta": {
-      "type": "number"
+      "description": "VSM inertia constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "kd": {
+      "description": "VSM damping constant",
       "type": "number"
     },
-    "komega": {
+    "k_frequency": {
+      "description": "frequency droop gain",
       "type": "number"
     },
     "P_ref": {
+      "description": "Reference Power Set-point (pu) Units: pu.",
       "type": "number",
-      "default": 1.0
+      "default": 1.0,
+      "x-unit": "pu",
+      "x-quantity": "ActivePower"
     }
   },
   "required": [
     "id",
     "Ta",
     "kd",
-    "komega"
+    "k_frequency"
   ],
   "title": "VirtualInertia",
   "type": "object"

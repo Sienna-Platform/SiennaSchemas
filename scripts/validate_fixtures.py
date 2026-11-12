@@ -198,6 +198,30 @@ def check_bundles(failures):
     return count
 
 
+def sample(node, base, path):
+    """A minimal instance of a schema node, built from its types alone."""
+    if "$ref" in node:
+        file, _, pointer = node["$ref"].partition("#")
+        target = (base / file).resolve() if file else path
+        sub = load(target)
+        for part in pointer.strip("/").split("/"):
+            if part:
+                sub = sub[part]
+        return sample(sub, target.parent, target)
+    kind = node["type"]
+    if kind == "object":
+        return {k: sample(node["properties"][k], base, path) for k in node.get("required", node["properties"])}
+    if kind == "array":
+        return [sample(node["items"], base, path) for _ in range(node.get("minItems", 1))]
+    if kind == "boolean":
+        return False
+    if kind == "integer":
+        return node.get("minimum", 0)
+    if kind == "string":
+        return "x"
+    return 1.0
+
+
 def check_dynamics(validator, failures):
     """A dynamics-bearing document against the strict bundle and the link rule."""
     base = load(FIXTURE_DIR / "dynamics" / "system_document.json")
@@ -213,6 +237,13 @@ def check_dynamics(validator, failures):
     def static(doc):
         return doc["components"]["ThermalStandard"][0]
 
+    def static_row(doc):
+        return {"available": True, "bus": 1, "active_power": 50.0, "reactive_power": 0.0, "rating": 60.0,
+                "prime_mover_type": "PVe", "power_factor": 1.0,
+                "operation_cost": {"cost_type": "RENEWABLE", "variable_operation_cost": static(doc)[
+                    "operation_cost"]["variable_operation_cost"]},
+                "base_power": 100.0, "power_units": "NATURAL_UNITS"}
+
     def inv(doc):
         return doc["components"]["DynamicInverter"][0]
 
@@ -222,11 +253,11 @@ def check_dynamics(validator, failures):
     def add_inverter(doc, active="ActivePowerPI", reactive="ReactivePowerPI"):
         params = {
             "AverageConverter": {"rated_voltage": 0.69, "rated_current": 100.0},
-            "ActivePowerPI": {"Kp_p": 0.0, "Ki_p": 4.69, "omegaz": 1000.0},
-            "ReactivePowerPI": {"Kp_q": 0.0, "Ki_q": 4.69, "omegaf": 1000.0},
+            "ActivePowerPI": {"Kp_p": 0.0, "Ki_p": 4.69, "active_power_filter_frequency": 1000.0},
+            "ReactivePowerPI": {"Kp_q": 0.0, "Ki_q": 4.69, "reactive_power_filter_frequency": 1000.0},
             "VoltageModeControl": {
                 "kpv": 0.59, "kiv": 736.0, "kffv": 0.0, "rv": 0.0, "lv": 0.2,
-                "kpc": 1.27, "kic": 14.3, "kffi": 0.0, "omegaad": 50.0, "kad": 0.2,
+                "kpc": 1.27, "kic": 14.3, "kffi": 0.0, "active_damping_filter_frequency": 50.0, "kad": 0.2,
             },
             "FixedDCSource": {"voltage": 600.0},
             "FixedFrequency": {"frequency": 60.0},
@@ -244,14 +275,9 @@ def check_dynamics(validator, failures):
         for ident, kind in models.values():
             rows(doc, kind).append({"id": ident, **params[kind]})
         rows(doc, "DynamicInverter").append(
-            {"id": 20, "name": "ibr1", "omega_ref": 60.0, "base_power": 100.0, "current_limitation": None,
+            {"id": 20, "name": "ibr1", "frequency_ref": 60.0, "base_power": 100.0, "current_limitation": None,
              **{prop: ident for prop, (ident, _) in models.items()}})
-        rows(doc, "RenewableDispatch").append(
-            {"id": 19, "name": "ibr1", "available": True, "bus": 1, "active_power": 50.0,
-             "reactive_power": 0.0, "rating": 60.0, "prime_mover_type": "PVe", "power_factor": 1.0,
-             "operation_cost": {"cost_type": "RENEWABLE", "variable_operation_cost": static(doc)[
-                 "operation_cost"]["variable_operation_cost"]},
-             "base_power": 100.0, "power_units": "NATURAL_UNITS", "dynamic_injector": 20})
+        rows(doc, "RenewableDispatch").append({**static_row(doc), "id": 19, "name": "ibr1", "dynamic_injector": 20})
 
     shape = {
         "dynamic generator": (lambda d: None, True),
@@ -261,7 +287,7 @@ def check_dynamics(validator, failures):
         "name absent": (lambda d: gen(d).pop("name"), False),
         "model with a base_power": (lambda d: rows(d, "AVRFixed")[0].update(base_power=100.0), False),
         "wrapper with an unknown property": (lambda d: gen(d).update(Ka=1.0), False),
-        "omega_ref absent": (lambda d: gen(d).pop("omega_ref"), False),
+        "frequency_ref absent": (lambda d: gen(d).pop("frequency_ref"), False),
         "dynamic inverter": (add_inverter, True),
         "inverter with a current_limitation reference": (
             lambda d: (add_inverter(d), inv(d).update(current_limitation=28),
@@ -306,7 +332,24 @@ def check_dynamics(validator, failures):
         got = link_errors(edit(fn), models_by_class, static_kinds)
         if len(got) != want:
             failures.append(f"dynamic links, {label}: {len(got)} error(s), expected {want}: {got}")
-    return len(shape) + len(links)
+    leaf_dir = REPO_ROOT / "Dynamics" / "DynamicInjection"
+    leaves = sorted(p for p in leaf_dir.glob("*.json") if p.stem not in ("DynamicGenerator", "DynamicInverter"))
+    for path in leaves:
+        schema = load(path)
+        kind = schema["title"]
+
+        def add_leaf(d, kind=kind, row=sample(schema, leaf_dir, path)):
+            row.update(id=40, name="leaf")
+            rows(d, kind).append(row)
+            rows(d, "RenewableDispatch").append(
+                {**static_row(d), "id": 41, "name": "leaf", "dynamic_injector": 40})
+
+        if not validator.is_valid(edit(add_leaf)):
+            failures.append(f"dynamics bundle, {kind} sample row: expected valid")
+        got = link_errors(edit(add_leaf), models_by_class, static_kinds)
+        if got:
+            failures.append(f"dynamic links, {kind} sample row: {got}")
+    return len(shape) + len(links) + 2 * len(leaves)
 
 
 def main():

@@ -23,8 +23,9 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Regulator input filter time constant",
-      "type": "number"
+      "description": "Regulator input filter time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "K_pr": {
       "description": "Regulator proportional gain",
@@ -55,8 +56,9 @@
       "type": "number"
     },
     "T_a": {
-      "description": "Controlled rectifier bridge equivalent time constant",
-      "type": "number"
+      "description": "Controlled rectifier bridge equivalent time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Vr_lim": {
       "description": "Voltage regulator limits",
@@ -67,8 +69,9 @@
       "type": "number"
     },
     "T_f": {
-      "description": "Field current feedback time constant",
-      "type": "number"
+      "description": "Field current feedback time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "K_c1": {
       "description": "Rectifier loading factor proportional to commutating reactance",

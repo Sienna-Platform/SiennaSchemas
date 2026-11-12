@@ -39,28 +39,34 @@
       "type": "number"
     },
     "T1": {
-      "description": "Time constant",
-      "type": "number"
+      "description": "Time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T2": {
-      "description": "Time constant",
-      "type": "number"
+      "description": "Time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T3": {
-      "description": "Time constant",
-      "type": "number"
+      "description": "Time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T4": {
-      "description": "Time constant",
-      "type": "number"
+      "description": "Time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T5": {
-      "description": "Time constant",
-      "type": "number"
+      "description": "Time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T6": {
-      "description": "Time constant",
-      "type": "number"
+      "description": "Time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Ks": {
       "description": "Proportional gain",
@@ -82,7 +88,7 @@
     "Vcl": {
       "description": "Cutoff limiter lower bound",
       "type": "number"
-    }  
+    }
   },
   "required": [
     "id",

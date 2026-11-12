@@ -7,32 +7,37 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Regulator input filter time constant",
-      "type": "number"
+      "description": "Regulator input filter time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Ka": {
       "description": "Voltage regulator gain",
       "type": "number"
     },
     "Ta": {
-      "description": "Voltage regulator time constant",
-      "type": "number"
+      "description": "Voltage regulator time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Va_lim": {
       "description": "Limits for pi controller",
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Ta_2": {
-      "description": "Voltage regulator time constant",
-      "type": "number"
+      "description": "Voltage regulator time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Ta_3": {
-      "description": "Voltage regulator time constant",
-      "type": "number"
+      "description": "Voltage regulator time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Ta_4": {
-      "description": "Voltage regulator time constant",
-      "type": "number"
+      "description": "Voltage regulator time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Vr_lim": {
       "description": "Voltage regulator limits (regulator output)",
@@ -43,12 +48,14 @@
       "type": "number"
     },
     "Tf_1": {
-      "description": "Rate feedback time constant",
-      "type": "number"
+      "description": "Rate feedback time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tf_2": {
-      "description": "Rate feedback time constant",
-      "type": "number"
+      "description": "Rate feedback time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Efd_lim": {
       "description": "Field voltage regulator limits (regulator output)",
@@ -59,8 +66,9 @@
       "type": "number"
     },
     "Te": {
-      "description": "Exciter time constant",
-      "type": "number"
+      "description": "Exciter time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "E_sat": {
       "type": "array",

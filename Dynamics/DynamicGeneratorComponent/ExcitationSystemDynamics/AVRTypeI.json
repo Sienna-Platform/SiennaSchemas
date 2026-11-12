@@ -19,20 +19,24 @@
       "type": "number"
     },
     "Ta": {
-      "description": "Amplifier time constant",
-      "type": "number"
+      "description": "Amplifier time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Te": {
-      "description": "Field circuit time constant",
-      "type": "number"
+      "description": "Field circuit time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tf": {
-      "description": "Stabilizer time constant",
-      "type": "number"
+      "description": "Stabilizer time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tr": {
-      "description": "Voltage measurement time constant",
-      "type": "number"
+      "description": "Voltage measurement time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Va_lim": {
       "description": "Limits for pi controller",

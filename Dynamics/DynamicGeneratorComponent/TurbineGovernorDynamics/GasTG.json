@@ -11,16 +11,19 @@
       "type": "number"
     },
     "T1": {
-      "description": "Governor time constant",
-      "type": "number"
+      "description": "Governor time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T2": {
-      "description": "Combustion chamber time constant",
-      "type": "number"
+      "description": "Combustion chamber time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T3": {
-      "description": "Load limit time constant (exhaust gas measurement time)",
-      "type": "number"
+      "description": "Load limit time constant (exhaust gas measurement time) Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "AT": {
       "description": "Ambient temperature load limit",

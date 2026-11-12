@@ -15,8 +15,9 @@
       "type": "number"
     },
     "T2": {
-      "description": "Power fraction time constant",
-      "type": "number"
+      "description": "Power fraction time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "tau_limits": {
       "description": "Power limits into the governor",

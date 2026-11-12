@@ -78,6 +78,14 @@ REFERENCES = {
         "filter": "Filter",
         "current_limitation": "CurrentLimitation",
     },
+    "SingleCageInductionMachine": {},
+    "SimplifiedSingleCageInductionMachine": {},
+    "DynamicExponentialLoad": {},
+    "ActiveConstantPowerLoad": {},
+    "CSVGN1": {},
+    "AggregateDistributedGenerationA": {},
+    "PeriodicVariableSource": {},
+    "GenericDER": {},
 }
 
 

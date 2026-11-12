@@ -11,8 +11,9 @@
       "type": "number"
     },
     "Tm": {
-      "description": "Turbine governor low-pass time constant",
-      "type": "number"
+      "description": "Turbine governor low-pass time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "P_ref": {
       "description": "Reference power set-point",

@@ -12,7 +12,7 @@
       "description": "Name of the dynamic injection. Must equal the name of the static injection device that names it in `dynamic_injector`.",
       "type": "string"
     },
-    "omega_ref": {
+    "frequency_ref": {
       "description": "Frequency reference set-point, in natural units. Usually equal to the system frequency. Units: Hz.",
       "type": "number",
       "exclusiveMinimum": 0,
@@ -63,7 +63,7 @@
   "required": [
     "id",
     "name",
-    "omega_ref",
+    "frequency_ref",
     "converter",
     "active_power_control",
     "reactive_power_control",

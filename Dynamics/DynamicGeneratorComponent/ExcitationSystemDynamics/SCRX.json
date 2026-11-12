@@ -19,8 +19,9 @@
       "type": "number"
     },
     "Te": {
-      "description": "Regulator time constant",
-      "type": "number"
+      "description": "Regulator time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Efd_lim": {
       "description": "Field voltage regulator limits (regulator output)",

@@ -15,8 +15,9 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Regulator input filter time constant",
-      "type": "number"
+      "description": "Regulator input filter time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Vi_lim": {
       "type": "array",
@@ -28,28 +29,33 @@
       "maxItems": 2
     },
     "Tc": {
-      "description": "First regulator numerator (lead) time constant",
-      "type": "number"
+      "description": "First regulator numerator (lead) time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tb": {
-      "description": "First regulator denominator (lag) time constant",
-      "type": "number"
+      "description": "First regulator denominator (lag) time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tc1": {
-      "description": "Second regulator numerator (lead) time constant",
-      "type": "number"
+      "description": "Second regulator numerator (lead) time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tb1": {
-      "description": "Second regulator denominator (lag) time constant",
-      "type": "number"
+      "description": "Second regulator denominator (lag) time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Ka": {
       "description": "Voltage regulator gain",
       "type": "number"
     },
     "Ta": {
-      "description": "Voltage regulator time constant",
-      "type": "number"
+      "description": "Voltage regulator time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Va_lim": {
       "description": "Limits for regulator output",
@@ -68,8 +74,9 @@
       "type": "number"
     },
     "Tf": {
-      "description": "Rate feedback time constant",
-      "type": "number"
+      "description": "Rate feedback time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "K_lr": {
       "description": "Exciter output current limiter gain",

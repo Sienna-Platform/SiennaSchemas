@@ -7,24 +7,34 @@
       "type": "integer"
     },
     "lf": {
-      "description": "Series inductance of converter filter",
-      "type": "number"
+      "description": "Series inductance of converter filter Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "rf": {
-      "description": "Series resistance of converter filter",
-      "type": "number"
+      "description": "Series resistance of converter filter Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
     },
     "cf": {
-      "description": "Shunt capacitance of converter filter",
-      "type": "number"
+      "description": "Shunt capacitance of converter filter Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Susceptance"
     },
     "lg": {
-      "description": "Series inductance of converter filter to the grid",
-      "type": "number"
+      "description": "Series inductance of converter filter to the grid Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "rg": {
-      "description": "Series resistance of converter filter to the grid",
-      "type": "number"
+      "description": "Series resistance of converter filter to the grid Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
     }
   },
   "required": [

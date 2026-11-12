@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SimplifiedSingleCageInductionMachine",
+  "description": "Parameters of 3-states three-phase single cage induction machine with quadratic torque-speed relationship It has no bus of its own: exactly one static injection device, with the same name, names it in its `dynamic_injector` property, and that device supplies the rest of its data.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the dynamic injection. Must equal the name of the static injection device that names it in `dynamic_injector`.",
+      "type": "string"
+    },
+    "R_s": {
+      "description": "Armature stator resistance Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
+    },
+    "R_r": {
+      "description": "Rotor resistance Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
+    },
+    "X_ls": {
+      "description": "Stator Leakage Reactance Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
+    },
+    "X_lr": {
+      "description": "Rotor Leakage Reactance Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
+    },
+    "X_m": {
+      "description": "Stator-Rotor Mutual Reactance Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
+    },
+    "H": {
+      "description": "Motor Inertia Constant [s] Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "A": {
+      "description": "Torque-Speed Quadratic Term",
+      "type": "number"
+    },
+    "B": {
+      "description": "Torque-Speed Linear Term",
+      "type": "number"
+    },
+    "torque_ref": {
+      "description": "Reference torque parameter",
+      "type": "number"
+    },
+    "B_shunt": {
+      "description": "Susceptance Initialization Corrector Term",
+      "type": "number"
+    },
+    "base_power": {
+      "description": "Base power for the per-unit parameters of this model. Usually equal to the `base_power` of the static injection device that names this model. Units: MVA.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "MVA"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "R_s",
+    "R_r",
+    "X_ls",
+    "X_lr",
+    "X_m",
+    "H",
+    "A",
+    "B",
+    "torque_ref",
+    "B_shunt",
+    "base_power"
+  ]
+}

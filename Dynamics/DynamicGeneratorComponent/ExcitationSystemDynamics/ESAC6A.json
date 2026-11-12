@@ -7,28 +7,33 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Regulator input filter time constant",
-      "type": "number"
+      "description": "Regulator input filter time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Ka": {
       "description": "Regulator output gain",
       "type": "number"
     },
     "Ta": {
-      "description": "Regulator output lag time constant",
-      "type": "number"
+      "description": "Regulator output lag time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tk": {
-      "description": "Voltage regulator lead time constant",
-      "type": "number"
+      "description": "Voltage regulator lead time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tb": {
-      "description": "Regulator denominator (lag) time constant",
-      "type": "number"
+      "description": "Regulator denominator (lag) time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tc": {
-      "description": "Regulator numerator (lead) time constant",
-      "type": "number"
+      "description": "Regulator numerator (lead) time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Va_lim": {
       "description": "Limits for regulator output",
@@ -39,8 +44,9 @@
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Te": {
-      "description": "Exciter field time constant",
-      "type": "number"
+      "description": "Exciter field time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "VFE_lim": {
       "description": "Exciter field current limiter reference",
@@ -55,12 +61,14 @@
       "type": "number"
     },
     "Th": {
-      "description": "Exciter field current limiter denominator (lag) time constant",
-      "type": "number"
+      "description": "Exciter field current limiter denominator (lag) time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tj": {
-      "description": "Exciter field current limiter (lead) time constant",
-      "type": "number"
+      "description": "Exciter field current limiter (lead) time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Kc": {
       "description": "Rectifier loading factor proportional to commutating reactance",

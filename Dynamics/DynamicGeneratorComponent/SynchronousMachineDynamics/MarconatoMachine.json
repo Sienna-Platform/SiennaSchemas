@@ -7,53 +7,72 @@
       "type": "integer"
     },
     "R": {
-      "description": "Resistance after EMF",
-      "type": "number"
+      "description": "Resistance after EMF Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
     },
     "Xd": {
-      "description": "Reactance after EMF in d-axis",
-      "type": "number"
+      "description": "Reactance after EMF in d-axis Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "Xq": {
-      "description": "Reactance after EMF in q-axis",
-      "type": "number"
+      "description": "Reactance after EMF in q-axis Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "Xd_p": {
-      "description": "Transient reactance after EMF in d-axis",
-      "type": "number"
+      "description": "Transient reactance after EMF in d-axis Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "Xq_p": {
-      "description": "Transient reactance after EMF in q-axis",
-      "type": "number"
+      "description": "Transient reactance after EMF in q-axis Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "Xd_pp": {
-      "description": "Sub-Transient reactance after EMF in d-axis",
-      "type": "number"
+      "description": "Sub-Transient reactance after EMF in d-axis Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "Xq_pp": {
-      "description": "Sub-Transient reactance after EMF in q-axis",
-      "type": "number"
+      "description": "Sub-Transient reactance after EMF in q-axis Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "Td0_p": {
-      "description": "Time constant of transient d-axis voltage",
-      "type": "number"
+      "description": "Time constant of transient d-axis voltage Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tq0_p": {
-      "description": "Time constant of transient q-axis voltage",
-      "type": "number"
+      "description": "Time constant of transient q-axis voltage Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Td0_pp": {
-      "description": "Time constant of sub-transient d-axis voltage",
-      "type": "number"
+      "description": "Time constant of sub-transient d-axis voltage Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tq0_pp": {
-      "description": "Time constant of sub-transient q-axis voltage",
-      "type": "number"
+      "description": "Time constant of sub-transient q-axis voltage Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T_AA": {
-      "description": "Time constant of d-axis additional leakage, validation range",
-      "type": "number"
-    }  
+      "description": "Time constant of d-axis additional leakage, validation range Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    }
   },
   "required": [
     "id",

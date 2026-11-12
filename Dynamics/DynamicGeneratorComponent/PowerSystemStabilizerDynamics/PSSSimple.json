@@ -6,7 +6,7 @@
       "description": "Unique integer identifier for this component",
       "type": "integer"
     },
-    "K_omega": {
+    "K_frequency": {
       "description": "Proportional gain for frequency",
       "type": "number"
     },
@@ -17,7 +17,7 @@
   },
   "required": [
     "id",
-    "K_omega",
+    "K_frequency",
     "K_p"
   ],
   "title": "PSSSimple",

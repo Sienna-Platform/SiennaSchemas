@@ -31,28 +31,34 @@
       "type": "integer"
     },
     "Tw1": {
-      "description": "Time constant for first washout filter for first input",
-      "type": "number"
+      "description": "Time constant for first washout filter for first input Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tw2": {
-      "description": "Time constant for second washout filter for first input",
-      "type": "number"
+      "description": "Time constant for second washout filter for first input Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T6": {
-      "description": "Time constant for low-pass filter for first input",
-      "type": "number"
+      "description": "Time constant for low-pass filter for first input Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tw3": {
-      "description": "Time constant for first washout filter for second input",
-      "type": "number"
+      "description": "Time constant for first washout filter for second input Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tw4": {
-      "description": "Time constant for second washout filter for second input",
-      "type": "number"
+      "description": "Time constant for second washout filter for second input Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T7": {
-      "description": "Time constant for low-pass filter for second input",
-      "type": "number"
+      "description": "Time constant for low-pass filter for second input Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Ks2": {
       "description": "Gain for low-pass filter for second input",
@@ -63,40 +69,48 @@
       "type": "number"
     },
     "T8": {
-      "description": "Time constant for ramp tracking filter",
-      "type": "number"
+      "description": "Time constant for ramp tracking filter Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T9": {
-      "description": "Time constant for ramp tracking filter",
-      "type": "number"
+      "description": "Time constant for ramp tracking filter Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Ks1": {
       "description": "Gain before lead-lag blocks",
       "type": "number"
     },
     "T1": {
-      "description": "Time constant for first lead-lag block",
-      "type": "number"
+      "description": "Time constant for first lead-lag block Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T2": {
-      "description": "Time constant for first lead-lag block",
-      "type": "number"
+      "description": "Time constant for first lead-lag block Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T3": {
-      "description": "Time constant for second lead-lag block",
-      "type": "number"
+      "description": "Time constant for second lead-lag block Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T4": {
-      "description": "Time constant for second lead-lag block",
-      "type": "number"
+      "description": "Time constant for second lead-lag block Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T10": {
-      "description": "Time constant for third lead-lag block",
-      "type": "number"
+      "description": "Time constant for third lead-lag block Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T11": {
-      "description": "Time constant for third lead-lag block",
-      "type": "number"
+      "description": "Time constant for third lead-lag block Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Vs1_lim": {
       "type": "array",

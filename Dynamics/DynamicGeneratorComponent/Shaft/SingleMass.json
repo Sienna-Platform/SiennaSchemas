@@ -7,13 +7,14 @@
       "type": "integer"
     },
     "H": {
-      "description": "Rotor inertia constant in MWs/MVA",
-      "type": "number"
+      "description": "Rotor inertia constant in MWs/MVA Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "D": {
       "description": "Rotor natural damping",
       "type": "number"
-    }  
+    }
   },
   "required": [
     "id",

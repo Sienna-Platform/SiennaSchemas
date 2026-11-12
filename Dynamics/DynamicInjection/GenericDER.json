@@ -1,0 +1,359 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GenericDER",
+  "description": "Parameters of a Generic Distributed Energy Resource Model. Based on \"Modeling Framework and Coordination of DER and Flexible Loads for Ancillary Service Provision.\" It has no bus of its own: exactly one static injection device, with the same name, names it in its `dynamic_injector` property, and that device supplies the rest of its data.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the dynamic injection. Must equal the name of the static injection device that names it in `dynamic_injector`.",
+      "type": "string"
+    },
+    "Qref_Flag": {
+      "description": "Reactive Power Control Mode. 1 VoltVar Control, 2 Constant Q Control, 3 Constant PF Control",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3
+    },
+    "PQ_Flag": {
+      "description": "Active and reactive power priority mode. 0 for Q priority, 1 for P priority",
+      "type": "boolean"
+    },
+    "Gen_Flag": {
+      "description": "Define generator or storage system. 0 unit is a storage device, 1 unit is a generator",
+      "type": "boolean"
+    },
+    "PerOp_Flag": {
+      "description": "Defines operation of permisible region in VRT characteristic. 0 for cease, 1 for continuous operation",
+      "type": "boolean"
+    },
+    "Recon_Flag": {
+      "description": "Defines if DER can reconnect after voltage ride-through disconnection",
+      "type": "boolean"
+    },
+    "Trv": {
+      "description": "Voltage measurement transducer's time constant, in s Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "VV_pnts": {
+      "description": "Y-axis Volt-var curve points (V1,V2,V3,V4)",
+      "$ref": "#/$defs/VoltVarPnts"
+    },
+    "Q_lim": {
+      "description": "Reactive power limits in pu (Q_min, Q_max)",
+      "$ref": "../../Core/common.json#/$defs/MinMax"
+    },
+    "Tp": {
+      "description": "Power measurement transducer's time constant, in s Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "e_lim": {
+      "description": "Error limit in PI controller for q control (e_min, e_max)",
+      "$ref": "../../Core/common.json#/$defs/MinMax"
+    },
+    "Kpq": {
+      "description": "PI controller proportional gain for q control",
+      "type": "number"
+    },
+    "Kiq": {
+      "description": "PI controller integral gain for q control",
+      "type": "number"
+    },
+    "Iqr_lim": {
+      "description": "Limit on rate of change for reactive current (pu/s) (Iqr_min, Iqr_max)",
+      "$ref": "../../Core/common.json#/$defs/MinMax"
+    },
+    "I_max": {
+      "description": "Max. inverter's current",
+      "type": "number"
+    },
+    "Tg": {
+      "description": "Current control's time constant, in s Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "kWh_Cap": {
+      "description": "BESS capacity in kWh",
+      "type": "number"
+    },
+    "SOC_ini": {
+      "description": "Initial state of charge (SOC) in pu",
+      "type": "number"
+    },
+    "SOC_lim": {
+      "description": "Battery's SOC limits (SOC_min, SOC_max)",
+      "$ref": "../../Core/common.json#/$defs/MinMax"
+    },
+    "Trf": {
+      "description": "Time constant to estimate system frequency, in s Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "fdbd_pnts": {
+      "description": "Frequency error dead band thresholds `(fdbd1, fdbd2)`",
+      "$ref": "../../Core/common.json#/$defs/FdbdPnts"
+    },
+    "D_dn": {
+      "description": "reciprocal of droop for over-frequency conditions, in pu",
+      "type": "number"
+    },
+    "D_up": {
+      "description": "reciprocal of droop for under-frequency conditions, in pu",
+      "type": "number"
+    },
+    "fe_lim": {
+      "description": "Frequency error limits in pu (fe_min, fe_max)",
+      "$ref": "../../Core/common.json#/$defs/MinMax"
+    },
+    "Kpp": {
+      "description": "PI controller proportional gain for p control",
+      "type": "number"
+    },
+    "Kip": {
+      "description": "PI controller integral gain for p control",
+      "type": "number"
+    },
+    "P_lim": {
+      "description": "Active power limits in pu (P_min, P_max)",
+      "$ref": "../../Core/common.json#/$defs/MinMax"
+    },
+    "dP_lim": {
+      "description": "Ramp rate limits for active power in pu/s (dP_min, dP_max)",
+      "$ref": "../../Core/common.json#/$defs/MinMax"
+    },
+    "T_pord": {
+      "description": "Power filter time constant in s Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "rrpwr": {
+      "description": "Ramp rate for real power increase following a fault, in pu/s",
+      "type": "number"
+    },
+    "VRT_pnts": {
+      "description": "Voltage ride through v points (vrt1,vrt2,vrt3,vrt4,vrt5)",
+      "$ref": "#/$defs/VoltageRideThroughPnts"
+    },
+    "TVRT_pnts": {
+      "description": "Voltage ride through time points (tvrt1,tvrt2,tvrt3)",
+      "$ref": "#/$defs/VoltageRideThroughTimePnts"
+    },
+    "tV_delay": {
+      "description": "Time delay for reconnection after voltage ride-through disconnection Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "VES_lim": {
+      "description": "Min and max voltage for entering service (VES_min,VES_max)",
+      "$ref": "../../Core/common.json#/$defs/MinMax"
+    },
+    "FRT_pnts": {
+      "description": "Frequency ride through v points (frt1,frt2,frt3,frt4)",
+      "$ref": "#/$defs/FrequencyRideThroughPnts"
+    },
+    "TFRT_pnts": {
+      "description": "Frequency ride through time points (tfrt1,tfrt2)",
+      "$ref": "#/$defs/FrequencyRideThroughTimePnts"
+    },
+    "tF_delay": {
+      "description": "Time delay for reconnection after frequency ride-through disconnection Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "FES_lim": {
+      "description": "Min and max frequency for entering service (FES_min,FES_max)",
+      "$ref": "../../Core/common.json#/$defs/MinMax"
+    },
+    "Pfa_ref": {
+      "description": "Reference power factor",
+      "type": "number",
+      "default": 0.0
+    },
+    "Q_ref": {
+      "description": "Reference reactive power, in pu Units: pu.",
+      "type": "number",
+      "default": 0.0,
+      "x-unit": "pu",
+      "x-quantity": "ReactivePower"
+    },
+    "P_ref": {
+      "description": "Reference active power, in pu Units: pu.",
+      "type": "number",
+      "default": 1.0,
+      "x-unit": "pu",
+      "x-quantity": "ActivePower"
+    },
+    "base_power": {
+      "description": "Base power for the per-unit parameters of this model. Usually equal to the `base_power` of the static injection device that names this model. Units: MVA.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "MVA"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "Qref_Flag",
+    "PQ_Flag",
+    "Gen_Flag",
+    "PerOp_Flag",
+    "Recon_Flag",
+    "Trv",
+    "VV_pnts",
+    "Q_lim",
+    "Tp",
+    "e_lim",
+    "Kpq",
+    "Kiq",
+    "Iqr_lim",
+    "I_max",
+    "Tg",
+    "kWh_Cap",
+    "SOC_ini",
+    "SOC_lim",
+    "Trf",
+    "fdbd_pnts",
+    "D_dn",
+    "D_up",
+    "fe_lim",
+    "Kpp",
+    "Kip",
+    "P_lim",
+    "dP_lim",
+    "T_pord",
+    "rrpwr",
+    "VRT_pnts",
+    "TVRT_pnts",
+    "tV_delay",
+    "VES_lim",
+    "FRT_pnts",
+    "TFRT_pnts",
+    "tF_delay",
+    "FES_lim",
+    "base_power"
+  ],
+  "$defs": {
+    "FrequencyRideThroughPnts": {
+      "description": "The four frequency points `(frt1, ..., frt4)` of a frequency ride-through characteristic.",
+      "properties": {
+        "frt1": {
+          "type": "number"
+        },
+        "frt2": {
+          "type": "number"
+        },
+        "frt3": {
+          "type": "number"
+        },
+        "frt4": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "frt1",
+        "frt2",
+        "frt3",
+        "frt4"
+      ],
+      "title": "FrequencyRideThroughPnts",
+      "type": "object"
+    },
+    "FrequencyRideThroughTimePnts": {
+      "description": "The two time points `(tfrt1, tfrt2)` of a frequency ride-through characteristic.",
+      "properties": {
+        "tfrt1": {
+          "type": "number"
+        },
+        "tfrt2": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "tfrt1",
+        "tfrt2"
+      ],
+      "title": "FrequencyRideThroughTimePnts",
+      "type": "object"
+    },
+    "VoltVarPnts": {
+      "description": "The four voltage points `(V1, V2, V3, V4)` of a volt-var curve.",
+      "properties": {
+        "V1": {
+          "type": "number"
+        },
+        "V2": {
+          "type": "number"
+        },
+        "V3": {
+          "type": "number"
+        },
+        "V4": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "V1",
+        "V2",
+        "V3",
+        "V4"
+      ],
+      "title": "VoltVarPnts",
+      "type": "object"
+    },
+    "VoltageRideThroughPnts": {
+      "description": "The five voltage points `(vrt1, ..., vrt5)` of a voltage ride-through characteristic.",
+      "properties": {
+        "vrt1": {
+          "type": "number"
+        },
+        "vrt2": {
+          "type": "number"
+        },
+        "vrt3": {
+          "type": "number"
+        },
+        "vrt4": {
+          "type": "number"
+        },
+        "vrt5": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "vrt1",
+        "vrt2",
+        "vrt3",
+        "vrt4",
+        "vrt5"
+      ],
+      "title": "VoltageRideThroughPnts",
+      "type": "object"
+    },
+    "VoltageRideThroughTimePnts": {
+      "description": "The three time points `(tvrt1, tvrt2, tvrt3)` of a voltage ride-through characteristic.",
+      "properties": {
+        "tvrt1": {
+          "type": "number"
+        },
+        "tvrt2": {
+          "type": "number"
+        },
+        "tvrt3": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "tvrt1",
+        "tvrt2",
+        "tvrt3"
+      ],
+      "title": "VoltageRideThroughTimePnts",
+      "type": "object"
+    }
+  }
+}

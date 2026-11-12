@@ -19,8 +19,9 @@
       "type": "number"
     },
     "T3": {
-      "description": "Valve position time constant",
-      "type": "number"
+      "description": "Valve position time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "U0": {
       "description": "Maximum valve opening rate",
@@ -35,8 +36,9 @@
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "T4": {
-      "description": "Time constant inlet steam",
-      "type": "number"
+      "description": "Time constant inlet steam Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "K1": {
       "description": "Fraction of high pressure shaft power",
@@ -47,8 +49,9 @@
       "type": "number"
     },
     "T5": {
-      "description": "Time constant for second boiler pass",
-      "type": "number"
+      "description": "Time constant for second boiler pass Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "K3": {
       "description": "Fraction of high pressure shaft power second boiler pass",
@@ -59,8 +62,9 @@
       "type": "number"
     },
     "T6": {
-      "description": "Time constant for third boiler pass",
-      "type": "number"
+      "description": "Time constant for third boiler pass Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "K5": {
       "description": "Fraction of high pressure shaft power third boiler pass",
@@ -71,8 +75,9 @@
       "type": "number"
     },
     "T7": {
-      "description": "Time constant for fourth boiler pass",
-      "type": "number"
+      "description": "Time constant for fourth boiler pass Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "K7": {
       "description": "Fraction of high pressure shaft power fourth boiler pass",

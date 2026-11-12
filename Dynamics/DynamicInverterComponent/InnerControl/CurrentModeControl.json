@@ -6,12 +6,15 @@
       "type": "integer"
     },
     "kpc": {
+      "description": "Current controller proportional gain",
       "type": "number"
     },
     "kic": {
+      "description": "Current controller integral gain",
       "type": "number"
     },
     "kffv": {
+      "description": "Gain to enable feed-forward gain of voltage",
       "type": "number"
     }
   },

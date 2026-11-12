@@ -7,17 +7,21 @@
       "type": "integer"
     },
     "R": {
-      "description": "Resistance after EMF",
-      "type": "number"
+      "description": "Resistance after EMF Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
     },
     "Xd_p": {
-      "description": "Reactance after EMF",
-      "type": "number"
+      "description": "Reactance after EMF Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "eq_p": {
       "description": "Fixed EMF behind the impedance",
       "type": "number"
-    }  
+    }
   },
   "required": [
     "id",

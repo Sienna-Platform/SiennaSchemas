@@ -6,7 +6,7 @@
       "description": "Unique integer identifier for this component",
       "type": "integer"
     },
-    "omega_lp": {
+    "frequency_lp": {
       "description": "PLL low-pass filter frequency",
       "type": "number"
     },
@@ -21,7 +21,7 @@
   },
   "required": [
     "id",
-    "omega_lp",
+    "frequency_lp",
     "kp_pll",
     "ki_pll"
   ],

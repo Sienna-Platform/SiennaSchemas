@@ -7,8 +7,10 @@
       "type": "integer"
     },
     "R": {
-      "description": "Armature resistance",
-      "type": "number"
+      "description": "Armature resistance Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
     },
     "Td0_p": {
       "description": "Time constant of transient d-axis voltage Units: s.",
@@ -26,24 +28,34 @@
       "x-unit": "s"
     },
     "Xd": {
-      "description": "Reactance after EMF in d-axis",
-      "type": "number"
+      "description": "Reactance after EMF in d-axis Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "Xq": {
-      "description": "Reactance after EMF in q-axis",
-      "type": "number"
+      "description": "Reactance after EMF in q-axis Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "Xd_p": {
-      "description": "Transient reactance after EMF in d-axis",
-      "type": "number"
+      "description": "Transient reactance after EMF in d-axis Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "Xd_pp": {
-      "description": "Sub-Transient reactance after EMF in d-axis. Note: Xd_pp = Xq_pp",
-      "type": "number"
+      "description": "Sub-Transient reactance after EMF in d-axis. Note: Xd_pp = Xq_pp Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "Xl": {
-      "description": "Stator leakage reactance",
-      "type": "number"
+      "description": "Stator leakage reactance Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     },
     "Se": {
       "type": "array",

@@ -11,24 +11,28 @@
       "type": "number"
     },
     "Ts": {
-      "description": "Governor time constant",
-      "type": "number"
+      "description": "Governor time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tc": {
-      "description": "Servo time constant",
-      "type": "number"
+      "description": "Servo time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T3": {
       "description": "Transient gain time constant",
       "type": "number"
     },
     "T4": {
-      "description": "Power fraction time constant",
-      "type": "number"
+      "description": "Power fraction time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T5": {
-      "description": "Reheat time constant",
-      "type": "number"
+      "description": "Reheat time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "valve_position_limits": {
       "description": "Valve position limits",

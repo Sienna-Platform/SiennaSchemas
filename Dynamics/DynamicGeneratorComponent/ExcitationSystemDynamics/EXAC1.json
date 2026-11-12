@@ -7,40 +7,46 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Regulator input filter time constant",
-      "type": "number"
+      "description": "Regulator input filter time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tb": {
-      "description": "Regulator denominator (lag) time constant",
-      "type": "number"
+      "description": "Regulator denominator (lag) time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tc": {
-      "description": "Regulator numerator (lead) time constant",
-      "type": "number"
+      "description": "Regulator numerator (lead) time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Ka": {
       "description": "Regulator output gain",
       "type": "number"
     },
     "Ta": {
-      "description": "Regulator output time constant",
-      "type": "number"
+      "description": "Regulator output time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Vr_lim": {
       "description": "Limits for regulator output",
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Te": {
-      "description": "Exciter field time constant",
-      "type": "number"
+      "description": "Exciter field time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Kf": {
       "description": "Rate feedback excitation system stabilizer gain",
       "type": "number"
     },
     "Tf": {
-      "description": "Rate feedback time constant",
-      "type": "number"
+      "description": "Rate feedback time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Kc": {
       "description": "Rectifier loading factor proportional to commutating reactance",

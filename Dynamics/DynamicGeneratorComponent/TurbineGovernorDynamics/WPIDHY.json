@@ -7,8 +7,9 @@
       "type": "integer"
     },
     "T_reg": {
-      "description": "Input time constant of the governor",
-      "type": "number"
+      "description": "Input time constant of the governor Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "reg": {
       "description": "Input governor gain",
@@ -27,12 +28,14 @@
       "type": "number"
     },
     "Ta": {
-      "description": "Governor derivative/high-frequency time constant",
-      "type": "number"
+      "description": "Governor derivative/high-frequency time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tb": {
-      "description": "Gate-servo time constant",
-      "type": "number"
+      "description": "Gate-servo time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "V_lim": {
       "description": "Gate opening velocity limits",
@@ -43,8 +46,9 @@
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Tw": {
-      "description": "Water inertia time constant",
-      "type": "number"
+      "description": "Water inertia time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "P_lim": {
       "description": "Minimum and maximum gate openings",

@@ -6,33 +6,43 @@
       "type": "integer"
     },
     "kpv": {
+      "description": "voltage controller proportional gain",
       "type": "number"
     },
     "kiv": {
+      "description": "voltage controller integral gain",
       "type": "number"
     },
     "kffv": {
+      "description": "Binary variable to enable feed-forward gain of voltage",
       "type": "number"
     },
     "rv": {
+      "description": "virtual resistance",
       "type": "number"
     },
     "lv": {
+      "description": "virtual inductance",
       "type": "number"
     },
     "kpc": {
+      "description": "current controller proportional gain",
       "type": "number"
     },
     "kic": {
+      "description": "current controller integral gain",
       "type": "number"
     },
     "kffi": {
+      "description": "Binary variable to enable feed-forward gain of current",
       "type": "number"
     },
-    "omegaad": {
+    "active_damping_filter_frequency": {
+      "description": "active damping filter cutoff frequency (rad/sec)",
       "type": "number"
     },
     "kad": {
+      "description": "active damping gain",
       "type": "number"
     }
   },
@@ -46,7 +56,7 @@
     "kpc",
     "kic",
     "kffi",
-    "omegaad",
+    "active_damping_filter_frequency",
     "kad"
   ],
   "title": "VoltageModeControl",

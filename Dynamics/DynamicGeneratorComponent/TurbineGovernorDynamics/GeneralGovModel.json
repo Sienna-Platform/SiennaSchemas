@@ -19,8 +19,9 @@
       "type": "number"
     },
     "Tpelec": {
-      "description": "Electrical power transducer time constant",
-      "type": "number"
+      "description": "Electrical power transducer time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "speed_error_signal": {
       "description": "Speed error signal limits",
@@ -39,16 +40,18 @@
       "type": "number"
     },
     "Td_gov": {
-      "description": "Governor derivative time constant",
-      "type": "number"
+      "description": "Governor derivative time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "valve_position_limits": {
       "description": "Valve position limits",
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "T_act": {
-      "description": "Actuator time constant",
-      "type": "number"
+      "description": "Actuator time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "K_turb": {
       "description": "Turbine gain",
@@ -59,20 +62,24 @@
       "type": "number"
     },
     "Tb": {
-      "description": "Turbine lag time constant",
-      "type": "number"
+      "description": "Turbine lag time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tc": {
-      "description": "Turbine lead time constant",
-      "type": "number"
+      "description": "Turbine lead time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T_eng": {
-      "description": "Transport lag time constant for diesel engine",
-      "type": "number"
+      "description": "Transport lag time constant for diesel engine Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tf_load": {
-      "description": "Load limiter time constant",
-      "type": "number"
+      "description": "Load limiter time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Kp_load": {
       "description": "Load limiter proportional gain for PI controller",
@@ -111,8 +118,9 @@
       "type": "number"
     },
     "Ta": {
-      "description": "Acceleration limiter time constant",
-      "type": "number"
+      "description": "Acceleration limiter time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T_rate": {
       "description": "Turbine rating",
@@ -123,12 +131,14 @@
       "type": "number"
     },
     "Tsa": {
-      "description": "Temperature detection lead time constant",
-      "type": "number"
+      "description": "Temperature detection lead time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tsb": {
-      "description": "Temperature detection lag time constant",
-      "type": "number"
+      "description": "Temperature detection lag time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "R_lim": {
       "description": "Maximum rate of load increase",

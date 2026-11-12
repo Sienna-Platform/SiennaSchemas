@@ -7,36 +7,43 @@
       "type": "integer"
     },
     "T1": {
-      "description": "Governor mechanism time constant",
-      "type": "number"
+      "description": "Governor mechanism time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T2": {
-      "description": "Turbine power time constant",
-      "type": "number"
+      "description": "Turbine power time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T3": {
-      "description": "Turbine exhaust temperature time constant",
-      "type": "number"
+      "description": "Turbine exhaust temperature time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "K": {
       "description": "Governor gain (reciproical of droop)",
       "type": "number"
     },
     "T4": {
-      "description": "Governor lead time constant",
-      "type": "number"
+      "description": "Governor lead time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T5": {
-      "description": "Governor lag time constant",
-      "type": "number"
+      "description": "Governor lag time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "T6": {
-      "description": "Actuator time constant",
-      "type": "number"
+      "description": "Actuator time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Td": {
-      "description": "Engine time delay",
-      "type": "number"
+      "description": "Engine time delay Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "P_ref": {
       "description": "Reference power set-point",

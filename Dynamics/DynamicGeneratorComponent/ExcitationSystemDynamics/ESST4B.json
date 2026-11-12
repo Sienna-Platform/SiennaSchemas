@@ -3,8 +3,9 @@
   "description": "In these excitation systems, voltage (and also current in compounded systems) is transformed to an appropriate level. Rectifiers, either controlled or non-controlled, provide the necessary direct current for the generator field. Parameters of IEEE Std 421.5 Type ST4B Excitacion System. ESST4B in PSSE and PSLF",
   "properties": {
     "Tr": {
-      "description": "Regulator input filter time constant",
-      "type": "number"
+      "description": "Regulator input filter time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "id": {
       "description": "Unique integer identifier for this component",
@@ -23,8 +24,9 @@
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Ta": {
-      "description": "Voltage regulator time constant",
-      "type": "number"
+      "description": "Voltage regulator time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "K_pm": {
       "description": "Voltage regulator proportional gain output",

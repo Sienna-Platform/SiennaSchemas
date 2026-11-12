@@ -15,8 +15,9 @@
       "type": "number"
     },
     "T_reg": {
-      "description": "Speed detector time constant",
-      "type": "number"
+      "description": "Speed detector time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Kp": {
       "description": "Governor proportional gain",
@@ -31,12 +32,14 @@
       "type": "number"
     },
     "Ta": {
-      "description": "Governor derivative time constant",
-      "type": "number"
+      "description": "Governor derivative time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tb": {
-      "description": "Gate-servo time constant",
-      "type": "number"
+      "description": "Gate-servo time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "D_turb": {
       "description": "Turbine damping factor",
@@ -69,8 +72,9 @@
       "type": "number"
     },
     "Tw": {
-      "description": "Water inertia time constant",
-      "type": "number"
+      "description": "Water inertia time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "V_lim": {
       "description": "Gate opening velocity limits",

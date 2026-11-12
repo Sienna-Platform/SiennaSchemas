@@ -6,20 +6,25 @@
       "type": "integer"
     },
     "kq": {
+      "description": "frequency droop gain",
       "type": "number"
     },
-    "omegaf": {
+    "reactive_power_filter_frequency": {
+      "description": "filter frequency cutoff",
       "type": "number"
     },
     "V_ref": {
+      "description": "Reference Voltage Set-point (pu) Units: pu.",
       "type": "number",
-      "default": 1.0
+      "default": 1.0,
+      "x-unit": "pu",
+      "x-quantity": "Voltage"
     }
   },
   "required": [
     "id",
     "kq",
-    "omegaf"
+    "reactive_power_filter_frequency"
   ],
   "title": "ReactivePowerDroop",
   "type": "object"

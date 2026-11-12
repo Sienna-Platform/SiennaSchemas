@@ -7,24 +7,29 @@
       "type": "integer"
     },
     "H": {
-      "description": "Rotor inertia constant in MWs/MVA",
-      "type": "number"
+      "description": "Rotor inertia constant in MWs/MVA Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "H_hp": {
-      "description": "High pressure turbine inertia constant in MWs/MVA",
-      "type": "number"
+      "description": "High pressure turbine inertia constant in MWs/MVA Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "H_ip": {
-      "description": "Intermediate pressure turbine inertia constant in MWs/MVA",
-      "type": "number"
+      "description": "Intermediate pressure turbine inertia constant in MWs/MVA Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "H_lp": {
-      "description": "Low pressure turbine inertia constant in MWs/MVA",
-      "type": "number"
+      "description": "Low pressure turbine inertia constant in MWs/MVA Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "H_ex": {
-      "description": "Exciter inertia constant in MWs/MVA",
-      "type": "number"
+      "description": "Exciter inertia constant in MWs/MVA Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "D": {
       "description": "Rotor natural damping",
@@ -77,7 +82,7 @@
     "K_ex": {
       "description": "Exciter angle coefficient",
       "type": "number"
-    }  
+    }
   },
   "required": [
     "id",

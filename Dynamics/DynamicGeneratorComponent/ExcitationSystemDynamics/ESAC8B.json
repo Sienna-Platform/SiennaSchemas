@@ -7,8 +7,9 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Regulator input filter time constant",
-      "type": "number"
+      "description": "Regulator input filter time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Kp": {
       "description": "Regulator proportional PID gain",
@@ -23,24 +24,27 @@
       "type": "number"
     },
     "Td": {
-      "description": "Regulator derivative PID time constant",
-      "type": "number"
+      "description": "Regulator derivative PID time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Ka": {
       "description": "Regulator output gain",
       "type": "number"
     },
     "Ta": {
-      "description": "Regulator output lag time constant",
-      "type": "number"
+      "description": "Regulator output lag time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Vr_lim": {
       "description": "Limits for excitor field voltage",
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Te": {
-      "description": "Exciter field time constant",
-      "type": "number"
+      "description": "Exciter field time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Ke": {
       "description": "Exciter field proportional constant",

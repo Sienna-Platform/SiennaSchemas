@@ -15,16 +15,19 @@
       "type": "number"
     },
     "Tr": {
-      "description": "Governor time constant",
-      "type": "number"
+      "description": "Governor time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tf": {
-      "description": "Filter time constant",
-      "type": "number"
+      "description": "Filter time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tg": {
-      "description": "Servo time constant",
-      "type": "number"
+      "description": "Servo time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "VELM": {
       "description": "Gate velocity limit",
@@ -35,8 +38,9 @@
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Tw": {
-      "description": "Water time constant",
-      "type": "number"
+      "description": "Water time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "At": {
       "description": "Turbine gain",

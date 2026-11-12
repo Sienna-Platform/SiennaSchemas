@@ -7,28 +7,32 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Voltage measurement time constant",
-      "type": "number"
+      "description": "Voltage measurement time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Vi_lim": {
       "description": "Voltage input limits",
       "$ref": "../../../Core/common.json#/$defs/MinMax"
     },
     "Tc": {
-      "description": "Numerator lead-lag (lead) time constant",
-      "type": "number"
+      "description": "Numerator lead-lag (lead) time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tb": {
-      "description": "Denominator lead-lag (lag) time constant",
-      "type": "number"
+      "description": "Denominator lead-lag (lag) time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Ka": {
       "description": "Amplifier gain",
       "type": "number"
     },
     "Ta": {
-      "description": "Amplifier time constant",
-      "type": "number"
+      "description": "Amplifier time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Vr_lim": {
       "description": "Voltage regulator limits (regulator output)",
@@ -43,8 +47,9 @@
       "type": "number"
     },
     "Tf": {
-      "description": "Excitation control system stabilizer time constant",
-      "type": "number"
+      "description": "Excitation control system stabilizer time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "V_ref": {
       "description": "Reference voltage set-point",

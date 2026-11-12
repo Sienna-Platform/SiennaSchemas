@@ -6,28 +6,37 @@
       "type": "integer"
     },
     "Kp_q": {
+      "description": "Proportional Gain",
       "type": "number"
     },
     "Ki_q": {
+      "description": "Integral Gain",
       "type": "number"
     },
-    "omegaf": {
+    "reactive_power_filter_frequency": {
+      "description": "filter frequency cutoff",
       "type": "number"
     },
     "V_ref": {
+      "description": "Voltage Set-point (pu) Units: pu.",
       "type": "number",
-      "default": 1.0
+      "default": 1.0,
+      "x-unit": "pu",
+      "x-quantity": "Voltage"
     },
     "Q_ref": {
+      "description": "Reactive Power Set-point (pu) Units: pu.",
       "type": "number",
-      "default": 1.0
+      "default": 1.0,
+      "x-unit": "pu",
+      "x-quantity": "ReactivePower"
     }
   },
   "required": [
     "id",
     "Kp_q",
     "Ki_q",
-    "omegaf"
+    "reactive_power_filter_frequency"
   ],
   "title": "ReactivePowerPI",
   "type": "object"

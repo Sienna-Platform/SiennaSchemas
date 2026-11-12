@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CSVGN1",
+  "description": "Parameters of static shunt compensator: CSVGN1 in PSSE It has no bus of its own: exactly one static injection device, with the same name, names it in its `dynamic_injector` property, and that device supplies the rest of its data.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the dynamic injection. Must equal the name of the static injection device that names it in `dynamic_injector`.",
+      "type": "string"
+    },
+    "K": {
+      "description": "Gain in pu (`DEVICE_BASE`)",
+      "type": "number"
+    },
+    "T1": {
+      "description": "Time constant in s Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "T2": {
+      "description": "Time constant in s Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "T3": {
+      "description": "Time constant in s Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "T4": {
+      "description": "Time constant in s Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "T5": {
+      "description": "Time constant in s Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "Rmin": {
+      "description": "Reactor minimum MVAr",
+      "type": "number"
+    },
+    "Vmax": {
+      "description": "Maximum voltage in pu Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Voltage"
+    },
+    "Vmin": {
+      "description": "Minimum voltage in pu Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Voltage"
+    },
+    "CBase": {
+      "description": "Capacitor (MVAR)",
+      "type": "number"
+    },
+    "R_th": {
+      "description": "Source Thevenin resistance",
+      "type": "number"
+    },
+    "X_th": {
+      "description": "Source Thevenin reactance",
+      "type": "number"
+    },
+    "base_power": {
+      "description": "Base power for the per-unit parameters of this model. Usually equal to the `base_power` of the static injection device that names this model. Units: MVA.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "MVA"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "K",
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "Rmin",
+    "Vmax",
+    "Vmin",
+    "CBase",
+    "R_th",
+    "X_th",
+    "base_power"
+  ]
+}

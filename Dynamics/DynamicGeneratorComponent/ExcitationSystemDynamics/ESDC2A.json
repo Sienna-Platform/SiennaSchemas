@@ -7,24 +7,28 @@
       "type": "integer"
     },
     "Tr": {
-      "description": "Voltage measurement time constant",
-      "type": "number"
+      "description": "Voltage measurement time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Ka": {
       "description": "Amplifier gain",
       "type": "number"
     },
     "Ta": {
-      "description": "Amplifier time constant",
-      "type": "number"
+      "description": "Amplifier time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tb": {
-      "description": "Regulator input time constant",
-      "type": "number"
+      "description": "Regulator input time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Tc": {
-      "description": "Regulator input time constant",
-      "type": "number"
+      "description": "Regulator input time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Vr_lim": {
       "description": "Voltage regulator limits (regulator output)",
@@ -35,16 +39,18 @@
       "type": "number"
     },
     "Te": {
-      "description": "Exciter time constant, integration rate associated with exciter control",
-      "type": "number"
+      "description": "Exciter time constant, integration rate associated with exciter control Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "Kf": {
       "description": "Excitation control system stabilizer gain",
       "type": "number"
     },
     "Tf": {
-      "description": "Excitation control system stabilizer time constant",
-      "type": "number"
+      "description": "Excitation control system stabilizer time constant Units: s.",
+      "type": "number",
+      "x-unit": "s"
     },
     "switch": {
       "description": "switch",
