@@ -12,7 +12,7 @@
     },
     "T1": {
       "description": "Input filter lag",
-      "type": "integer"
+      "type": "number"
     },
     "T2": {
       "description": "Input filter lead",
