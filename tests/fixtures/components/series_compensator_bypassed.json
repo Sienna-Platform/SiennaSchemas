@@ -10,9 +10,5 @@
   "rating": 1700.0,
   "base_power": 100.0,
   "power_units": "NATURAL_UNITS",
-  "control_mode": "ACTIVE_POWER_FLOW",
-  "reactance_limits": {
-    "min": -0.02,
-    "max": 0.0
-  }
+  "bypassed": true
 }

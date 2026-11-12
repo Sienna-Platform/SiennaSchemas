@@ -17,6 +17,8 @@ This project is pre-1.0; any release may change schemas incompatibly.
   `SynchronousCondenser`.
 - `TransformerCircuit.regulated_bus` (nullable bus ID) and `regulated_bus_orientation`, with the
   new `TransformerRegulationOrientation` enum (`UNDEFINED`, `FROM`, `TO`).
+- Optional `rating_b` and `rating_c` on `DiscreteControlledACBranch`, matching `Line` and
+  `TransformerCircuit`.
 
 ### Changed
 
@@ -31,13 +33,50 @@ This project is pre-1.0; any release may change schemas incompatibly.
 - `TransformerCircuit.regulated_bus_number`, a signed bus number, is replaced by
   `regulated_bus` and `regulated_bus_orientation`. A null `regulated_bus` requires an
   `UNDEFINED` orientation.
+- `rating_b` and `rating_c` on `Line`, `TransformerCircuit`, and `DiscreteControlledACBranch`
+  are described as the short-term (PSS/E Rate B) and emergency (Rate C) thermal ratings.
+- `SeriesCompensator` is a fixed series capacitor or reactor (the CIM `SeriesCompensator`)
+  with constant `r` and `x`. An optional `bypassed` flag (default `false`) shorts it into a
+  zero-impedance tie. `control_mode`, `reactance_limits`, `active_power_flow_setpoint` and
+  `SeriesCompensatorControlMode` are removed; documents that set them do not read.
 
 ### Removed
 
+- `monitored_components` on `PlannedOutage`. A planned outage is not a contingency; only
+  `FixedForcedOutage` and `GeometricDistributionForcedOutage` carry monitored components.
 - The device-level AC voltage setpoints: `FACTSControlDevice.voltage_setpoint` and
   `voltage_setpoint_units`, `InterconnectingConverter.ac_voltage_setpoint`, and
   `TwoTerminalVSCLine.ac_voltage_setpoint_from`/`_to`. A regulating device holds the
   `voltage_setpoint` of the bus it regulates.
+
+## [0.4.0] - 2026-10-27
+
+0.4.0 starts a new compatibility line. Timestamps follow the OpenAPI Format Registry: a
+`date-time` always carries a time zone, and a time series timestamp without one is a
+`date-time-local`. Documents written at 0.3.x do not read at 0.4.0; regenerate them with a
+current producer.
+
+### Changed
+
+- `initial_timestamp` on `SingleTimeSeries`, `Deterministic`,
+  `DeterministicSingleTimeSeries`, `Probabilistic` and `Scenarios` is one of two RFC 3339
+  forms: `date-time`, with `Z` or a UTC offset, or `date-time-local`, with no offset (a wall
+  clock that names no instant). Each form has a `pattern`, because JSON Schema treats
+  `format` as an annotation. The patterns allow at most 3 fractional-second digits and
+  uppercase `T` and `Z` only.
+- `time_reference` now fixes the form of `initial_timestamp`: `zoneless` requires
+  `date-time-local`; `utc` requires `Z` or `+00:00` (RFC 3339 gives `-00:00` the meaning
+  "offset unknown"); a fixed offset or an IANA zone name requires `date-time`. With no
+  `time_reference`, either form is accepted, and no zone is assumed.
+- `DataSource.retrieved_at` and `published_at` stay `date-time` and gain the same offset
+  `pattern`: a data source records an instant, so these fields always carry a time zone. A
+  value without an offset, which 0.3.x validators accepted, is now rejected.
+
+### Fixed
+
+- `scripts/validate_fixtures.py` checks `pattern` with ECMA-262 semantics, as JSON Schema
+  requires. Python's `re` let `$` match before a trailing newline and `\d` match any Unicode
+  digit. The gate now depends on `regress`.
 
 ## [0.3.0] - 2026-10-26
 
