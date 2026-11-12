@@ -253,11 +253,11 @@ def check_dynamics(validator, failures):
     def add_inverter(doc, active="ActivePowerPI", reactive="ReactivePowerPI"):
         params = {
             "AverageConverter": {"rated_voltage": 0.69, "rated_current": 100.0},
-            "ActivePowerPI": {"Kp_p": 0.0, "Ki_p": 4.69, "active_power_filter_frequency": 1000.0},
-            "ReactivePowerPI": {"Kp_q": 0.0, "Ki_q": 4.69, "reactive_power_filter_frequency": 1000.0},
+            "ActivePowerPI": {"Kp_p": 0.0, "Ki_p": 4.69, "active_power_filter_frequency": 159.155},
+            "ReactivePowerPI": {"Kp_q": 0.0, "Ki_q": 4.69, "reactive_power_filter_frequency": 159.155},
             "VoltageModeControl": {
                 "kpv": 0.59, "kiv": 736.0, "kffv": 0.0, "rv": 0.0, "lv": 0.2,
-                "kpc": 1.27, "kic": 14.3, "kffi": 0.0, "active_damping_filter_frequency": 50.0, "kad": 0.2,
+                "kpc": 1.27, "kic": 14.3, "kffi": 0.0, "active_damping_filter_frequency": 7.958, "kad": 0.2,
             },
             "FixedDCSource": {"voltage": 600.0},
             "FixedFrequency": {"frequency": 60.0},

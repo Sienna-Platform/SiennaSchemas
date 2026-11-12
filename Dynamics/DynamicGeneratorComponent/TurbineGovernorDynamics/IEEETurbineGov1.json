@@ -8,7 +8,7 @@
     },
     "K": {
       "description": "Governor gain",
-      "type": "integer"
+      "type": "number"
     },
     "T1": {
       "description": "Input filter lag",
