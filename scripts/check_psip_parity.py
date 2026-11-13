@@ -59,16 +59,10 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EXCLUDED_FIELDS = {"ext", "internal", "requirements"}
 
 # Schema components with no descriptor entry. These are plain Julia structs
-# (src/models/financial_data/, src/portfolio.jl) rather than descriptor-generated
+# (src/models/financial_data/) rather than descriptor-generated
 # types, so their fields are read from the struct definitions instead. Every
 # field is positional with no default, hence all are required.
 FINANCIAL_FIELDS = {
-    "PortfolioFinancialData": [
-        "base_year",
-        "discount_rate",
-        "inflation_rate",
-        "interest_rate",
-    ],
     "TechnologyFinancialData": [
         "capital_recovery_period",
         "technology_base_year",
@@ -76,6 +70,9 @@ FINANCIAL_FIELDS = {
         "debt_rate",
         "return_on_equity",
         "tax_rate",
+        "discount_rate",
+        "inflation_rate",
+        "interest_rate",
     ],
 }
 

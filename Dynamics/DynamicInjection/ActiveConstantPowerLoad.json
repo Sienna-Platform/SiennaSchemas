@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ActiveConstantPowerLoad",
+  "description": "Parameters of 12-states active power load based on the paper, \"Dynamic Stability of a Microgrid With an Active Load.\" It has no bus of its own: exactly one static injection device, with the same name, names it in its `dynamic_injector` property, and that device supplies the rest of its data.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the dynamic injection. Must equal the name of the static injection device that names it in `dynamic_injector`.",
+      "type": "string"
+    },
+    "r_load": {
+      "description": "DC-side resistor",
+      "type": "number"
+    },
+    "c_dc": {
+      "description": "DC-side capacitor",
+      "type": "number"
+    },
+    "rf": {
+      "description": "Converter side filter resistance",
+      "type": "number"
+    },
+    "lf": {
+      "description": "Converter side filter inductance",
+      "type": "number"
+    },
+    "cf": {
+      "description": "AC Converter filter capacitance",
+      "type": "number"
+    },
+    "rg": {
+      "description": "Network side filter resistance",
+      "type": "number"
+    },
+    "lg": {
+      "description": "Network side filter inductance",
+      "type": "number"
+    },
+    "kp_pll": {
+      "description": "Proportional constant for PI-PLL block",
+      "type": "number"
+    },
+    "ki_pll": {
+      "description": "Integral constant for PI-PLL block",
+      "type": "number"
+    },
+    "kpv": {
+      "description": "Proportional constant for Voltage Control block",
+      "type": "number"
+    },
+    "kiv": {
+      "description": "Integral constant for Voltage Control block",
+      "type": "number"
+    },
+    "kpc": {
+      "description": "Proportional constant for Current Control block",
+      "type": "number"
+    },
+    "kic": {
+      "description": "Integral constant for Current Control block",
+      "type": "number"
+    },
+    "P_ref": {
+      "description": "Reference active power (pu). Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "ActivePower"
+    },
+    "Q_ref": {
+      "description": "Reference reactive power (pu). Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "ReactivePower"
+    },
+    "V_ref": {
+      "description": "Reference voltage (pu). Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Voltage"
+    },
+    "frequency_ref": {
+      "description": "Reference frequency, in natural units. Usually equal to the system frequency. Units: Hz.",
+      "type": "number",
+      "x-unit": "Hz"
+    },
+    "is_filter_differential": {
+      "description": "Boolean to decide if filter states are differential or algebraic",
+      "type": "boolean"
+    },
+    "base_power": {
+      "description": "Base power for the per-unit parameters of this model. Usually equal to the `base_power` of the static injection device that names this model. Units: MVA.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "MVA"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "r_load",
+    "c_dc",
+    "rf",
+    "lf",
+    "cf",
+    "rg",
+    "lg",
+    "kp_pll",
+    "ki_pll",
+    "kpv",
+    "kiv",
+    "kpc",
+    "kic",
+    "P_ref",
+    "Q_ref",
+    "V_ref",
+    "frequency_ref",
+    "is_filter_differential",
+    "base_power"
+  ]
+}

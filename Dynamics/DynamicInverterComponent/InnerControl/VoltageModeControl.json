@@ -1,38 +1,54 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
     "kpv": {
+      "description": "voltage controller proportional gain",
       "type": "number"
     },
     "kiv": {
+      "description": "voltage controller integral gain",
       "type": "number"
     },
     "kffv": {
+      "description": "Binary variable to enable feed-forward gain of voltage",
       "type": "number"
     },
     "rv": {
+      "description": "virtual resistance",
       "type": "number"
     },
     "lv": {
+      "description": "virtual inductance",
       "type": "number"
     },
     "kpc": {
+      "description": "current controller proportional gain",
       "type": "number"
     },
     "kic": {
+      "description": "current controller integral gain",
       "type": "number"
     },
     "kffi": {
+      "description": "Binary variable to enable feed-forward gain of current",
       "type": "number"
     },
-    "omegaad": {
-      "type": "number"
+    "active_damping_filter_frequency": {
+      "description": "Active damping filter cutoff frequency, in natural units. Units: Hz.",
+      "type": "number",
+      "x-unit": "Hz"
     },
     "kad": {
+      "description": "active damping gain",
       "type": "number"
     }
   },
   "required": [
+    "id",
     "kpv",
     "kiv",
     "kffv",
@@ -41,7 +57,7 @@
     "kpc",
     "kic",
     "kffi",
-    "omegaad",
+    "active_damping_filter_frequency",
     "kad"
   ],
   "title": "VoltageModeControl",

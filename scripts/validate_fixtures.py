@@ -28,6 +28,7 @@ import warnings
 import regress
 
 from build_bundles import build, current_version
+from dynamic_links import link_errors, standard_models, static_injectors
 from schema_version import classify, message
 
 # `RefResolver` is deprecated in favor of the `referencing` library, but that
@@ -111,13 +112,31 @@ COMPONENT = {
     "area_with_interchange": ("Core/Topology/Area.json", None, True),
     "area_null_interchange": ("Core/Topology/Area.json", None, True),
     "series_compensator_fixed": ("Operations/Branch/SeriesCompensator.json", None, True),
-    "series_compensator_dispatchable": ("Operations/Branch/SeriesCompensator.json", None, True),
-    "series_compensator_dispatchable_without_limits": ("Operations/Branch/SeriesCompensator.json", None, False),
-    "series_compensator_power_flow_without_setpoint": ("Operations/Branch/SeriesCompensator.json", None, False),
+    "series_compensator_bypassed": ("Operations/Branch/SeriesCompensator.json", None, True),
     "data_source_offset": ("Core/SupplementalAttributes/DataSource.json", None, True),
     "data_source_published_null": ("Core/SupplementalAttributes/DataSource.json", None, True),
     "data_source_zoneless": ("Core/SupplementalAttributes/DataSource.json", None, False),
     "data_source_published_zoneless": ("Core/SupplementalAttributes/DataSource.json", None, False),
+    "acbus_pq_with_setpoint": ("Core/Topology/ACBus.json", None, True),
+    "acbus_null_setpoint": ("Core/Topology/ACBus.json", None, True),
+    "synchronous_condenser_remote_regulated": (
+        "Operations/StaticInjection/SynchronousCondenser.json", None, True,
+    ),
+    "synchronous_condenser_local_regulated": (
+        "Operations/StaticInjection/SynchronousCondenser.json", None, True,
+    ),
+    "synchronous_condenser_regulated_bus_name": (
+        "Operations/StaticInjection/SynchronousCondenser.json", None, False,
+    ),
+    "transformer_circuit_remote_regulated": (
+        "Operations/Branch/TransformerCircuit.json", None, True,
+    ),
+    "transformer_circuit_unknown_orientation": (
+        "Operations/Branch/TransformerCircuit.json", None, False,
+    ),
+    "transformer_circuit_orientation_without_bus": (
+        "Operations/Branch/TransformerCircuit.json", None, False,
+    ),
 }
 
 
@@ -141,7 +160,7 @@ def check_bundles(failures):
         version = current_version(REPO_ROOT)
         build(REPO_ROOT, version, tmp)
         for name, (stem, component, attrs) in docs.items():
-            validator = Draft7Validator(load(pathlib.Path(tmp) / version / f"{name}.json"))
+            validator = Draft202012Validator(load(pathlib.Path(tmp) / version / f"{name}.json"))
             base = load(FIXTURE_DIR / "versioning" / f"{stem}.json")
 
             def mutated(edit):
@@ -173,7 +192,164 @@ def check_bundles(failures):
                     verb = "accepted" if accepted else "rejected"
                     want = "accept" if should_pass else "reject"
                     failures.append(f"{name} bundle, {label}: was {verb}, expected to {want}")
+        count += check_dynamics(
+            Draft202012Validator(load(pathlib.Path(tmp) / version / "SystemDocument.json")), failures
+        )
     return count
+
+
+def sample(node, base, path):
+    """A minimal instance of a schema node, built from its types alone."""
+    if "$ref" in node:
+        file, _, pointer = node["$ref"].partition("#")
+        target = (base / file).resolve() if file else path
+        sub = load(target)
+        for part in pointer.strip("/").split("/"):
+            if part:
+                sub = sub[part]
+        return sample(sub, target.parent, target)
+    kind = node["type"]
+    if kind == "object":
+        return {k: sample(node["properties"][k], base, path) for k in node.get("required", node["properties"])}
+    if kind == "array":
+        return [sample(node["items"], base, path) for _ in range(node.get("minItems", 1))]
+    if kind == "boolean":
+        return False
+    if kind == "integer":
+        return node.get("minimum", 0)
+    if kind == "string":
+        return "x"
+    return 1.0
+
+
+def check_dynamics(validator, failures):
+    """A dynamics-bearing document against the strict bundle and the link rule."""
+    base = load(FIXTURE_DIR / "dynamics" / "system_document.json")
+
+    def edit(fn):
+        doc = copy.deepcopy(base)
+        fn(doc)
+        return doc
+
+    def gen(doc):
+        return doc["components"]["DynamicGenerator"][0]
+
+    def static(doc):
+        return doc["components"]["ThermalStandard"][0]
+
+    def static_row(doc):
+        return {"available": True, "bus": 1, "active_power": 50.0, "reactive_power": 0.0, "rating": 60.0,
+                "prime_mover_type": "PVe", "power_factor": 1.0,
+                "operation_cost": {"cost_type": "RENEWABLE", "variable_operation_cost": static(doc)[
+                    "operation_cost"]["variable_operation_cost"]},
+                "base_power": 100.0, "power_units": "NATURAL_UNITS"}
+
+    def inv(doc):
+        return doc["components"]["DynamicInverter"][0]
+
+    def rows(doc, kind):
+        return doc["components"].setdefault(kind, [])
+
+    def add_inverter(doc, active="ActivePowerPI", reactive="ReactivePowerPI"):
+        params = {
+            "AverageConverter": {"rated_voltage": 0.69, "rated_current": 100.0},
+            "ActivePowerPI": {"Kp_p": 0.0, "Ki_p": 4.69, "active_power_filter_frequency": 159.155},
+            "ReactivePowerPI": {"Kp_q": 0.0, "Ki_q": 4.69, "reactive_power_filter_frequency": 159.155},
+            "VoltageModeControl": {
+                "kpv": 0.59, "kiv": 736.0, "kffv": 0.0, "rv": 0.0, "lv": 0.2,
+                "kpc": 1.27, "kic": 14.3, "kffi": 0.0, "active_damping_filter_frequency": 7.958, "kad": 0.2,
+            },
+            "FixedDCSource": {"voltage": 600.0},
+            "FixedFrequency": {"frequency": 60.0},
+            "RLFilter": {"rf": 0.01, "lf": 0.08},
+        }
+        models = {
+            "converter": (21, "AverageConverter"),
+            "active_power_control": (22, active),
+            "reactive_power_control": (23, reactive),
+            "inner_control": (24, "VoltageModeControl"),
+            "dc_source": (25, "FixedDCSource"),
+            "reference_frame_rotation": (26, "FixedFrequency"),
+            "filter": (27, "RLFilter"),
+        }
+        for ident, kind in models.values():
+            rows(doc, kind).append({"id": ident, **params[kind]})
+        rows(doc, "DynamicInverter").append(
+            {"id": 20, "name": "ibr1", "frequency_ref": 60.0, "base_power": 100.0, "current_limitation": None,
+             **{prop: ident for prop, (ident, _) in models.items()}})
+        rows(doc, "RenewableDispatch").append({**static_row(doc), "id": 19, "name": "ibr1", "dynamic_injector": 20})
+
+    shape = {
+        "dynamic generator": (lambda d: None, True),
+        "model embedded instead of referenced": (lambda d: gen(d).update(excitation_system_dynamics={"Vf": 1.05}), False),
+        "model row with an unknown property": (lambda d: rows(d, "AVRFixed")[0].update(Ka=1.0), False),
+        "required model reference absent": (lambda d: gen(d).pop("power_system_stabilizer_dynamics"), False),
+        "name absent": (lambda d: gen(d).pop("name"), False),
+        "model with a base_power": (lambda d: rows(d, "AVRFixed")[0].update(base_power=100.0), False),
+        "wrapper with an unknown property": (lambda d: gen(d).update(Ka=1.0), False),
+        "frequency_ref absent": (lambda d: gen(d).pop("frequency_ref"), False),
+        "dynamic inverter": (add_inverter, True),
+        "inverter with a current_limitation reference": (
+            lambda d: (add_inverter(d), inv(d).update(current_limitation=28),
+                       rows(d, "MagnitudeOutputCurrentLimiter").append({"id": 28, "I_max": 1.0})), True),
+        "inverter required reference absent": (lambda d: (add_inverter(d), inv(d).pop("filter")), False),
+    }
+    links = {
+        "linked": (lambda d: None, 0),
+        "dangling dynamic_injector": (lambda d: static(d).update(dynamic_injector=99), 2),
+        "dynamic_injector names a model": (lambda d: static(d).update(dynamic_injector=4), 2),
+        "orphan dynamic injection": (lambda d: static(d).update(dynamic_injector=None), 1),
+        "name differs from the static device": (lambda d: gen(d).update(name="other"), 1),
+        "shared dynamic injection": (
+            lambda d: rows(d, "ThermalStandard").append({**static(d), "id": 9, "name": "unit2"}), 1),
+        "function block reference names another class": (lambda d: gen(d).update(excitation_system_dynamics=4), 3),
+        "dangling model reference": (lambda d: gen(d).update(excitation_system_dynamics=99), 2),
+        "orphan model": (lambda d: rows(d, "AVRFixed").append({"id": 10, "Vf": 1.0}), 1),
+        "dynamic inverter": (add_inverter, 0),
+        "active and reactive controls swapped": (
+            lambda d: add_inverter(d, active="ReactivePowerPI", reactive="ActivePowerPI"), 2),
+        "bus carries a dynamic_injector": (lambda d: rows(d, "ACBus")[0].update(dynamic_injector=3), 2),
+        "duplicate id": (lambda d: rows(d, "AVRFixed").append({"id": 4, "Vf": 1.0}), 1),
+        "dynamic injection name absent": (lambda d: gen(d).pop("name"), 1),
+        "static device name absent": (lambda d: static(d).pop("name"), 1),
+        "inverter name differs": (lambda d: (add_inverter(d), inv(d).update(name="other")), 1),
+        "dangling current_limitation": (lambda d: (add_inverter(d), inv(d).update(current_limitation=99)), 1),
+        "current_limitation names another class": (lambda d: (add_inverter(d), inv(d).update(current_limitation=4)), 2),
+        "shared models": (
+            lambda d: (
+                rows(d, "DynamicGenerator").append({**gen(d), "id": 11, "name": "unit2"}),
+                rows(d, "ThermalStandard").append(
+                    {**static(d), "id": 12, "name": "unit2", "dynamic_injector": 11}),
+            ),
+            5,
+        ),
+    }
+    for label, (fn, should_pass) in shape.items():
+        if validator.is_valid(edit(fn)) != should_pass:
+            failures.append(f"dynamics bundle, {label}: expected valid={should_pass}")
+    models_by_class, static_kinds = standard_models(), static_injectors()
+    for label, (fn, want) in links.items():
+        got = link_errors(edit(fn), models_by_class, static_kinds)
+        if len(got) != want:
+            failures.append(f"dynamic links, {label}: {len(got)} error(s), expected {want}: {got}")
+    leaf_dir = REPO_ROOT / "Dynamics" / "DynamicInjection"
+    leaves = sorted(p for p in leaf_dir.glob("*.json") if p.stem not in ("DynamicGenerator", "DynamicInverter"))
+    for path in leaves:
+        schema = load(path)
+        kind = schema["title"]
+
+        def add_leaf(d, kind=kind, row=sample(schema, leaf_dir, path)):
+            row.update(id=40, name="leaf")
+            rows(d, kind).append(row)
+            rows(d, "RenewableDispatch").append(
+                {**static_row(d), "id": 41, "name": "leaf", "dynamic_injector": 40})
+
+        if not validator.is_valid(edit(add_leaf)):
+            failures.append(f"dynamics bundle, {kind} sample row: expected valid")
+        got = link_errors(edit(add_leaf), models_by_class, static_kinds)
+        if got:
+            failures.append(f"dynamic links, {kind} sample row: {got}")
+    return len(shape) + len(links) + 2 * len(leaves)
 
 
 def main():

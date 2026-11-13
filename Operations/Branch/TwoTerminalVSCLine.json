@@ -102,14 +102,6 @@
       "x-unit": "1",
       "x-quantity": "PowerFactor"
     },
-    "ac_voltage_setpoint_from": {
-      "description": "AC-side voltage magnitude target of the `from` bus converter, used when `ac_control_from` is `AC_VOLTAGE`; `null` otherwise. Units: kV.",
-      "type": [
-        "number",
-        "null"
-      ],
-      "x-unit": "kV"
-    },
     "rated_ac_voltage_from": {
       "description": "Rated AC voltage at the `from` converter's AC terminal; 0.0 means unspecified. Units: kV.",
       "default": 0.0,
@@ -234,14 +226,6 @@
       "x-unit": "1",
       "x-quantity": "PowerFactor"
     },
-    "ac_voltage_setpoint_to": {
-      "description": "AC-side voltage magnitude target of the `to` bus converter, used when `ac_control_to` is `AC_VOLTAGE`; `null` otherwise. Units: kV.",
-      "type": [
-        "number",
-        "null"
-      ],
-      "x-unit": "kV"
-    },
     "rated_ac_voltage_to": {
       "description": "Rated AC voltage at the `to` converter's AC terminal; 0.0 means unspecified. Units: kV.",
       "default": 0.0,
@@ -331,16 +315,16 @@
       "type": "number",
       "x-unit": "kV"
     },
-    "remote_bus_control_from": {
-      "description": "Number of the AC bus whose voltage the `from` converter regulates when `ac_control_from` is `AC_VOLTAGE`; null regulates its own terminal bus.",
+    "remote_regulated_bus_from": {
+      "description": "ID of the AC bus whose voltage the `from` converter regulates when `ac_control_from` is `AC_VOLTAGE`, to the `voltage_setpoint` of that bus; null regulates the `from` terminal bus. A value equal to the `from` terminal bus is invalid.",
       "default": null,
       "type": [
         "integer",
         "null"
       ]
     },
-    "remote_bus_control_to": {
-      "description": "Number of the AC bus whose voltage the `to` converter regulates when `ac_control_to` is `AC_VOLTAGE`; null regulates its own terminal bus.",
+    "remote_regulated_bus_to": {
+      "description": "ID of the AC bus whose voltage the `to` converter regulates when `ac_control_to` is `AC_VOLTAGE`, to the `voltage_setpoint` of that bus; null regulates the `to` terminal bus. A value equal to the `to` terminal bus is invalid.",
       "default": null,
       "type": [
         "integer",
@@ -442,28 +426,6 @@
     {
       "if": {
         "properties": {
-          "ac_control_from": {
-            "const": "AC_VOLTAGE"
-          }
-        },
-        "required": [
-          "ac_control_from"
-        ]
-      },
-      "then": {
-        "required": [
-          "ac_voltage_setpoint_from"
-        ],
-        "properties": {
-          "ac_voltage_setpoint_from": {
-            "type": "number"
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
           "dc_control_to": {
             "const": "DC_POWER"
           }
@@ -525,28 +487,6 @@
         ],
         "properties": {
           "power_factor_setpoint_to": {
-            "type": "number"
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "ac_control_to": {
-            "const": "AC_VOLTAGE"
-          }
-        },
-        "required": [
-          "ac_control_to"
-        ]
-      },
-      "then": {
-        "required": [
-          "ac_voltage_setpoint_to"
-        ],
-        "properties": {
-          "ac_voltage_setpoint_to": {
             "type": "number"
           }
         }

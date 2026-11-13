@@ -9,11 +9,67 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ### Added
 
+- `SystemDocument` carries dynamic injections and their function blocks. `DynamicGenerator` and
+  `DynamicInverter` name their function blocks by integer id, and a static injection device names
+  its dynamic injection in `dynamic_injector`. A function block uses the base of its dynamic
+  injection and has no `base_power`.
+- The eight remaining dynamic injection types: `SingleCageInductionMachine`,
+  `SimplifiedSingleCageInductionMachine`, `GenericDER`, `AggregateDistributedGenerationA`,
+  `CSVGN1`, `ActiveConstantPowerLoad`, `DynamicExponentialLoad`, and `PeriodicVariableSource`.
+- `scripts/dynamic_links.py` checks the links between dynamic injections, function blocks and
+  static devices.
+- `ACBus.voltage_setpoint` (nullable, pu on `base_voltage`): the target of every device that
+  regulates the bus, at the bus or from a remote terminal.
+- `remote_regulated_bus` (nullable bus ID, default `null` = the device's own bus) on
+  `ThermalStandard`, `ThermalMultiStart`, `HydroDispatch`, `HydroTurbine`, `HydroPumpTurbine`,
+  `RenewableDispatch`, `EnergyReservoirStorage`, `HybridSystem`, `Source`, and
+  `SynchronousCondenser`.
+- `TransformerCircuit.regulated_bus` (nullable bus ID) and `regulated_bus_orientation`, with the
+  new `TransformerRegulationOrientation` enum (`UNDEFINED`, `FROM`, `TO`).
 - Optional `rating_b` and `rating_c` on `DiscreteControlledACBranch`, matching `Line` and
   `TransformerCircuit`.
+- Required `discount_rate`, `inflation_rate` and `interest_rate` on `TechnologyFinancialData`.
+  Each technology carries the rates used to convert its costs to a net present value in the
+  model base year. A portfolio with one common rate repeats it on every technology.
+
+### Removed
+
+- `PortfolioFinancialData` and `PortfolioDocument.financial_data`. Portfolio-wide financial
+  parameters are modeling assumptions, not data: the rates move to `TechnologyFinancialData`
+  and the base year belongs to the consuming model. Documents carrying `financial_data` no
+  longer validate; regenerate them with a current producer.
+- `monitored_components` on `PlannedOutage`. A planned outage is not a contingency; only
+  `FixedForcedOutage` and `GeometricDistributionForcedOutage` carry monitored components.
+- The device-level AC voltage setpoints: `FACTSControlDevice.voltage_setpoint` and
+  `voltage_setpoint_units`, `InterconnectingConverter.ac_voltage_setpoint`, and
+  `TwoTerminalVSCLine.ac_voltage_setpoint_from`/`_to`. A regulating device holds the
+  `voltage_setpoint` of the bus it regulates.
 
 ### Changed
 
+- Dynamics directories and properties use the CGMES Dynamics names, for example `AVR/` is
+  `ExcitationSystemDynamics/` and `avr` is `excitation_system_dynamics`. Inverter properties use
+  IEC 61400-27-1 block names: `limiter` is `current_limitation` and `freq_estimator` is
+  `reference_frame_rotation`. `OuterControl/` is split into `ActivePowerControl/` and
+  `ReactivePowerControl/`.
+- `frequency_ref` replaces `omega_ref` and is in Hz on `DynamicGenerator`, `DynamicInverter`,
+  `AggregateDistributedGenerationA` and `ActiveConstantPowerLoad`. `FixedFrequency.frequency`
+  is in Hz and has no default. The filter and PLL cutoff frequencies of the inverter function
+  blocks are in Hz.
+- All schemas and the strict bundles use JSON Schema 2020-12. A consumer that validates with a
+  draft-07 validator must change to a 2020-12 validator.
+- `Units:` sentences in descriptions always follow a full stop.
+- `ACBus.bustype` is a classification only: a `PV` bus has in-service generation that
+  regulates voltage, at this bus or at its `remote_regulated_bus`. The held voltage is the
+  regulated bus's `voltage_setpoint`, and `magnitude` is the solved value.
+- `FACTSControlDevice.regulated_bus_number` and `SwitchedAdmittance.regulated_bus_number` are
+  replaced by `remote_regulated_bus`, a nullable bus ID instead of a bus number with 0 for local.
+- `InterconnectingConverter.remote_bus_control` and
+  `TwoTerminalVSCLine.remote_bus_control_from`/`_to` are renamed `remote_regulated_bus` and
+  `remote_regulated_bus_from`/`_to`, and hold bus IDs instead of bus numbers.
+- `TransformerCircuit.regulated_bus_number`, a signed bus number, is replaced by
+  `regulated_bus` and `regulated_bus_orientation`. A null `regulated_bus` requires an
+  `UNDEFINED` orientation.
 - `rating_b` and `rating_c` on `Line`, `TransformerCircuit`, and `DiscreteControlledACBranch`
   are described as the short-term (PSS/E Rate B) and emergency (Rate C) thermal ratings.
 - `GenericArcImpedance.r` and `x` are per-unit on `base_power` only, and `parameter_units` is removed.
@@ -21,6 +77,12 @@ This project is pre-1.0; any release may change schemas incompatibly.
   Ohms on such an arc depend on which end's base voltage is chosen, and the two choices differ by the squared voltage ratio, so neither is correct.
   The schema now matches `DiscreteControlledACBranch`, whose `r` and `x` are also per-unit only.
   This is a breaking change: a document that sets `parameter_units` no longer validates.
+- `StorageTechnology.storage_tech` is optional with a documented default of `OTHER_CHEM`,
+  matching the consumer data model.
+- `SeriesCompensator` is a fixed series capacitor or reactor (the CIM `SeriesCompensator`)
+  with constant `r` and `x`. An optional `bypassed` flag (default `false`) shorts it into a
+  zero-impedance tie. `control_mode`, `reactance_limits`, `active_power_flow_setpoint` and
+  `SeriesCompensatorControlMode` are removed; documents that set them do not read.
 
 ## [0.4.0] - 2026-10-27
 

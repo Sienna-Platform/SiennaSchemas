@@ -30,7 +30,7 @@
       "x-unit": "Hz"
     },
     "components": {
-      "description": "Components grouped by type name, e.g. `{\"ACBus\": [...], \"ThermalStandard\": [...]}`. The key is the referenced schema's `title`. Keys are emitted in sorted order so output is deterministic. Every type present must be one the consumer can convert: a consumer encountering an unknown type name must fail rather than skip it.",
+      "description": "Components grouped by type name, e.g. `{\"ACBus\": [...], \"ThermalStandard\": [...]}`. The key is the referenced schema's `title`. Keys are emitted in sorted order so output is deterministic. Every type present must be one the consumer can convert: a consumer encountering an unknown type name must fail rather than skip it. A dynamic injection (e.g. `DynamicGenerator`) is a component with no bus of its own: a non-null `dynamic_injector` on a static injection device must name a dynamic injection's `id`, each dynamic injection must be named by exactly one static device, and the two must have the same `name`. A dynamic injection names its function blocks (`excitation_system_dynamics`, `filter`, ...) by `id`; each must name a standard model of that function block class (e.g. `excitation_system_dynamics` names an `ExcitationSystemDynamics` model such as `SEXS`), and each function block must be named by exactly one dynamic injection. A reader checks these links after decoding, with one id lookup per reference.",
       "type": "object",
       "additionalProperties": {
         "type": "array",

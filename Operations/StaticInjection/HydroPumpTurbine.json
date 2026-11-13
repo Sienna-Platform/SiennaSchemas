@@ -18,6 +18,14 @@
       "description": "ID of the bus that this component is connected to.",
       "type": "integer"
     },
+    "remote_regulated_bus": {
+      "description": "ID of the bus whose voltage this device regulates, to the `voltage_setpoint` of that bus, while the device regulates voltage; null regulates the bus this device is connected to. A value equal to `bus` is invalid.",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
     "active_power": {
       "description": "Initial active power set point of the turbine unit. For power flow, this is the steady state operating point of the system. For production cost modeling, this may or may not be used as the initial starting point for the solver, depending on the solver used. Units: per power_units — NATURAL_UNITS: MW, COMPONENT_BASE: pu .",
       "type": "number",
@@ -59,7 +67,7 @@
       "x-quantity": "ActivePower"
     },
     "reactive_power_limits": {
-      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
+      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -79,7 +87,7 @@
       "x-quantity": "ActivePower"
     },
     "outflow_limits": {
-      "description": "Turbine/Pump outflow limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing Units: m3/s.",
+      "description": "Turbine/Pump outflow limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing. Units: m3/s.",
       "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit": "m3/s"
     },
@@ -90,7 +98,7 @@
       "x-quantity": "Elevation"
     },
     "ramp_limits": {
-      "description": "Ramp up and ramp down limits. in psy5 a required param with an option to be nothing Units: per power_units — NATURAL_UNITS: MW/min, COMPONENT_BASE: pu/min .",
+      "description": "Ramp up and ramp down limits. in psy5 a required param with an option to be nothing. Units: per power_units — NATURAL_UNITS: MW/min, COMPONENT_BASE: pu/min .",
       "$ref": "../../Core/common.json#/$defs/UpDown",
       "x-unit-discriminator": "power_units",
       "x-units": {
@@ -99,7 +107,7 @@
       }
     },
     "time_limits": {
-      "description": "Minimum up and minimum down time limits. in psy5 a required param with an option to be nothing Units: min.",
+      "description": "Minimum up and minimum down time limits. in psy5 a required param with an option to be nothing. Units: min.",
       "$ref": "../../Core/common.json#/$defs/UpDown",
       "x-unit": "min"
     },

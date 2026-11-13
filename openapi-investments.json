@@ -50,9 +50,6 @@
       "NodalHVDCTransportTechnology": {
         "$ref": "Investments/Technologies/NodalHVDCTransportTechnology.json"
       },
-      "PortfolioFinancialData": {
-        "$ref": "Investments/Financials/PortfolioFinancialData.json"
-      },
       "RequirementAssociation": {
         "$ref": "Investments/Associations/RequirementAssociation.json"
       },

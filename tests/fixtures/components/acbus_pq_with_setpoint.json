@@ -1,0 +1,11 @@
+{
+  "id": 1,
+  "number": 101,
+  "name": "droop_regulated_bus",
+  "available": true,
+  "bustype": "PQ",
+  "angle": -0.05,
+  "magnitude": 0.98,
+  "voltage_setpoint": 1.02,
+  "base_voltage": 230.0
+}
