@@ -6,12 +6,12 @@
       "description": "Unique integer identifier for this component",
       "type": "integer"
     },
-    "R": {
-      "description": "Permanent droop parameter",
+    "R_BIG": {
+      "description": "Permanent droop, in pu.",
       "type": "number"
     },
-    "r_droop": {
-      "description": "Temporary droop parameter",
+    "R_SMALL": {
+      "description": "Temporary droop, in pu.",
       "type": "number"
     },
     "Tr": {
@@ -62,8 +62,8 @@
   },
   "required": [
     "id",
-    "R",
-    "r_droop",
+    "R_BIG",
+    "R_SMALL",
     "Tr",
     "Tf",
     "Tg",
