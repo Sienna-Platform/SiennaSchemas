@@ -79,6 +79,18 @@ def test_moved_component_file_is_breaking():
         assert any(f[0] == cc.BREAKING and "no longer in" in f[3] for f in out), list(out)
 
 
+def test_directory_dropped_from_document_is_breaking():
+    with tempfile.TemporaryDirectory() as tmp:
+        head = Path(tmp) / "head"
+        shutil.copytree(ROOT, head, ignore=shutil.ignore_patterns(".git"))
+        builder = head / "scripts/build_bundles.py"
+        text = builder.read_text()
+        builder.write_text(text.replace('            "Operations/Market",\n', "", 1))
+        assert builder.read_text() != text
+        out = cc.diff_trees(ROOT, head)
+        assert any(f[0] == cc.BREAKING and "no longer in SystemDocument components" in f[3] for f in out), list(out)
+
+
 def tagged(required=True):
     def branch(tag):
         b = {"type": "object", "properties": {"kind": {"const": tag}}}

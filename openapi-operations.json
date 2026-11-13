@@ -212,14 +212,14 @@
       "SwitchedAdmittanceControlMode": {
         "$ref": "Operations/common.json#/$defs/SwitchedAdmittanceControlMode"
       },
-      "SeriesCompensatorControlMode": {
-        "$ref": "Operations/common.json#/$defs/SeriesCompensatorControlMode"
-      },
       "ReserveDirection": {
         "$ref": "Operations/common.json#/$defs/ReserveDirection"
       },
       "TransformerControlObjective": {
         "$ref": "Operations/common.json#/$defs/TransformerControlObjective"
+      },
+      "TransformerRegulationOrientation": {
+        "$ref": "Operations/common.json#/$defs/TransformerRegulationOrientation"
       },
       "TwoWindingTransformerShuntLocation": {
         "$ref": "Operations/common.json#/$defs/TwoWindingTransformerShuntLocation"

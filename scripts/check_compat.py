@@ -15,6 +15,7 @@ Stdlib only.
 """
 
 import argparse
+import ast
 import json
 import subprocess
 import sys
@@ -33,7 +34,6 @@ from refs import (  # noqa: E402
     _repoint,
 )
 from build_bundles import (  # noqa: E402
-    DOCUMENTS as BUNDLE_DOCUMENTS,
     _merged,
     _names_under,
     effective_additional,
@@ -311,10 +311,26 @@ def versions(root, domains=DOMAINS):
     return {d: load_json(Path(root) / f"openapi-{d}.json")["info"]["version"] for d in domains}
 
 
+def bundle_documents(root):
+    """The bundle `DOCUMENTS` table as the tree under `root` declares it.
+
+    Each tree uses its own directory lists, so a directory dropped from a
+    document is a membership change. A tree with no bundle builder has no
+    bundles.
+    """
+    path = Path(root) / "scripts" / "build_bundles.py"
+    if not path.is_file():
+        return {}
+    for node in ast.parse(path.read_text()).body:
+        if isinstance(node, ast.Assign) and any(getattr(t, "id", None) == "DOCUMENTS" for t in node.targets):
+            return ast.literal_eval(node.value)
+    raise ValueError(f"{path}: no literal DOCUMENTS table")
+
+
 def membership(root, available=DOMAINS):
     """Bundle membership per document: ``(document, kind) -> set of type names``."""
     result = {}
-    for doc, (_, domains, component_dirs, attribute_dirs) in BUNDLE_DOCUMENTS.items():
+    for doc, (_, domains, component_dirs, attribute_dirs) in bundle_documents(root).items():
         names, _ = _merged(root, [d for d in domains if d in available])
         result[doc, "components"] = set(_names_under(root, names, component_dirs))
         result[doc, "attributes"] = set(_names_under(root, names, attribute_dirs))

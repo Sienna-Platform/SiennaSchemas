@@ -1,0 +1,10 @@
+{
+  "id": 2,
+  "number": 102,
+  "name": "unregulated_bus",
+  "available": true,
+  "bustype": "PQ",
+  "magnitude": 1.0,
+  "voltage_setpoint": null,
+  "base_voltage": 230.0
+}

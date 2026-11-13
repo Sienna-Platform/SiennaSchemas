@@ -2,6 +2,10 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Parameters of an average converter model",
   "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
     "rated_voltage": {
       "description": "Rated voltage (V)",
       "type": "number"
@@ -12,6 +16,7 @@
     }
   },
   "required": [
+    "id",
     "rated_voltage",
     "rated_current"
   ],

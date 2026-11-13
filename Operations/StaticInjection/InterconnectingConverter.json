@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Interconnecting Power Converter (IPC) for transforming power from an ACBus to a DCBus. Voltage and voltage-droop fields are natural units only: there is no conventional DC base voltage from which to per-unitize them. `rated_dc_voltage` and `rated_ac_voltage` record the voltage bases, so a consumer can convert the voltage fields to per unit.",
+  "description": "Interconnecting Power Converter (IPC) for transforming power from an ACBus to a DCBus. Voltage and voltage-droop fields are natural units only: there is no conventional DC base voltage from which to per-unitize them. `rated_dc_voltage` records the DC voltage base, so a consumer can convert the DC voltage fields to per unit.",
   "properties": {
     "id": {
       "description": "Unique integer identifier for this component.",
@@ -133,16 +133,8 @@
       "x-unit": "1",
       "x-quantity": "PowerFactor"
     },
-    "ac_voltage_setpoint": {
-      "description": "AC-side voltage magnitude target of the converter, used when `ac_control` is `AC_VOLTAGE`; `null` otherwise. Units: kV.",
-      "type": [
-        "number",
-        "null"
-      ],
-      "x-unit": "kV"
-    },
     "rated_ac_voltage": {
-      "description": "Rated AC voltage at the converter's AC terminal, the base for `ac_voltage_setpoint`; 0.0 means unspecified. Units: kV.",
+      "description": "Rated AC voltage at the converter's AC terminal; 0.0 means unspecified. Units: kV.",
       "default": 0.0,
       "type": "number",
       "x-unit": "kV"
@@ -153,8 +145,8 @@
       "type": "number",
       "x-unit": "kV/MW"
     },
-    "remote_bus_control": {
-      "description": "Number of the AC bus whose voltage the converter regulates when `ac_control` is `AC_VOLTAGE`; null regulates its own terminal bus.",
+    "remote_regulated_bus": {
+      "description": "ID of the AC bus whose voltage the converter regulates when `ac_control` is `AC_VOLTAGE`, to the `voltage_setpoint` of that bus; null regulates the converter's own AC bus. A value equal to `bus` is invalid.",
       "default": null,
       "type": [
         "integer",
@@ -264,28 +256,6 @@
         ],
         "properties": {
           "power_factor_setpoint": {
-            "type": "number"
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "ac_control": {
-            "const": "AC_VOLTAGE"
-          }
-        },
-        "required": [
-          "ac_control"
-        ]
-      },
-      "then": {
-        "required": [
-          "ac_voltage_setpoint"
-        ],
-        "properties": {
-          "ac_voltage_setpoint": {
             "type": "number"
           }
         }
