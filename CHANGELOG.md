@@ -50,6 +50,8 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ### Changed
 
+- `HydroTurbineGov.r`, the temporary droop, is renamed `r_droop`. Generators that fold case
+  gave `R` and `r` the same name. Documents that use `r` no longer validate.
 - Dynamics directories and properties use the CGMES Dynamics names, for example `AVR/` is
   `ExcitationSystemDynamics/` and `avr` is `excitation_system_dynamics`. Inverter properties use
   IEC 61400-27-1 block names: `limiter` is `current_limitation` and `freq_estimator` is

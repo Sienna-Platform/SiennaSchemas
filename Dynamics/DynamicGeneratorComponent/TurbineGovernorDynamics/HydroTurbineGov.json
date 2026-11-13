@@ -10,8 +10,8 @@
       "description": "Permanent droop parameter",
       "type": "number"
     },
-    "r": {
-      "description": "Temporary droop",
+    "r_droop": {
+      "description": "Temporary droop parameter",
       "type": "number"
     },
     "Tr": {
@@ -63,7 +63,7 @@
   "required": [
     "id",
     "R",
-    "r",
+    "r_droop",
     "Tr",
     "Tf",
     "Tg",
