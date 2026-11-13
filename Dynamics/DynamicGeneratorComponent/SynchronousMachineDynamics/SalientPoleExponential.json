@@ -7,7 +7,7 @@
       "type": "integer"
     },
     "base_machine": {
-      "description": "Salient pole machine parameters",
+      "description": "ID of the SalientPoleMachine function block that holds the base parameters of this machine.",
       "type": "integer"
     },
     "saturation_coeffs": {

@@ -18,6 +18,9 @@ This project is pre-1.0; any release may change schemas incompatibly.
   `CSVGN1`, `ActiveConstantPowerLoad`, `DynamicExponentialLoad`, and `PeriodicVariableSource`.
 - `scripts/dynamic_links.py` checks the links between dynamic injections, function blocks and
   static devices.
+- `scripts/dynamic_links.py` treats `base_machine` on a saturation machine as an owner link. A base
+  machine has exactly one owner: one saturation machine or one dynamic injection. `base_machine`
+  names a `RoundRotorMachine` for `RoundRotor*` and a `SalientPoleMachine` for `SalientPole*`.
 - `ACBus.voltage_setpoint` (nullable, pu on `base_voltage`): the target of every device that
   regulates the bus, at the bus or from a remote terminal.
 - `remote_regulated_bus` (nullable bus ID, default `null` = the device's own bus) on

@@ -14,8 +14,15 @@ linear in the number of components.
 * Each function block reference on a dynamic injection
   (`excitation_system_dynamics`, `filter`, ...) names a standard model of that
   function block class.
-* Each function block is named by exactly one dynamic injection, for the same
-  reasons.
+* Each function block is named by exactly one owner, for the same reasons. The
+  owner is a dynamic injection, or a function block that names it. Today only
+  a saturation machine names a function block, in `base_machine`. It names the
+  base machine that holds its parameters. A base machine has one owner: one
+  saturation machine or one dynamic injection, never both and never none.
+* `base_machine` names a `RoundRotorMachine` for a `RoundRotor*` saturation
+  machine, and a `SalientPoleMachine` for a `SalientPole*` saturation machine.
+  The schemas type `base_machine` as a plain integer, so `BASE_MACHINES` lists
+  the pairs.
 
 Links resolve only when ids are unique across `components`, so a duplicate id
 is the only error reported for that document.
@@ -86,6 +93,13 @@ REFERENCES = {
     "AggregateDistributedGenerationA": {},
     "PeriodicVariableSource": {},
     "GenericDER": {},
+}
+# function block type -> reference property -> required function block type
+BASE_MACHINES = {
+    "RoundRotorQuadratic": {"base_machine": "RoundRotorMachine"},
+    "RoundRotorExponential": {"base_machine": "RoundRotorMachine"},
+    "SalientPoleQuadratic": {"base_machine": "SalientPoleMachine"},
+    "SalientPoleExponential": {"base_machine": "SalientPoleMachine"},
 }
 
 
@@ -175,9 +189,20 @@ def link_errors(doc, models_by_class=None, static_kinds=None):
                     )
                 users[target].append(f"{kind} {row['id']}")
 
+    for kind, refs in BASE_MACHINES.items():
+        for row in components.get(kind, []):
+            for prop, base_kind in refs.items():
+                target = row.get(prop)
+                if kind_of.get(target) != base_kind:
+                    errors.append(
+                        f"{kind} {row['id']}: {prop} {target} names "
+                        f"{kind_of.get(target, 'no component')}, expected {base_kind}"
+                    )
+                users[target].append(f"{kind} {row['id']}")
+
     models = set().union(*models_by_class.values())
     for kind, rows in components.items():
         if kind in models:
             for row in rows:
-                _exactly_one(errors, kind, row["id"], users[row["id"]], "dynamic injections")
+                _exactly_one(errors, kind, row["id"], users[row["id"]], "owners")
     return sorted(errors)

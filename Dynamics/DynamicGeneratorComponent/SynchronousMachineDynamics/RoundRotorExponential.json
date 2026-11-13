@@ -7,7 +7,7 @@
       "type": "integer"
     },
     "base_machine": {
-      "description": "Round Rotor machine parameters",
+      "description": "ID of the RoundRotorMachine function block that holds the base parameters of this machine.",
       "type": "integer"
     },
     "saturation_coeffs": {
