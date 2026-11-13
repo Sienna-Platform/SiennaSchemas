@@ -279,6 +279,21 @@ def check_dynamics(validator, failures):
              **{prop: ident for prop, (ident, _) in models.items()}})
         rows(doc, "RenewableDispatch").append({**static_row(doc), "id": 19, "name": "ibr1", "dynamic_injector": 20})
 
+    def add_saturated(doc, saturated="RoundRotorQuadratic", base_kind="RoundRotorMachine"):
+        # Replaces the generator's machine (id 4) with a saturation machine (id 30) over base machine 31.
+        round_rotor = {"R": 0.0, "Td0_p": 8.0, "Td0_pp": 0.03, "Tq0_p": 0.4, "Tq0_pp": 0.05, "Xd": 1.8,
+                       "Xq": 1.7, "Xd_p": 0.3, "Xq_p": 0.5, "Xd_pp": 0.2, "Xl": 0.15, "Se": [0.1, 0.5]}
+        salient = {k: v for k, v in round_rotor.items() if k not in ("Tq0_p", "Xq_p")}
+        base = {"id": 31, **(round_rotor if base_kind == "RoundRotorMachine" else salient)}
+        rows(doc, "BaseMachine").clear()
+        rows(doc, base_kind).append(base)
+        rows(doc, saturated).append({"id": 30, "base_machine": 31, "saturation_coeffs": [1.0, 2.0]})
+        gen(doc).update(synchronous_machine_dynamics=30)
+
+    def add_second_saturated(doc):
+        add_saturated(doc)
+        rows(doc, "RoundRotorExponential").append({"id": 32, "base_machine": 31, "saturation_coeffs": [1.0, 2.0]})
+
     shape = {
         "dynamic generator": (lambda d: None, True),
         "model embedded instead of referenced": (lambda d: gen(d).update(excitation_system_dynamics={"Vf": 1.05}), False),
@@ -288,6 +303,9 @@ def check_dynamics(validator, failures):
         "model with a base_power": (lambda d: rows(d, "AVRFixed")[0].update(base_power=100.0), False),
         "wrapper with an unknown property": (lambda d: gen(d).update(Ka=1.0), False),
         "frequency_ref absent": (lambda d: gen(d).pop("frequency_ref"), False),
+        "round rotor saturation machine": (add_saturated, True),
+        "salient pole saturation machine": (
+            lambda d: add_saturated(d, "SalientPoleExponential", "SalientPoleMachine"), True),
         "dynamic inverter": (add_inverter, True),
         "inverter with a current_limitation reference": (
             lambda d: (add_inverter(d), inv(d).update(current_limitation=28),
@@ -306,6 +324,24 @@ def check_dynamics(validator, failures):
         "dangling model reference": (lambda d: gen(d).update(excitation_system_dynamics=99), 2),
         "orphan model": (lambda d: rows(d, "AVRFixed").append({"id": 10, "Vf": 1.0}), 1),
         "dynamic inverter": (add_inverter, 0),
+        "round rotor saturation machine": (add_saturated, 0),
+        "salient pole saturation machine": (
+            lambda d: add_saturated(d, "SalientPoleExponential", "SalientPoleMachine"), 0),
+        "base machine named by two saturation machines": (add_second_saturated, 2),
+        "base machine named by a saturation machine and an injection": (
+            lambda d: (add_saturated(d), rows(d, "DynamicGenerator").append(
+                {**gen(d), "id": 11, "name": "unit2", "synchronous_machine_dynamics": 31,
+                 "shaft": 5, "excitation_system_dynamics": 6, "turbine_governor_dynamics": 7,
+                 "power_system_stabilizer_dynamics": 8}),
+                rows(d, "ThermalStandard").append({**static(d), "id": 12, "name": "unit2", "dynamic_injector": 11})),
+            5),
+        "orphan base machine": (
+            lambda d: (add_saturated(d), rows(d, "SalientPoleMachine").append(
+                {**rows(d, "RoundRotorMachine")[0], "id": 33})), 1),
+        "base_machine names the wrong type": (
+            lambda d: (add_saturated(d, "SalientPoleQuadratic", "RoundRotorMachine")), 1),
+        "dangling base_machine": (
+            lambda d: (add_saturated(d), rows(d, "RoundRotorQuadratic")[0].update(base_machine=99)), 2),
         "active and reactive controls swapped": (
             lambda d: add_inverter(d, active="ReactivePowerPI", reactive="ActivePowerPI"), 2),
         "bus carries a dynamic_injector": (lambda d: rows(d, "ACBus")[0].update(dynamic_injector=3), 2),
