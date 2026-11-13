@@ -7,6 +7,13 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-13
+
+0.5.0 starts a new compatibility line. Documents written at 0.4.x do not read at 0.5.0;
+regenerate them with a current producer, including cached test systems. Dynamics is now a
+full model of the domain: every PowerSystems.jl dynamic injection type has a schema, and
+`SystemDocument` carries dynamic injections.
+
 ### Added
 
 - `SystemDocument` carries dynamic injections and their function blocks. `DynamicGenerator` and
@@ -34,6 +41,9 @@ This project is pre-1.0; any release may change schemas incompatibly.
 - Required `discount_rate`, `inflation_rate` and `interest_rate` on `TechnologyFinancialData`.
   Each technology carries the rates used to convert its costs to a net present value in the
   model base year. A portfolio with one common rate repeats it on every technology.
+- Optional `per_unit_of` on the six time series types. It names the field on the owning
+  component that the values are a fraction of when `unit_system` is `COMPONENT_BASE`.
+- `km3` as a `Volume` unit in `Core/units.json`.
 
 ### Removed
 
@@ -273,7 +283,9 @@ renders vendor extensions, so it is the only channel that survives into generate
 - **The unit-quantity pairing rule needs a SiennaGridDB checkout** and skips silently without
   one, so a green CI run is not evidence that it holds.
 
-[Unreleased]: https://github.com/Sienna-Platform/SiennaSchemas/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/Sienna-Platform/SiennaSchemas/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/Sienna-Platform/SiennaSchemas/releases/tag/v0.5.0
+[0.4.0]: https://github.com/Sienna-Platform/SiennaSchemas/releases/tag/v0.4.0
 [0.3.0]: https://github.com/Sienna-Platform/SiennaSchemas/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Sienna-Platform/SiennaSchemas/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Sienna-Platform/SiennaSchemas/releases/tag/v0.1.0
