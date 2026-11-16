@@ -300,6 +300,10 @@
           "description": "First fuel per hour against power, in `fuel_units`.",
           "$ref": "#/$defs/ValueCurve"
         },
+        "first_fuel_startup_offtake": {
+          "description": "First fuel consumed during startup, as a curve in `fuel_units`.",
+          "$ref": "#/$defs/InputOutputCurve"
+        },
         "fuel_units": {
           "description": "The quantity both curves' y axes count per hour and both prices are per.",
           "$ref": "#/$defs/FuelUnit"
@@ -334,6 +338,10 @@
           "minimum": 0,
           "maximum": 1,
           "description": "Fixed share of the blend the second fuel supplies, or null or absent when the fuels are stacked."
+        },
+        "second_fuel_startup_offtake": {
+          "description": "Second fuel consumed during startup, as a curve in `fuel_units`.",
+          "$ref": "#/$defs/InputOutputCurve"
         },
         "variable_cost_type": {
           "type": "string",

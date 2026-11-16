@@ -109,6 +109,9 @@ COMPONENT = {
     "ofl_half": ("Core/common.json", "/$defs/OperationalFlowLimit", False),
     "dual_fuel_stacked": ("Core/common.json", "/$defs/ProductionVariableCostCurve", True),
     "dual_fuel_blended": ("Core/common.json", "/$defs/ProductionVariableCostCurve", True),
+    "dual_fuel_blended_startup_offtake": (
+        "Core/common.json", "/$defs/ProductionVariableCostCurve", True,
+    ),
     "dual_fuel_share_out_of_range": (
         "Core/common.json", "/$defs/ProductionVariableCostCurve", False,
     ),
