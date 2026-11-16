@@ -18,6 +18,12 @@
       "type": "number",
       "description": "Factor for heat recovery to steam conversion",
       "default": 0.0
+    },
+    "hrsg_heat_loss": {
+      "type": "number",
+      "minimum": 0,
+      "default": 0.0,
+      "description": "Heat each HRSG of the block loses per hour for each committed CT that feeds it, taken from the recovered heat. In `fuel_units` per hour of the member units' fuel curves, which all use the same `fuel_units`."
     }
   },
   "required": [

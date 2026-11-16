@@ -107,6 +107,20 @@ COMPONENT = {
     "ofl_valid": ("Core/common.json", "/$defs/OperationalFlowLimit", True),
     "ofl_negative": ("Core/common.json", "/$defs/OperationalFlowLimit", False),
     "ofl_half": ("Core/common.json", "/$defs/OperationalFlowLimit", False),
+    "dual_fuel_stacked": ("Core/common.json", "/$defs/ProductionVariableCostCurve", True),
+    "dual_fuel_blended": ("Core/common.json", "/$defs/ProductionVariableCostCurve", True),
+    "dual_fuel_share_out_of_range": (
+        "Core/common.json", "/$defs/ProductionVariableCostCurve", False,
+    ),
+    "dual_fuel_missing_second_curve": (
+        "Core/common.json", "/$defs/ProductionVariableCostCurve", False,
+    ),
+    "combined_cycle_block_hrsg_loss": (
+        "Operations/SupplementalAttributes/CombinedCycleBlock.json", None, True,
+    ),
+    "combined_cycle_block_negative_hrsg_loss": (
+        "Operations/SupplementalAttributes/CombinedCycleBlock.json", None, False,
+    ),
     "line_with_ofl": ("Operations/Branch/Line.json", None, True),
     "line_without_ofl": ("Operations/Branch/Line.json", None, True),
     "area_with_interchange": ("Core/Topology/Area.json", None, True),

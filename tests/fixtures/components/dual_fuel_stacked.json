@@ -1,0 +1,36 @@
+{
+  "power_units": "NATURAL_UNITS",
+  "fuel_units": "MMBTU",
+  "vom_cost": {
+    "curve_type": "INPUT_OUTPUT",
+    "function_data": {
+      "function_type": "LINEAR",
+      "proportional_term": 7.0,
+      "constant_term": 1.0
+    }
+  },
+  "variable_cost_type": "DUAL_FUEL",
+  "first_fuel_curve": {
+    "curve_type": "INPUT_OUTPUT",
+    "function_data": {
+      "function_type": "LINEAR",
+      "proportional_term": 7.0,
+      "constant_term": 1.0
+    }
+  },
+  "first_fuel_cost": 0.0,
+  "second_fuel_curve": {
+    "curve_type": "INCREMENTAL",
+    "function_data": {
+      "function_type": "PIECEWISE_STEP",
+      "x_coords": [
+        100,
+        200
+      ],
+      "y_coords": [
+        8.0
+      ]
+    }
+  },
+  "second_fuel_cost": 3.44
+}

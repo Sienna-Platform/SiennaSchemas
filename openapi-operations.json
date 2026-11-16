@@ -287,6 +287,9 @@
       "FuelCurve": {
         "$ref": "Core/common.json#/$defs/FuelCurve"
       },
+      "DualFuelCurve": {
+        "$ref": "Core/common.json#/$defs/DualFuelCurve"
+      },
       "FuelUnit": {
         "$ref": "Core/common.json#/$defs/FuelUnit"
       },

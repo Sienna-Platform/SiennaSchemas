@@ -557,7 +557,7 @@ exactly three scopes, each read against its own record rather than anything docu
 
 - **A component's own `power_units`.** Governs that component's power-family fields, read
   against that component's own `base_power`. Required, no default.
-- **A cost payload's own `power_units`.** The x-axis basis of a `CostCurve` or `FuelCurve` —
+- **A cost payload's own `power_units`.** The x-axis basis of a `CostCurve`, `FuelCurve` or `DualFuelCurve` —
   the value curves wrapped by a generation cost's `variable_operation_cost` member (renamed
   from `variable` in this design pass). Read against the *owning component's* `base_power`,
   same as any other `COMPONENT_BASE` reading. Note the field-level asymmetry here:

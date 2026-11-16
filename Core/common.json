@@ -278,8 +278,85 @@
       "title": "FuelCurve",
       "type": "object"
     },
+    "DualFuelCurve": {
+      "description": "Variable operation cost of a device that uses two fuels, each with its own curve and price. With `second_fuel_share` null or absent the fuels are stacked along the power axis: the first curve covers output up to the first x of the second curve, and the second curve, an `INCREMENTAL` curve with `PIECEWISE_STEP` data and no `initial_input`, covers output above it. With `second_fuel_share` set the fuels are blended: each curve is the unit's fuel use when it burns only that fuel, both cover the full output, and the cost is (1 - share) x first price x first curve + share x second price x second curve. Exactly one of the fixed price and the price time series is set for each fuel, and the curve layout matches the case; producers and consumers enforce both.",
+      "properties": {
+        "first_fuel_cost": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Fixed price of the first fuel in USD per one `fuel_units`, or null when `first_fuel_cost_time_series` names a time-varying one. A stacked first fuel priced at 0 is paid for elsewhere, as for recovered exhaust heat."
+        },
+        "first_fuel_cost_time_series": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Store-minted id of the first fuel's price time series association, or null when `first_fuel_cost` carries a fixed value. Exactly one of the two is set."
+        },
+        "first_fuel_curve": {
+          "description": "First fuel per hour against power, in `fuel_units`.",
+          "$ref": "#/$defs/ValueCurve"
+        },
+        "fuel_units": {
+          "description": "The quantity both curves' y axes count per hour and both prices are per.",
+          "$ref": "#/$defs/FuelUnit"
+        },
+        "power_units": {
+          "$ref": "#/$defs/UnitSystem"
+        },
+        "second_fuel_cost": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Fixed price of the second fuel in USD per one `fuel_units`, or null when `second_fuel_cost_time_series` names a time-varying one."
+        },
+        "second_fuel_cost_time_series": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Store-minted id of the second fuel's price time series association, or null when `second_fuel_cost` carries a fixed value. Exactly one of the two is set."
+        },
+        "second_fuel_curve": {
+          "description": "Second fuel per hour against power, in `fuel_units`.",
+          "$ref": "#/$defs/ValueCurve"
+        },
+        "second_fuel_share": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Fixed share of the blend the second fuel supplies, or null or absent when the fuels are stacked."
+        },
+        "variable_cost_type": {
+          "type": "string",
+          "const": "DUAL_FUEL",
+          "default": "DUAL_FUEL"
+        },
+        "vom_cost": {
+          "$ref": "#/$defs/InputOutputCurve"
+        }
+      },
+      "required": [
+        "first_fuel_curve",
+        "second_fuel_curve",
+        "power_units",
+        "fuel_units",
+        "vom_cost",
+        "variable_cost_type"
+      ],
+      "title": "DualFuelCurve",
+      "type": "object"
+    },
     "FuelUnit": {
-      "description": "Fuel quantity a `FuelCurve` is expressed in: `MMBTU` (million British thermal units) or `GJ` (gigajoules) of heat content.",
+      "description": "Fuel quantity a `FuelCurve` or `DualFuelCurve` is expressed in: `MMBTU` (million British thermal units) or `GJ` (gigajoules) of heat content.",
       "enum": [
         "MMBTU",
         "GJ"
@@ -1118,12 +1195,13 @@
       "type": "string"
     },
     "ProductionVariableCostCurve": {
-      "description": "Variable production cost of a device, selected by `variable_cost_type` between a curve denominated directly in currency (`COST`) and one denominated in fuel with a separate fuel price (`FUEL`).",
+      "description": "Variable production cost of a device, selected by `variable_cost_type` between a curve denominated directly in currency (`COST`), one denominated in fuel with a separate fuel price (`FUEL`), and one denominated in two fuels each with its own curve and price (`DUAL_FUEL`).",
       "title": "ProductionVariableCostCurve",
       "discriminator": {
         "mapping": {
           "COST": "#/$defs/CostCurve",
-          "FUEL": "#/$defs/FuelCurve"
+          "FUEL": "#/$defs/FuelCurve",
+          "DUAL_FUEL": "#/$defs/DualFuelCurve"
         },
         "propertyName": "variable_cost_type"
       },
@@ -1133,6 +1211,9 @@
         },
         {
           "$ref": "#/$defs/FuelCurve"
+        },
+        {
+          "$ref": "#/$defs/DualFuelCurve"
         }
       ],
       "type": "object"
