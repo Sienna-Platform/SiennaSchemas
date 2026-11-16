@@ -6,7 +6,8 @@
   "time_series_type": "SingleTimeSeries",
   "name": "max_active_power",
   "features": {
-    "model_year": 2030
+    "model_year": 2030,
+    "temperature": 20.0
   },
   "uri": "infrastore://systems/base.h5",
   "element_type": "f64",

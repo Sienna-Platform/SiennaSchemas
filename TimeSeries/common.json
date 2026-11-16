@@ -28,7 +28,8 @@
           "type": "string"
         }
       ],
-      "description": "One feature value. Four kinds, matching the backing store's feature-value type: int, float, bool, str. `anyOf` rather than `oneOf` is required, not stylistic: JSON Schema's `integer` is a subset of `number`, so an integer instance matches both branches and `oneOf` — which demands exactly one match — would reject every integer feature. A float feature is compared and hashed by its bit pattern rather than by IEEE comparison, so 0.0 and -0.0 are two different series; NaN and negative zero are rejected on write because the catalog cannot store either faithfully."
+      "description": "One feature value. Four kinds, matching the backing store's feature-value type: int, float, bool, str. An int feature is written as a JSON number without a fractional part or exponent (for example, 2030). A float feature is written with a fractional part or exponent (for example, 2030.0 or 2.03e3). The spelling of numeric feature tokens is part of the wire contract and must be preserved by tools: feature values must not be reformatted or canonicalized. `anyOf` rather than `oneOf` is required, not stylistic: JSON Schema's `integer` is a subset of `number`, so an integer instance matches both branches and `oneOf` — which demands exactly one match — would reject every integer feature. A float feature is compared and hashed by its bit pattern rather than by IEEE comparison, so 0.0 and -0.0 are two different series; NaN and negative zero are rejected on write because the catalog cannot store either faithfully."
+
     },
     "TimeSeriesFeatures": {
       "title": "TimeSeriesFeatures",
@@ -76,8 +77,8 @@
           ]
         }
       },
-      "description": "User-defined key/value tags forming part of a series' identity. A map, matching the backing store's feature-map type (a BTreeMap whose sort order is load-bearing, because the hash of the feature map keys the catalog's uniqueness index). The excluded property names each already name a field of a time series or of the tuple that addresses one: consumers routinely spread a feature map into keyword arguments, where a feature called `name` or `resolution` would shadow the real field and silently change what a query means. The comparison is exact and case-sensitive — `resolution` is reserved, `Resolution` is not."
-    },
+      "description": "User-defined key/value tags forming part of a series' identity. A map, matching the backing store's feature-map type (a BTreeMap whose sort order is load-bearing, because the hash of the feature map keys the catalog's uniqueness index). The excluded property names each already name a field of a time series or of the tuple that addresses one: consumers routinely spread a feature map into keyword arguments, where a feature called `name` or `resolution` would shadow the real field and silently change what a query means. The comparison is exact and case-sensitive — `resolution` is reserved, `Resolution` is not. Numeric feature values use their JSON token spelling to distinguish int from float: integers have neither a fractional part nor an exponent, while floats have a fractional part or an exponent. Tools must preserve this spelling and must not reformat or canonicalize feature values."
+ },
     "ElementType": {
       "title": "ElementType",
       "type": "string",

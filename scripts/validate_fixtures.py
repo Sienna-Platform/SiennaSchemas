@@ -77,6 +77,27 @@ POSITIVE = {
     "probabilistic": "Probabilistic",
     "scenarios": "Scenarios",
 }
+# Expected Python types of values in each time-series fixture's features map.
+# These expectations are independent of the parsed JSON values.
+EXPECTED_FEATURE_KINDS = {
+    "single_time_series": {
+        "model_year": int,
+        "temperature": float,
+    },
+    "non_sequential_time_series": {},
+    "deterministic": {
+        "scenario": str,
+    },
+    "deterministic_single_time_series": {
+        "scenario": str,
+    },
+    "probabilistic": {
+        "scenario": str,
+    },
+    "scenarios": {
+        "scenario": str,
+    },
+}
 
 # fixture stem -> whether the wrapper is expected to accept it
 NEGATIVE = {
@@ -147,6 +168,28 @@ def load(path):
 
 def validator_for(schema):
     return Draft202012Validator(schema, resolver=RefResolver(BASE_URI, schema))
+
+def check_feature_kinds(stem, instance, failures):
+    """Check that feature values use their expected Python types."""
+    expected = EXPECTED_FEATURE_KINDS[stem]
+    features = instance.get("features", {})
+
+    for name, expected_type in expected.items():
+        if name not in features:
+            failures.append(
+                f"{stem}: missing expected feature {name!r}"
+            )
+            continue
+
+        value = features[name]
+
+        if type(value) is not expected_type:
+            failures.append(
+                f"{stem}: feature {name!r} has type "
+                f"{type(value).__name__}, expected "
+                f"{expected_type.__name__}"
+            )
+
 
 
 def check_bundles(failures):
@@ -413,14 +456,20 @@ def main():
 
     for stem, expected_title in POSITIVE.items():
         instance = load(FIXTURE_DIR / f"{stem}.json")
+
+        check_feature_kinds(stem, instance, failures)
+
         hits = [title for title, v in branches if v.is_valid(instance)]
         if hits != [expected_title]:
             failures.append(
                 f"{stem}: expected to match exactly [{expected_title}], matched {hits}"
             )
+
         errors = [e.message for e in wrapper_validator.iter_errors(instance)]
         if errors:
-            failures.append(f"{stem}: rejected by TimeSeriesAssociation: {errors[0]}")
+            failures.append(
+                f"{stem}: rejected by TimeSeriesAssociation: {errors[0]}"
+            )
 
     for stem, should_pass in NEGATIVE.items():
         instance = load(FIXTURE_DIR / f"{stem}.json")
