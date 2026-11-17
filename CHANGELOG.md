@@ -7,6 +7,13 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ## [Unreleased]
 
+### Added
+
+- `DualFuelCurve`, a `ProductionVariableCostCurve` variant (`DUAL_FUEL`) for a device that uses two fuels, each with its own curve and price.
+  With `second_fuel_share` null the fuels are stacked along the power axis; with it set they are blended at that fixed share.
+  Each fuel has an optional startup offtake.
+- `CombinedCycleBlock.hrsg_heat_loss` (default 0): heat each HRSG loses per hour for each committed CT that feeds it, in the `fuel_units` of the member units' fuel curves.
+
 ## [0.5.0] - 2026-11-13
 
 0.5.0 starts a new compatibility line. Documents written at 0.4.x do not read at 0.5.0;
