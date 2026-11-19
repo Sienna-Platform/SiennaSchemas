@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters Woodward Diesel Governor Model. DEGOV1 in PSSE",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "droop_flag": {
+      "description": "Droop control Flag. 0 for throttle feedback and 1 for electric power feedback",
+      "type": "integer"
+    },
+    "T1": {
+      "description": "Governor mechanism time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "T2": {
+      "description": "Turbine power time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "T3": {
+      "description": "Turbine exhaust temperature time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "K": {
+      "description": "Governor gain for actuator",
+      "type": "number"
+    },
+    "T4": {
+      "description": "Governor lead time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "T5": {
+      "description": "Governor lag time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "T6": {
+      "description": "Actuator time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "Td": {
+      "description": "Engine time delay. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "T_lim": {
+      "type": "array",
+      "description": "Operational control limits on actuator (Tmin, Tmax)",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "R": {
+      "description": "Steady state droop parameter",
+      "type": "number"
+    },
+    "Te": {
+      "description": "Power transducer time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "P_ref": {
+      "description": "Reference power set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "T1",
+    "T2",
+    "T3",
+    "K",
+    "T4",
+    "T5",
+    "T6",
+    "Td",
+    "T_lim",
+    "R",
+    "Te"
+  ],
+  "title": "DEGOV1",
+  "type": "object"
+}

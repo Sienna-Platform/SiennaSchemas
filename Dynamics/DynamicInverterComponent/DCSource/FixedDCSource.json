@@ -2,12 +2,17 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Parameters of a Fixed DC Source that returns a fixed DC voltage",
   "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
     "voltage": {
       "description": "Voltage (V)",
       "type": "number"
     }
   },
   "required": [
+    "id",
     "voltage"
   ],
   "title": "FixedDCSource",

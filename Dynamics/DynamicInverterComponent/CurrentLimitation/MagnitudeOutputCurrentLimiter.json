@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of Magnitude (Circular) Current Controller Limiter. Regulates only the magnitude of the inverter output current",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "I_max": {
+      "description": "Maximum limit on current controller input current",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "I_max"
+  ],
+  "title": "MagnitudeOutputCurrentLimiter",
+  "type": "object"
+}

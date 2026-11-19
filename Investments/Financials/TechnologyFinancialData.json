@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Financial data for a candidate technology: the capital recovery period used to derive overnight capital cost from annualized investment cost, the dollar-year its cost data is reported in, and the debt fraction, debt rate, return on equity, and tax rate that together set its cost of capital.",
+  "description": "Financial data for a candidate technology: the capital recovery period used to derive overnight capital cost from annualized investment cost, the dollar-year its cost data is reported in, the debt fraction, debt rate, return on equity, and tax rate that together set its cost of capital, and the discount, inflation, and interest rates used to convert its costs to a net present value in the model base year.",
   "properties": {
     "capital_recovery_period": {
       "description": "Period over which capital costs are recovered for net present value calculations. Units: yr.",
@@ -8,7 +8,7 @@
       "x-unit": "yr"
     },
     "technology_base_year": {
-      "description": "Base year for technology cost data used in NPV calculations.",
+      "description": "Year the technology's cost data is reported in. Costs are converted from this year to the model base year using the inflation rate.",
       "type": "integer"
     },
     "debt_fraction": {
@@ -34,6 +34,24 @@
       "type": "number",
       "x-unit": "1",
       "x-quantity": "Fraction"
+    },
+    "discount_rate": {
+      "description": "Discount rate used to convert this technology's future costs to a net present value in the model base year. Units: 1.",
+      "type": "number",
+      "x-unit": "1",
+      "x-quantity": "Fraction"
+    },
+    "inflation_rate": {
+      "description": "Inflation rate used to convert this technology's costs from its base year to the model base year. Units: 1.",
+      "type": "number",
+      "x-unit": "1",
+      "x-quantity": "Fraction"
+    },
+    "interest_rate": {
+      "description": "Interest rate for financing calculations. Units: 1.",
+      "type": "number",
+      "x-unit": "1",
+      "x-quantity": "Fraction"
     }
   },
   "required": [
@@ -42,7 +60,10 @@
     "debt_fraction",
     "debt_rate",
     "return_on_equity",
-    "tax_rate"
+    "tax_rate",
+    "discount_rate",
+    "inflation_rate",
+    "interest_rate"
   ],
   "title": "TechnologyFinancialData",
   "type": "object"

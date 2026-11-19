@@ -64,7 +64,6 @@ UNIT_BASIS_DISCRIMINATORS = frozenset({
     "admittance_units",
     "voltage_units",
     "dc_voltage_units",
-    "voltage_setpoint_units",
     "setpoint_voltage_units",
     "energy_units",
     "mass_unit",
@@ -1004,6 +1003,8 @@ def desired_description(node, source_path=None, is_form_scalar=False):
     prefix = strip_units_sentence(desc).rstrip()
     if prefix == "":
         return sentence
+    if not prefix.endswith((".", "!", "?")):
+        prefix += "."
     return f"{prefix} {sentence}"
 
 

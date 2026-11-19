@@ -89,6 +89,7 @@
     {"quantity_kind": "VolumeFlowRate", "unit": "m3/s", "to_default": 1.0},
     {"quantity_kind": "HeadRate", "unit": "m/s", "to_default": 1.0},
     {"quantity_kind": "Volume", "unit": "m3", "to_default": 1.0},
+    {"quantity_kind": "Volume", "unit": "km3", "to_default": 1e9},
     {"quantity_kind": "Inductance", "unit": "H", "to_default": 1.0},
     {"quantity_kind": "Capacitance", "unit": "F", "to_default": 1.0},
     {"quantity_kind": "CostPerCapacity", "unit": "USD/MW", "to_default": 1.0},

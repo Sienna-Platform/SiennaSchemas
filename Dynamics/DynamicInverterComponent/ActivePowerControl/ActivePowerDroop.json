@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "Rp": {
+      "description": "Droop Gain",
+      "type": "number"
+    },
+    "active_power_filter_frequency": {
+      "description": "Filter cutoff frequency, in natural units. Units: Hz.",
+      "type": "number",
+      "x-unit": "Hz"
+    },
+    "P_ref": {
+      "description": "Reference Power Set-point (pu). Units: pu.",
+      "type": "number",
+      "default": 1.0,
+      "x-unit": "pu",
+      "x-quantity": "ActivePower"
+    }
+  },
+  "required": [
+    "id",
+    "Rp",
+    "active_power_filter_frequency"
+  ],
+  "title": "ActivePowerDroop",
+  "type": "object"
+}

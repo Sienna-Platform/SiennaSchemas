@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of a Classic Machine: GENCLS in PSSE and PSLF",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "R": {
+      "description": "Resistance after EMF. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
+    },
+    "Xd_p": {
+      "description": "Reactance after EMF. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
+    },
+    "eq_p": {
+      "description": "Fixed EMF behind the impedance",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "R",
+    "Xd_p",
+    "eq_p"
+  ],
+  "title": "BaseMachine",
+  "type": "object"
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DynamicExponentialLoad",
+  "description": "Parameters of 2-states of a generic dynamic load model based on \"Voltage stability analysis using generic dynamic load models.\" It has no bus of its own: exactly one static injection device, with the same name, names it in its `dynamic_injector` property, and that device supplies the rest of its data.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the dynamic injection. Must equal the name of the static injection device that names it in `dynamic_injector`.",
+      "type": "string"
+    },
+    "a": {
+      "description": "Active power static exponential coefficient",
+      "type": "number"
+    },
+    "b": {
+      "description": "Reactive power static exponential coefficient",
+      "type": "number"
+    },
+    "alpha": {
+      "description": "Active power transient exponential coefficient",
+      "type": "number"
+    },
+    "beta": {
+      "description": "Reactive power transient exponential coefficient",
+      "type": "number"
+    },
+    "T_p": {
+      "description": "Active Power Time Constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "T_q": {
+      "description": "Reactive Power Time Constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "base_power": {
+      "description": "Base power for the per-unit parameters of this model. Usually equal to the `base_power` of the static injection device that names this model. Units: MVA.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "MVA"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "a",
+    "b",
+    "alpha",
+    "beta",
+    "T_p",
+    "T_q",
+    "base_power"
+  ]
+}

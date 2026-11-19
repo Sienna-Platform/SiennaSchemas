@@ -2,16 +2,25 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Parameters of RL series filter in algebraic representation",
   "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
     "rf": {
-      "description": "Series resistance in p.u. of converter filter to the grid",
-      "type": "number"
+      "description": "Series resistance in p.u. of converter filter to the grid. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Resistance"
     },
     "lf": {
-      "description": "Series inductance in p.u. of converter filter to the grid",
-      "type": "number"
+      "description": "Series inductance in p.u. of converter filter to the grid. Units: pu.",
+      "type": "number",
+      "x-unit": "pu",
+      "x-quantity": "Reactance"
     }
   },
   "required": [
+    "id",
     "rf",
     "lf"
   ],

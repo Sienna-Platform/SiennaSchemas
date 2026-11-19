@@ -1,0 +1,12 @@
+{
+  "id": 21,
+  "available": true,
+  "arc": 5,
+  "control_objective": "VOLTAGE",
+  "regulated_bus": null,
+  "regulated_bus_orientation": "FROM",
+  "tap_ratio_limits": {"min": 0.9, "max": 1.1},
+  "controlled_voltage_limits": {"min": 0.98, "max": 1.02},
+  "rating": 100.0,
+  "power_units": "NATURAL_UNITS"
+}

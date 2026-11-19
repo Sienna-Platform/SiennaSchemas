@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "PowerInvestmentsOpenAPIModels",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "description": "Power system investments models: Technologies, Financials, Requirements, SupplementalAttributes, and Portfolio components"
   },
   "paths": {},
@@ -46,9 +46,6 @@
       },
       "NodalHVDCTransportTechnology": {
         "$ref": "Investments/Technologies/NodalHVDCTransportTechnology.json"
-      },
-      "PortfolioFinancialData": {
-        "$ref": "Investments/Financials/PortfolioFinancialData.json"
       },
       "ProjectedDemand": {
         "$ref": "Investments/Technologies/ProjectedDemand.json"

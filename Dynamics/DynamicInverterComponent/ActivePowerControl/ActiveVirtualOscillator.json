@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "k1": {
+      "description": "VOC Synchronization Gain",
+      "type": "number"
+    },
+    "psi": {
+      "description": "Rotation angle of the controller",
+      "type": "number"
+    },
+    "P_ref": {
+      "description": "Reference Power Set-point (pu). Units: pu.",
+      "type": "number",
+      "default": 1.0,
+      "x-unit": "pu",
+      "x-quantity": "ActivePower"
+    }
+  },
+  "required": [
+    "id",
+    "k1",
+    "psi"
+  ],
+  "title": "ActiveVirtualOscillator",
+  "type": "object"
+}

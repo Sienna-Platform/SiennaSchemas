@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters Woodward Diesel Governor Model. DEGOV in PowerWorld",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "T1": {
+      "description": "Governor mechanism time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "T2": {
+      "description": "Turbine power time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "T3": {
+      "description": "Turbine exhaust temperature time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "K": {
+      "description": "Governor gain (reciproical of droop)",
+      "type": "number"
+    },
+    "T4": {
+      "description": "Governor lead time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "T5": {
+      "description": "Governor lag time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "T6": {
+      "description": "Actuator time constant. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "Td": {
+      "description": "Engine time delay. Units: s.",
+      "type": "number",
+      "x-unit": "s"
+    },
+    "P_ref": {
+      "description": "Reference power set-point",
+      "default": 1.0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "T1",
+    "T2",
+    "T3",
+    "K",
+    "T4",
+    "T5",
+    "T6",
+    "Td"
+  ],
+  "title": "DEGOV",
+  "type": "object"
+}

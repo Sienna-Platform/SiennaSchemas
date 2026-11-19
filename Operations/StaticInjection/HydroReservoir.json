@@ -36,7 +36,7 @@
       "description": "Units: per level_data_type — USABLE_VOLUME: m3, TOTAL_VOLUME: m3, HEAD: m, ENERGY: MWh ."
     },
     "spillage_limits": {
-      "description": "in psy5 a required param with an option to be nothing Units: per level_data_type — USABLE_VOLUME: m3/s, TOTAL_VOLUME: m3/s, HEAD: m/s, ENERGY: MW .",
+      "description": "in psy5 a required param with an option to be nothing. Units: per level_data_type — USABLE_VOLUME: m3/s, TOTAL_VOLUME: m3/s, HEAD: m/s, ENERGY: MW .",
       "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit-discriminator": "level_data_type",
       "x-units": {
@@ -69,7 +69,7 @@
       "description": "Units: per level_data_type — USABLE_VOLUME: m3/s, TOTAL_VOLUME: m3/s, HEAD: m/s, ENERGY: MW ."
     },
     "level_targets": {
-      "description": "in psy5 a required param with an option to be nothing Units: per level_data_type — USABLE_VOLUME: m3, TOTAL_VOLUME: m3, HEAD: m, ENERGY: MWh .",
+      "description": "in psy5 a required param with an option to be nothing. Units: per level_data_type — USABLE_VOLUME: m3, TOTAL_VOLUME: m3, HEAD: m, ENERGY: MWh .",
       "type": "number",
       "x-unit-discriminator": "level_data_type",
       "x-units": {

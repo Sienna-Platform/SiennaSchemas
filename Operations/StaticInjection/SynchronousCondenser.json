@@ -18,6 +18,14 @@
       "description": "ID of the bus that this component is connected to.",
       "type": "integer"
     },
+    "remote_regulated_bus": {
+      "description": "ID of the bus whose voltage this device regulates, to the `voltage_setpoint` of that bus, while the device regulates voltage; null regulates the bus this device is connected to. A value equal to `bus` is invalid.",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
     "reactive_power": {
       "description": "Initial reactive power set point of the unit. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "type": "number",
@@ -39,7 +47,7 @@
       "x-quantity": "ApparentPower"
     },
     "reactive_power_limits": {
-      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
+      "description": "Minimum and maximum reactive power limits. Set to `null` if not applicable. in psy5 a required param with an option to be nothing. Units: per power_units — NATURAL_UNITS: MVAr, COMPONENT_BASE: pu .",
       "$ref": "../../Core/common.json#/$defs/MinMax",
       "x-unit-discriminator": "power_units",
       "x-units": {

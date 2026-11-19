@@ -11,7 +11,7 @@
       "type": "boolean"
     },
     "base_voltage": {
-      "description": "The base voltage. in psy5 a required param with an option to be nothing Units: kV.",
+      "description": "The base voltage. in psy5 a required param with an option to be nothing. Units: kV.",
       "type": "number",
       "x-unit": "kV"
     },
@@ -24,7 +24,7 @@
       "type": "integer"
     },
     "magnitude": {
-      "description": "Voltage as a multiple of `base_voltage`. in psy5 a required param with an option to be nothing Units: pu.",
+      "description": "Voltage as a multiple of `base_voltage`. in psy5 a required param with an option to be nothing. Units: pu.",
       "type": "number",
       "x-unit": "pu",
       "x-quantity": "Voltage",
@@ -39,7 +39,7 @@
       "type": "number"
     },
     "voltage_limits": {
-      "description": "Limits on the voltage variation as multiples of `base_voltage`. in psy5 a required param with an option to be nothing Units: pu.",
+      "description": "Limits on the voltage variation as multiples of `base_voltage`. in psy5 a required param with an option to be nothing. Units: pu.",
       "$ref": "../common.json#/$defs/MinMax",
       "x-unit": "pu",
       "x-quantity": "Voltage",

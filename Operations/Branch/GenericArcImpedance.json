@@ -57,29 +57,16 @@
       "description": "Unit basis for this component's power-family fields (active/reactive/apparent power, ratings, limits, ramp rates). COMPONENT_BASE: per unit on this component's own base_power. NATURAL_UNITS: the field's physical unit.",
       "$ref": "../../Core/common.json#/$defs/UnitSystem"
     },
-    "parameter_units": {
-      "description": "Unit basis for r and x. COMPONENT_BASE is per-unit on this component's base_power, which records the system base.",
-      "default": "COMPONENT_BASE",
-      "$ref": "../../Core/common.json#/$defs/ImpedanceUnitBasis"
-    },
     "r": {
-      "description": "Resistance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "description": "Resistance. Per-unit on `base_power`, which records the system base. Units: pu.",
       "type": "number",
-      "x-unit-discriminator": "parameter_units",
-      "x-units": {
-        "NATURAL_UNITS": "ohm",
-        "COMPONENT_BASE": "pu"
-      },
+      "x-unit": "pu",
       "x-quantity": "Resistance"
     },
     "x": {
-      "description": "Reactance. Units: per parameter_units — NATURAL_UNITS: ohm, COMPONENT_BASE: pu .",
+      "description": "Reactance. Per-unit on `base_power`, which records the system base. Units: pu.",
       "type": "number",
-      "x-unit-discriminator": "parameter_units",
-      "x-units": {
-        "NATURAL_UNITS": "ohm",
-        "COMPONENT_BASE": "pu"
-      },
+      "x-unit": "pu",
       "x-quantity": "Reactance"
     }
   },

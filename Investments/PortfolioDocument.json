@@ -34,10 +34,6 @@
       "description": "Qualified type name of the regional aggregation the portfolio groups its regions by. A type identifier resolved by the consumer, not a component in the document.",
       "type": "string"
     },
-    "financial_data": {
-      "description": "Portfolio-wide financial parameters: the base economic year every cost is discounted to a net present value in, and the discount, inflation, and interest rates used in that conversion. Absent when the portfolio carries no financial data.",
-      "$ref": "Financials/PortfolioFinancialData.json"
-    },
     "components": {
       "description": "Components grouped by type name, e.g. `{\"SupplyTechnology\": [...], \"StorageTechnology\": [...]}`. The key is the referenced schema's `title` and spans the portfolio's regional aggregations, policy requirements, and candidate technologies. Keys are emitted in sorted order so output is deterministic. Every type present must be one the consumer can convert: a consumer encountering an unknown type name must fail rather than skip it.",
       "type": "object",

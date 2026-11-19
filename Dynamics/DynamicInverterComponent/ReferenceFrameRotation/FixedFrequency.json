@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Parameters of a Fixed Frequency Estimator (i.e. no PLL)",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "frequency": {
+      "description": "Reference frequency, in natural units. Units: Hz.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "x-unit": "Hz"
+    }
+  },
+  "required": [
+    "id",
+    "frequency"
+  ],
+  "title": "FixedFrequency",
+  "type": "object"
+}

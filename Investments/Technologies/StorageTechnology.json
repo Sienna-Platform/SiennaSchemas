@@ -39,7 +39,8 @@
     },
     "storage_tech": {
       "description": "Storage Technology Type.",
-      "$ref": "../../Core/common.json#/$defs/StorageTech"
+      "$ref": "../../Core/common.json#/$defs/StorageTech",
+      "default": "OTHER_CHEM"
     },
     "capital_costs": {
       "description": "Capital and interconnection cost for investing in a storage technology's charge, discharge, and energy capacity (charge and discharge in USD/MW, energy in USD/MWh).",
@@ -137,8 +138,7 @@
     "financial_data",
     "id",
     "name",
-    "power_systems_type",
-    "storage_tech"
+    "power_systems_type"
   ],
   "title": "StorageTechnology",
   "type": "object"

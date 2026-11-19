@@ -80,12 +80,13 @@
       "default": "FIXED",
       "$ref": "../../Operations/common.json#/$defs/SwitchedAdmittanceControlMode"
     },
-    "regulated_bus_number": {
-      "description": "Bus number whose voltage/quantity this shunt regulates; 0 means local bus (PSS/E SWREM/NREG). Units: 1.",
-      "default": 0,
-      "type": "integer",
-      "x-unit": "1",
-      "x-quantity": "Dimensionless"
+    "remote_regulated_bus": {
+      "description": "ID of the bus this shunt regulates (PSS/E SWREM in v33, SWREG in v34 and later): under the voltage modes, the bus whose voltage it holds within `voltage_limits`; under the reactive modes, the bus of the device whose reactive quantity it regulates. null means the bus this shunt is connected to. A value equal to `bus` is invalid.",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ]
     },
     "dynamic_injector": {
       "description": "ID of the corresponding dynamic injection model for admittance, if any.",

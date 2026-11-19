@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "id": {
+      "description": "Unique integer identifier for this component",
+      "type": "integer"
+    },
+    "Kp_q": {
+      "description": "Proportional Gain",
+      "type": "number"
+    },
+    "Ki_q": {
+      "description": "Integral Gain",
+      "type": "number"
+    },
+    "reactive_power_filter_frequency": {
+      "description": "Filter cutoff frequency, in natural units. Units: Hz.",
+      "type": "number",
+      "x-unit": "Hz"
+    },
+    "V_ref": {
+      "description": "Voltage Set-point (pu). Units: pu.",
+      "type": "number",
+      "default": 1.0,
+      "x-unit": "pu",
+      "x-quantity": "Voltage"
+    },
+    "Q_ref": {
+      "description": "Reactive Power Set-point (pu). Units: pu.",
+      "type": "number",
+      "default": 1.0,
+      "x-unit": "pu",
+      "x-quantity": "ReactivePower"
+    }
+  },
+  "required": [
+    "id",
+    "Kp_q",
+    "Ki_q",
+    "reactive_power_filter_frequency"
+  ],
+  "title": "ReactivePowerPI",
+  "type": "object"
+}
