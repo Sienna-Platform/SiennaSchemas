@@ -278,8 +278,106 @@
       "title": "FuelCurve",
       "type": "object"
     },
+    "TwoFuelCurve": {
+      "description": "Variable operation cost of a device that uses two fuels, each with its own curve and price. `fuel_curve_type` states how the fuels serve the output. With `STACKED` the first curve covers output up to the first x of the second curve, and the second curve, an `INCREMENTAL` curve with `PIECEWISE_STEP` data and no `initial_input`, covers output above it. With `BLENDED` a share s of the output, `second_fuel_output_share`, is made from the second fuel and the rest from the first, each at its own curve's fuel use at the operating point P: each curve is the unit's total fuel use when it burns only that fuel, both cover the full output, and the cost is (1 - s) x first price x first curve(P) + s x second price x second curve(P). With `UNDEFINED` the layout is unstated and consumers that model the curve reject it. Exactly one of the fixed price and the price time series is set for each fuel, and the curve layout matches `fuel_curve_type`; producers and consumers enforce both.",
+      "properties": {
+        "first_fuel_cost": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Fixed price of the first fuel in USD per one `fuel_units`, or null when `first_fuel_cost_time_series` names a time-varying one. A stacked first fuel priced at 0 is paid for elsewhere, as for recovered exhaust heat."
+        },
+        "first_fuel_cost_time_series": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Store-minted id of the first fuel's price time series association, or null when `first_fuel_cost` carries a fixed value. Exactly one of the two is set."
+        },
+        "first_fuel_curve": {
+          "description": "First fuel per hour against power, in `fuel_units`.",
+          "$ref": "#/$defs/ValueCurve"
+        },
+        "first_fuel_startup_offtake": {
+          "description": "First fuel consumed during startup, as a curve in `fuel_units`.",
+          "$ref": "#/$defs/InputOutputCurve"
+        },
+        "fuel_curve_type": {
+          "description": "How the two fuels serve the output.",
+          "default": "UNDEFINED",
+          "$ref": "#/$defs/TwoFuelCurveType"
+        },
+        "fuel_units": {
+          "description": "The quantity both curves' y axes count per hour and both prices are per.",
+          "$ref": "#/$defs/FuelUnit"
+        },
+        "power_units": {
+          "$ref": "#/$defs/UnitSystem"
+        },
+        "second_fuel_cost": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Fixed price of the second fuel in USD per one `fuel_units`, or null when `second_fuel_cost_time_series` names a time-varying one."
+        },
+        "second_fuel_cost_time_series": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Store-minted id of the second fuel's price time series association, or null when `second_fuel_cost` carries a fixed value. Exactly one of the two is set."
+        },
+        "second_fuel_curve": {
+          "description": "Second fuel per hour against power, in `fuel_units`.",
+          "$ref": "#/$defs/ValueCurve"
+        },
+        "second_fuel_output_share": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0,
+          "description": "Share of output produced from the second fuel, between 0 and 1; used only when `fuel_curve_type` is `BLENDED`, and 0 otherwise. It is a share of output, not of fuel energy or volume."
+        },
+        "second_fuel_startup_offtake": {
+          "description": "Second fuel consumed during startup, as a curve in `fuel_units`.",
+          "$ref": "#/$defs/InputOutputCurve"
+        },
+        "variable_cost_type": {
+          "type": "string",
+          "const": "TWO_FUEL",
+          "default": "TWO_FUEL"
+        },
+        "vom_cost": {
+          "$ref": "#/$defs/InputOutputCurve"
+        }
+      },
+      "required": [
+        "first_fuel_curve",
+        "second_fuel_curve",
+        "power_units",
+        "fuel_units",
+        "vom_cost",
+        "variable_cost_type"
+      ],
+      "title": "TwoFuelCurve",
+      "type": "object"
+    },
+    "TwoFuelCurveType": {
+      "description": "How the two fuels of a `TwoFuelCurve` serve its output: `BLENDED` makes a fixed share of the output from each fuel, `STACKED` uses the first fuel up to a threshold and the second above it, and `UNDEFINED` leaves the layout unstated.",
+      "enum": [
+        "UNDEFINED",
+        "BLENDED",
+        "STACKED"
+      ],
+      "title": "TwoFuelCurveType",
+      "type": "string"
+    },
     "FuelUnit": {
-      "description": "Fuel quantity a `FuelCurve` is expressed in: `MMBTU` (million British thermal units) or `GJ` (gigajoules) of heat content.",
+      "description": "Fuel quantity a `FuelCurve` or `TwoFuelCurve` is expressed in: `MMBTU` (million British thermal units) or `GJ` (gigajoules) of heat content.",
       "enum": [
         "MMBTU",
         "GJ"
@@ -1118,12 +1216,13 @@
       "type": "string"
     },
     "ProductionVariableCostCurve": {
-      "description": "Variable production cost of a device, selected by `variable_cost_type` between a curve denominated directly in currency (`COST`) and one denominated in fuel with a separate fuel price (`FUEL`).",
+      "description": "Variable production cost of a device, selected by `variable_cost_type` between a curve denominated directly in currency (`COST`), one denominated in fuel with a separate fuel price (`FUEL`), and one denominated in two fuels each with its own curve and price (`TWO_FUEL`).",
       "title": "ProductionVariableCostCurve",
       "discriminator": {
         "mapping": {
           "COST": "#/$defs/CostCurve",
-          "FUEL": "#/$defs/FuelCurve"
+          "FUEL": "#/$defs/FuelCurve",
+          "TWO_FUEL": "#/$defs/TwoFuelCurve"
         },
         "propertyName": "variable_cost_type"
       },
@@ -1133,6 +1232,9 @@
         },
         {
           "$ref": "#/$defs/FuelCurve"
+        },
+        {
+          "$ref": "#/$defs/TwoFuelCurve"
         }
       ],
       "type": "object"

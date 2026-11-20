@@ -1,0 +1,65 @@
+{
+  "power_units": "NATURAL_UNITS",
+  "fuel_units": "MMBTU",
+  "vom_cost": {
+    "curve_type": "INPUT_OUTPUT",
+    "function_data": {
+      "function_type": "LINEAR",
+      "proportional_term": 7.0,
+      "constant_term": 1.0
+    }
+  },
+  "variable_cost_type": "TWO_FUEL",
+  "fuel_curve_type": "BLENDED",
+  "first_fuel_curve": {
+    "curve_type": "INPUT_OUTPUT",
+    "function_data": {
+      "function_type": "PIECEWISE_LINEAR",
+      "points": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 100,
+          "y": 900
+        }
+      ]
+    }
+  },
+  "second_fuel_curve": {
+    "curve_type": "INPUT_OUTPUT",
+    "function_data": {
+      "function_type": "PIECEWISE_LINEAR",
+      "points": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 100,
+          "y": 900
+        }
+      ]
+    }
+  },
+  "first_fuel_cost_time_series": 11,
+  "second_fuel_cost_time_series": 12,
+  "second_fuel_output_share": 0.3,
+  "first_fuel_startup_offtake": {
+    "curve_type": "INPUT_OUTPUT",
+    "function_data": {
+      "function_type": "LINEAR",
+      "proportional_term": 0.0,
+      "constant_term": 12.0
+    }
+  },
+  "second_fuel_startup_offtake": {
+    "curve_type": "INPUT_OUTPUT",
+    "function_data": {
+      "function_type": "LINEAR",
+      "proportional_term": 0.0,
+      "constant_term": 3.5
+    }
+  }
+}
