@@ -107,15 +107,18 @@ COMPONENT = {
     "ofl_valid": ("Core/common.json", "/$defs/OperationalFlowLimit", True),
     "ofl_negative": ("Core/common.json", "/$defs/OperationalFlowLimit", False),
     "ofl_half": ("Core/common.json", "/$defs/OperationalFlowLimit", False),
-    "dual_fuel_stacked": ("Core/common.json", "/$defs/ProductionVariableCostCurve", True),
-    "dual_fuel_blended": ("Core/common.json", "/$defs/ProductionVariableCostCurve", True),
-    "dual_fuel_blended_startup_offtake": (
+    "two_fuel_stacked": ("Core/common.json", "/$defs/ProductionVariableCostCurve", True),
+    "two_fuel_blended": ("Core/common.json", "/$defs/ProductionVariableCostCurve", True),
+    "two_fuel_blended_startup_offtake": (
         "Core/common.json", "/$defs/ProductionVariableCostCurve", True,
     ),
-    "dual_fuel_share_out_of_range": (
+    "two_fuel_share_out_of_range": (
         "Core/common.json", "/$defs/ProductionVariableCostCurve", False,
     ),
-    "dual_fuel_missing_second_curve": (
+    "two_fuel_missing_second_curve": (
+        "Core/common.json", "/$defs/ProductionVariableCostCurve", False,
+    ),
+    "two_fuel_unknown_curve_type": (
         "Core/common.json", "/$defs/ProductionVariableCostCurve", False,
     ),
     "combined_cycle_block_hrsg_loss": (

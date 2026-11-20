@@ -9,7 +9,8 @@
       "constant_term": 1.0
     }
   },
-  "variable_cost_type": "DUAL_FUEL",
+  "variable_cost_type": "TWO_FUEL",
+  "fuel_curve_type": "STACKED",
   "first_fuel_curve": {
     "curve_type": "INPUT_OUTPUT",
     "function_data": {
@@ -19,5 +20,18 @@
     }
   },
   "first_fuel_cost": 0.0,
+  "second_fuel_curve": {
+    "curve_type": "INCREMENTAL",
+    "function_data": {
+      "function_type": "PIECEWISE_STEP",
+      "x_coords": [
+        100,
+        200
+      ],
+      "y_coords": [
+        8.0
+      ]
+    }
+  },
   "second_fuel_cost": 3.44
 }

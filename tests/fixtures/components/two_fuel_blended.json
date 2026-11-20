@@ -9,7 +9,8 @@
       "constant_term": 1.0
     }
   },
-  "variable_cost_type": "DUAL_FUEL",
+  "variable_cost_type": "TWO_FUEL",
+  "fuel_curve_type": "BLENDED",
   "first_fuel_curve": {
     "curve_type": "INPUT_OUTPUT",
     "function_data": {
@@ -44,5 +45,5 @@
   },
   "first_fuel_cost_time_series": 11,
   "second_fuel_cost_time_series": 12,
-  "second_fuel_share": 1.2
+  "second_fuel_output_share": 0.3
 }

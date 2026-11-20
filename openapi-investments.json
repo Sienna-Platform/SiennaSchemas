@@ -83,8 +83,11 @@
       "FuelCurve": {
         "$ref": "Core/common.json#/$defs/FuelCurve"
       },
-      "DualFuelCurve": {
-        "$ref": "Core/common.json#/$defs/DualFuelCurve"
+      "TwoFuelCurve": {
+        "$ref": "Core/common.json#/$defs/TwoFuelCurve"
+      },
+      "TwoFuelCurveType": {
+        "$ref": "Core/common.json#/$defs/TwoFuelCurveType"
       },
       "FuelUnit": {
         "$ref": "Core/common.json#/$defs/FuelUnit"
