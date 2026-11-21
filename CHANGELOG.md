@@ -7,6 +7,12 @@ This project is pre-1.0; any release may change schemas incompatibly.
 
 ## [Unreleased]
 
+### Changed
+
+- Documented that numeric time-series feature values use JSON token spelling
+  to distinguish integers from floats. Updated fixture validation to check
+  the expected Python types of time-series feature values.
+
 ## [0.5.0] - 2026-11-13
 
 0.5.0 starts a new compatibility line. Documents written at 0.4.x do not read at 0.5.0;
